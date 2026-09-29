@@ -216,6 +216,7 @@ export default function App() {
                 ) : (
                     <CatalogView apps={state.apps} selection={selection} setSelection={setSelection}
                                  onInstall={() => void startRun(selectionProfile(selection))}
+                                 onInstallOne={(a) => void startRun(selectionProfile([a.id], a.name))}
                                  onSave={saveSelection} openURL={(u) => void api.OpenURL(u)}/>
                 )}
             </main>
@@ -235,6 +236,8 @@ function ProfilesView(p: {
     onImport: () => void; onFromPC: () => void; onEdit: (p: ProfileInfo) => void;
 }) {
     const [sel, setSel] = useState<string>(p.state.profiles[0]?.id ?? "");
+    const [skip, setSkip] = useState<Set<string>>(new Set());
+    const choose = (id: string) => { setSel(id); setSkip(new Set()); };
     const current = p.state.profiles.find((x) => x.id === sel) ?? p.state.profiles[0];
     const apps = useMemo(() => new Map(p.state.apps.map((a) => [a.id, a])), [p.state.apps]);
     const groups: [string, ProfileInfo[]][] = [
@@ -242,6 +245,13 @@ function ProfilesView(p: {
         ["General", p.state.profiles.filter((x) => x.builtin && x.kind !== "dev")],
         ["Mine", p.state.profiles.filter((x) => !x.builtin)],
     ];
+    const toInstall = current ? current.resolved.filter((id) => !skip.has(id) && !apps.get(id)?.installed) : [];
+    const installSelected = () => {
+        if (!current) return;
+        // Untouched selection = the whole profile (its own recipes included).
+        if (skip.size === 0) p.onInstall(current);
+        else p.onInstall(selectionProfile(toInstall, current.name));
+    };
     const run = (fn: () => Promise<string | void>, ok?: string) => fn().then((r) => {
         if (r) p.say(`Saved to ${r}`); else if (ok) p.say(ok);
     }).catch((e) => p.say(errText(e)));
@@ -255,7 +265,7 @@ function ProfilesView(p: {
                         {list.map((x) => {
                             const have = x.resolved.filter((id) => apps.get(id)?.installed).length;
                             return (
-                                <button key={x.id} className={"row" + (x.id === current?.id ? " on" : "")} onClick={() => setSel(x.id)}>
+                                <button key={x.id} className={"row" + (x.id === current?.id ? " on" : "")} onClick={() => choose(x.id)}>
                                     <span>{x.name}</span><em>{have}/{x.resolved.length}</em>
                                 </button>
                             );
@@ -272,7 +282,9 @@ function ProfilesView(p: {
                     <h2>{current.name}</h2>
                     <p className="muted">{current.description}</p>
                     <div className="actions">
-                        <button className="primary" onClick={() => p.onInstall(current)}>Install what’s missing…</button>
+                        <button className="primary" disabled={toInstall.length === 0} onClick={installSelected}>
+                            {skip.size === 0 ? "Install what’s missing…" : `Install ${toInstall.length} selected…`}
+                        </button>
                         <button onClick={() => run(() => api.ExportProfile(current))}>Export</button>
                         <button onClick={() => run(() => api.ExportWinget(current))} title="A file `winget import` understands">Export for winget</button>
                         <button onClick={() => p.onEdit(current)}>Edit in catalog</button>
@@ -282,10 +294,15 @@ function ProfilesView(p: {
                         {current.resolved.map((id) => {
                             const a = apps.get(id);
                             return a && (
-                                <li key={id}>
+                                <li key={id} className={skip.has(id) ? "off" : ""}>
+                                    {!a.installed && (
+                                        <input type="checkbox" checked={!skip.has(id)} aria-label={`Include ${a.name}`}
+                                               onChange={() => { const n = new Set(skip); if (n.has(id)) n.delete(id); else n.add(id); setSkip(n); }}/>
+                                    )}
                                     <span className={"dot " + (a.installed ? "ok" : "miss")} title={a.installed ? `installed ${a.version ?? ""}` : "not installed"}/>
                                     <b>{a.name}</b><span className="muted"> {a.publisher}</span>
                                     {a.admin && <span className="tag">admin</span>}
+                                    {!a.installed && <button className="mini" onClick={() => p.onInstall(selectionProfile([id], a.name))}>Install</button>}
                                 </li>
                             );
                         })}
@@ -299,7 +316,7 @@ function ProfilesView(p: {
 
 function CatalogView(p: {
     apps: AppInfo[]; selection: Set<string>; setSelection: (s: Set<string>) => void;
-    onInstall: () => void; onSave: () => void; openURL: (u: string) => void;
+    onInstall: () => void; onInstallOne: (a: AppInfo) => void; onSave: () => void; openURL: (u: string) => void;
 }) {
     const [f, setF] = useState<Filter>({query: "", category: "", installed: "all", openSourceOnly: false});
     const cats = useMemo(() => categories(p.apps), [p.apps]);
@@ -340,7 +357,9 @@ function CatalogView(p: {
                             </div>
                         </label>
                         <div className="meta">
-                            {a.installed ? <span className="pill ok">installed {a.version}</span> : <span className="pill">not installed</span>}
+                            {a.installed
+                                ? <span className="pill ok">installed {a.version}</span>
+                                : <button className="mini" onClick={() => p.onInstallOne(a)}>Install</button>}
                             <a href="#" onClick={(e) => { e.preventDefault(); p.openURL(a.homepage); }}>{a.publisher}</a>
                         </div>
                     </li>

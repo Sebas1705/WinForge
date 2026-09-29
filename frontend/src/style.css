@@ -100,3 +100,8 @@ button.icon { padding: 5px 9px; font-size: 16px; line-height: 1; }
 
 .tag.oss { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
 .toolbar .check { display: flex; align-items: center; gap: 6px; white-space: nowrap; color: var(--muted); }
+
+button.mini { padding: 2px 10px; font-size: 12px; margin-left: auto; }
+.apps li { display: flex; align-items: center; gap: 6px; }
+.apps li.off { opacity: .5; }
+.apps li input[type=checkbox] { margin: 0 2px 0 0; }
