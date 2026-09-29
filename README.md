@@ -60,5 +60,9 @@ Requires Go 1.26, Node 22 and the [Wails CLI](https://wails.io) v2.
 - Portable/zip installs with pinned hashes for tools missing from winget (Gradle, Maven, Android command-line tools).
 - Per-app options in profiles (scope, install location) and version pinning UI.
 - Upgrade view (`winget upgrade` for catalog apps) and drift detection against a profile.
-- Own icon and signed releases; Scoop/winget publication of WinForge itself.
+- Signed releases; Scoop/winget publication of WinForge itself.
 - Spanish UI.
+
+## Appearance
+
+The gear button sets theme (system, dark, light), accent colour and list density; choices persist per user. The logo source is `frontend/src/logo.svg`; `build/appicon.png` and `build/windows/icon.ico` are rendered from it.

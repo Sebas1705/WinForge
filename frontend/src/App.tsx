@@ -6,6 +6,8 @@ import {
     type App as AppInfo, type Filter, type InstallEvent, type Plan, type Profile,
     type ProfileInfo, type State, type StepStatus,
 } from "./lib/model";
+import * as prefs from "./lib/settings";
+import logo from "./logo.svg";
 
 // The generated bindings use their own model classes; the JSON shapes are
 // identical, so the boundary is typed once here.
@@ -44,6 +46,8 @@ export default function App() {
     const [toast, setToast] = useState<string | null>(null);
     const [selection, setSelection] = useState<Set<string>>(new Set());
     const [run, setRun] = useState<Run | null>(null);
+    const [settings, setSettings] = useState<prefs.Settings>(prefs.load);
+    const [showSettings, setShowSettings] = useState(false);
     const [naming, setNaming] = useState<null | { title: string; initial: string; onOk: (n: string) => void }>(null);
 
     const say = useCallback((m: string) => {
@@ -63,6 +67,15 @@ export default function App() {
     }, [say]);
 
     useEffect(() => { void refresh(); }, [refresh]);
+
+    useEffect(() => {
+        const mq = window.matchMedia("(prefers-color-scheme: dark)");
+        const paint = () => prefs.apply(settings, document.documentElement, mq.matches);
+        paint();
+        prefs.save(settings);
+        mq.addEventListener("change", paint);
+        return () => mq.removeEventListener("change", paint);
+    }, [settings]);
 
     useEffect(() => {
         const offEvent = EventsOn("install", (e: InstallEvent) => {
@@ -140,7 +153,7 @@ export default function App() {
     return (
         <div className="shell">
             <header>
-                <div className="brand">Win<b>Forge</b> <span className="ver">{state?.version}</span></div>
+                <div className="brand"><img src={logo} alt="" width={26} height={26}/>Win<b>Forge</b> <span className="ver">{state?.version}</span></div>
                 <nav>
                     <button className={tab === "profiles" ? "on" : ""} onClick={() => setTab("profiles")}>Profiles</button>
                     <button className={tab === "catalog" ? "on" : ""} onClick={() => setTab("catalog")}>Catalog</button>
@@ -149,6 +162,7 @@ export default function App() {
                 {state && !state.admin && <span className="pill" title="Some installers and recipes need administrator rights">standard user</span>}
                 {state?.admin && <span className="pill ok">administrator</span>}
                 <button onClick={() => void refresh()} disabled={busy}>{busy ? "Scanning…" : "Rescan PC"}</button>
+                <button className="icon" title="Appearance" aria-label="Appearance" onClick={() => setShowSettings(true)}>⚙</button>
             </header>
 
             {state?.wingetError && (
@@ -170,6 +184,7 @@ export default function App() {
             {run && <RunModal run={run} state={state} onConfirm={() => void confirmRun()}
                               onCancel={() => void api.Cancel()} onClose={() => setRun(null)}
                               onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>}
+            {showSettings && <SettingsDialog value={settings} onChange={setSettings} onClose={() => setShowSettings(false)}/>}
             {naming && <NameDialog {...naming} onClose={() => setNaming(null)}/>}
             {toast && <div className="toast" role="status">{toast}</div>}
         </div>
@@ -343,6 +358,41 @@ function NameDialog(p: { title: string; initial: string; onOk: (n: string) => vo
                 <input autoFocus value={v} placeholder="Profile name" onChange={(e) => setV(e.target.value)}
                        onKeyDown={(e) => { if (e.key === "Enter") submit(); if (e.key === "Escape") p.onClose(); }}/>
                 <div className="actions end"><button onClick={p.onClose}>Cancel</button><button className="primary" disabled={!v.trim()} onClick={submit}>Save</button></div>
+            </div>
+        </div>
+    );
+}
+
+function SettingsDialog(p: { value: prefs.Settings; onChange: (s: prefs.Settings) => void; onClose: () => void }) {
+    const set = (patch: Partial<prefs.Settings>) => p.onChange({...p.value, ...patch});
+    return (
+        <div className="overlay" onClick={p.onClose}>
+            <div className="modal small" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && p.onClose()}>
+                <h3>Appearance</h3>
+                <div className="field"><span>Theme</span>
+                    <div className="seg">
+                        {(["system", "dark", "light"] as const).map((t) => (
+                            <button key={t} className={p.value.theme === t ? "on" : ""} onClick={() => set({theme: t})}>{t}</button>
+                        ))}
+                    </div>
+                </div>
+                <div className="field"><span>Accent</span>
+                    <div className="swatches">
+                        {prefs.ACCENTS.map((c) => (
+                            <button key={c.value} title={c.name} aria-label={c.name} aria-pressed={p.value.accent === c.value}
+                                    className={"swatch" + (p.value.accent === c.value ? " on" : "")} style={{background: c.value}}
+                                    onClick={() => set({accent: c.value})}/>
+                        ))}
+                    </div>
+                </div>
+                <div className="field"><span>Density</span>
+                    <div className="seg">
+                        {(["comfortable", "compact"] as const).map((d) => (
+                            <button key={d} className={p.value.density === d ? "on" : ""} onClick={() => set({density: d})}>{d}</button>
+                        ))}
+                    </div>
+                </div>
+                <div className="actions end"><button className="primary" onClick={p.onClose}>Done</button></div>
             </div>
         </div>
     );

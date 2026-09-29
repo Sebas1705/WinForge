@@ -1,9 +1,14 @@
-:root {
+:root, :root[data-theme=dark] {
     color-scheme: dark;
     --bg: #181a1f; --panel: #20232a; --panel2: #292d36; --line: #343945;
     --text: #e6e8ee; --muted: #9098a8; --accent: #4f9dff; --ok: #3ecf8e; --warn: #f5b942; --bad: #f0626d;
     font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
     font-size: 14px;
+}
+:root[data-theme=light] {
+    color-scheme: light;
+    --bg: #f4f5f8; --panel: #ffffff; --panel2: #eceef3; --line: #d6dae3;
+    --text: #1c2029; --muted: #667085; --ok: #12a06a; --warn: #b7791f; --bad: #d1343f;
 }
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; background: var(--bg); color: var(--text); }
@@ -72,5 +77,20 @@ aside .row em { color: var(--muted); font-style: normal; }
 .steps li { padding: 3px 0; color: var(--muted); }
 .steps li span:first-child { display: inline-block; width: 18px; }
 .steps li.running { color: var(--text); } .steps li.ok { color: var(--ok); } .steps li.failed { color: var(--bad); }
-.log { background: #101216; border-radius: 8px; padding: 10px; margin: 0; height: 200px; overflow: auto; font: 12px/1.45 Consolas, monospace; white-space: pre-wrap; }
+.log { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px; margin: 0; height: 200px; overflow: auto; font: 12px/1.45 Consolas, monospace; white-space: pre-wrap; }
 .toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 16px; max-width: 80%; }
+
+.brand { display: flex; align-items: center; gap: 8px; }
+button.icon { padding: 5px 9px; font-size: 16px; line-height: 1; }
+.field { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.seg { display: flex; }
+.seg button { border-radius: 0; text-transform: capitalize; margin-left: -1px; }
+.seg button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.seg button:last-child { border-radius: 0 6px 6px 0; }
+.seg button.on { background: var(--accent); border-color: var(--accent); color: #06121f; font-weight: 600; position: relative; }
+.swatches { display: flex; gap: 8px; }
+.swatch { width: 26px; height: 26px; padding: 0; border-radius: 50%; border: 2px solid transparent; }
+.swatch.on { border-color: var(--text); }
+:root[data-density=compact] .list li { padding: 4px 10px; }
+:root[data-density=compact] .apps li { padding: 5px 10px; }
+:root[data-density=compact] aside .row { padding: 3px 10px; }
