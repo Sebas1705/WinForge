@@ -1,0 +1,2088 @@
+- id: vscodium
+  name: "VSCodium"
+  category: dev/editors
+  description: "VSCodium is a community-driven, freely-licensed and telemetry-free rebuilt of Microsoft's Visual Studio Code."
+  homepage: https://vscodium.com/
+  license: "MIT"
+  winget: VSCodium.VSCodium
+  publisher: "VSCodium"
+
+- id: helix
+  name: "Helix"
+  category: dev/editors
+  description: "Helix Editor"
+  homepage: https://helix-editor.com/
+  license: "MPL-2.0"
+  winget: Helix.Helix
+  publisher: "Helix"
+
+- id: gnu-emacs
+  name: "GNU Emacs"
+  category: dev/editors
+  description: "An extensible, customizable, free/libre text editor - and more."
+  homepage: https://www.gnu.org/software/emacs/
+  license: "GPL"
+  winget: GNU.Emacs
+  publisher: "GNU Project"
+
+- id: sublime-text-4
+  name: "Sublime Text 4"
+  category: dev/editors
+  description: "Sublime is a sophisticated cross-platform text editor for code, markup and prose."
+  homepage: https://www.sublimetext.com/
+  license: "Proprietary"
+  winget: SublimeHQ.SublimeText.4
+  publisher: "Sublime HQ Pty Ltd"
+
+- id: lapce
+  name: "Lapce"
+  category: dev/editors
+  description: "Lightning-fast and Powerful Code Editor written in Rust"
+  homepage: https://lapce.dev
+  license: "Apache-2.0"
+  winget: Lapce.Lapce
+  publisher: "Lapce"
+
+- id: geany
+  name: "Geany"
+  category: dev/editors
+  description: "A powerful, stable and lightweight programmer's text editor that provides tons of useful features without bogging down your workflow."
+  homepage: https://www.geany.org
+  license: "GPL-2.0-or-later"
+  winget: Geany.Geany
+  publisher: "The Geany developer team"
+
+- id: intellij-idea-ultimate-edition
+  name: "IntelliJ IDEA Ultimate Edition"
+  category: dev/editors
+  description: "The Leading Java and Kotlin IDE"
+  homepage: https://www.jetbrains.com/idea/
+  license: "Proprietary"
+  winget: JetBrains.IntelliJIDEA.Ultimate
+  publisher: "JetBrains s.r.o."
+
+- id: pycharm-community-edition
+  name: "PyCharm Community Edition"
+  category: dev/editors
+  description: "The Python IDE for Professional Developers"
+  homepage: https://www.jetbrains.com/pycharm/
+  license: "Apache-2.0"
+  winget: JetBrains.PyCharm.Community
+  publisher: "JetBrains s.r.o."
+
+- id: pycharm-professional-edition
+  name: "PyCharm Professional Edition"
+  category: dev/editors
+  description: "The Python IDE for Professional Developers"
+  homepage: https://www.jetbrains.com/pycharm/
+  license: "Proprietary"
+  winget: JetBrains.PyCharm.Professional
+  publisher: "JetBrains s.r.o."
+
+- id: webstorm
+  name: "WebStorm"
+  category: dev/editors
+  description: "The smartest JavaScript IDE"
+  homepage: https://www.jetbrains.com/webstorm/
+  license: "Proprietary"
+  winget: JetBrains.WebStorm
+  publisher: "JetBrains s.r.o."
+
+- id: goland
+  name: "GoLand"
+  category: dev/editors
+  description: "The complete IDE crafted for Gophers"
+  homepage: https://www.jetbrains.com/go/
+  license: "Proprietary"
+  winget: JetBrains.GoLand
+  publisher: "JetBrains s.r.o."
+
+- id: clion
+  name: "CLion"
+  category: dev/editors
+  description: "A cross-platform IDE for C and C++"
+  homepage: https://www.jetbrains.com/clion/
+  license: "Proprietary"
+  winget: JetBrains.CLion
+  publisher: "JetBrains s.r.o."
+
+- id: jetbrains-rider
+  name: "JetBrains Rider"
+  category: dev/editors
+  description: "Fast \u0026 powerful cross-platform .NET IDE"
+  homepage: https://www.jetbrains.com/rider/
+  license: "Proprietary"
+  winget: JetBrains.Rider
+  publisher: "JetBrains s.r.o."
+
+- id: rustrover
+  name: "RustRover"
+  category: dev/editors
+  description: "A powerhouse IDE for Rust developers"
+  homepage: https://www.jetbrains.com/rust/
+  license: "Proprietary"
+  winget: JetBrains.RustRover
+  publisher: "JetBrains s.r.o."
+
+- id: phpstorm
+  name: "PhpStorm"
+  category: dev/editors
+  description: "Lightning-smart PHP IDE"
+  homepage: https://www.jetbrains.com/phpstorm/
+  license: "Proprietary"
+  winget: JetBrains.PhpStorm
+  publisher: "JetBrains s.r.o."
+
+- id: datagrip
+  name: "DataGrip"
+  category: dev/editors
+  description: "The Cross-Platform IDE for Databases \u0026 SQL by JetBrains"
+  homepage: https://www.jetbrains.com/datagrip/
+  license: "Proprietary"
+  winget: JetBrains.DataGrip
+  publisher: "JetBrains s.r.o."
+
+- id: apache-netbeans-ide
+  name: "Apache NetBeans IDE"
+  category: dev/editors
+  description: "Development Environment, Tooling Platform and Application Framework."
+  homepage: https://netbeans.apache.org/
+  license: "Apache-2.0"
+  winget: Apache.NetBeans
+  publisher: "Apache NetBeans"
+
+- id: visual-studio-professional-2022
+  name: "Visual Studio Professional 2022"
+  category: dev/editors
+  description: "The trusted IDE for professional developers - from desktop to cloud."
+  homepage: https://visualstudio.microsoft.com/
+  license: "Proprietary"
+  winget: Microsoft.VisualStudio.2022.Professional
+  publisher: "Microsoft Corporation"
+
+- id: visual-studio-enterprise-2022
+  name: "Visual Studio Enterprise 2022"
+  category: dev/editors
+  description: "Built for scale, security, and speed - the IDE for complex, high-impact development."
+  homepage: https://visualstudio.microsoft.com/
+  license: "Proprietary"
+  winget: Microsoft.VisualStudio.2022.Enterprise
+  publisher: "Microsoft Corporation"
+
+- id: antigravity
+  name: "Antigravity"
+  category: dev/editors
+  description: "Experience liftoffwith the next-gen agent platform"
+  homepage: https://antigravity.google/
+  license: "Proprietary"
+  winget: Google.Antigravity
+  publisher: "Google"
+
+- id: tortoisegit
+  name: "TortoiseGit"
+  category: dev/vcs
+  description: "Windows Shell Interface to Git"
+  homepage: https://tortoisegit.org/
+  license: "GPL-2.0-only"
+  winget: TortoiseGit.TortoiseGit
+  publisher: "TortoiseGit"
+
+- id: gitkraken
+  name: "GitKraken"
+  category: dev/vcs
+  description: "The legendary Git client with an ultra-intuitive GUI, a powerful terminal, and offers a seamless experience for Windows, Mac and Linux."
+  homepage: https://www.gitkraken.com/git-client
+  license: "Proprietary"
+  winget: Axosoft.GitKraken
+  publisher: "GitKraken"
+
+- id: fork
+  name: "Fork"
+  category: dev/vcs
+  description: "A fast and friendly git client for Mac and Windows."
+  homepage: https://fork.dev/
+  license: "Proprietary"
+  winget: Fork.Fork
+  publisher: "Fork"
+
+- id: git-extensions
+  name: "Git Extensions"
+  category: dev/vcs
+  description: "Git Extensions is a standalone UI tool for managing git repositories."
+  homepage: https://gitextensions.github.io/
+  license: "GPL-3.0"
+  winget: GitExtensionsTeam.GitExtensions
+  publisher: "Git Extensions Team"
+
+- id: lazygit
+  name: "lazygit"
+  category: dev/vcs
+  description: "Simple terminal UI for git commands."
+  homepage: https://github.com/jesseduffield/lazygit
+  license: "MIT"
+  winget: JesseDuffield.lazygit
+  publisher: "Jesse Duffield"
+
+- id: sourcetree
+  name: "Sourcetree"
+  category: dev/vcs
+  description: "Sourcetree simplifies how you interact with your Git repositories so you can focus on coding."
+  homepage: https://www.sourcetreeapp.com/
+  license: "Proprietary"
+  winget: Atlassian.Sourcetree
+  publisher: "Atlassian"
+
+- id: tortoisesvn
+  name: "TortoiseSVN"
+  category: dev/vcs
+  description: "TortoiseSVN is a really easy to use Revision control/version control/source control software for Windows."
+  homepage: https://tortoisesvn.net/downloads.html
+  license: "GPL-2.0-only"
+  winget: TortoiseSVN.TortoiseSVN
+  publisher: "TortoiseSVN"
+
+- id: mercurial
+  name: "Mercurial"
+  category: dev/vcs
+  description: "Mercurial is a free, distributed source control management tool."
+  homepage: https://www.mercurial-scm.org/
+  license: "GPL-2.0"
+  winget: Mercurial.Mercurial
+  publisher: "Olivia Mackall and others"
+
+- id: gitleaks
+  name: "Gitleaks"
+  category: dev/vcs
+  description: "Protect and discover secrets using Gitleaks"
+  homepage: https://github.com/gitleaks/gitleaks
+  license: "MIT"
+  winget: Gitleaks.Gitleaks
+  publisher: "Gitleaks LLC"
+
+- id: copilot-cli
+  name: "Copilot CLI"
+  category: dev/vcs
+  description: "GitHub Copilot CLI brings the power of Copilot coding agent directly to your terminal."
+  homepage: https://github.com/github/copilot-cli
+  license: "Proprietary"
+  winget: GitHub.Copilot
+  publisher: "GitHub, Inc."
+
+- id: git-delta
+  name: "delta"
+  category: dev/vcs
+  description: "A syntax-highlighting pager for git, diff, and grep output"
+  homepage: https://github.com/dandavison/delta
+  license: "MIT"
+  winget: dandavison.delta
+  publisher: "Dan Davison"
+
+- id: devtoys
+  name: "DevToys"
+  category: dev/vcs
+  description: "DevToys is a Swiss Army knife for developers."
+  homepage: https://devtoys.app/
+  license: "MIT"
+  winget: DevToys-app.DevToys
+  publisher: "DevToys"
+
+- id: node-js
+  name: "Node.js"
+  category: dev/languages
+  description: "Run JavaScript Everywhere"
+  homepage: https://nodejs.org/
+  license: "MIT"
+  winget: OpenJS.NodeJS
+  publisher: "Node.js Foundation"
+
+- id: volta
+  name: "Volta"
+  category: dev/languages
+  description: "The Hassle-Free JavaScript Tool Manager"
+  homepage: https://volta.sh
+  license: "BSD-2-Clause-Views"
+  winget: Volta.Volta
+  publisher: "The Volta Maintainers"
+
+- id: fast-node-manager
+  name: "Fast Node Manager"
+  category: dev/languages
+  description: "Fast and simple Node.js version manager, built in Rust"
+  homepage: https://github.com/Schniz/fnm
+  license: "GPL-3.0"
+  winget: Schniz.fnm
+  publisher: "Schniz"
+
+- id: nvm-for-windows
+  name: "NVM for Windows"
+  category: dev/languages
+  description: "A node.js version management utility for Windows."
+  homepage: https://nvm-windows.com/
+  license: "MIT"
+  winget: CoreyButler.NVMforWindows
+  publisher: "Author Software Inc."
+
+- id: yarn
+  name: "Yarn"
+  category: dev/languages
+  description: "Yarn is a package manager that doubles down as project manager."
+  homepage: https://yarnpkg.com/
+  license: "Distributed under BSD License · Code of Conduct"
+  winget: Yarn.Yarn
+  publisher: "Yarn Contributors"
+
+- id: python-3-12
+  name: "Python 3.12"
+  category: dev/languages
+  description: "Python is a programming language that lets you work more quickly and integrate your systems more effectively."
+  homepage: https://www.python.org/
+  license: "PSF-2.0"
+  winget: Python.Python.3.12
+  publisher: "Python Software Foundation"
+
+- id: python-3-11
+  name: "Python 3.11"
+  category: dev/languages
+  description: "Python is a programming language that lets you work more quickly and integrate your systems more effectively."
+  homepage: https://www.python.org/
+  license: "PSF-2.0"
+  winget: Python.Python.3.11
+  publisher: "Python Software Foundation"
+
+- id: python-3-14
+  name: "Python 3.14"
+  category: dev/languages
+  description: "A programming language that lets you work more quickly and integrate your systems more effectively."
+  homepage: https://www.python.org/
+  license: "PSF-2.0"
+  winget: Python.Python.3.14
+  publisher: "Python Software Foundation"
+
+- id: anaconda3
+  name: "Anaconda3"
+  category: dev/languages
+  description: "Python/R distribution for data science and machine learning."
+  homepage: https://www.anaconda.com/download
+  license: "Proprietary"
+  winget: Anaconda.Anaconda3
+  publisher: "Anaconda, Inc."
+
+- id: pixi
+  name: "pixi"
+  category: dev/languages
+  description: "A cross-platform, multi-language package manager and workflow tool"
+  homepage: https://github.com/prefix-dev/pixi
+  license: "BSD-3-Clause"
+  winget: prefix-dev.pixi
+  publisher: "prefix-dev"
+
+- id: microsoft-build-of-openjdk-with-hotspot-21
+  name: "Microsoft Build of OpenJDK with Hotspot 21"
+  category: dev/languages
+  description: "The Microsoft Build of OpenJDK is a new no-cost long-term supported distribution and Microsoft's new way to collaborate and contribute to the Java ecosystem."
+  homepage: https://www.microsoft.com/openjdk
+  license: "GPL2 with Classpath Exception"
+  winget: Microsoft.OpenJDK.21
+  publisher: "Microsoft"
+
+- id: microsoft-build-of-openjdk-with-hotspot-17
+  name: "Microsoft Build of OpenJDK with Hotspot 17"
+  category: dev/languages
+  description: "The Microsoft Build of OpenJDK is a new no-cost long-term supported distribution and Microsoft's new way to collaborate and contribute to the Java ecosystem."
+  homepage: https://www.microsoft.com/openjdk
+  license: "GPL2 with Classpath Exception"
+  winget: Microsoft.OpenJDK.17
+  publisher: "Microsoft"
+
+- id: azul-zulu-jdk-21
+  name: "Azul Zulu JDK 21"
+  category: dev/languages
+  description: "Azul Zulu 21 is a build of OpenJDK 21"
+  homepage: https://www.azul.com/downloads/?version=java-21-lts&os=windows&package=jdk#zulu
+  license: "GPL-2.0 with Classpath Exception"
+  winget: Azul.Zulu.21.JDK
+  publisher: "Azul Systems, Inc."
+
+- id: azul-zulu-jdk-17
+  name: "Azul Zulu JDK 17"
+  category: dev/languages
+  description: "Azul Zulu 17 is a build of OpenJDK 17"
+  homepage: https://www.azul.com/downloads/?version=java-17-lts&os=windows&package=jdk#zulu
+  license: "GPL-2.0 with Classpath Exception"
+  winget: Azul.Zulu.17.JDK
+  publisher: "Azul Systems, Inc."
+
+- id: amazon-corretto-21
+  name: "Amazon Corretto 21"
+  category: dev/languages
+  description: "Amazon Corretto 21 is a Long-Term Supported (LTS) distribution of OpenJDK 21"
+  homepage: https://docs.aws.amazon.com/corretto/latest/corretto-21-ug/what-is-corretto-21.html
+  license: "GPL-2.0 with Classpath Exception"
+  winget: Amazon.Corretto.21.JDK
+  publisher: "Amazon"
+
+- id: liberica-jdk-21
+  name: "Liberica JDK 21"
+  category: dev/languages
+  description: "Liberica JDK is available on a variety of platforms."
+  homepage: https://bell-sw.com/pages/downloads/?version=java-21-lts&os=Windows&package=jdk
+  license: "GPL 2 with Classpath Exception"
+  winget: BellSoft.LibericaJDK.21
+  publisher: "BellSoft"
+
+- id: java-tm-se-development-kit-21
+  name: "Java(TM) SE Development Kit 21"
+  category: dev/languages
+  description: "The JDK is a development environment for building applications and components using the Java programming language."
+  homepage: https://www.oracle.com/java/
+  license: "Oracle No-Fee Terms and Conditions"
+  winget: Oracle.JDK.21
+  publisher: "Oracle Corporation"
+
+- id: java-tm-se-development-kit-25
+  name: "Java(TM) SE Development Kit 25"
+  category: dev/languages
+  description: "The JDK is a development environment for building applications and components using the Java programming language."
+  homepage: https://www.oracle.com/java/
+  license: "Oracle No-Fee Terms and Conditions"
+  winget: Oracle.JDK.25
+  publisher: "Oracle Corporation"
+
+- id: rust-msvc
+  name: "Rust (MSVC)"
+  category: dev/languages
+  description: "A language empowering everyone to build reliable and efficient software."
+  homepage: https://www.rust-lang.org/
+  license: "Apache-2.0 AND MIT"
+  winget: Rustlang.Rust.MSVC
+  publisher: "The Rust Project Developers"
+
+- id: rust-gnu
+  name: "Rust (GNU)"
+  category: dev/languages
+  description: "A language empowering everyone to build reliable and efficient software."
+  homepage: https://www.rust-lang.org/
+  license: "Apache-2.0 AND MIT"
+  winget: Rustlang.Rust.GNU
+  publisher: "The Rust Project Developers"
+
+- id: julia
+  name: "Julia"
+  category: dev/languages
+  description: "Julia is a high-level, high-performance, dynamic programming language."
+  homepage: https://julialang.org/downloads/
+  license: "MIT"
+  winget: Julialang.Julia
+  publisher: "Julia Language"
+
+- id: r-for-windows
+  name: "R for Windows"
+  category: dev/languages
+  description: "R is a free software environment for statistical computing and graphics."
+  homepage: https://cloud.r-project.org
+  license: "GPL-2.0-or-later"
+  winget: RProject.R
+  publisher: "R Core Team"
+
+- id: rstudio
+  name: "RStudio"
+  category: dev/languages
+  description: "RStudio is an integrated development environment (IDE) for R."
+  homepage: https://posit.co/products/open-source/rstudio/
+  license: "AGPL-3.0"
+  winget: Posit.RStudio
+  publisher: "Posit Software"
+
+- id: ruby-3-4
+  name: "Ruby 3.4"
+  category: dev/languages
+  description: "The Ruby language execution environment"
+  homepage: https://rubyinstaller.org/downloads/
+  license: "BSD-3-Clause"
+  winget: RubyInstallerTeam.Ruby.3.4
+  publisher: "RubyInstaller Team"
+
+- id: ruby-3-4-with-msys2
+  name: "Ruby 3.4 with MSYS2"
+  category: dev/languages
+  description: "A Ruby language execution environment with a MSYS2 installation."
+  homepage: https://rubyinstaller.org/downloads/
+  license: "BSD-3-Clause"
+  winget: RubyInstallerTeam.RubyWithDevKit.3.4
+  publisher: "RubyInstaller Team"
+
+- id: php-8-4
+  name: "PHP 8.4"
+  category: dev/languages
+  description: "PHP 8.4"
+  homepage: https://php.net/
+  license: "PHP License v3.01"
+  winget: PHP.PHP.8.4
+  publisher: "PHP Group"
+
+- id: xampp-8-2
+  name: "XAMPP 8.2"
+  category: dev/languages
+  description: "A completely free, easy to install Apache distribution containing MariaDB, PHP, and Perl."
+  homepage: https://www.apachefriends.org/download.html
+  license: "GPL-2.0"
+  winget: ApacheFriends.Xampp.8.2
+  publisher: "Apache Friends"
+
+- id: elixir
+  name: "Elixir"
+  category: dev/languages
+  description: "Elixir is a dynamic, functional language for building scalable and maintainable applications."
+  homepage: https://elixir-lang.org/
+  license: "Apache-2.0"
+  winget: Elixir.Elixir
+  publisher: "The Elixir Team"
+
+- id: erlang-otp
+  name: "Erlang OTP"
+  category: dev/languages
+  description: "Erlang is a programming language and runtime system for building massively scalable soft real-time systems with requirements on high availability."
+  homepage: https://www.erlang.org/downloads
+  license: "Apache-2.0"
+  winget: Erlang.ErlangOTP
+  publisher: "Ericsson AB"
+
+- id: opam
+  name: "opam"
+  category: dev/languages
+  description: "A package manager for OCaml."
+  homepage: https://opam.ocaml.org/
+  license: "LGPL-2.1-only WITH OCaml-LGPL-linking-exception"
+  winget: OCaml.opam
+  publisher: "OCaml, Inc."
+
+- id: strawberry-perl
+  name: "Strawberry Perl"
+  category: dev/languages
+  description: "Strawberry Perl is a perl environment for MS Windows containing all you need to run and develop perl applications."
+  homepage: https://strawberryperl.com/
+  license: "Perl.org"
+  winget: StrawberryPerl.StrawberryPerl
+  publisher: "strawberryperl.com project"
+
+- id: microsoft-net-runtime-8-0
+  name: "Microsoft .NET Runtime 8.0"
+  category: dev/languages
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com
+  license: "MIT"
+  winget: Microsoft.DotNet.Runtime.8
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-net-runtime-9-0
+  name: "Microsoft .NET Runtime 9.0"
+  category: dev/languages
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com
+  license: "MIT"
+  winget: Microsoft.DotNet.Runtime.9
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-asp-net-core-runtime-8-0
+  name: "Microsoft ASP.NET Core Runtime 8.0"
+  category: dev/languages
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com
+  license: "MIT"
+  winget: Microsoft.DotNet.AspNetCore.8
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-asp-net-core-runtime-9-0
+  name: "Microsoft ASP.NET Core Runtime 9.0"
+  category: dev/languages
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com
+  license: "MIT"
+  winget: Microsoft.DotNet.AspNetCore.9
+  publisher: "Microsoft Corporation"
+
+- id: mono-for-windows
+  name: "Mono for Windows"
+  category: dev/languages
+  description: "Cross platform, open source .NET framework"
+  homepage: https://www.mono-project.com/
+  license: "MIT"
+  winget: Mono.Mono
+  publisher: "Xamarin, Inc."
+
+- id: racket
+  name: "Racket"
+  category: dev/languages
+  description: "Racket is a general-purpose, multi-paradigm programming language."
+  homepage: https://racket-lang.org/
+  license: "MIT OR Apache-2.0"
+  winget: Racket.Racket
+  publisher: "Racket"
+
+- id: octave
+  name: "Octave"
+  category: dev/languages
+  description: "Scientific Programming Language"
+  homepage: https://octave.org
+  license: "GPL-3.0"
+  winget: GNU.Octave
+  publisher: "GNU Octave"
+
+- id: swi-prolog
+  name: "SWI-Prolog"
+  category: dev/languages
+  description: "A versatile implementation of the Prolog language"
+  homepage: https://www.swi-prolog.org/
+  license: "BSD-2-Clause"
+  winget: SWI-Prolog.SWI-Prolog
+  publisher: "SWI-Prolog"
+
+- id: wasmer
+  name: "Wasmer"
+  category: dev/languages
+  description: "The leading WebAssembly Runtime supporting WASI and Emscripten"
+  homepage: https://wasmer.io
+  license: "MIT"
+  winget: Wasmer.Wasmer
+  publisher: "Wasmer, Inc."
+
+- id: bazelisk
+  name: "Bazelisk"
+  category: dev/languages
+  description: "A user-friendly launcher for Bazel."
+  homepage: https://bazel.build/
+  license: "Apache-2.0"
+  winget: Bazel.Bazelisk
+  publisher: "Bazel"
+
+- id: gleam
+  name: "Gleam"
+  category: dev/languages
+  description: "Gleam is a friendly language for building type-safe systems that scale!"
+  homepage: https://gleam.run/
+  license: "Apache-2.0"
+  winget: Gleam.Gleam
+  publisher: "Gleam"
+
+- id: visual-studio-buildtools-2019
+  name: "Visual Studio BuildTools 2019"
+  category: dev/build
+  description: "These Build Tools allow you to build Visual Studio projects from a command-line interface."
+  homepage: https://visualstudio.microsoft.com/
+  license: "Proprietary"
+  winget: Microsoft.VisualStudio.2019.BuildTools
+  publisher: "Microsoft Corporation"
+
+- id: ffmpeg
+  name: "FFmpeg"
+  category: dev/build
+  description: "A complete, cross-platform solution to record, convert and stream audio and video."
+  homepage: https://www.gyan.dev/ffmpeg/builds/
+  license: "GPL-3.0"
+  winget: Gyan.FFmpeg
+  publisher: "Gyan"
+
+- id: winlibs-gcc
+  name: "WinLibs (POSIX threads, UCRT runtime)"
+  category: dev/build
+  description: "A standalone build of GCC and MinGW-w64 for Windows, with POSIX threading library and UCRT runtime library."
+  homepage: https://winlibs.com/
+  license: "Multiple licenses"
+  winget: BrechtSanders.WinLibs.POSIX.UCRT
+  publisher: "Brecht Sanders"
+
+- id: ccache
+  name: "Ccache"
+  category: dev/build
+  description: "Ccache is a compiler cache."
+  homepage: https://github.com/ccache/ccache
+  license: "GPL-3.0"
+  winget: Ccache.Ccache
+  publisher: "Joel Rosdahl"
+
+- id: nasm
+  name: "NASM"
+  category: dev/build
+  description: "An asssembler for the x86 CPU architecture portable to nearly every modern platform, and with code generation for many platforms old and new."
+  homepage: https://www.nasm.us/
+  license: "2-clause BSD"
+  winget: NASM.NASM
+  publisher: "NASM"
+
+- id: graphviz
+  name: "Graphviz"
+  category: dev/build
+  description: "Open source graph visualization software"
+  homepage: https://graphviz.org/download
+  license: "CPL-1.0"
+  winget: Graphviz.Graphviz
+  publisher: "Graphviz"
+
+- id: clangd
+  name: "clangd"
+  category: dev/build
+  description: "Language server for C/C++, by the LLVM project"
+  homepage: https://github.com/clangd/clangd
+  license: "Apache-2.0"
+  winget: LLVM.clangd
+  publisher: "LLVM"
+
+- id: wix-toolset
+  name: "WiX Toolset"
+  category: dev/build
+  description: "WiX Toolset build tools include everything you need to create installations on your development and build machines."
+  homepage: https://github.com/wixtoolset/wix3
+  license: "MS-RL"
+  winget: WiXToolset.WiXToolset
+  publisher: ".NET Foundation"
+
+- id: nullsoft-install-system
+  name: "Nullsoft Install System"
+  category: dev/build
+  description: "A professional open source system to create Windows installers"
+  homepage: https://nsis.sourceforge.io/Download
+  license: "zlib/libpng, bzip2, CPLv1"
+  winget: NSIS.NSIS
+  publisher: "Nullsoft and Contributors"
+
+- id: inno-setup-6
+  name: "Inno Setup 6"
+  category: dev/build
+  description: "Inno Setup is an open-source installation builder for Windows applications."
+  homepage: https://jrsoftware.org/isinfo.php
+  license: "Inno Setup License"
+  winget: JRSoftware.InnoSetup
+  publisher: "jrsoftware.org"
+
+- id: directx-end-user-runtime-installer
+  name: "DirectX End-User Runtime Installer"
+  category: runtimes
+  description: "Installs a number of runtime libraries from the legacy DirectX SDK for some games that use D3DX9, D3DX10, D3DX11, XAudio 2.7, XInput 1.3, XACT, and/or…"
+  homepage: https://www.microsoft.com/en-gb/download/details.aspx?id=35
+  license: "Proprietary (Freeware)"
+  winget: Microsoft.DirectX
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-xna-framework-redistributable-refresh
+  name: "Microsoft XNA Framework Redistributable Refresh"
+  category: runtimes
+  description: "The XNA Framework Redistributable download provides game developers with the XNA Framework run-time libraries they can include with their product for…"
+  homepage: https://www.microsoft.com/en-gb/download/details.aspx?id=20914
+  license: "Proprietary"
+  winget: Microsoft.XNARedist
+  publisher: "Microsoft Corporation"
+
+- id: nuget
+  name: "NuGet"
+  category: dev/build
+  description: "The package manager for .NET"
+  homepage: https://www.nuget.org/
+  license: "Apache-2.0"
+  winget: Microsoft.NuGet
+  publisher: "Microsoft Corporation"
+
+- id: x64dbg
+  name: "x64dbg"
+  category: dev/analysis
+  description: "An open-source user mode debugger for Windows."
+  homepage: https://github.com/x64dbg/x64dbg
+  license: "GPL-3.0 (Modified)"
+  winget: x64dbg.x64dbg
+  publisher: "x64dbg"
+
+- id: rizin
+  name: "Rizin"
+  category: dev/analysis
+  description: "UNIX-like reverse engineering framework and command-line toolset."
+  homepage: https://github.com/rizinorg/rizin
+  license: "LGPL-3.0"
+  winget: Rizin.Rizin
+  publisher: "RizinOrg"
+
+- id: dnspy
+  name: "dnSpy"
+  category: dev/analysis
+  description: "dnSpyEx is a unofficial continuation of the dnSpy project which is a debugger and .NET assembly editor."
+  homepage: https://github.com/dnSpyEx/dnSpy
+  license: "GPL-3.0"
+  winget: dnSpyEx.dnSpy
+  publisher: "dnSpyEx"
+
+- id: ilspy
+  name: "ILSpy"
+  category: dev/analysis
+  description: "Cross-Platform .NET assembly browser and decompiler."
+  homepage: https://github.com/icsharpcode/ILSpy
+  license: "MIT"
+  winget: icsharpcode.ILSpy
+  publisher: "ICSharpCode Team"
+
+- id: jetbrains-dotpeek
+  name: "JetBrains dotPeek"
+  category: dev/analysis
+  description: ".NET performance profiler"
+  homepage: https://www.jetbrains.com/profiler/
+  license: "Proprietary"
+  winget: JetBrains.dotPeek
+  publisher: "JetBrains s.r.o."
+
+- id: imhex
+  name: "imhex"
+  category: dev/analysis
+  description: "A Hex Editor for Reverse Engineers, Programmers and people who value their retinas when working at 3 AM."
+  homepage: https://github.com/WerWolv/ImHex
+  license: "GPL-2.0"
+  winget: WerWolv.ImHex
+  publisher: "WerWolv"
+
+- id: nmap
+  name: "Nmap"
+  category: dev/analysis
+  description: "Nmap (\"Network Mapper\") is a free and open source utility for network discovery and security auditing."
+  homepage: https://nmap.org
+  license: "Modified GNU GPLv2"
+  winget: Insecure.Nmap
+  publisher: "Nmap Project"
+
+- id: burp-suite-community-edition
+  name: "Burp Suite Community Edition"
+  category: dev/analysis
+  description: "The best manual tools to start web security testing."
+  homepage: https://portswigger.net/burp/communitydownload
+  license: "Freeware"
+  winget: PortSwigger.BurpSuite.Community
+  publisher: "PortSwigger Web Security"
+
+- id: progress-telerik-fiddler-classic
+  name: "Progress Telerik Fiddler Classic"
+  category: dev/analysis
+  description: "The Original and Free Web Debugging Proxy Tool Exclusively for Windows"
+  homepage: https://www.telerik.com/fiddler/fiddler-classic
+  license: "Proprietary"
+  winget: Telerik.Fiddler.Classic
+  publisher: "Progress Software Corporation"
+
+- id: sysinternals-process-explorer
+  name: "Sysinternals Process Explorer"
+  category: system
+  description: "Process Explorer shows you information about which handles and DLLs processes have opened or loaded."
+  homepage: https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer
+  license: "Proprietary"
+  winget: Microsoft.Sysinternals.ProcessExplorer
+  publisher: "Sysinternals"
+
+- id: sysinternals-process-monitor
+  name: "Sysinternals Process Monitor"
+  category: system
+  description: "Process Monitor is an advanced monitoring tool for Windows that shows real-time file system, Registry and process/thread activity."
+  homepage: https://learn.microsoft.com/en-us/sysinternals/downloads/procmon
+  license: "Proprietary"
+  winget: Microsoft.Sysinternals.ProcessMonitor
+  publisher: "Sysinternals"
+
+- id: sysinternals-autoruns
+  name: "Sysinternals Autoruns"
+  category: system
+  description: "This utility shows you what programs are configured to run during system bootup or login."
+  homepage: https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns
+  license: "Proprietary"
+  winget: Microsoft.Sysinternals.Autoruns
+  publisher: "Sysinternals"
+
+- id: sysinternals-tcpview
+  name: "Sysinternals TCPView"
+  category: system
+  description: "TCPView is a Windows program that will show you detailed listings of all TCP and UDP endpoints on your system, including the local and remote addresses and…"
+  homepage: https://learn.microsoft.com/en-us/sysinternals/downloads/tcpview
+  license: "Proprietary"
+  winget: Microsoft.Sysinternals.TCPView
+  publisher: "Sysinternals"
+
+- id: sysinternals-pstools-suite
+  name: "Sysinternals PsTools Suite"
+  category: system
+  description: "A set of command-line tools for managing processes."
+  homepage: https://learn.microsoft.com/en-us/sysinternals/downloads/pstools
+  license: "Proprietary"
+  winget: Microsoft.Sysinternals.PsTools
+  publisher: "Sysinternals"
+
+- id: sysinternals-rammap
+  name: "Sysinternals RAMMap"
+  category: system
+  description: "An advanced physical memory usage analysis utility for Windows Vista and higher."
+  homepage: https://learn.microsoft.com/en-us/sysinternals/downloads/rammap
+  license: "Proprietary"
+  winget: Microsoft.Sysinternals.RAMMap
+  publisher: "Sysinternals"
+
+- id: dependencies
+  name: "Dependencies"
+  category: dev/analysis
+  description: "Dependencies is a rewrite of the legacy software Dependency Walker which was shipped along Windows SDKs, but whose development stopped around 2006"
+  homepage: https://github.com/himeshsameera/Dependencies
+  license: "MIT"
+  winget: lucasg.Dependencies
+  publisher: "lucasg"
+
+- id: podman
+  name: "Podman"
+  category: dev/containers
+  description: "A daemonless container engine for developing, managing, and running OCI Containers"
+  homepage: https://podman.io/
+  license: "Apache-2.0"
+  winget: RedHat.Podman
+  publisher: "Red Hat"
+
+- id: podman-desktop
+  name: "Podman Desktop"
+  category: dev/containers
+  description: "Manage different container engines from a single UI and tray icon"
+  homepage: https://github.com/containers/podman-desktop
+  license: "Apache License 2.0"
+  winget: RedHat.Podman-Desktop
+  publisher: "RedHat"
+
+- id: docker-compose
+  name: "Docker Compose"
+  category: dev/containers
+  description: "docker-compose plugin for docker cli"
+  homepage: https://github.com/docker/compose
+  license: "Apache-2.0"
+  winget: Docker.DockerCompose
+  publisher: "Docker Inc."
+
+- id: docker-buildx
+  name: "Docker Buildx"
+  category: dev/containers
+  description: "Docker CLI plugin for extended build capabilities with BuildKit"
+  homepage: https://github.com/docker/buildx
+  license: "Apache-2.0"
+  winget: Docker.Buildx
+  publisher: "Docker Inc."
+
+- id: rancher-desktop
+  name: "Rancher Desktop"
+  category: dev/containers
+  description: "Kubernetes and container management to the desktop."
+  homepage: https://rancherdesktop.io/
+  license: "Apache-2.0"
+  winget: SUSE.RancherDesktop
+  publisher: "SUSE"
+
+- id: kubernetes
+  name: "Kubernetes"
+  category: dev/containers
+  description: "minikube quickly sets up a local Kubernetes cluster on macOS, Linux, and Windows."
+  homepage: https://minikube.sigs.k8s.io/docs
+  license: "Apache-2.0"
+  winget: Kubernetes.minikube
+  publisher: "Kubernetes"
+
+- id: kind
+  name: "kind"
+  category: dev/containers
+  description: "A tool for running local Kubernetes clusters using Docker container \"nodes\""
+  homepage: https://kind.sigs.k8s.io/
+  license: "Apache-2.0"
+  winget: Kubernetes.kind
+  publisher: "Kubernetes SIGs"
+
+- id: lens
+  name: "Lens"
+  category: dev/containers
+  description: "The Kubernetes IDE"
+  homepage: https://k8slens.dev/download
+  license: "Proprietary"
+  winget: Mirantis.Lens
+  publisher: "Mirantis, Inc."
+
+- id: k9s
+  name: "k9s"
+  category: dev/containers
+  description: "Kubernetes CLI To Manage Your Clusters In Style!"
+  homepage: https://github.com/derailed/k9s
+  license: "Apache-2.0"
+  winget: Derailed.k9s
+  publisher: "Derailed"
+
+- id: cilium-cli
+  name: "Cilium CLI"
+  category: dev/containers
+  description: "Cilium CNI CLI"
+  homepage: https://github.com/cilium
+  license: "Apache-2.0"
+  winget: Cilium.CiliumCLI
+  publisher: "Cilium"
+
+- id: grype
+  name: "Grype"
+  category: dev/containers
+  description: "A vulnerability scanner for container images and filesystems"
+  homepage: https://github.com/anchore/grype
+  license: "Apache-2.0"
+  winget: Anchore.Grype
+  publisher: "Anchore Inc"
+
+- id: syft
+  name: "Syft"
+  category: dev/containers
+  description: "CLI tool and library for generating a Software Bill of Materials from container images and filesystems"
+  homepage: https://github.com/anchore/syft
+  license: "Apache-2.0"
+  winget: Anchore.Syft
+  publisher: "Anchore Inc"
+
+- id: cosign
+  name: "cosign"
+  category: dev/containers
+  description: "Code signing and transparency for containers and binaries"
+  homepage: https://github.com/sigstore/cosign
+  license: "Apache-2.0"
+  winget: Sigstore.Cosign
+  publisher: "sigstore"
+
+- id: ubuntu-22-04-lts
+  name: "Ubuntu 22.04 LTS"
+  category: dev/containers
+  description: "Install a complete Ubuntu terminal environment in minutes with Windows Subsystem for Linux (WSL)."
+  homepage: https://ubuntu.com/desktop/wsl
+  license: "Freeware"
+  winget: Canonical.Ubuntu.2204
+  publisher: "Canonical Group Limited"
+
+- id: ubuntu
+  name: "Ubuntu"
+  category: dev/containers
+  description: "Install a complete Ubuntu terminal environment in minutes with Windows Subsystem for Linux (WSL)."
+  homepage: https://ubuntu.com/desktop/wsl
+  license: "Freeware"
+  winget: Canonical.Ubuntu
+  publisher: "Canonical Group Limited"
+
+- id: debian
+  name: "Debian"
+  category: dev/containers
+  description: "Debian for the Windows Subsystem for Linux (WSL)."
+  homepage: https://wiki.debian.org/InstallingDebianOn/Microsoft/Windows/SubsystemForLinux
+  license: "Freeware"
+  winget: Debian.Debian
+  publisher: "The Debian Project"
+
+- id: virtualbox
+  name: "Oracle VirtualBox"
+  category: dev/containers
+  description: "VirtualBox is a general-purpose full virtualization software for x86_64 hardware (with version 7.1 additionally for macOS/Arm), targeted at laptop, desktop,…"
+  homepage: https://www.virtualbox.org/
+  license: "GPL-3.0-only"
+  winget: Oracle.VirtualBox
+  publisher: "Oracle and/or its affiliates"
+
+- id: genymotion
+  name: "Genymotion"
+  category: dev/containers
+  description: "Android emulator with over 3.000 Android configurations."
+  homepage: https://www.genymotion.com/download
+  license: "Proprietary"
+  winget: Genymobile.Genymotion
+  publisher: "Genymobile"
+
+- id: multipass
+  name: "Multipass"
+  category: dev/containers
+  description: "A lightweight VM Manager that supports cloud-deployment simulation"
+  homepage: https://github.com/canonical/multipass
+  license: "GPL-3.0"
+  winget: Canonical.Multipass
+  publisher: "Canonical Ltd"
+
+- id: coder
+  name: "Coder"
+  category: dev/containers
+  description: "Remote development environments on your infrastructure provisioned with Terraform"
+  homepage: https://github.com/coder/coder
+  license: "AGPL-3.0"
+  winget: Coder.Coder
+  publisher: "Coder Technologies, Inc."
+
+- id: vagrant
+  name: "Vagrant"
+  category: dev/cloud
+  description: "Build and manage virtual machine environments in a single workflow"
+  homepage: https://developer.hashicorp.com/vagrant
+  license: "BUSL-1.1"
+  winget: Hashicorp.Vagrant
+  publisher: "HashiCorp"
+
+- id: hashicorp-vault
+  name: "Hashicorp Vault"
+  category: dev/cloud
+  description: "Vault is a tool for securely accessing secrets."
+  homepage: https://developer.hashicorp.com/vault
+  license: "BUSL-1.1"
+  winget: Hashicorp.Vault
+  publisher: "HashiCorp, Inc."
+
+- id: hashicorp-consul
+  name: "HashiCorp Consul"
+  category: dev/cloud
+  description: "A distributed, highly available, and data center aware solution to connect and configure applications across dynamic, distributed infrastructure."
+  homepage: https://github.com/hashicorp/consul
+  license: "BUSL-1.1"
+  winget: Hashicorp.Consul
+  publisher: "HashiCorp"
+
+- id: hashicorp-nomad
+  name: "HashiCorp Nomad"
+  category: dev/cloud
+  description: "An easy-to-use, flexible, and performant workload orchestrator that can deploy a mix of microservice, batch, containerized, and non-containerized applications."
+  homepage: https://github.com/hashicorp/nomad
+  license: "BUSL-1.1"
+  winget: Hashicorp.Nomad
+  publisher: "HashiCorp"
+
+- id: opentofu
+  name: "OpenTofu"
+  category: dev/cloud
+  description: "OpenTofu lets you declaratively manage your cloud infrastructure."
+  homepage: https://github.com/opentofu/opentofu
+  license: "MPL-2.0"
+  winget: OpenTofu.Tofu
+  publisher: "The Linux Foundation"
+
+- id: pulumi
+  name: "Pulumi"
+  category: dev/cloud
+  description: "Pulumi CLI for managing modern infrastructure as code"
+  homepage: https://www.pulumi.com
+  license: "Apache License 2.0"
+  winget: Pulumi.Pulumi
+  publisher: "Pulumi Corp"
+
+- id: cloudflared
+  name: "cloudflared"
+  category: dev/cloud
+  description: "Cloudflare Tunnel provides you with a secure way to connect your resources to Cloudflare without a publicly routable IP address."
+  homepage: https://try.cloudflare.com/
+  license: "Apache-2.0"
+  winget: Cloudflare.cloudflared
+  publisher: "cloudflare"
+
+- id: cloudflare-one-client
+  name: "Cloudflare One Client"
+  category: dev/cloud
+  description: "1.1.1.1 with WARP replaces the connection between your device and the Internet with a modern, optimized, protocol."
+  homepage: https://one.one.one.one/
+  license: "Proprietary"
+  winget: Cloudflare.Warp
+  publisher: "Cloudflare, Inc."
+
+- id: heroku
+  name: "heroku"
+  category: dev/cloud
+  description: "The Heroku Command Line Interface (CLI) makes it easy to create and manage your Heroku apps directly from the terminal."
+  homepage: https://devcenter.heroku.com/articles/heroku-cli
+  license: "ISC License"
+  winget: Heroku.HerokuCLI
+  publisher: "Heroku"
+
+- id: flyctl
+  name: "flyctl"
+  category: dev/cloud
+  description: "Command line tools for fly.io services"
+  homepage: https://github.com/superfly/flyctl
+  license: "Apache-2.0"
+  winget: Fly-io.flyctl
+  publisher: "Fly.io"
+
+- id: doctl
+  name: "doctl"
+  category: dev/cloud
+  description: "The official command line interface for the DigitalOcean API."
+  homepage: https://github.com/digitalocean/doctl
+  license: "Apache-2.0"
+  winget: DigitalOcean.Doctl
+  publisher: "DigitalOcean"
+
+- id: aws-sam-cli
+  name: "AWS SAM Command Line Interface"
+  category: dev/cloud
+  description: "The AWS Serverless Application Model (SAM) is an open-source framework for building serverless applications."
+  homepage: https://aws.amazon.com/serverless/sam
+  license: "Apache-2.0"
+  winget: Amazon.SAM-CLI
+  publisher: "AWS Serverless Applications"
+
+- id: session-manager-plugin
+  name: "Session Manager Plugin"
+  category: dev/cloud
+  description: "This plugin helps you to use the AWS Command Line Interface (AWS CLI) to start and end sessions to your managed instances."
+  homepage: https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html
+  license: "Apache-2.0"
+  winget: Amazon.SessionManagerPlugin
+  publisher: "Amazon Web Services"
+
+- id: azure-functions-core-tools
+  name: "Azure Functions Core Tools"
+  category: dev/cloud
+  description: "Command line tools for Azure Functions"
+  homepage: https://github.com/Azure/azure-functions-core-tools
+  license: "MIT"
+  winget: Microsoft.Azure.FunctionsCoreTools
+  publisher: "Microsoft"
+
+- id: microsoft-azure-storage-explorer
+  name: "Microsoft Azure Storage Explorer"
+  category: dev/cloud
+  description: "Free tool to easily manage your Azure cloud storage resources anywhere, from Windows, macOS, or Linux."
+  homepage: https://azure.microsoft.com/en-us/features/storage-explorer
+  license: "CC-BY-4.0"
+  winget: Microsoft.Azure.StorageExplorer
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-azure-export-for-terraform
+  name: "Microsoft Azure Export for Terraform"
+  category: dev/cloud
+  description: "A tool to bring your existing Azure resources under the management of Terraform."
+  homepage: https://github.com/Azure/aztfexport
+  license: "Mozilla Public License 2.0"
+  winget: Microsoft.Azure.AztfExport
+  publisher: "Microsoft"
+
+- id: azure-cosmos-db-emulator
+  name: "Azure Cosmos DB Emulator"
+  category: dev/cloud
+  description: "The Azure Cosmos emulator provides a local environment that emulates the Azure Cosmos DB service for development purposes."
+  homepage: https://docs.microsoft.com/azure/cosmos-db/local-emulator
+  license: "Proprietary"
+  winget: Microsoft.Azure.CosmosEmulator
+  publisher: "Microsoft® Corporation"
+
+- id: bicep-cli
+  name: "Bicep CLI"
+  category: dev/cloud
+  description: "A declarative language for describing and deploying Azure resources"
+  homepage: https://github.com/Azure/bicep
+  license: "MIT"
+  winget: Microsoft.Bicep
+  publisher: "Microsoft Corporation"
+
+- id: firebase-cli-tools
+  name: "Firebase CLI Tools"
+  category: dev/cloud
+  description: "The Firebase CLI Tools can be used to test, manage, and deploy your Firebase project from the command line."
+  homepage: https://github.com/firebase/firebase-tools
+  license: "MIT"
+  winget: Google.FirebaseCLI
+  publisher: "Google"
+
+- id: ngrok
+  name: "Ngrok"
+  category: dev/cloud
+  description: "Tunnel local ports to public URLs and inspect traffic"
+  homepage: https://ngrok.com
+  license: "Proprietary"
+  winget: Ngrok.Ngrok
+  publisher: "ngrok, Inc."
+
+- id: tailscale
+  name: "Tailscale"
+  category: dev/cloud
+  description: "Tailscale is a WireGuard based mesh VPN, used to connect your computers and other devices together securely without proxies."
+  homepage: https://tailscale.com/download
+  license: "BSD-3-Clause"
+  winget: Tailscale.Tailscale
+  publisher: "Tailscale Inc."
+
+- id: zerotier-one
+  name: "ZeroTier One"
+  category: dev/cloud
+  description: "A Smart Ethernet Switch for Earth"
+  homepage: https://www.zerotier.com/download
+  license: "BUSL-1.1"
+  winget: ZeroTier.ZeroTierOne
+  publisher: "ZeroTier, Inc."
+
+- id: wireguard
+  name: "WireGuard"
+  category: dev/cloud
+  description: "Fast, Modern, Secure VPN Tunnel"
+  homepage: https://www.wireguard.com/install/
+  license: "MIT"
+  winget: WireGuard.WireGuard
+  publisher: "WireGuard LLC"
+
+- id: openvpn-connect
+  name: "OpenVPN Connect"
+  category: dev/cloud
+  description: "Securely access your organization's network resources"
+  homepage: https://openvpn.net/client/
+  license: "Proprietary"
+  winget: OpenVPNTechnologies.OpenVPNConnect
+  publisher: "OpenVPN Inc."
+
+- id: bitwarden-cli
+  name: "Bitwarden CLI"
+  category: dev/cloud
+  description: "A secure and free password manager for all of your devices."
+  homepage: https://bitwarden.com/download
+  license: "GPL-3.0 or Bitwarden-1.0"
+  winget: Bitwarden.CLI
+  publisher: "Bitwarden Inc."
+
+- id: gpg4win
+  name: "Gpg4win"
+  category: dev/cloud
+  description: "A secure solution for file and email encryption."
+  homepage: https://www.gpg4win.org/
+  license: "GPL-2.0"
+  winget: GnuPG.Gpg4win
+  publisher: "The Gpg4win Project"
+
+- id: gnu-privacy-guard
+  name: "GNU Privacy Guard"
+  category: dev/cloud
+  description: "GNU Privacy Guard (GnuPG or GPG) is a free-software replacement for Symantec's PGP cryptographic software suite."
+  homepage: https://gnupg.org/
+  license: "GPLv3"
+  winget: GnuPG.GnuPG
+  publisher: "The GnuPG Project"
+
+- id: yubikey-manager
+  name: "YubiKey Manager"
+  category: dev/cloud
+  description: "Cross-platform application for configuring any YubiKey over all USB interfaces."
+  homepage: https://www.yubico.com/products/services-software/download/yubikey-manager/
+  license: "BSD-2-Clause"
+  winget: Yubico.YubikeyManager
+  publisher: "Yubico AB"
+
+- id: yubico-authenticator
+  name: "Yubico Authenticator"
+  category: dev/cloud
+  description: "Authenticator to generate 2-step verification codes using your YubiKey"
+  homepage: https://www.yubico.com/products/yubico-authenticator/
+  license: "Apache-2.0"
+  winget: Yubico.Authenticator
+  publisher: "Yubico AB"
+
+- id: yubikey-manager-cli
+  name: "YubiKey Manager CLI"
+  category: dev/cloud
+  description: "Python 3.7 (or later) library and command line tool for configuring a YubiKey."
+  homepage: https://developers.yubico.com/yubikey-manager/Releases/yubikey-manager-5.4.0-win64.msi
+  license: "BSD-2"
+  winget: Yubico.YubiKeyManagerCLI
+  publisher: "Yubico"
+
+- id: step
+  name: "step"
+  category: dev/cloud
+  description: "A Swiss army knife for working with X.509 certificates, JWTs, etc."
+  homepage: https://github.com/smallstep/cli
+  license: "Apache-2.0"
+  winget: Smallstep.step
+  publisher: "Smallstep"
+
+- id: mkcert
+  name: "mkcert"
+  category: dev/cloud
+  description: "A simple zero-config tool to make locally trusted development certificates with any names you'd like."
+  homepage: https://github.com/FiloSottile
+  license: "BSD-3-Clause"
+  winget: FiloSottile.mkcert
+  publisher: "FiloSottile"
+
+- id: openssl-light
+  name: "OpenSSL Light"
+  category: dev/cloud
+  description: "Install the most commonly used essentials of OpenSSL - a robust, commercial-grade, full-featured toolkit for general-purpose cryptography and secure…"
+  homepage: https://slproweb.com/products/Win32OpenSSL.html
+  license: "Freeware"
+  winget: ShiningLight.OpenSSL.Light
+  publisher: "Shining Light Productions"
+
+- id: age
+  name: "age"
+  category: dev/cloud
+  description: "A simple, modern and secure encryption tool (and Go library) with small explicit keys, no config options, and UNIX-style composability."
+  homepage: https://github.com/FiloSottile/age
+  license: "BSD-3-Clause"
+  winget: FiloSottile.age
+  publisher: "FiloSottile"
+
+- id: mongodb-compass
+  name: "MongoDB Compass"
+  category: dev/database
+  description: "The GUI for MongoDB."
+  homepage: https://www.mongodb.com/products/compass
+  license: "Proprietary"
+  winget: MongoDB.Compass.Full
+  publisher: "MongoDB Inc"
+
+- id: mongodb
+  name: "MongoDB"
+  category: dev/database
+  description: "MongoDB is a general purpose, document-based, distributed database built for modern application developers and for the cloud era."
+  homepage: https://www.mongodb.com/try/download/community
+  license: "Server Side Public License (SSPL)"
+  winget: MongoDB.Server
+  publisher: "MongoDB Inc."
+
+- id: mongodb-shell
+  name: "MongoDB Shell"
+  category: dev/database
+  description: "The mongo shell is an interactive JavaScript interface to MongoDB."
+  homepage: https://www.mongodb.com/products/shell
+  license: "Apache License 2.0"
+  winget: MongoDB.Shell
+  publisher: "MongoDB Inc."
+
+- id: mongodb-tools
+  name: "MongoDB Tools"
+  category: dev/database
+  description: "The MongoDB Database Tools are a collection of command-line utilities for working with a MongoDB deployment."
+  homepage: https://docs.mongodb.com/database-tools/
+  license: "Server Side Public License (SSPL)"
+  winget: MongoDB.DatabaseTools
+  publisher: "MongoDB Inc."
+
+- id: mysql
+  name: "MySQL"
+  category: dev/database
+  description: "Oracle MySQL Database Service is a fully managed database service that lets developers quickly develop and deploy secure, cloud native applications using the…"
+  homepage: https://www.oracle.com/
+  license: "GNU General Public License version 2"
+  winget: Oracle.MySQL
+  publisher: "Oracle Corporation"
+
+- id: mariadb
+  name: "MariaDB"
+  category: dev/database
+  description: "The innovative open source database"
+  homepage: https://mariadb.org/download/
+  license: "GPL-2.0"
+  winget: MariaDB.Server
+  publisher: "MariaDB Corporation Ab"
+
+- id: heidisql
+  name: "HeidiSQL"
+  category: dev/database
+  description: "A lightweight client for managing MariaDB, MySQL, SQL Server, PostgreSQL and SQLite, written in Delphi"
+  homepage: https://www.heidisql.com/
+  license: "GPL-2.0"
+  winget: HeidiSQL.HeidiSQL
+  publisher: "Ansgar Becker"
+
+- id: postgresql-16
+  name: "PostgreSQL 16"
+  category: dev/database
+  description: "The World's Most Advanced Open Source Relational Database"
+  homepage: https://www.postgresql.org/download/windows/
+  license: "PostgreSQL"
+  winget: PostgreSQL.PostgreSQL.16
+  publisher: "PostgreSQL Global Development Group"
+
+- id: postgresql-15
+  name: "PostgreSQL 15"
+  category: dev/database
+  description: "The World's Most Advanced Open Source Relational Database"
+  homepage: https://www.postgresql.org/download/windows/
+  license: "PostgreSQL"
+  winget: PostgreSQL.PostgreSQL.15
+  publisher: "PostgreSQL Global Development Group"
+
+- id: pgadmin-4
+  name: "pgAdmin 4"
+  category: dev/database
+  description: "Open Source administration and development platform for PostgreSQL"
+  homepage: https://www.pgadmin.org/download/pgadmin-4-windows/
+  license: "PostgreSQL"
+  winget: PostgreSQL.pgAdmin
+  publisher: "The pgAdmin Development Team"
+
+- id: microsoft-sql-server-management-studio
+  name: "Microsoft SQL Server Management Studio"
+  category: dev/database
+  description: "SQL Server Management Studio (SSMS) is an integrated environment for managing any SQL infrastructure"
+  homepage: https://learn.microsoft.com/en-US/sql/ssms/download-sql-server-management-studio-ssms
+  license: "Proprietary"
+  winget: Microsoft.SQLServerManagementStudio
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-sql-server-2022-express
+  name: "Microsoft SQL Server 2022 Express"
+  category: dev/database
+  description: "SQL Server 2022 Express is a free edition of SQL Server, ideal for development and production for desktop, web, and small server applications."
+  homepage: https://www.microsoft.com/en-us/
+  license: "Proprietary"
+  winget: Microsoft.SQLServer.2022.Express
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-sql-server-2022-developer
+  name: "Microsoft SQL Server 2022 Developer"
+  category: dev/database
+  description: "SQL Server 2022 Developer is a full-featured free edition, licensed for use as a development and test database in a non-production environment."
+  homepage: https://www.microsoft.com/en-us/
+  license: "Proprietary"
+  winget: Microsoft.SQLServer.2022.Developer
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-sqlpackage
+  name: "Microsoft SqlPackage"
+  category: dev/database
+  description: "SqlPackage is a command-line utility that automates the database development tasks by exposing some of the public Data-Tier Application Framework (DacFx) APIs."
+  homepage: https://learn.microsoft.com/en-us/sql/tools/sqlpackage/sqlpackage?view=sql-server-ver16
+  license: "Proprietary"
+  winget: Microsoft.SqlPackage
+  publisher: "Microsoft Corporation"
+
+- id: sqlite
+  name: "SQLite"
+  category: dev/database
+  description: "Self-contained transactional SQL database engine"
+  homepage: https://sqlite.org/
+  license: "Public Domain"
+  winget: SQLite.SQLite
+  publisher: "SQLite"
+
+- id: duckdb
+  name: "DuckDB CLI"
+  category: dev/database
+  description: "DuckDB is an in-process SQL OLAP Database Management System"
+  homepage: https://github.com/duckdb/duckdb
+  license: "MIT"
+  winget: DuckDB.cli
+  publisher: "DuckDB"
+
+- id: tableplus
+  name: "TablePlus"
+  category: dev/database
+  description: "Modern, native, and friendly GUI tool for relational databases: MySQL, PostgreSQL, SQLite \u0026 more"
+  homepage: https://tableplus.com/windows
+  license: "Proprietary"
+  winget: TablePlus.TablePlus
+  publisher: "TablePlus, Inc"
+
+- id: neo4j-desktop
+  name: "Neo4j Desktop"
+  category: dev/database
+  description: "A client application to help you work with Neo4j"
+  homepage: https://neo4j.com/download/
+  license: "Proprietary"
+  winget: Neo4j.Neo4jDesktop
+  publisher: "Neo4j Inc."
+
+- id: elasticsearch
+  name: "Elasticsearch"
+  category: dev/database
+  description: "Elasticsearch is a distributed, RESTful search and analytics engine"
+  homepage: https://www.elastic.co/downloads/elasticsearch
+  license: "Dual licensed under the Elastic License and the Server Side Public License"
+  winget: Elastic.Elasticsearch
+  publisher: "Elastic"
+
+- id: liquibase
+  name: "Liquibase"
+  category: dev/database
+  description: "Easiest, safest, and most powerful community-led database change management solution."
+  homepage: https://www.liquibase.com/community
+  license: "Apache-2.0"
+  winget: Liquibase.Liquibase
+  publisher: "Liquibase"
+
+- id: planetscale-cli
+  name: "PlanetScale CLI"
+  category: dev/database
+  description: "PlanetScale is more than a database and our CLI is more than a jumble of commands."
+  homepage: https://planetscale.com/cli
+  license: "Apache-2.0"
+  winget: PlanetScale.CLI
+  publisher: "PlanetScale, Inc."
+
+- id: surrealdb
+  name: "SurrealDB"
+  category: dev/database
+  description: "SurrealDB has been built from the ground up to be the ultimate database for developers who want to build tomorrow's applications."
+  homepage: https://surrealdb.com/
+  license: "Apache License, Version 2.0"
+  winget: SurrealDB.SurrealDB
+  publisher: "SurrealDB"
+
+- id: minio-client
+  name: "MinIO Client"
+  category: dev/database
+  description: "Simple | Fast tool to manage MinIO clusters ☁️"
+  homepage: https://min.io/
+  license: "AGPL-3.0"
+  winget: MinIO.Client
+  publisher: "MinIO"
+
+- id: insomnia
+  name: "Insomnia"
+  category: dev/api
+  description: "The Desktop API client for REST and GraphQL."
+  homepage: https://insomnia.rest/
+  license: "Apache-2.0"
+  winget: Insomnia.Insomnia
+  publisher: "Kong"
+
+- id: stoplight-studio
+  name: "Stoplight Studio"
+  category: dev/api
+  description: "The modern editor for API Design and Technical Writing."
+  homepage: https://stoplight.io/studio
+  license: "CC BY-ND 4.0"
+  winget: Stoplight.Studio
+  publisher: "Stoplight"
+
+- id: httpie-desktop
+  name: "HTTPie"
+  category: dev/api
+  description: "HTTPie for Web \u0026 Desktop — cross-platform API testing client for humans."
+  homepage: https://httpie.io/desktop
+  license: "Freeware"
+  winget: HTTPie.HTTPie
+  publisher: "HTTPie"
+
+- id: curl
+  name: "cURL"
+  category: dev/api
+  description: "Command line tool and library for transferring data with URLs"
+  homepage: https://curl.se/
+  license: "Freeware"
+  winget: cURL.cURL
+  publisher: "curl"
+
+- id: wget2
+  name: "Wget2"
+  category: dev/api
+  description: "GNU Wget2 is the successor of GNU Wget, a file and recursive website downloader."
+  homepage: https://github.com/rockdaboot/wget2
+  license: "LGPL-3.0"
+  winget: GNU.Wget2
+  publisher: "GNU"
+
+- id: wget
+  name: "Wget"
+  category: dev/api
+  description: "Wget is a command line utility for retrieving files using HTTP, HTTPS, FTP and FTPS."
+  homepage: https://eternallybored.org/misc/wget/
+  license: "GPL-3.0-or-later"
+  winget: JernejSimoncic.Wget
+  publisher: "Jernej Simoncic"
+
+- id: datadog-agent
+  name: "Datadog Agent"
+  category: dev/api
+  description: "Datadog helps you monitor your infrastructure and application"
+  homepage: https://docs.datadoghq.com/
+  license: "Apache-2.0"
+  winget: Datadog.Agent
+  publisher: "Datadog, Inc."
+
+- id: geckodriver
+  name: "geckodriver"
+  category: dev/api
+  description: "WebDriver for Firefox"
+  homepage: https://firefox-source-docs.mozilla.org/testing/geckodriver/
+  license: "MPL-2.0"
+  winget: Mozilla.GeckoDriver
+  publisher: "Mozilla"
+
+- id: firefox-developer-edition-en-us
+  name: "Firefox Developer Edition (en-US)"
+  category: dev/api
+  description: "Firefox Browser Developer Edition"
+  homepage: https://www.mozilla.org/firefox/developer/
+  license: "MPL-2.0"
+  winget: Mozilla.Firefox.DeveloperEdition
+  publisher: "Mozilla"
+
+- id: mozilla-firefox-esr-en-us
+  name: "Mozilla Firefox ESR (en-US)"
+  category: dev/api
+  description: "Get the Firefox Extended Support Release or Rapid Release browser for comprehensive data security and data protection."
+  homepage: https://www.mozilla.org/firefox/enterprise/
+  license: "MPL-2.0"
+  winget: Mozilla.Firefox.ESR
+  publisher: "Mozilla"
+
+- id: microsoft-edge-webview2-runtime
+  name: "Microsoft Edge WebView2 Runtime"
+  category: runtimes
+  description: "Embed web content (HTML, CSS, and JavaScript) in your native applications with Microsoft Edge WebView2."
+  homepage: https://developer.microsoft.com/microsoft-edge/webview2/
+  license: "Proprietary"
+  winget: Microsoft.EdgeWebView2Runtime
+  publisher: "Microsoft Corporation"
+
+- id: alacritty
+  name: "Alacritty"
+  category: dev/terminal
+  description: "Alacritty is a free and open-source GPU accelerated terminal emulator focused on performance and simplicity."
+  homepage: https://github.com/alacritty/alacritty
+  license: "Apache-2.0"
+  winget: Alacritty.Alacritty
+  publisher: "Alacritty"
+
+- id: wezterm
+  name: "WezTerm"
+  category: dev/terminal
+  description: "A GPU-accelerated cross-platform terminal emulator and multiplexer implemented in Rust."
+  homepage: https://wezterm.org
+  license: "MIT"
+  winget: wez.wezterm
+  publisher: "Wez Furlong"
+
+- id: tabby
+  name: "Tabby"
+  category: dev/terminal
+  description: "A terminal for a more modern age."
+  homepage: https://tabby.sh/
+  license: "MIT"
+  winget: Eugeny.Tabby
+  publisher: "Eugene Pankov"
+
+- id: warp
+  name: "Warp"
+  category: dev/terminal
+  description: "Warp is the intelligent terminal with AI and your dev team’s knowledge built-in."
+  homepage: https://www.warp.dev/windows-terminal
+  license: "Proprietary"
+  winget: Warp.Warp
+  publisher: "Denver Technologies, Inc."
+
+- id: starship
+  name: "starship"
+  category: dev/terminal
+  description: "The minimal, blazing-fast, and infinitely customizable prompt for any shell!"
+  homepage: https://starship.rs/
+  license: "ISC"
+  winget: Starship.Starship
+  publisher: "Starship Contributors"
+
+- id: nushell
+  name: "nu"
+  category: dev/terminal
+  description: "A new type of shell"
+  homepage: https://github.com/nushell/integrations
+  license: "MIT"
+  winget: Nushell.Nushell
+  publisher: "The Nushell Project Developers"
+
+- id: putty
+  name: "PuTTY"
+  category: dev/terminal
+  description: "A free implementation of SSH and Telnet for Windows and Unix platforms, along with an xterm terminal emulator."
+  homepage: https://www.chiark.greenend.org.uk/~sgtatham/putty/
+  license: "MIT"
+  winget: PuTTY.PuTTY
+  publisher: "Simon Tatham"
+
+- id: winscp
+  name: "WinSCP"
+  category: dev/terminal
+  description: "Free SFTP, SCP, S3 and FTP client for Windows"
+  homepage: https://winscp.net/
+  license: "GPL-3.0-or-later"
+  winget: WinSCP.WinSCP
+  publisher: "Martin Prikryl"
+
+- id: mobaxterm
+  name: "MobaXterm"
+  category: dev/terminal
+  description: "Enhanced terminal for Windows with X11 server, tabbed SSH client, network tools and much more"
+  homepage: https://mobaxterm.mobatek.net/
+  license: "Freeware"
+  winget: Mobatek.MobaXterm
+  publisher: "Mobatek"
+
+- id: termius
+  name: "Termius"
+  category: dev/terminal
+  description: "Modern SSH client for Windows"
+  homepage: https://termius.com/free-ssh-client-for-windows
+  license: "Proprietary"
+  winget: Termius.Termius
+  publisher: "Termius Corporation"
+
+- id: remote-desktop-manager
+  name: "Remote Desktop Manager"
+  category: dev/terminal
+  description: "Remote Connections \u0026 Passwords."
+  homepage: https://remotedesktopmanager.com/
+  license: "Proprietary"
+  winget: Devolutions.RemoteDesktopManager
+  publisher: "Devolutions inc."
+
+- id: rclone
+  name: "Rclone"
+  category: dev/terminal
+  description: "Rclone (\"rsync for cloud storage\") is a command-line program to sync files and directories to and from different cloud storage providers."
+  homepage: https://rclone.org/
+  license: "MIT"
+  winget: Rclone.Rclone
+  publisher: "Rclone"
+
+- id: bat
+  name: "bat"
+  category: dev/cli
+  description: "A cat(1) clone with syntax highlighting and Git integration."
+  homepage: https://github.com/sharkdp/bat
+  license: "Apache-2.0"
+  winget: sharkdp.bat
+  publisher: "David Peter"
+
+- id: fd
+  name: "fd"
+  category: dev/cli
+  description: "A simple, fast and user-friendly alternative to 'find'"
+  homepage: https://github.com/sharkdp/fd
+  license: "Apache-2.0"
+  winget: sharkdp.fd
+  publisher: "David Peter"
+
+- id: hyperfine
+  name: "hyperfine"
+  category: dev/cli
+  description: "A command-line benchmarking tool"
+  homepage: https://github.com/sharkdp/hyperfine
+  license: "Apache-2.0"
+  winget: sharkdp.hyperfine
+  publisher: "David Peter"
+
+- id: pastel
+  name: "pastel"
+  category: dev/cli
+  description: "A command-line tool to generate, analyze, convert and manipulate colors."
+  homepage: https://github.com/sharkdp/pastel
+  license: "Apache-2.0"
+  winget: sharkdp.pastel
+  publisher: "David Peter"
+
+- id: hexyl
+  name: "hexyl"
+  category: dev/cli
+  description: "Hex viewer, which uses colored output to distinguish different categories of bytes."
+  homepage: https://github.com/sharkdp/hexyl
+  license: "Apache-2.0"
+  winget: sharkdp.hexyl
+  publisher: "David Peter"
+
+- id: eza
+  name: "eza"
+  category: dev/cli
+  description: "A modern, maintained replacement for ls, built on exa."
+  homepage: https://github.com/eza-community/eza
+  license: "EUPL-1.2"
+  winget: eza-community.eza
+  publisher: "eza community"
+
+- id: zoxide
+  name: "zoxide"
+  category: dev/cli
+  description: "zoxide is a smarter cd command, inspired by z and autojump"
+  homepage: https://github.com/ajeetdsouza/zoxide
+  license: "MIT"
+  winget: ajeetdsouza.zoxide
+  publisher: "Ajeet D'Souza"
+
+- id: ugrep
+  name: "ugrep"
+  category: dev/cli
+  description: "An ultra-fast, user-friendly, and compatible grep replacement"
+  homepage: https://github.com/Genivia/ugrep
+  license: "BSD-3-Clause"
+  winget: Genivia.ugrep
+  publisher: "Genivia Inc."
+
+- id: gdu
+  name: "gdu"
+  category: dev/cli
+  description: "Pretty fast disk usage analyzer written in Go."
+  homepage: https://github.com/dundee/gdu
+  license: "MIT"
+  winget: dundee.gdu
+  publisher: "Daniel Milde"
+
+- id: duf
+  name: "duf"
+  category: dev/cli
+  description: "Disk Usage/Free Utility - a better 'df' alternative"
+  homepage: https://github.com/muesli/duf
+  license: "MIT"
+  winget: muesli.duf
+  publisher: "Christian Muehlhaeuser"
+
+- id: miller
+  name: "Miller"
+  category: dev/cli
+  description: "Miller is like awk, sed, cut, join, and sort for name-indexed data such as CSV, TSV, and tabular JSON"
+  homepage: https://github.com/johnkerl/miller
+  license: "BSD-2-Clause"
+  winget: Miller.Miller
+  publisher: "John Kerl"
+
+- id: tealdeer
+  name: "tealdeer"
+  category: dev/cli
+  description: "A very fast implementation of tldr in Rust."
+  homepage: https://github.com/tealdeer-rs/tealdeer
+  license: "Apache-2.0"
+  winget: dbrgn.tealdeer
+  publisher: "Danilo Bargen"
+
+- id: fastfetch
+  name: "fastfetch"
+  category: dev/cli
+  description: "Like neofetch, but much faster because written mostly in C."
+  homepage: https://github.com/fastfetch-cli/fastfetch
+  license: "MIT"
+  winget: Fastfetch-cli.Fastfetch
+  publisher: "fastfetch-cli"
+
+- id: difftastic
+  name: "Difftastic"
+  category: dev/cli
+  description: "Difftastic is a structural diff tool that compares files based on their syntax."
+  homepage: https://github.com/Wilfred/difftastic
+  license: "MIT"
+  winget: Wilfred.difftastic
+  publisher: "Wilfred Hughes"
+
+- id: yt-dlp
+  name: "yt-dlp"
+  category: dev/cli
+  description: "A feature-rich command-line audio/video downloader."
+  homepage: https://github.com/yt-dlp/yt-dlp
+  license: "Unlicense"
+  winget: yt-dlp.yt-dlp
+  publisher: "yt-dlp"
+
+- id: aria2
+  name: "aria2"
+  category: dev/cli
+  description: "The next generation download utility."
+  homepage: https://aria2.github.io/
+  license: "GPL-2.0-or-later"
+  winget: aria2.aria2
+  publisher: "aria2"
+
+- id: sysinternals-sysmon
+  name: "Sysinternals Sysmon"
+  category: system
+  description: "System activity monitor"
+  homepage: https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
+  license: "Proprietary"
+  winget: Microsoft.Sysinternals.Sysmon
+  publisher: "Sysinternals"
+
+- id: ms-edit
+  name: "Edit"
+  category: dev/cli
+  description: "A simple editor for simple needs."
+  homepage: https://github.com/microsoft/edit
+  license: "MIT"
+  winget: Microsoft.Edit
+  publisher: "Microsoft Corporation"
+
+- id: chocolatey
+  name: "Chocolatey"
+  category: dev/cli
+  description: "Chocolatey is The Package Manager for Windows."
+  homepage: https://github.com/chocolatey/choco
+  license: "Apache v2"
+  winget: Chocolatey.Chocolatey
+  publisher: "Chocolatey Software, Inc."
+
+- id: unigetui
+  name: "UniGetUI"
+  category: dev/cli
+  description: "The Graphical Interface for your package managers."
+  homepage: https://devolutions.net/unigetui/
+  license: "MIT"
+  winget: Devolutions.UniGetUI
+  publisher: "Devolutions Inc."
+
+- id: mise-en-place
+  name: "mise-en-place"
+  category: dev/cli
+  description: "Your dev env, already prepped."
+  homepage: https://mise.en.dev/
+  license: "MIT"
+  winget: jdx.mise
+  publisher: "jdx"
+
+- id: kubectx
+  name: "kubectx"
+  category: dev/cli
+  description: "Faster way to switch between clusters in kubectl"
+  homepage: https://github.com/ahmetb/kubectx
+  license: "Apache-2.0"
+  winget: ahmetb.kubectx
+  publisher: "Ahmet Alp Balkan"
+
+- id: gum
+  name: "gum"
+  category: dev/cli
+  description: "A tool for glamorous shell scripts"
+  homepage: https://charm.land/
+  license: "MIT"
+  winget: charmbracelet.gum
+  publisher: "charmbracelet"
+
+- id: glow
+  name: "glow"
+  category: dev/cli
+  description: "Render markdown on the CLI, with pizzazz!"
+  homepage: https://github.com/charmbracelet/glow
+  license: "MIT License"
+  winget: charmbracelet.glow
+  publisher: "charmbracelet"
+
+- id: freeze
+  name: "freeze"
+  category: dev/cli
+  description: "Generate images of code and terminal output."
+  homepage: https://charm.sh/
+  license: "MIT"
+  winget: charmbracelet.freeze
+  publisher: "charmbracelet"
+
+- id: vhs
+  name: "vhs"
+  category: dev/cli
+  description: "A tool for recording terminal GIFs"
+  homepage: https://charm.land/
+  license: "MIT"
+  winget: charmbracelet.vhs
+  publisher: "charmbracelet"
+
+- id: btop
+  name: "btop4win"
+  category: dev/cli
+  description: "Resource monitor that shows usage and stats for processor, memory, disks, network, processes and services."
+  homepage: https://github.com/aristocratos/btop4win
+  license: "Apache-2.0"
+  winget: aristocratos.btop4win
+  publisher: "aristocratos"
+
+- id: arduino-ide
+  name: "Arduino IDE"
+  category: dev/editors
+  description: "Open-source electronic prototyping platform enabling users to create interactive electronic objects."
+  homepage: https://www.arduino.cc/en/software
+  license: "AGPL-3.0"
+  winget: ArduinoSA.IDE.stable
+  publisher: "Arduino SA"
+
+- id: esp-idf-manager
+  name: "ESP-IDF Installation Manager"
+  category: dev/build
+  description: "CLI tool for managing ESP-IDF installations"
+  homepage: https://github.com/espressif/idf-im-ui/
+  license: "Apache-2.0"
+  winget: Espressif.EIM-CLI
+  publisher: "Espressif Systems"
+

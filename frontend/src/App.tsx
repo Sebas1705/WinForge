@@ -301,7 +301,7 @@ function CatalogView(p: {
     apps: AppInfo[]; selection: Set<string>; setSelection: (s: Set<string>) => void;
     onInstall: () => void; onSave: () => void; openURL: (u: string) => void;
 }) {
-    const [f, setF] = useState<Filter>({query: "", category: "", installed: "all"});
+    const [f, setF] = useState<Filter>({query: "", category: "", installed: "all", openSourceOnly: false});
     const cats = useMemo(() => categories(p.apps), [p.apps]);
     const list = useMemo(() => filterApps(p.apps, f), [p.apps, f]);
     const toggle = (id: string) => {
@@ -324,6 +324,8 @@ function CatalogView(p: {
                     <option value="installed">Installed</option>
                     <option value="missing">Not installed</option>
                 </select>
+                <label className="check"><input type="checkbox" checked={f.openSourceOnly}
+                       onChange={(e) => setF({...f, openSourceOnly: e.target.checked})}/> Open source</label>
             </div>
             <ul className="list">
                 {list.map((a) => (
@@ -333,6 +335,7 @@ function CatalogView(p: {
                             <div className="grow">
                                 <b>{a.name}</b> <span className="muted">{a.category}</span>
                                 {a.admin && <span className="tag">admin</span>}
+                                {a.openSource && <span className="tag oss" title={a.license}>open source</span>}
                                 <div className="muted">{a.description}</div>
                             </div>
                         </label>
@@ -345,7 +348,7 @@ function CatalogView(p: {
                 {list.length === 0 && <li className="muted pad">No app matches.</li>}
             </ul>
             <footer>
-                <span>{p.selection.size} selected, {missing} to install</span>
+                <span>{list.length} of {p.apps.length} shown · {p.selection.size} selected, {missing} to install</span>
                 <div className="grow"/>
                 <button disabled={!p.selection.size} onClick={() => p.setSelection(new Set())}>Clear</button>
                 <button disabled={!p.selection.size} onClick={p.onSave}>Save as profile…</button>

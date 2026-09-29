@@ -4,8 +4,8 @@ Fast, profile-based installation of Windows apps and developer toolchains.
 
 WinForge scans the PC, shows which apps of a **curated catalog** are installed, and lets you save, export, import and apply **profiles** - from "Essentials" to "Rust", "Android" or "Containers" - installing only what is missing.
 
-- **Catalog**: 86 apps, each pinned to a [winget](https://github.com/microsoft/winget-pkgs) package. winget manifests carry the vendor's own installer URL and a SHA-256, and are moderated - that is the reliability this project builds on instead of re-hosting or scraping installers.
-- **Profiles**: base (Essentials, Everyday, Creator, Gaming) and developer (Developer base, Java/Kotlin, Android, Web/Node, Python, Go, Rust, .NET, C/C++, Containers, Cloud, Databases, AI tooling). Profiles `extend` each other and apps `require` each other, so `dev-rust` brings the MSVC build tools Rust links with, in the right order.
+- **Catalog**: 744 apps (a large share open source, filterable), each pinned to a [winget](https://github.com/microsoft/winget-pkgs) package. winget manifests carry the vendor's own installer URL and a SHA-256, and are moderated - that is the reliability this project builds on instead of re-hosting or scraping installers.
+- **Profiles**: 31 — base (Essentials, Everyday, Creator, Gaming, Runtimes, Open-source essentials, Privacy, System tools, …) and developer (Developer base, Java/Kotlin, Android, Web/Node, Python, Go, Rust, .NET, C/C++, Containers, Cloud, Databases, AI tooling). Profiles `extend` each other and apps `require` each other, so `dev-rust` brings the MSVC build tools Rust links with, in the right order.
 - **Recipes**: vetted, idempotent post-install steps (Git defaults, `rustup default stable-msvc`, WSL 2 as default, long paths, Developer Mode, `ANDROID_HOME`).
 - **Detection**: winget's inventory, the Uninstall registry keys, PATH and known folders - so tools installed by hand or by a version manager count as installed.
 
@@ -36,11 +36,24 @@ app.go, main.go, frontend/   Wails desktop app (Go + React/TypeScript)
 
 The desktop stack, CI and release pipeline follow [Templetry's desktop app](https://github.com/Templetry/desktop). If the pattern proves out, a `go/wails-desktop` form in the Templetry catalog would generate the same skeleton.
 
-## Adding an app
+## Growing the catalog
 
-1. Find the winget id: `winget search <name>`.
-2. Add an entry to a file in `catalogdata/apps/` (`publisher` must equal the manifest's `Publisher`; `detect` adds PATH/registry/folder hints for tools winget may not know about).
-3. `go run ./cmd/winforge-verify -lock catalog.lock.json` and commit the lock diff.
+Entries are generated from winget-pkgs manifests, so every fact (name, publisher, homepage, license, description) is the manifest's, not something typed from memory.
+
+```bash
+# 1. add "category|Winget.Id[|catalog-id[|Display name]]" lines to a file in tools/catalog-lists/
+# 2. import: skips ids already in the catalog, unknown ids, pre-release channels (Beta/Nightly/...),
+#    ids in tools/catalog-lists/deny.txt, and manifests without an https homepage or https installers
+go run ./cmd/winforge-import -list tools/catalog-lists/general.txt -out catalogdata/apps/general-more.yml
+# 3. regenerate detection rules for every app (see below) and the verification lock
+go run ./cmd/winforge-import -detect
+go run ./cmd/winforge-verify -lock catalog.lock.json
+```
+
+- **Open source** is derived from each app's `license` (`catalog.IsOpenSource`, conservative: proprietary, source-available and unknown are false) and drives the "Open source" filter and badge.
+- **Detection**: winget only knows about apps it installed or could correlate. `-detect` writes `catalogdata/detect/detect.yml` from each package's *Apps & features* name, so an app installed by hand is still recognised. Rules are version-tolerant (`Git` matches "Git version 2.50" but not "Git LFS").
+- **Denying**: put an id in `deny.txt` with a reason to keep it out for good (adware-style bundlers, end-of-life runtimes, unofficial builds).
+- The importer waits out GitHub's API limit and remembers ids that do not exist (`tools/catalog-lists/.notfound`, git-ignored); export `GITHUB_TOKEN` for the 5000/hour budget.
 
 Apps that are not in winget (Gradle, Maven) are deliberately absent rather than served from an unofficial source; projects use their wrappers.
 

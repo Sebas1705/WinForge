@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/fs"
 	"path"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -55,6 +56,20 @@ func Load(fsys fs.FS) (*Catalog, error) {
 			return nil, fmt.Errorf("duplicate recipe id %q", r.ID)
 		}
 		c.Recipes[r.ID] = r
+	}
+	var overlays []*DetectOverlay
+	if err := readAll(fsys, "detect", &overlays); err != nil {
+		return nil, err
+	}
+	for _, o := range overlays {
+		a := c.Apps[o.ID]
+		if a == nil {
+			return nil, fmt.Errorf("detect overlay for unknown app %q", o.ID)
+		}
+		a.Detect.Registry = union(a.Detect.Registry, o.Registry)
+	}
+	for _, a := range c.Apps {
+		a.OpenSource = IsOpenSource(a.License)
 	}
 	if errs := c.Validate(); len(errs) > 0 {
 		msgs := make([]string, len(errs))
@@ -108,6 +123,11 @@ func (c *Catalog) Validate() []error {
 		case a.Scope != "" && a.Scope != "user" && a.Scope != "machine":
 			add("app %q: scope must be user or machine", a.ID)
 		}
+		for _, pattern := range a.Detect.Registry {
+			if _, err := regexp.Compile("(?i)" + pattern); err != nil {
+				add("app %q: bad detect.registry pattern %q: %v", a.ID, pattern, err)
+			}
+		}
 		for _, r := range a.Requires {
 			if c.Apps[r] == nil {
 				add("app %q: requires unknown app %q", a.ID, r)
@@ -149,6 +169,18 @@ func (c *Catalog) Validate() []error {
 		seen[w] = id
 	}
 	return errs
+}
+
+func union(a, b []string) []string {
+	seen := map[string]bool{}
+	var out []string
+	for _, s := range append(append([]string{}, a...), b...) {
+		if !seen[s] {
+			seen[s] = true
+			out = append(out, s)
+		}
+	}
+	return out
 }
 
 func validID(s string) bool {

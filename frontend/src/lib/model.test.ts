@@ -3,7 +3,7 @@ import {applyEvent, categories, filterApps, selectionProfile, slugify, type App}
 
 const app = (o: Partial<App>): App => ({
     id: "x", name: "X", category: "dev/vcs", description: "", homepage: "https://x",
-    winget: "X.X", publisher: "P", installed: false, ...o,
+    winget: "X.X", publisher: "P", installed: false, openSource: false, ...o,
 });
 
 describe("filterApps", () => {
@@ -12,12 +12,16 @@ describe("filterApps", () => {
         app({id: "vlc", name: "VLC media player", category: "media", publisher: "VideoLAN"}),
     ];
     it("matches name, publisher and winget id case-insensitively", () => {
-        expect(filterApps(apps, {query: "videolan", category: "", installed: "all"})).toHaveLength(1);
-        expect(filterApps(apps, {query: "GIT", category: "", installed: "all"})[0].id).toBe("git");
+        expect(filterApps(apps, {query: "videolan", category: "", installed: "all", openSourceOnly: false})).toHaveLength(1);
+        expect(filterApps(apps, {query: "GIT", category: "", installed: "all", openSourceOnly: false})[0].id).toBe("git");
     });
     it("filters by top-level category and installed state", () => {
-        expect(filterApps(apps, {query: "", category: "dev", installed: "all"})).toHaveLength(1);
-        expect(filterApps(apps, {query: "", category: "", installed: "missing"})[0].id).toBe("vlc");
+        expect(filterApps(apps, {query: "", category: "dev", installed: "all", openSourceOnly: false})).toHaveLength(1);
+        expect(filterApps(apps, {query: "", category: "", installed: "missing", openSourceOnly: false})[0].id).toBe("vlc");
+    });
+    it("can restrict to open-source apps", () => {
+        const list = [app({id: "a", openSource: true}), app({id: "b"})];
+        expect(filterApps(list, {query: "", category: "", installed: "all", openSourceOnly: true}).map((a) => a.id)).toEqual(["a"]);
     });
     it("lists top-level categories once", () => {
         expect(categories([...apps, app({category: "dev/cli"})])).toEqual(["dev", "media"]);

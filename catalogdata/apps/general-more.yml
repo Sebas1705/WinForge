@@ -1,0 +1,3834 @@
+- id: opera
+  name: "Opera"
+  category: browsers
+  description: "The Opera browser includes everything you need for private, safe, and efficient browsing, along with a variety of unique features to enhance your…"
+  homepage: https://www.opera.com/browsers/opera
+  license: "Freeware"
+  winget: Opera.Opera
+  publisher: "Opera Software"
+
+- id: opera-gx
+  name: "Opera GX"
+  category: browsers
+  description: "Opera GX is a special version of the Opera browser which, on top of Opera’s great features for privacy, security and efficiency, includes special features…"
+  homepage: https://www.opera.com/gx
+  license: "Freeware"
+  winget: Opera.OperaGX
+  publisher: "Opera Software"
+
+- id: vivaldi
+  name: "Vivaldi"
+  category: browsers
+  description: "Powerful, Personal and Private web browser."
+  homepage: https://vivaldi.com/desktop/
+  license: "Freeware"
+  winget: Vivaldi.Vivaldi
+  publisher: "Vivaldi Technologies AS."
+
+- id: librewolf
+  name: "LibreWolf"
+  category: browsers
+  description: "A custom version of Firefox, focused on privacy, security and freedom."
+  homepage: https://librewolf.net/
+  license: "MPL-2.0"
+  winget: LibreWolf.LibreWolf
+  publisher: "LibreWolf"
+
+- id: waterfox
+  name: "Waterfox"
+  category: browsers
+  description: "Fast and Private Web Browser"
+  homepage: https://www.waterfox.net/
+  license: "MPL-2.0"
+  winget: Waterfox.Waterfox
+  publisher: "BrowserWorks"
+
+- id: tor-browser
+  name: "Tor Browser"
+  category: browsers
+  description: "Protect yourself against tracking, surveillance, and censorship."
+  homepage: https://www.torproject.org/
+  license: "MPL-2.0"
+  winget: TorProject.TorBrowser
+  publisher: "Tor Project"
+
+- id: zen-browser
+  name: "Zen Browser"
+  category: browsers
+  description: "Zen is the best way to browse the web."
+  homepage: https://zen-browser.app/
+  license: "MPL-2.0"
+  winget: Zen-Team.Zen-Browser
+  publisher: "Mozilla"
+
+- id: ablaze-floorp
+  name: "Ablaze Floorp"
+  category: browsers
+  description: "Floorp is built on Firefox and was built in Japan and is a new browser with excellent privacy \u0026 flexibility."
+  homepage: https://floorp.app/
+  license: "Mozilla Public License Version 2.0"
+  winget: Ablaze.Floorp
+  publisher: "Ablaze"
+
+- id: mullvad-browser
+  name: "Mullvad Browser"
+  category: browsers
+  description: "Mullvad Browser is a privacy-focused web browser developed in collaboration between Mullvad VPN and the Tor Project."
+  homepage: https://mullvad.net/browser
+  license: "MPL-2.0"
+  winget: MullvadVPN.MullvadBrowser
+  publisher: "Mullvad VPN"
+
+- id: duckduckgo
+  name: "DuckDuckGo"
+  category: browsers
+  description: "An everyday web browser that truly protects your privacy."
+  homepage: https://duckduckgo.com/windows
+  license: "Freeware"
+  winget: DuckDuckGo.DesktopBrowser
+  publisher: "DuckDuckGo"
+
+- id: arc
+  name: "Arc"
+  category: browsers
+  description: "Arc is a new browser that shapes itself to how you use the internet."
+  homepage: https://arc.net/
+  license: "Proprietary"
+  winget: TheBrowserCompany.Arc
+  publisher: "The Browser Company of New York"
+
+- id: yandex-browser
+  name: "Yandex Browser"
+  category: browsers
+  description: "Yandex Browser delivers fast and secure browsing with built-in Alice and the ability to sync passwords, bookmarks, and bank cards across devices."
+  homepage: https://browser.yandex.com/
+  license: "Freeware"
+  winget: Yandex.Browser
+  publisher: "Yandex"
+
+- id: maxthon
+  name: "Maxthon"
+  category: browsers
+  description: "Browse with wings."
+  homepage: https://www.maxthon.com/download/
+  license: "Freeware"
+  winget: Maxthon.Maxthon
+  publisher: "The Maxthon Authors"
+
+- id: microsoft-teams
+  name: "Microsoft Teams"
+  category: communication
+  description: "Collaborate more effectively with a faster, simpler, smarter, and more flexible Teams."
+  homepage: https://www.microsoft.com/microsoft-teams/group-chat-software
+  license: "Proprietary"
+  winget: Microsoft.Teams
+  publisher: "Microsoft Corporation"
+
+- id: outlook-for-windows
+  name: "Outlook for Windows"
+  category: communication
+  description: "Microsoft's email and calendar client."
+  homepage: https://learn.microsoft.com/en-us/microsoft-365-apps/outlook/get-started/deployment-new-outlook#other-deployment-options
+  license: "Proprietary"
+  winget: Microsoft.Outlook
+  publisher: "Microsoft Corporation"
+
+- id: element
+  name: "Element"
+  category: communication
+  description: "Secure collaboration and messaging"
+  homepage: https://element.io/download
+  license: "AGPL-3.0-only or GPL-3.0-only"
+  winget: Element.Element
+  publisher: "Element"
+
+- id: guilded
+  name: "Guilded"
+  category: communication
+  description: "Guilded upgrades your group chat and equips your server with integrated event calendars, forums, and more – 100% free."
+  homepage: https://www.guilded.gg
+  license: "Proprietary"
+  winget: Guilded.Guilded
+  publisher: "Guilded, Inc."
+
+- id: vesktop
+  name: "Vesktop"
+  category: communication
+  description: "A cross platform electron-based desktop app aiming to give you a snappier Discord experience with Vencord pre-installed."
+  homepage: https://github.com/Vencord/Vesktop
+  license: "GPL-3.0"
+  winget: Vencord.Vesktop
+  publisher: "Vencord"
+
+- id: mumble-client
+  name: "Mumble (client)"
+  category: communication
+  description: "Low-latency and high quality voice chat primarily intended for use while gaming."
+  homepage: https://www.mumble.info/
+  license: "BSD 3 Clause"
+  winget: Mumble.Mumble.Client
+  publisher: "Mumble VoIP"
+
+- id: teamspeak-3-client
+  name: "TeamSpeak 3 Client"
+  category: communication
+  description: "Use crystal clear sound to communicate with your team mates cross-platform with military-grade security, lag-free performance \u0026 unparalleled reliability and…"
+  homepage: https://www.teamspeak.com/en/
+  license: "Proprietary, Freeware"
+  winget: TeamSpeakSystems.TeamSpeakClient
+  publisher: "TeamSpeak Systems GmbH"
+
+- id: wechat
+  name: "WeChat"
+  category: communication
+  description: "Connecting a billion people with calls, chats and more"
+  homepage: https://windows.weixin.qq.com/?lang=en_US
+  license: "Freeware"
+  winget: Tencent.WeChat
+  publisher: "腾讯科技(深圳)有限公司"
+
+- id: qq
+  name: "腾讯QQ"
+  category: communication
+  description: "An instant messaging tool that gives you the best way to keep in touch with your friends and family"
+  homepage: https://im.qq.com/pcqq
+  license: "Proprietary"
+  winget: Tencent.QQ
+  publisher: "腾讯科技(深圳)有限公司"
+
+- id: mattermost
+  name: "Mattermost"
+  category: communication
+  description: "Access your Mattermost instance with your credentials using the desktop app"
+  homepage: https://mattermost.com/apps/
+  license: "Apache-2.0"
+  winget: Mattermost.MattermostDesktop
+  publisher: "Mattermost, Inc."
+
+- id: rocket-chat
+  name: "Rocket.Chat"
+  category: communication
+  description: "Rocket.Chat is the leading open source team chat software solution."
+  homepage: https://rocket.chat/
+  license: "MIT"
+  winget: RocketChat.RocketChat
+  publisher: "Rocket.Chat Support"
+
+- id: zulip
+  name: "Zulip"
+  category: communication
+  description: "Desktop client for Zulip, an open source team chat application."
+  homepage: https://zulip.com/apps/
+  license: "Apache-2.0"
+  winget: Zulip.Zulip
+  publisher: "Kandra Labs, Inc."
+
+- id: jitsi-meet
+  name: "Jitsi Meet"
+  category: communication
+  description: "Jitsi Meet is an open-source (Apache) WebRTC JavaScript application that uses Jitsi Videobridge to provide high quality, secure and scalable video conferences."
+  homepage: https://jitsi.org/
+  license: "Apache-2.0"
+  winget: Jitsi.Meet
+  publisher: "Jitsi Team"
+
+- id: gotomeeting
+  name: "GoToMeeting"
+  category: communication
+  description: "GoToMeeting is a conferencing and online meeting tool."
+  homepage: https://www.gotomeeting.com
+  license: "Proprietary"
+  winget: GoTo.GoToMeeting
+  publisher: "LogMeIn, Inc."
+
+- id: loom
+  name: "Loom"
+  category: communication
+  description: "Loom is a video messaging tool that helps you get your message across through instantly shareable videos."
+  homepage: https://www.loom.com/
+  license: "Proprietary"
+  winget: Loom.Loom
+  publisher: "Loom, Inc."
+
+- id: rambox
+  name: "Rambox"
+  category: communication
+  description: "Workspace simplifier - The only way to organize your workspace and boost your productivity"
+  homepage: https://rambox.app/download-windows/
+  license: "Proprietary"
+  winget: Rambox.Rambox
+  publisher: "Rambox LLC"
+
+- id: ferdium
+  name: "Ferdium"
+  category: communication
+  description: "Messaging app for WhatsApp, Slack, Telegram, HipChat, Hangouts and many many more."
+  homepage: https://github.com/ferdium/ferdium-app
+  license: "Apache-2.0"
+  winget: Ferdium.Ferdium
+  publisher: "Ferdium Contributors"
+
+- id: betterbird
+  name: "Betterbird"
+  category: communication
+  description: "Betterbird is a fork of Mozilla Thunderbird with additional features and bugfixes."
+  homepage: https://www.betterbird.eu/downloads/
+  license: "MPL-2.0"
+  winget: Betterbird.Betterbird
+  publisher: "Betterbird Project"
+
+- id: proton-mail
+  name: "Proton Mail"
+  category: communication
+  description: "Keep your conversations private with Proton Mail, an encrypted email service based in Switzerland."
+  homepage: https://proton.me/mail
+  license: "Proprietary"
+  winget: Proton.ProtonMail
+  publisher: "Proton"
+
+- id: proton-mail-bridge
+  name: "Proton Mail Bridge"
+  category: communication
+  description: "Use Proton Mail with your desktop email client"
+  homepage: https://proton.me/mail/bridge
+  license: "GPL-3.0"
+  winget: Proton.ProtonMailBridge
+  publisher: "Proton AG"
+
+- id: tuta-mail
+  name: "Tuta Mail"
+  category: communication
+  description: "Tutanota is an email client with a strong focus on security and privacy that lets you encrypt emails on all your devices."
+  homepage: https://github.com/tutao/tutanota
+  license: "GPL-3.0"
+  winget: Tutanota.Tutanota
+  publisher: "Tutao GmbH"
+
+- id: nextcloud-desktop
+  name: "Nextcloud"
+  category: communication
+  description: "The Nextcloud Desktop Client is a tool to synchronize files from Nextcloud Server with your computer."
+  homepage: https://nextcloud.com/
+  license: "GPL-2.0"
+  winget: Nextcloud.NextcloudDesktop
+  publisher: "Nextcloud GmbH"
+
+- id: beeper
+  name: "Beeper"
+  category: communication
+  description: "All your chats in one app."
+  homepage: https://www.beeper.com/download
+  license: "Proprietary"
+  winget: Beeper.Beeper
+  publisher: "Beeper Inc."
+
+- id: mpc-be
+  name: "MPC-BE"
+  category: media
+  description: "Media Player Classic - BE is a free and open source audio and video player for Windows."
+  homepage: https://sourceforge.net/projects/mpcbe
+  license: "GPL-3.0"
+  winget: MPC-BE.MPC-BE
+  publisher: "MPC-BE Team"
+
+- id: mpc-hc
+  name: "MPC-HC"
+  category: media
+  description: "MPC-HC is an extremely light-weight, open source media player for Windows."
+  homepage: https://github.com/clsid2/mpc-hc
+  license: "GPL-3.0"
+  winget: clsid2.mpc-hc
+  publisher: "MPC-HC Team"
+
+- id: mpv-shinchiro-build
+  name: "mpv (shinchiro build)"
+  category: media
+  description: "A free, open source, and cross-platform media player."
+  homepage: https://github.com/shinchiro/mpv-winbuild-cmake
+  license: "GPL-2.0-or-later"
+  winget: shinchiro.mpv
+  publisher: "shinchiro"
+
+- id: potplayer
+  name: "PotPlayer"
+  category: media
+  description: "Powerful multimedia player that supports a variety of different video codecs and formats."
+  homepage: https://potplayer.tv/
+  license: "Freeware"
+  winget: Daum.PotPlayer
+  publisher: "Kakao Corp."
+
+- id: jellyfin-media-player
+  name: "Jellyfin Media Player"
+  category: media
+  description: "Jellyfin Desktop Client based on Plex Media Player"
+  homepage: https://github.com/jellyfin/jellyfin-media-player
+  license: "GPL-2.0"
+  winget: Jellyfin.JellyfinMediaPlayer
+  publisher: "Jellyfin"
+
+- id: jellyfin-server
+  name: "Jellyfin Server"
+  category: media
+  description: "Jellyfin Server: The Free Software Media System"
+  homepage: https://jellyfin.org/
+  license: "MIT"
+  winget: Jellyfin.Server
+  publisher: "The Jellyfin Project"
+
+- id: plex
+  name: "Plex"
+  category: media
+  description: "Plex is a global streaming media service and a client–server media player platform, made by Plex, Inc."
+  homepage: https://www.plex.tv/
+  license: "Freemium AND GPL-2.0"
+  winget: Plex.Plex
+  publisher: "Plex, Inc."
+
+- id: plexamp
+  name: "Plexamp"
+  category: media
+  description: "A beautiful Plex music player for audiophiles, curators, and hipsters."
+  homepage: https://www.plex.tv/plexamp/
+  license: "Proprietary"
+  winget: Plex.Plexamp
+  publisher: "Plex, Inc."
+
+- id: stremio
+  name: "Stremio"
+  category: media
+  description: "Stremio is a modern media center that's a one-stop solution for your video entertainment."
+  homepage: https://www.stremio.com/
+  license: "GPL"
+  winget: Stremio.Stremio
+  publisher: "Smart Code Ltd"
+
+- id: irfanview
+  name: "IrfanView"
+  category: media
+  description: "Fast and compact image viewer and converter"
+  homepage: https://www.irfanview.com/
+  license: "Proprietary, free for private and non-commercial use"
+  winget: IrfanSkiljan.IrfanView
+  publisher: "Irfan Skiljan"
+
+- id: xnview-mp
+  name: "XnView MP"
+  category: media
+  description: "Professional Image Viewer \u0026 Photo Management"
+  homepage: https://www.xnview.com/en/xnviewmp/
+  license: "Proprietary"
+  winget: XnSoft.XnViewMP
+  publisher: "Pierre-e Gougelet"
+
+- id: faststone-image-viewer
+  name: "FastStone Image Viewer"
+  category: media
+  description: "FastStone Image Viewer is a fast, stable, user-friendly image browser, converter and editor."
+  homepage: https://www.faststone.org/FSViewerDetail.htm
+  license: "Proprietary"
+  winget: FastStone.Viewer
+  publisher: "FastStone Corporation"
+
+- id: winamp
+  name: "Winamp"
+  category: media
+  description: "The legendary Winamp desktop player for Windows"
+  homepage: https://www.winamp.com/
+  license: "Proprietary"
+  winget: Winamp.Winamp
+  publisher: "Winamp SA"
+
+- id: aimp
+  name: "AIMP"
+  category: media
+  description: "AIMP is a freeware audio player."
+  homepage: https://www.aimp.ru
+  license: "Proprietary"
+  winget: AIMP.AIMP
+  publisher: "Artem Izmaylov"
+
+- id: deezer
+  name: "Deezer"
+  category: media
+  description: "A French online music streaming service."
+  homepage: https://www.deezer.com/explore/download/
+  license: "Proprietary"
+  winget: Deezer.Deezer
+  publisher: "Deezer"
+
+- id: youtube-music
+  name: "YouTube Music"
+  category: media
+  description: "YouTube Music Desktop App bundled with custom plugins (and built-in ad blocker / downloader)"
+  homepage: https://github.com/th-ch/youtube-music
+  license: "MIT license"
+  winget: th-ch.YouTubeMusic
+  publisher: "th-ch"
+
+- id: mediainfo
+  name: "MediaInfo"
+  category: media
+  description: "A convenient unified display of the most relevant technical and tag data for video and audio files."
+  homepage: https://mediaarea.net/MediaInfo
+  license: "BSD-2-Clause"
+  winget: MediaArea.MediaInfo.GUI
+  publisher: "MediaArea.net"
+
+- id: mediainfo-cli
+  name: "MediaInfo CLI"
+  category: media
+  description: "A convenient unified display of the most relevant technical and tag data for video and audio files from command line."
+  homepage: https://mediaarea.net/MediaInfo
+  license: "BSD-2-Clause"
+  winget: MediaArea.MediaInfo
+  publisher: "MediaArea.net"
+
+- id: mkvtoolnix
+  name: "MKVToolNix"
+  category: media
+  description: "MKVToolNix is a set of tools to create, alter and inspect Matroska files under Linux, other Unices and Windows."
+  homepage: https://mkvtoolnix.download/
+  license: "GPL-2.0"
+  winget: MoritzBunkus.MKVToolNix
+  publisher: "Moritz Bunkus"
+
+- id: subtitle-edit
+  name: "Subtitle Edit"
+  category: media
+  description: "Subtitle Edit is a free and open source editor for video subtitles."
+  homepage: https://github.com/SubtitleEdit/subtitleedit
+  license: "MIT"
+  winget: Nikse.SubtitleEdit
+  publisher: "Nikse"
+
+- id: aegisub
+  name: "Aegisub"
+  category: media
+  description: "Cross-platform advanced subtitle editor"
+  homepage: https://aegisub.org/downloads/
+  license: "GPL-2.0"
+  winget: Aegisub.Aegisub
+  publisher: "Aegisub Team"
+
+- id: avidemux
+  name: "Avidemux"
+  category: media
+  description: "Avidemux is a simple platform video editor for Linux, Windows and Mac OS X."
+  homepage: https://avidemux.sourceforge.net/
+  license: "GPL-2.0"
+  winget: Avidemux.Avidemux
+  publisher: "Avidemux"
+
+- id: kdenlive
+  name: "Kdenlive"
+  category: media
+  description: "Free and Open Source Video Editor"
+  homepage: https://kdenlive.org/
+  license: "GPL-3.0"
+  winget: KDE.Kdenlive
+  publisher: "KDE e.V."
+
+- id: openshot-video-editor
+  name: "OpenShot Video Editor"
+  category: media
+  description: "An award-winning, open-source video editor"
+  homepage: https://www.openshot.org/download/
+  license: "GPL-3.0"
+  winget: OpenShot.OpenShot
+  publisher: "OpenShot Studios, LLC"
+
+- id: natron
+  name: "Natron"
+  category: media
+  description: "Open-source video compositing software."
+  homepage: https://github.com/NatronGitHub/Natron
+  license: "GPL-2.0 Licence"
+  winget: Natron.Natron
+  publisher: "The Natron developers"
+
+- id: lmms
+  name: "LMMS"
+  category: media
+  description: "LMMS is a free cross-platform alternative to commercial programs like FL Studio®, which allow you to produce music with your computer."
+  homepage: https://lmms.io/download
+  license: "GPL-2.0-or-later"
+  winget: LMMS.LMMS
+  publisher: "LMMS Developers"
+
+- id: reaper
+  name: "REAPER"
+  category: media
+  description: "REAPER is a digital audio production application, offering full multitrack audio and MIDI recording, processing, editing, mixing and mastering toolset."
+  homepage: https://www.reaper.fm/
+  license: "Proprietary"
+  winget: Cockos.REAPER
+  publisher: "Cockos Incorporated"
+
+- id: voicemeeter
+  name: "Voicemeeter"
+  category: media
+  description: "Voicemeeter is Audio Mixer Application endowed with Virtual Audio Device used as Virtual I/O to mix and manage any audio sources from or to any audio devices…"
+  homepage: https://vb-audio.com/Voicemeeter/index.htm
+  license: "Donationware"
+  winget: VB-Audio.Voicemeeter
+  publisher: "VB-Audio Software"
+
+- id: fxsound
+  name: "FxSound"
+  category: media
+  description: "Free open-source software to boost sound quality, volume, and bass."
+  homepage: https://www.fxsound.com/download
+  license: "AGPLv3"
+  winget: FxSound.FxSound
+  publisher: "FxSound LLC"
+
+- id: eartrumpet
+  name: "EarTrumpet"
+  category: media
+  description: "A powerful volume control app for Windows."
+  homepage: https://eartrumpet.app
+  license: "MIT"
+  winget: File-New-Project.EarTrumpet
+  publisher: "File-New-Project"
+
+- id: elgato-stream-deck
+  name: "Elgato Stream Deck"
+  category: media
+  description: "With Stream Deck, unleash your creative genius and make waves across Twitch and YouTube."
+  homepage: https://www.elgato.com/s/downloads
+  license: "Proprietary"
+  winget: Elgato.StreamDeck
+  publisher: "Corsair Memory, Inc."
+
+- id: elgato-wave-link
+  name: "Elgato Wave Link"
+  category: media
+  description: "Wave Link gives you ultimate control of your Twitch stream, YouTube video or podcast audio."
+  homepage: https://www.elgato.com/s/downloads
+  license: "Proprietary"
+  winget: Elgato.WaveLink
+  publisher: "Corsair Memory, Inc."
+
+- id: elgato-control-center
+  name: "Elgato Control Center"
+  category: media
+  description: "Control your Elgato lights with ease"
+  homepage: https://www.elgato.com/s/downloads
+  license: "Proprietary"
+  winget: Elgato.ControlCenter
+  publisher: "Corsair Memory, Inc."
+
+- id: elgato-4k-capture-utility
+  name: "Elgato 4K Capture Utility"
+  category: media
+  description: "Software for recording video using Elgato capture cards"
+  homepage: https://www.elgato.com/s/downloads
+  license: "Proprietary"
+  winget: Elgato.4KCaptureUtility
+  publisher: "Corsair Memory, Inc."
+
+- id: streamlink
+  name: "Streamlink"
+  category: media
+  description: "Streamlink is a CLI utility which pipes video streams from various services into a video player, such as VLC."
+  homepage: https://streamlink.github.io/
+  license: "BSD-2-Clause"
+  winget: Streamlink.Streamlink
+  publisher: "Streamlink"
+
+- id: mediahuman-youtube-downloader
+  name: "MediaHuman YouTube Downloader"
+  category: media
+  description: "Download videos from YouTube"
+  homepage: https://www.mediahuman.com/youtube-video-downloader/
+  license: "Proprietary"
+  winget: MediaHuman.YouTubeDownloader
+  publisher: "MediaHuman"
+
+- id: internet-download-manager
+  name: "Internet Download Manager"
+  category: media
+  description: "Internet Download Manager (IDM) is a tool to increase download speeds by up to 5 times, resume and schedule downloads."
+  homepage: https://www.internetdownloadmanager.com/
+  license: "Proprietary"
+  winget: Tonec.InternetDownloadManager
+  publisher: "Tonec Inc."
+
+- id: musicbrainz-picard
+  name: "MusicBrainz Picard"
+  category: media
+  description: "A cross-platform music tagger powered by the MusicBrainz database."
+  homepage: https://picard.musicbrainz.org/
+  license: "GPL-2.0"
+  winget: MusicBrainz.Picard
+  publisher: "MusicBrainz"
+
+- id: amazon-kindle
+  name: "Amazon Kindle"
+  category: media
+  description: "Your library on your PC - read your books on your PC with the free Kindle app."
+  homepage: https://www.amazon.com/gp/browse.html?node=16571048011
+  license: "Copyright (c) 1996-2023, Amazon.com, Inc. or its affiliates"
+  winget: Amazon.Kindle
+  publisher: "Amazon"
+
+- id: okular
+  name: "Okular"
+  category: media
+  description: "The Universal Document Viewer"
+  homepage: https://okular.kde.org/
+  license: "GPL-2.0-or-later"
+  winget: KDE.Okular
+  publisher: "KDE e.V."
+
+- id: foxit-pdf-reader
+  name: "Foxit PDF Reader"
+  category: media
+  description: "Industry’s most powerful PDF Reader Solution."
+  homepage: https://www.foxitsoftware.com/pdf-reader/
+  license: "Proprietary"
+  winget: Foxit.FoxitReader
+  publisher: "Foxit Software Inc."
+
+- id: pdfsam-basic
+  name: "PDFsam Basic"
+  category: media
+  description: "A free, open source, multi-platform software designed to split, merge, extract pages, mix and rotate PDF files."
+  homepage: https://pdfsam.org/pdfsam-basic/
+  license: "AGPL-3.0"
+  winget: PDFsam.PDFsam
+  publisher: "Sober Lemur S.r.l."
+
+- id: pdf-xchange-editor
+  name: "PDF-XChange Editor"
+  category: media
+  description: "The smallest, fastest and most feature-rich free PDF viewer/editor on the market."
+  homepage: https://www.pdf-xchange.com/product/pdf-xchange-editor
+  license: "Proprietary"
+  winget: TrackerSoftware.PDF-XChangeEditor
+  publisher: "PDF-XChange Co Ltd."
+
+- id: gsview
+  name: "GSview"
+  category: media
+  description: "GSview is a graphical interface for Ghostscript, an interpreter for the PostScript language and Portable Document Format."
+  homepage: https://github.com/bquistorff
+  license: "Aladdin Free Public Licence"
+  winget: Ghostgum.GSview
+  publisher: "Ghostgum"
+
+- id: imagemagick-q16-hdri
+  name: "ImageMagick Q16-HDRI"
+  category: media
+  description: "A free, open-source software suite for editing and manipulating digital images"
+  homepage: https://imagemagick.org/
+  license: "ImageMagick"
+  winget: ImageMagick.ImageMagick
+  publisher: "ImageMagick Studio LLC"
+
+- id: ffmpeg-essentials-build
+  name: "FFmpeg (Essentials Build)"
+  category: media
+  description: "A complete, cross-platform solution to record, convert and stream audio and video."
+  homepage: https://www.gyan.dev/ffmpeg/builds/
+  license: "GPL-3.0"
+  winget: Gyan.FFmpeg.Essentials
+  publisher: "Gyan"
+
+- id: handbrake-cli
+  name: "HandBrake CLI"
+  category: media
+  description: "HandBrake is a open-source tool, built by volunteers, for converting video from nearly any format to a selection of modern, widely supported codecs."
+  homepage: https://handbrake.fr/
+  license: "GPL-2.0"
+  winget: HandBrake.HandBrake.CLI
+  publisher: "The HandBrake Team"
+
+- id: upscayl
+  name: "Upscayl"
+  category: media
+  description: "A powerful image upscaling tool that uses advanced AI technology to enhance your images."
+  homepage: https://upscayl.org/download
+  license: "AGPL-3.0"
+  winget: Upscayl.Upscayl
+  publisher: "Nayam Amarshe"
+
+- id: screentogif
+  name: "ScreenToGif"
+  category: media
+  description: "Screen, webcam and sketchboard recorder with an integrated editor."
+  homepage: https://www.screentogif.com/
+  license: "MS-PL"
+  winget: NickeManarin.ScreenToGif
+  publisher: "Nicke Manarin"
+
+- id: greenshot
+  name: "Greenshot"
+  category: media
+  description: "A light-weight screenshot software tool for Windows."
+  homepage: https://getgreenshot.org/
+  license: "GPL-3.0"
+  winget: Greenshot.Greenshot
+  publisher: "Greenshot"
+
+- id: flameshot
+  name: "Flameshot"
+  category: media
+  description: "Powerful yet simple to use screenshot software."
+  homepage: https://flameshot.org/
+  license: "GPL-3.0"
+  winget: Flameshot.Flameshot
+  publisher: "flameshot-org"
+
+- id: camtasia
+  name: "Camtasia"
+  category: media
+  description: "The best all-in-one screen recorder and video editor."
+  homepage: https://www.techsmith.com/camtasia/
+  license: "Proprietary"
+  winget: TechSmith.Camtasia
+  publisher: "TechSmith Corporation"
+
+- id: figma-agent
+  name: "Figma Agent"
+  category: design
+  description: "Access fonts on your computer in Figma"
+  homepage: https://www.figma.com/downloads/
+  license: "Proprietary"
+  winget: Figma.FigmaAgent
+  publisher: "Figma, Inc."
+
+- id: krita
+  name: "Krita"
+  category: design
+  description: "Krita is a professional FREE and open source painting program."
+  homepage: https://krita.org/
+  license: "GPL-3.0"
+  winget: KDE.Krita
+  publisher: "Krita Foundation"
+
+- id: paint-net
+  name: "paint.net"
+  category: design
+  description: "An image and photo editing software for PCs that run Windows."
+  homepage: https://getpaint.net/
+  license: "Proprietary (Freeware)"
+  winget: dotPDN.PaintDotNet
+  publisher: "dotPDN LLC"
+
+- id: pinta
+  name: "Pinta"
+  category: design
+  description: "Simple GTK# Paint Program"
+  homepage: https://github.com/PintaProject/Pinta
+  license: "MIT"
+  winget: Pinta.Pinta
+  publisher: "Pinta Community"
+
+- id: lunacy
+  name: "Lunacy"
+  category: design
+  description: "Free design software that keeps your flow with AI tools and built-in graphics"
+  homepage: https://icons8.com/lunacy
+  license: "Proprietary"
+  winget: Icons8.Lunacy
+  publisher: "Icons8"
+
+- id: scribus
+  name: "Scribus"
+  category: design
+  description: "Open Source Desktop Publishing"
+  homepage: https://www.scribus.net/
+  license: "GPL-2.0-or-later"
+  winget: Scribus.Scribus
+  publisher: "The Scribus Team"
+
+- id: rawtherapee
+  name: "RawTherapee"
+  category: design
+  description: "A free, cross-platform raw image processing program"
+  homepage: https://www.rawtherapee.com/downloads/
+  license: "GPL-3.0"
+  winget: RawTherapee.RawTherapee
+  publisher: "rawtherapee.com"
+
+- id: hugin
+  name: "Hugin"
+  category: design
+  description: "Panorama photo stitcher"
+  homepage: https://hugin.sourceforge.io/
+  license: "GNU General Public License, Version 2"
+  winget: Hugin.Hugin
+  publisher: "Hugin developer team"
+
+- id: freecad
+  name: "FreeCAD"
+  category: design
+  description: "A general purpose open source parametric 3D CAD modeler"
+  homepage: https://www.freecad.org/downloads.php
+  license: "LGPL-2.0-or-later"
+  winget: FreeCAD.FreeCAD
+  publisher: "FreeCAD Team"
+
+- id: openscad
+  name: "OpenSCAD"
+  category: design
+  description: "OpenSCAD is software for creating solid 3D CAD objects."
+  homepage: https://www.openscad.org/
+  license: "GNU GPLv2"
+  winget: OpenSCAD.OpenSCAD
+  publisher: "OpenSCAD"
+
+- id: librecad
+  name: "LibreCAD"
+  category: design
+  description: "LibreCAD is a cross-platform 2D CAD program written in C++11 using the Qt framework."
+  homepage: https://librecad.org/
+  license: "GPLv2"
+  winget: LibreCAD.LibreCAD
+  publisher: "LibreCAD Team"
+
+- id: kicad
+  name: "KiCad"
+  category: design
+  description: "A Cross Platform and Open Source Electronics Design Automation Suite"
+  homepage: https://www.kicad.org/download/windows/
+  license: "GPL-3.0"
+  winget: KiCad.KiCad
+  publisher: "KiCad"
+
+- id: ultimaker-cura
+  name: "Ultimaker Cura"
+  category: design
+  description: "3D printer / slicing GUI built on top of the Uranium framework"
+  homepage: https://ultimaker.com/software/ultimaker-cura
+  license: "LGPL-3.0"
+  winget: Ultimaker.Cura
+  publisher: "UltiMaker"
+
+- id: prusaslicer
+  name: "PrusaSlicer"
+  category: design
+  description: "An Open Source 3D model slicer"
+  homepage: https://www.prusa3d.com/prusaslicer/
+  license: "AGPL-3.0"
+  winget: Prusa3D.PrusaSlicer
+  publisher: "Prusa Research"
+
+- id: bambu-studio
+  name: "Bambu Studio"
+  category: design
+  description: "Bambu Studio is a cutting-edge, feature-rich slicing software."
+  homepage: https://github.com/bambulab/BambuStudio
+  license: "AGPL-3.0"
+  winget: Bambulab.Bambustudio
+  publisher: "Bambulab"
+
+- id: cloudcompare
+  name: "CloudCompare"
+  category: design
+  description: "3D point cloud and mesh processing software"
+  homepage: https://www.cloudcompare.org/
+  license: "GPL-2.0-or-later"
+  winget: CloudCompare.CloudCompare
+  publisher: "Daniel Girardeau-Montaut"
+
+- id: wings-3d
+  name: "Wings 3D"
+  category: design
+  description: "Wings 3D is an advanced subdivision modeler that is both powerful and easy to use."
+  homepage: https://sourceforge.net/projects/wings/
+  license: "BSD"
+  winget: Wings3D.Wings3D
+  publisher: "Wings3D Team"
+
+- id: godot-engine
+  name: "Godot Engine"
+  category: design
+  description: "Multi-platform 2D and 3D game engine"
+  homepage: https://godotengine.org/download/windows
+  license: "MIT"
+  winget: GodotEngine.GodotEngine
+  publisher: "Godot Engine"
+
+- id: unity-hub
+  name: "Unity Hub"
+  category: design
+  description: "Manage multiple installations of the Unity Editor, create new projects, and access your work."
+  homepage: https://unity.com/unity-hub
+  license: "Proprietary"
+  winget: Unity.UnityHub
+  publisher: "Unity Technologies Inc."
+
+- id: gdevelop
+  name: "GDevelop"
+  category: design
+  description: "The fastest, easiest, most powerful no-code game engine."
+  homepage: https://gdevelop.io/
+  license: "MIT"
+  winget: GDevelop.GDevelop
+  publisher: "GDevelop Team"
+
+- id: tiled
+  name: "Tiled"
+  category: design
+  description: "Tiled is a 2D level editor for game developers to create and edit map tiles for game content."
+  homepage: https://www.mapeditor.org
+  license: "GPL 2.0 or later"
+  winget: Tiled.Tiled
+  publisher: "mapeditor.org"
+
+- id: fontforge
+  name: "FontForge"
+  category: design
+  description: "FontForge is a free and open source font editor brought to you by a community of fellow type lovers."
+  homepage: https://github.com/fontforge/fontforge
+  license: "GPL-3.0-or-later"
+  winget: FontForge.FontForge
+  publisher: "FontForgeBuilds"
+
+- id: xnconvert
+  name: "XnConvert"
+  category: design
+  description: "A fast and powerful batch image converter"
+  homepage: https://www.xnview.com/en/xnconvert/
+  license: "Freeware"
+  winget: XnSoft.XnConvert
+  publisher: "Pierre-e Gougelet"
+
+- id: synfig-studio
+  name: "Synfig Studio"
+  category: design
+  description: "A free and open-source 2D animation software, designed as powerful industrial-strength solution for creating film-quality animation using a vector and bitmap…"
+  homepage: https://github.com/synfig/synfig
+  license: "GPL-3.0"
+  winget: Synfig.SynfigStudio
+  publisher: "Synfig"
+
+- id: drawio
+  name: "draw.io"
+  category: design
+  description: "A diagramming desktop app based on Electron that wraps the core draw.io editor."
+  homepage: https://github.com/jgraph/drawio-desktop
+  license: "GPL-3.0"
+  winget: JGraph.Draw
+  publisher: "JGraph"
+
+- id: freeplane
+  name: "Freeplane"
+  category: design
+  description: "Free mind mapping and knowledge building software"
+  homepage: https://docs.freeplane.org/
+  license: "GPL-2.0"
+  winget: Freeplane.Freeplane
+  publisher: "Open source"
+
+- id: miro
+  name: "Miro"
+  category: design
+  description: "The innovation workspace where teams manage projects, design products, and build the future together."
+  homepage: https://miro.com/apps/
+  license: "Proprietary"
+  winget: Miro.Miro
+  publisher: "Miro"
+
+- id: microsoft-onedrive
+  name: "Microsoft OneDrive"
+  category: productivity
+  description: "Keep your files and memories protected, up to date, and easily accessible across all your devices."
+  homepage: https://www.microsoft.com/microsoft-365/onedrive/download
+  license: "Proprietary"
+  winget: Microsoft.OneDrive
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-powerbi-desktop
+  name: "Microsoft PowerBI Desktop"
+  category: productivity
+  description: "Visualize any data and integrate the visuals into the apps you use every day with Power BI, a unified platform for self-service and business intelligence."
+  homepage: https://www.microsoft.com/power-platform/products/power-bi/
+  license: "Proprietary"
+  winget: Microsoft.PowerBI
+  publisher: "Microsoft Corporation"
+
+- id: power-automate-for-desktop
+  name: "Power Automate for desktop"
+  category: productivity
+  description: "Automate workflows across modern and legacy applications on your desktop by recording actions such as mouse and keyboard clicks."
+  homepage: https://learn.microsoft.com/power-automate/desktop-flows/introduction
+  license: "Proprietary"
+  winget: Microsoft.PowerAutomateDesktop
+  publisher: "Microsoft Corporation"
+
+- id: openoffice
+  name: "OpenOffice"
+  category: productivity
+  description: "The Free and Open Productivity Suite"
+  homepage: https://www.openoffice.org/
+  license: "Apache-2.0"
+  winget: Apache.OpenOffice
+  publisher: "Apache Software Foundation"
+
+- id: wps-office
+  name: "WPS Office"
+  category: productivity
+  description: "A free office suite fully compatible with Microsoft Office"
+  homepage: https://www.wps.com/office/windows/
+  license: "Proprietary"
+  winget: Kingsoft.WPSOffice
+  publisher: "Kingsoft Corp."
+
+- id: marktext
+  name: "MarkText"
+  category: productivity
+  description: "A simple and elegant Markdown editor focused on speed and usability."
+  homepage: https://github.com/marktext
+  license: "MIT"
+  winget: MarkText.MarkText
+  publisher: "Jocs"
+
+- id: zettlr
+  name: "Zettlr"
+  category: productivity
+  description: "Your one-stop publication workbench"
+  homepage: https://www.zettlr.com/
+  license: "GPL-3.0"
+  winget: Zettlr.Zettlr
+  publisher: "Hendrik Erz"
+
+- id: logseq
+  name: "Logseq"
+  category: productivity
+  description: "A privacy-first, open-source platform for knowledge management and collaboration"
+  homepage: https://logseq.com/
+  license: "AGPL-3.0"
+  winget: Logseq.Logseq
+  publisher: "Logseq"
+
+- id: joplin
+  name: "Joplin"
+  category: productivity
+  description: "Joplin is an open source note-taking app."
+  homepage: https://joplinapp.org/
+  license: "AGPL-3.0-or-later"
+  winget: Joplin.Joplin
+  publisher: "Laurent Cozic"
+
+- id: appflowy
+  name: "AppFlowy"
+  category: productivity
+  description: "The Open Source Alternative To Notion."
+  homepage: https://github.com/AppFlowy-IO/AppFlowy
+  license: "AGPL-3.0"
+  winget: AppFlowy.AppFlowy
+  publisher: "AppFlowy-IO"
+
+- id: evernote
+  name: "Evernote"
+  category: productivity
+  description: "Remember everything and tackle any project with your notes, tasks, and schedule all in one place."
+  homepage: https://evernote.com/download
+  license: "Proprietary"
+  winget: Evernote.Evernote
+  publisher: "Evernote Corporation"
+
+- id: todoist
+  name: "Todoist"
+  category: productivity
+  description: "Become focused, organized, and calm with Todoist."
+  homepage: https://todoist.com/
+  license: "Proprietary"
+  winget: Doist.Todoist
+  publisher: "Doist"
+
+- id: toggl-track
+  name: "Toggl Track"
+  category: productivity
+  description: "A native desktop application for the leading time tracking tool Toggl Track"
+  homepage: https://toggl.com/track/time-tracking-windows/
+  license: "Proprietary"
+  winget: Toggl.TogglTrack
+  publisher: "Toggl OÜ"
+
+- id: clockify
+  name: "Clockify"
+  category: productivity
+  description: "A time tracker and timesheet app that lets you track work hours across projects."
+  homepage: https://clockify.me/windows-time-tracking
+  license: "Proprietary"
+  winget: Clockify.Clockify
+  publisher: "COING Inc."
+
+- id: activitywatch
+  name: "ActivityWatch"
+  category: productivity
+  description: "ActivityWatch is an app that automatically tracks how you spend time on your devices."
+  homepage: https://activitywatch.net/
+  license: "MPL-2.0"
+  winget: ActivityWatch.ActivityWatch
+  publisher: "ActivityWatch Contributors"
+
+- id: flow-launcher
+  name: "Flow Launcher"
+  category: productivity
+  description: "Keystroke launcher for Windows to search, manage and launch files, folders bookmarks, websites and more."
+  homepage: https://github.com/Flow-Launcher/Flow.Launcher
+  license: "MIT"
+  winget: Flow-Launcher.Flow-Launcher
+  publisher: "Flow-Launcher Team"
+
+- id: wox
+  name: "Wox"
+  category: productivity
+  description: "WoX is a launcher for Windows that simply works."
+  homepage: https://github.com/Wox-launcher/Wox
+  license: "GPL-3.0 license"
+  winget: Wox.Wox
+  publisher: "Wox"
+
+- id: espanso
+  name: "Espanso"
+  category: productivity
+  description: "A Privacy-first, Cross-platform Text Expander"
+  homepage: https://espanso.org/
+  license: "GPL-3.0"
+  winget: Espanso.Espanso
+  publisher: "Federico Terzi"
+
+- id: ditto
+  name: "Ditto"
+  category: productivity
+  description: "Ditto is an extension to the Windows Clipboard."
+  homepage: https://sabrogden.github.io/Ditto/
+  license: "GPL-3.0"
+  winget: Ditto.Ditto
+  publisher: "Scott Brogden"
+
+- id: total-commander
+  name: "Total Commander"
+  category: productivity
+  description: "Total Commander is a modern file manager with plugin support in the classic 2-window style of the DOS era."
+  homepage: https://www.ghisler.com/
+  license: "Shareware"
+  winget: Ghisler.TotalCommander
+  publisher: "Ghisler Software GmbH"
+
+- id: syncthing
+  name: "Syncthing"
+  category: productivity
+  description: "Open Source Continuous File Synchronization"
+  homepage: https://github.com/syncthing/syncthing
+  license: "MPL-2.0"
+  winget: Syncthing.Syncthing
+  publisher: "The Syncthing Authors"
+
+- id: dropbox
+  name: "Dropbox"
+  category: productivity
+  description: "Organize all your team's content, tune out distractions, and get everyone coordinated with the world's first smart workspace."
+  homepage: https://www.dropbox.com/
+  license: "Combined GPLv2 and proprietary software"
+  winget: Dropbox.Dropbox
+  publisher: "Dropbox, Inc."
+
+- id: google-drive
+  name: "Google Drive"
+  category: productivity
+  description: "Safely store your files and access them from any device."
+  homepage: https://workspace.google.com/products/drive/
+  license: "Proprietary"
+  winget: Google.GoogleDrive
+  publisher: "Google LLC"
+
+- id: box
+  name: "Box"
+  category: productivity
+  description: "Apps for secure file sharing and collaboration from anywhere"
+  homepage: https://www.box.com/
+  license: "Proprietary"
+  winget: Box.Box
+  publisher: "Box, Inc."
+
+- id: cryptomator
+  name: "Cryptomator"
+  category: productivity
+  description: "Encryption made easy and optimized for the cloud"
+  homepage: https://cryptomator.org/
+  license: "GPL-3.0"
+  winget: Cryptomator.Cryptomator
+  publisher: "Skymatic GmbH"
+
+- id: duplicati
+  name: "Duplicati"
+  category: productivity
+  description: "Duplicati is a free, open source, backup client that securely stores encrypted, incremental, compressed backups on cloud storage services and remote file…"
+  homepage: https://www.duplicati.com/
+  license: "MIT"
+  winget: Duplicati.Duplicati
+  publisher: "Duplicati Team"
+
+- id: kopiaui
+  name: "KopiaUI"
+  category: productivity
+  description: "Cross-platform backup tool for Windows, macOS \u0026 Linux with fast, incremental backups, client-side end-to-end encryption, compression and data deduplication."
+  homepage: https://github.com/kopia/kopia
+  license: "Apache-2.0"
+  winget: Kopia.KopiaUI
+  publisher: "Kopia Authors"
+
+- id: teamviewer
+  name: "TeamViewer"
+  category: productivity
+  description: "Secure remote access and support."
+  homepage: https://www.teamviewer.com/en/download/windows/
+  license: "Proprietary"
+  winget: TeamViewer.TeamViewer
+  publisher: "TeamViewer"
+
+- id: parsec
+  name: "Parsec"
+  category: productivity
+  description: "Remote desktop you’ll actually love, in crystal clear, interactive HD."
+  homepage: https://parsec.app/
+  license: "Proprietary"
+  winget: Parsec.Parsec
+  publisher: "Parsec Cloud Inc."
+
+- id: sunshine
+  name: "Sunshine"
+  category: productivity
+  description: "Sunshine is a Gamestream host for Moonlight."
+  homepage: https://github.com/LizardByte/Sunshine
+  license: "GPL-3.0"
+  winget: LizardByte.Sunshine
+  publisher: "LizardByte"
+
+- id: remote-desktop
+  name: "Remote Desktop"
+  category: productivity
+  description: "You can access Windows Virtual Desktop resources on devices with Windows 7, Windows 10, and Windows 10 IoT Enterprise using the Windows Desktop client."
+  homepage: https://learn.microsoft.com/azure/virtual-desktop/users/connect-windows
+  license: "Proprietary"
+  winget: Microsoft.RemoteDesktopClient
+  publisher: "Microsoft Corporation"
+
+- id: realvnc-viewer
+  name: "RealVNC Viewer"
+  category: productivity
+  description: "The original VNC Viewer and the most secure way to connect to your devices remotely."
+  homepage: https://www.realvnc.com/connect/download/viewer/
+  license: "Proprietary"
+  winget: RealVNC.VNCViewer
+  publisher: "RealVNC"
+
+- id: tigervnc
+  name: "TigerVNC"
+  category: productivity
+  description: "High performance, multi-platform VNC client and server"
+  homepage: https://tigervnc.org/
+  license: "GPL-2.0"
+  winget: TigerVNC.TigerVNC
+  publisher: "TigerVNC project"
+
+- id: deskflow
+  name: "Deskflow"
+  category: productivity
+  description: "Deskflow lets you share one mouse and keyboard between multiple computers on Windows, macOS and Linux."
+  homepage: https://github.com/deskflow/deskflow
+  license: "GPL-2.0"
+  winget: Deskflow.Deskflow
+  publisher: "Deskflow"
+
+- id: synergy
+  name: "Synergy"
+  category: productivity
+  description: "Use a single keyboard and mouse between multiple computers."
+  homepage: https://symless.com/synergy/download
+  license: "EULA"
+  winget: Symless.Synergy
+  publisher: "Symless Ltd"
+
+- id: microsoft-garage-mouse-without-borders
+  name: "Microsoft Garage Mouse without Borders"
+  category: productivity
+  description: "Mouse without Borders allows you to control multiple computers from one system."
+  homepage: https://aka.ms/mm
+  license: "Copyright (c) Microsoft Corporation. All rights reserved."
+  winget: Microsoft.MouseWithoutBorders
+  publisher: "Microsoft Garage"
+
+- id: jabref
+  name: "JabRef"
+  category: productivity
+  description: "A free reference manager that helps you to discover, collect, organize and cite your scholarly literature and research in an efficient way."
+  homepage: https://www.jabref.org/
+  license: "MIT"
+  winget: JabRef.JabRef
+  publisher: "JabRef"
+
+- id: anki
+  name: "Anki"
+  category: productivity
+  description: "Powerful and intelligent flash cards."
+  homepage: https://apps.ankiweb.net/
+  license: "AGPL-3.0-or-later"
+  winget: Anki.Anki
+  publisher: "Anki"
+
+- id: grammarly-for-windows
+  name: "Grammarly for Windows"
+  category: productivity
+  description: "Compose bold, clear, mistake-free writing with Grammarly’s new AI-powered desktop Windows app."
+  homepage: https://www.grammarly.com/desktop/windows
+  license: "Proprietary"
+  winget: Grammarly.Grammarly
+  publisher: "Grammarly"
+
+- id: deepl
+  name: "DeepL"
+  category: productivity
+  description: "Translate everywhere with DeepL"
+  homepage: https://www.deepl.com/en/app
+  license: "Proprietary"
+  winget: DeepL.DeepL
+  publisher: "DeepL SE"
+
+- id: thorium-reader
+  name: "Thorium Reader"
+  category: productivity
+  description: "A cross platform desktop reading app, based on the Readium Desktop toolkit"
+  homepage: https://www.edrlab.org/software/thorium-reader/
+  license: "BSD-3-Clause"
+  winget: EDRLab.Thorium
+  publisher: "EDRLab"
+
+- id: trelby
+  name: "Trelby"
+  category: productivity
+  description: "The free, multiplatform, feature-rich screenwriting program."
+  homepage: https://www.trelby.org/
+  license: "GPLv2"
+  winget: Trelby.Trelby
+  publisher: "Trelby.org"
+
+- id: pandoc
+  name: "Pandoc"
+  category: productivity
+  description: "If you need to convert files from one markup format into another, pandoc is your swiss-army knife."
+  homepage: https://pandoc.org/
+  license: "GPL-2.0"
+  winget: JohnMacFarlane.Pandoc
+  publisher: "John MacFarlane"
+
+- id: miktex
+  name: "MiKTeX"
+  category: productivity
+  description: "A modern TeX distribution for Windows, Linux and macOS."
+  homepage: https://miktex.org/download
+  license: "Freeware"
+  winget: MiKTeX.MiKTeX
+  publisher: "MiKTeX.org"
+
+- id: texstudio
+  name: "TeXstudio"
+  category: productivity
+  description: "TeXstudio is a fully featured LaTeX editor."
+  homepage: https://www.texstudio.org/
+  license: "GPL-3.0"
+  winget: TeXstudio.TeXstudio
+  publisher: "Benito van der Zander"
+
+- id: typst
+  name: "Typst"
+  category: productivity
+  description: "A new markup-based typesetting system that is powerful and easy to learn."
+  homepage: https://typst.app/
+  license: "Apache-2.0"
+  winget: Typst.Typst
+  publisher: "Typst GmbH"
+
+- id: gephi
+  name: "Gephi"
+  category: productivity
+  description: "The Open Graph Viz Platform"
+  homepage: https://gephi.org/
+  license: "CDDL-1.0, GPL-3.0"
+  winget: Gephi.Gephi
+  publisher: "Gephi"
+
+- id: cal
+  name: "Cal"
+  category: productivity
+  description: "Scheduling infrastructure for everyone."
+  homepage: https://cal.com/
+  license: "AGPL-3.0"
+  winget: Cal.Cal
+  publisher: "Cal"
+
+- id: nextcloud-talk
+  name: "Nextcloud Talk"
+  category: productivity
+  description: "Official Desktop client for Nextcloud Talk"
+  homepage: https://github.com/nextcloud-releases/talk-desktop
+  license: "AGPL-3.0-or-later"
+  winget: Nextcloud.Talk
+  publisher: "Nextcloud GmbH"
+
+- id: notion-calendar
+  name: "Notion Calendar"
+  category: productivity
+  description: "All of your commitments, now in one place."
+  homepage: https://www.notion.com/product/calendar
+  license: "Proprietary"
+  winget: Notion.NotionCalendar
+  publisher: "Notion Labs, Inc."
+
+- id: proton-pass
+  name: "Proton Pass"
+  category: security
+  description: "Open-source and encrypted password manager"
+  homepage: https://proton.me/pass
+  license: "GPL-3.0"
+  winget: Proton.ProtonPass
+  publisher: "Proton AG"
+
+- id: proton-drive
+  name: "Proton Drive"
+  category: security
+  description: "Free secure cloud storage"
+  homepage: https://proton.me/drive
+  license: "Proprietary"
+  winget: Proton.ProtonDrive
+  publisher: "Proton AG"
+
+- id: proton-vpn
+  name: "Proton VPN"
+  category: network
+  description: "High-speed Swiss VPN that safeguards your privacy."
+  homepage: https://protonvpn.com/
+  license: "GPL-3.0"
+  winget: Proton.ProtonVPN
+  publisher: "Proton AG"
+
+- id: dashlane
+  name: "Dashlane"
+  category: security
+  description: "Dashlane fills all your passwords, payments, and personal details wherever you need them, across the web, on any device."
+  homepage: https://www.dashlane.com
+  license: "Proprietary software"
+  winget: Dashlane.Dashlane
+  publisher: "Dashlane, Inc."
+
+- id: lastpass
+  name: "LastPass"
+  category: security
+  description: "An online password manager and form filler that makes web browsing easier and more secure."
+  homepage: https://lastpass.com/misc_download2.php
+  license: "Proprietary"
+  winget: LastPass.LastPass
+  publisher: "LastPass US LP."
+
+- id: nordpass
+  name: "NordPass"
+  category: security
+  description: "Securely Store, Manage \u0026 Autofill Passwords"
+  homepage: https://nordpass.com/
+  license: "Proprietary"
+  winget: NordSecurity.NordPass
+  publisher: "NordPass Team"
+
+- id: keeweb
+  name: "KeeWeb"
+  category: security
+  description: "Free cross-platform password manager compatible with KeePass."
+  homepage: https://keeweb.info
+  license: "MIT"
+  winget: KeeWeb.KeeWeb
+  publisher: "KeeWeb"
+
+- id: keepass
+  name: "KeePass"
+  category: security
+  description: "KeePass, the free, open source, light-weight and easy-to-use password manager."
+  homepage: https://keepass.info/
+  license: "GPL-2.0"
+  winget: DominikReichl.KeePass
+  publisher: "Dominik Reichl"
+
+- id: winauth
+  name: "WinAuth"
+  category: security
+  description: "WinAuth is a portable, open-source Authenticator for Windows."
+  homepage: https://github.com/winauth/winauth
+  license: "GPL-3.0"
+  winget: WinAuth.WinAuth
+  publisher: "WinAuth"
+
+- id: veracrypt
+  name: "VeraCrypt"
+  category: security
+  description: "VeraCrypt is a free open source disk encryption software for Windows, Mac OSX and Linux."
+  homepage: https://veracrypt.io/
+  license: "Apache 2.0"
+  winget: IDRIX.VeraCrypt
+  publisher: "IDRIX"
+
+- id: malwarebytes
+  name: "Malwarebytes"
+  category: security
+  description: "Cyber Security Software and Anti-Malware"
+  homepage: https://www.malwarebytes.com/mwb-download
+  license: "Proprietary"
+  winget: Malwarebytes.Malwarebytes
+  publisher: "Malwarebytes"
+
+- id: eset-security
+  name: "ESET Security"
+  category: security
+  description: "Ideal for modern users concerned about their privacy, who actively use internet for shopping, banking, work and communication."
+  homepage: https://www.eset.com/int/home/internet-security
+  license: "Proprietary"
+  winget: ESET.Security
+  publisher: "ESET, spol. s r.o."
+
+- id: glasswire
+  name: "GlassWire"
+  category: security
+  description: "Instantly see your current \u0026 past network activity."
+  homepage: https://www.glasswire.com/
+  license: "Proprietary"
+  winget: GlassWire.GlassWire
+  publisher: "GlassWire"
+
+- id: hibit-uninstaller
+  name: "HiBit Uninstaller"
+  category: system
+  description: "Completely Uninstall Stubborn Software, Windows Apps \u0026 Browser Extension."
+  homepage: https://www.hibitsoft.ir/Uninstaller.html
+  license: "Proprietary"
+  winget: HiBitSoftware.HiBitUninstaller
+  publisher: "HiBitSoftware"
+
+- id: revo-uninstaller
+  name: "Revo Uninstaller"
+  category: system
+  description: "Revo Uninstaller helps you to uninstall software and remove unwanted programs easily."
+  homepage: https://www.revouninstaller.com/products/revo-uninstaller-free/
+  license: "Freeware"
+  winget: RevoUninstaller.RevoUninstaller
+  publisher: "VS Revo Group, Ltd."
+
+- id: bleachbit
+  name: "BleachBit"
+  category: system
+  description: "Clean Your System and Free Disk Space"
+  homepage: https://www.bleachbit.org/
+  license: "GPL-3.0"
+  winget: BleachBit.BleachBit
+  publisher: "BleachBit"
+
+- id: recuva
+  name: "Recuva"
+  category: system
+  description: "Restore accidentally deleted files quickly and easily."
+  homepage: https://www.ccleaner.com/recuva
+  license: "Freeware"
+  winget: Piriform.Recuva
+  publisher: "Piriform"
+
+- id: speccy
+  name: "Speccy"
+  category: system
+  description: "Fast, lightweight, advanced system information at your fingertips."
+  homepage: https://www.ccleaner.com/speccy
+  license: "Proprietary"
+  winget: Piriform.Speccy
+  publisher: "Piriform"
+
+- id: crystaldiskinfo
+  name: "CrystalDiskInfo"
+  category: system
+  description: "A HDD/SSD utility software which supports parts of USB, Intel RAID and NVMe."
+  homepage: https://crystalmark.info/en/software/crystaldiskinfo/
+  license: "MIT"
+  winget: CrystalDewWorld.CrystalDiskInfo
+  publisher: "Crystal Dew World"
+
+- id: crystaldiskmark
+  name: "CrystalDiskMark"
+  category: system
+  description: "A simple disk benchmark software."
+  homepage: https://crystalmark.info/en/software/crystaldiskmark/
+  license: "MIT"
+  winget: CrystalDewWorld.CrystalDiskMark
+  publisher: "Crystal Dew World"
+
+- id: cpu-z
+  name: "CPUID CPU-Z"
+  category: system
+  description: "System information software"
+  homepage: https://www.cpuid.com/softwares/cpu-z.html
+  license: "Freeware"
+  winget: CPUID.CPU-Z
+  publisher: "CPUID, Inc."
+
+- id: cpuid-hwmonitor
+  name: "CPUID HWMonitor"
+  category: system
+  description: "Voltages, temperatures and fans speed monitoring"
+  homepage: https://www.cpuid.com/softwares/hwmonitor.html
+  license: "Freeware"
+  winget: CPUID.HWMonitor
+  publisher: "CPUID, Inc."
+
+- id: gpu-z
+  name: "TechPowerUp GPU-Z"
+  category: system
+  description: "GPU-Z is a lightweight system utility designed to provide vital information about your video card and graphics processor."
+  homepage: https://www.techpowerup.com/gpuz/
+  license: "Freeware"
+  winget: TechPowerUp.GPU-Z
+  publisher: "TechPowerUp"
+
+- id: nvcleanstall
+  name: "NVCleanstall"
+  category: system
+  description: "NVCleanstall lets you customize the NVIDIA GeForce Driver package by removing components that you don't need (or want)."
+  homepage: https://www.techpowerup.com/download/techpowerup-nvcleanstall/
+  license: "Proprietary"
+  winget: TechPowerUp.NVCleanstall
+  publisher: "TechPowerUp"
+
+- id: throttlestop
+  name: "ThrottleStop"
+  category: system
+  description: "ThrottleStop is a small application designed to monitor for and correct the three main types of CPU throttling that are being used on many laptop computers"
+  homepage: https://www.techpowerup.com/download/techpowerup-throttlestop/
+  license: "Freeware"
+  winget: TechPowerUp.ThrottleStop
+  publisher: "TechPowerUp"
+
+- id: rivatuner-statistics-server
+  name: "Rivatuner Statistics Server"
+  category: system
+  description: "Framerate monitoring, On-Screen Display and high-performance video capture service provider for other graphics card utilities."
+  homepage: https://www.guru3d.com/download/rtss-rivatuner-statistics-server-download/
+  license: "Freeware"
+  winget: Guru3D.RTSS
+  publisher: "Unwinder"
+
+- id: librehardwaremonitor
+  name: "LibreHardwareMonitor"
+  category: system
+  description: "A free software fork of Open Hardware Monitor that can monitor the temperature sensors, fan speeds, voltages, load and clock speeds of your computer."
+  homepage: https://github.com/LibreHardwareMonitor/LibreHardwareMonitor
+  license: "MPL-2.0"
+  winget: LibreHardwareMonitor.LibreHardwareMonitor
+  publisher: "LibreHardwareMonitor"
+
+- id: fancontrol
+  name: "FanControl"
+  category: system
+  description: "A highly focused fan controlling software for Windows."
+  homepage: https://getfancontrol.com/
+  license: "Freeware"
+  winget: Rem0o.FanControl
+  publisher: "Remi Mercier Software Inc"
+
+- id: speedtest-cli
+  name: "Speedtest CLI"
+  category: system
+  description: "Internet connection measurement for developers"
+  homepage: https://www.speedtest.net/apps/cli
+  license: "Proprietary"
+  winget: Ookla.Speedtest.CLI
+  publisher: "Ookla"
+
+- id: speedtest-by-ookla
+  name: "Speedtest by Ookla"
+  category: system
+  description: "The definitive way to test the speed and performance of your internet connection."
+  homepage: https://www.speedtest.net/apps/windows
+  license: "Proprietary"
+  winget: Ookla.Speedtest.Desktop
+  publisher: "Ookla"
+
+- id: teamviewer-host
+  name: "TeamViewer Host"
+  category: security
+  description: "Set up unattended access to a device"
+  homepage: https://www.teamviewer.com/en/download/windows/
+  license: "Proprietary"
+  winget: TeamViewer.TeamViewer.Host
+  publisher: "TeamViewer"
+
+- id: nanazip
+  name: "NanaZip"
+  category: utilities
+  description: "The 7-Zip derivative intended for the modern Windows experience."
+  homepage: https://github.com/M2Team/NanaZip
+  license: "MIT"
+  winget: M2Team.NanaZip
+  publisher: "Kenji Mouri"
+
+- id: peazip
+  name: "PeaZip"
+  category: utilities
+  description: "A free file archiver utility and rar extractor for Windows and Linux, work with 200+ archive types and variants, handle spanned archives and support multiple…"
+  homepage: https://peazip.github.io/
+  license: "LGPL-3.0"
+  winget: Giorgiotani.Peazip
+  publisher: "Giorgio Tani"
+
+- id: bandizip
+  name: "Bandizip"
+  category: utilities
+  description: "A powerful archiver that provides an ultrafast processing speed and convenient features."
+  homepage: https://www.bandisoft.com/bandizip/
+  license: "Proprietary"
+  winget: Bandisoft.Bandizip
+  publisher: "Bandisoft.com"
+
+- id: honeyview
+  name: "Honeyview"
+  category: utilities
+  description: "A fast, powerful, and free image viewer."
+  homepage: https://en.bandisoft.com/honeyview
+  license: "Freeware"
+  winget: Bandisoft.Honeyview
+  publisher: "Bandisoft.com"
+
+- id: everything-lite
+  name: "Everything Lite"
+  category: utilities
+  description: "Locate files and folders by name instantly."
+  homepage: https://www.voidtools.com/
+  license: "MIT"
+  winget: voidtools.Everything.Lite
+  publisher: "voidtools"
+
+- id: wiztree
+  name: "WizTree"
+  category: utilities
+  description: "WizTree is a hard drive disk space analyser similar to WinDirStat but is MUCH faster."
+  homepage: https://diskanalyzer.com/
+  license: "Proprietary"
+  winget: AntibodySoftware.WizTree
+  publisher: "Antibody Software"
+
+- id: treesize-free
+  name: "TreeSize Free"
+  category: utilities
+  description: "Every hard disk is too small if you just wait long enough."
+  homepage: https://www.jam-software.com/treesize_free
+  license: "Proprietary"
+  winget: JAMSoftware.TreeSize.Free
+  publisher: "JAM Software"
+
+- id: agent-ransack
+  name: "Agent Ransack"
+  category: utilities
+  description: "A free file search tool for finding files on your PC or network drives."
+  homepage: https://www.mythicsoft.com/agentransack/
+  license: "Proprietary"
+  winget: Mythicsoft.AgentRansack
+  publisher: "Mythicsoft Ltd"
+
+- id: ripgrep-gnu
+  name: "RipGrep GNU"
+  category: utilities
+  description: "ripgrep recursively searches directories for a regex pattern while respecting your gitignore"
+  homepage: https://github.com/BurntSushi/ripgrep
+  license: "Dual License (MIT \u0026 Unlicense)"
+  winget: BurntSushi.ripgrep.GNU
+  publisher: "BurntSushi"
+
+- id: rufus
+  name: "Rufus"
+  category: system
+  description: "A utility that helps format and create bootable USB flash drives, such as USB keys/pendrives, memory sticks, etc."
+  homepage: https://rufus.ie/
+  license: "GPL-3.0-or-later"
+  winget: Rufus.Rufus
+  publisher: "pbatard"
+
+- id: balenaetcher
+  name: "balenaEtcher"
+  category: system
+  description: "Flash OS images to SD cards \u0026 USB drives, safely and easily."
+  homepage: https://etcher.balena.io/
+  license: "Apache-2.0"
+  winget: Balena.Etcher
+  publisher: "Balena Ltd. \u003chello@balena.io\u003e"
+
+- id: ventoy
+  name: "Ventoy"
+  category: system
+  description: "Ventoy is an open source tool to create bootable USB drive for ISO/WIM/IMG/VHD(x)/EFI files."
+  homepage: https://www.ventoy.net/
+  license: "GPL-3.0"
+  winget: Ventoy.Ventoy
+  publisher: "Ventoy"
+
+- id: fedora-media-writer
+  name: "Fedora Media Writer"
+  category: system
+  description: "Fedora Media Writer is a tool that helps users put Fedora images on their portable drives such as flash disks."
+  homepage: https://github.com/FedoraQt/MediaWriter
+  license: "GPL-2.0"
+  winget: Fedora.FedoraMediaWriter
+  publisher: "Fedora Project"
+
+- id: windows-pc-health-check
+  name: "Windows PC Health Check"
+  category: system
+  description: "Windows 11 OS compatibility checker."
+  homepage: https://support.microsoft.com/en-us/windows/how-to-use-the-pc-health-check-app-9c8abd9b-03ba-4e67-81ef-36f37caa7844
+  license: "Proprietary"
+  winget: Microsoft.WindowsPCHealthCheck
+  publisher: "Microsoft Corporation"
+
+- id: ddu
+  name: "Display Driver Uninstaller"
+  category: system
+  description: "Display Driver Uninstaller is a driver removal utility that can help you completely uninstall AMD/NVIDIA/INTEL graphics card drivers and packages from your…"
+  homepage: https://www.wagnardsoft.com/display-driver-uninstaller-ddu
+  license: "MIT"
+  winget: Wagnardsoft.DisplayDriverUninstaller
+  publisher: "Wagnardsoft"
+
+- id: nvidia-cuda-toolkit
+  name: "NVIDIA CUDA Toolkit"
+  category: system
+  description: "CUDA is a parallel computing platform and programming model developed by NVIDIA for general computing on graphical processing units (GPUs)."
+  homepage: https://developer.nvidia.com/cuda-toolkit
+  license: "Proprietary"
+  winget: Nvidia.CUDA
+  publisher: "NVIDIA Corporation"
+
+- id: nvidia-physx-system-software
+  name: "NVIDIA PhysX System Software"
+  category: system
+  description: "Provides updates that are necessary for some games to run PhysX content properly."
+  homepage: https://www.nvidia.com/en-us/drivers/physx/physx-9-26-0703-driver/
+  license: "Proprietary"
+  winget: Nvidia.PhysX
+  publisher: "NVIDIA Corporation"
+
+- id: rtx-voice
+  name: "RTX Voice"
+  category: system
+  description: "NVIDIA RTX Voice is a new plugin that leverages NVIDIA RTX GPUs and their AI capabilities to remove distracting background noise from your broadcasts, voice…"
+  homepage: https://www.nvidia.com/en-us/geforce/guides/nvidia-rtx-voice-setup-guide
+  license: "Copyright © 2021 NVIDIA Corporation"
+  winget: Nvidia.RTXVoice
+  publisher: "Nvidia Corporation"
+
+- id: intel-r-presentmon
+  name: "Intel(R) PresentMon"
+  category: system
+  description: "A gaming performance overlay and telemetry application to monitor and measure your gaming experience."
+  homepage: https://game.intel.com/intel-presentmon/
+  license: "MIT"
+  winget: Intel.PresentMon
+  publisher: "Intel(R) Corporation"
+
+- id: clink
+  name: "Clink"
+  category: system
+  description: "Clink combines the native Windows shell cmd.exe with the powerful command line editing features of the GNU Readline library, which provides rich completion,…"
+  homepage: https://chrisant996.github.io/clink/
+  license: "GPL-3.0"
+  winget: chrisant996.Clink
+  publisher: "Christopher Antos"
+
+- id: armourycrate
+  name: "ArmouryCrate"
+  category: system
+  description: "A program that allows you to unify the configuration and control of all ASUS and ROG software and gear."
+  homepage: https://www.asus.com/supportonly/armoury%20crate/helpdesk_download/
+  license: "Proprietary (Terms of Use)"
+  winget: Asus.ArmouryCrate
+  publisher: "Asus"
+
+- id: logitech-g-hub
+  name: "Logitech G HUB"
+  category: system
+  description: "Logitech G HUB Software lets you customize Logitech G gaming devices."
+  homepage: https://support.logi.com/hc/en-us/articles/360025298133
+  license: "Proprietary"
+  winget: Logitech.GHUB
+  publisher: "Logitech, Inc."
+
+- id: logi-optionsplus
+  name: "Logi Options+"
+  category: system
+  description: "Customization App for Logitech Devices"
+  homepage: https://www.logitech.com/software/logi-options-plus
+  license: "Proprietary"
+  winget: Logitech.OptionsPlus
+  publisher: "Logitech"
+
+- id: logi-tune
+  name: "Logi Tune"
+  category: system
+  description: "Get more out of your headsets and webcams, and book your spaces for better days in the office."
+  homepage: https://www.logitech.com/video-collaboration/software/logi-tune-software
+  license: "Proprietary"
+  winget: Logitech.LogiTune
+  publisher: "Logitech"
+
+- id: steelseries-gg
+  name: "SteelSeries GG"
+  category: system
+  description: "SteelSeries GG helps create better connections with your gear, your people and your game."
+  homepage: https://steelseries.com/gg
+  license: "Proprietary"
+  winget: SteelSeries.GG
+  publisher: "SteelSeries ApS"
+
+- id: qmk-toolbox
+  name: "QMK Toolbox"
+  category: system
+  description: "A collection of keyboard flashing tools"
+  homepage: https://github.com/qmk/qmk_toolbox
+  license: "MIT"
+  winget: QMK.QMKToolbox
+  publisher: "QMK"
+
+- id: openrgb
+  name: "OpenRGB"
+  category: system
+  description: "Open source RGB lighting control that doesn't depend on manufacturer software."
+  homepage: https://openrgb.org/
+  license: "GPL-2.0"
+  winget: OpenRGB.OpenRGB
+  publisher: "OpenRGB"
+
+- id: lively-wallpaper
+  name: "Lively Wallpaper"
+  category: system
+  description: "Free and open-source software that allows users to set animated desktop wallpapers and screensavers."
+  homepage: https://github.com/rocksdanister/lively
+  license: "GPLv3"
+  winget: rocksdanister.LivelyWallpaper
+  publisher: "rocksdanister"
+
+- id: rainmeter
+  name: "Rainmeter"
+  category: system
+  description: "Desktop Customization Tool"
+  homepage: https://www.rainmeter.net/
+  license: "GPL-2.0"
+  winget: Rainmeter.Rainmeter
+  publisher: "Rainmeter"
+
+- id: translucenttb
+  name: "TranslucentTB"
+  category: system
+  description: "A lightweight utility that makes the Windows taskbar translucent/transparent."
+  homepage: https://github.com/TranslucentTB/TranslucentTB
+  license: "GPL-3.0"
+  winget: CharlesMilette.TranslucentTB
+  publisher: "Charles Milette"
+
+- id: startallback
+  name: "StartAllBack"
+  category: system
+  description: "Fully integrates with Windows 11 and provides original Windows taskbar and start menu, as well as many other essential shell enhancements."
+  homepage: https://www.startallback.com/
+  license: "Proprietary"
+  winget: StartIsBack.StartAllBack
+  publisher: "startisback.com"
+
+- id: open-shell
+  name: "Open-Shell"
+  category: system
+  description: "A collection of utilities bringing back classic features to Windows."
+  homepage: https://open-shell.github.io/Open-Shell-Menu/
+  license: "MIT"
+  winget: Open-Shell.Open-Shell-Menu
+  publisher: "The Open-Shell Team"
+
+- id: nilesoft-shell
+  name: "Nilesoft Shell"
+  category: system
+  description: "Powerful context menu manager for Windows File Explorer."
+  homepage: https://nilesoft.org/
+  license: "MIT License"
+  winget: Nilesoft.Shell
+  publisher: "Nilesoft"
+
+- id: twinkle-tray
+  name: "Twinkle Tray"
+  category: system
+  description: "Easily manage the brightness of your monitors in Windows from the system tray"
+  homepage: https://github.com/xanderfrangos/twinkle-tray
+  license: "MIT"
+  winget: xanderfrangos.twinkletray
+  publisher: "Xander Frangos"
+
+- id: displayfusion
+  name: "DisplayFusion"
+  category: system
+  description: "DisplayFusion will make your multi-monitor life much easier! With powerful features like Multi-Monitor Taskbars, TitleBar Buttons and fully customizable…"
+  homepage: https://www.displayfusion.com/
+  license: "Proprietary"
+  winget: BinaryFortress.DisplayFusion
+  publisher: "Binary Fortress Software"
+
+- id: glazewm
+  name: "GlazeWM"
+  category: system
+  description: "GlazeWM is a tiling window manager for Windows inspired by i3wm."
+  homepage: https://github.com/glzr-io/glazewm
+  license: "GPL-3.0"
+  winget: glzr-io.glazewm
+  publisher: "Glzr Software Pte. Ltd."
+
+- id: komorebi
+  name: "komorebi"
+  category: system
+  description: "A tiling window manager for Windows"
+  homepage: https://github.com/LGUG2Z/komorebi
+  license: "Komorebi"
+  winget: LGUG2Z.komorebi
+  publisher: "LGUG2Z"
+
+- id: yasb
+  name: "yasb"
+  category: system
+  description: "A configurable Windows status bar."
+  homepage: https://github.com/amnweb/yasb
+  license: "MIT License"
+  winget: AmN.yasb
+  publisher: "AmN"
+
+- id: mem-reduct
+  name: "Mem Reduct"
+  category: system
+  description: "Lightweight real-time memory management application to monitor and clean system memory on your computer."
+  homepage: https://github.com/henrypp/memreduct
+  license: "GPL-3.0"
+  winget: Henry++.MemReduct
+  publisher: "Henry++"
+
+- id: sysinternals-bginfo
+  name: "Sysinternals BGInfo"
+  category: system
+  description: "Automatically display relevant information about a Windows computer on the desktop's background."
+  homepage: https://learn.microsoft.com/en-us/sysinternals/downloads/bginfo
+  license: "Proprietary"
+  winget: Microsoft.Sysinternals.BGInfo
+  publisher: "Sysinternals"
+
+- id: sysinternals-handle
+  name: "Sysinternals Handle"
+  category: system
+  description: "Handle is a utility that displays information about open handles for any process in the system."
+  homepage: https://learn.microsoft.com/en-us/sysinternals/downloads/handle
+  license: "Proprietary"
+  winget: Microsoft.Sysinternals.Handle
+  publisher: "Sysinternals"
+
+- id: sysinternals-strings
+  name: "Sysinternals Strings"
+  category: system
+  description: "Strings scans the file you pass it for UNICODE (or ASCII) strings of a default length of 3 or more UNICODE (or ASCII) characters."
+  homepage: https://learn.microsoft.com/en-us/sysinternals/downloads/strings
+  license: "Proprietary"
+  winget: Microsoft.Sysinternals.Strings
+  publisher: "Sysinternals"
+
+- id: sysinternals-zoomit
+  name: "Sysinternals ZoomIt"
+  category: system
+  description: "ZoomIt is a screen zoom, annotation, and recording tool for technical presentations that include application demonstrations."
+  homepage: https://learn.microsoft.com/en-us/sysinternals/downloads/zoomit
+  license: "Proprietary"
+  winget: Microsoft.Sysinternals.ZoomIt
+  publisher: "Sysinternals"
+
+- id: sysinternals-whois
+  name: "Sysinternals Whois"
+  category: system
+  description: "Whois performs the registration record for the domain name or IP address that you specify."
+  homepage: https://learn.microsoft.com/sysinternals/downloads/whois
+  license: "Proprietary"
+  winget: Microsoft.Sysinternals.Whois
+  publisher: "Sysinternals"
+
+- id: q-dir
+  name: "Q-Dir"
+  category: system
+  description: "Q-Dir the Quad Explorer"
+  homepage: https://www.softwareok.com/?seite=Freeware/Q-Dir
+  license: "Freeware"
+  winget: SoftwareOK.Q-Dir
+  publisher: "SoftwareOK"
+
+- id: chocolatey-gui
+  name: "Chocolatey GUI"
+  category: system
+  description: "A delicious GUI for Chocolatey"
+  homepage: https://github.com/chocolatey/ChocolateyGUI
+  license: "APACHE-2.0"
+  winget: Chocolatey.ChocolateyGUI
+  publisher: "Chocolatey"
+
+- id: app-installer
+  name: "App Installer"
+  category: system
+  description: "Microsoft App Installer lets you easily install Windows apps with a double-click."
+  homepage: https://github.com/microsoft/winget-cli
+  license: "Commercial"
+  winget: Microsoft.AppInstaller
+  publisher: "Microsoft Corporation"
+
+- id: steelseries-engine
+  name: "SteelSeries Engine"
+  category: system
+  description: "SteelSeries Engine is a configuration program for all compatible SteelSeries gear, allowing the user to adjust a wide range of customization options for…"
+  homepage: https://steelseries.com/engine
+  license: "Proprietary"
+  winget: SteelSeries.SteelSeriesEngine
+  publisher: "SteelSeries ApS"
+
+- id: adguard
+  name: "AdGuard"
+  category: network
+  description: "AdGuard is a unique adblock program for Windows that has all the necessary features for the best web experience."
+  homepage: https://adguard.com/adguard-windows/overview.html
+  license: "Proprietary"
+  winget: AdGuard.AdGuard
+  publisher: "Adguard Software Ltd"
+
+- id: adguard-vpn
+  name: "AdGuard VPN"
+  category: network
+  description: "Topnotch VPN by AdGuard."
+  homepage: https://adguard-vpn.com/en/welcome.html
+  license: "Proprietary"
+  winget: AdGuard.AdGuardVPN
+  publisher: "Adguard Software Limited"
+
+- id: adguard-home
+  name: "AdGuard Home"
+  category: network
+  description: "A network-wide software for blocking ads and tracking."
+  homepage: https://adguard.com/en/adguard-home/overview.html
+  license: "GPL-3.0"
+  winget: AdGuard.AdGuardHome
+  publisher: "AdGuard"
+
+- id: nextdns
+  name: "NextDNS"
+  category: network
+  description: "The new firewall for the modern Internet."
+  homepage: https://nextdns.io/
+  license: "Proprietary"
+  winget: NextDNS.NextDNS
+  publisher: "NextDNS"
+
+- id: v2rayn
+  name: "v2rayN"
+  category: network
+  description: "支持 Xray、v2fly 等 core 的 GUI 客户端"
+  homepage: https://github.com/2dust/v2rayN
+  license: "GPL-3.0"
+  winget: 2dust.v2rayN
+  publisher: "2dust"
+
+- id: mullvad-vpn
+  name: "Mullvad VPN"
+  category: network
+  description: "Mullvad is an open-source commercial virtual private network service based in Sweden."
+  homepage: https://mullvad.net/
+  license: "GPL-3.0"
+  winget: MullvadVPN.MullvadVPN
+  publisher: "Mullvad VPN"
+
+- id: expressvpn
+  name: "ExpressVPN"
+  category: network
+  description: "High-Speed, Secure \u0026 Anonymous VPN Service."
+  homepage: https://www.expressvpn.com/
+  license: "Proprietary"
+  winget: ExpressVPN.ExpressVPN
+  publisher: "Expressco Services, LLC"
+
+- id: private-internet-access
+  name: "Private Internet Access"
+  category: network
+  description: "Hide the IP address \u0026 location"
+  homepage: https://www.privateinternetaccess.com/
+  license: "Proprietary"
+  winget: PrivateInternetAccess.PrivateInternetAccess
+  publisher: "Private Internet Access, Inc."
+
+- id: windscribe
+  name: "Windscribe"
+  category: network
+  description: "Windscribe encrypts your browsing activity, blocks ads, and unblocks entertainment content"
+  homepage: https://windscribe.com/
+  license: "GPL-2.0"
+  winget: Windscribe.Windscribe
+  publisher: "Windscribe Limited"
+
+- id: ivpn-client
+  name: "IVPN Client"
+  category: network
+  description: "The IVPN client for Windows"
+  homepage: https://www.ivpn.net/apps-windows/
+  license: "GPL"
+  winget: IVPN.IVPN
+  publisher: "IVPN Limited"
+
+- id: riseupvpn
+  name: "RiseupVPN"
+  category: network
+  description: "Riseup has a VPN client called RiseupVPN."
+  homepage: https://riseup.net/en/windows
+  license: "GPL-3.0"
+  winget: Riseup.RiseupVPN
+  publisher: "LEAP Encryption Access Project"
+
+- id: hamachi
+  name: "Hamachi"
+  category: network
+  description: "Create virtual private networks on-demand"
+  homepage: https://vpn.net/
+  license: "Proprietary"
+  winget: LogMeIn.Hamachi
+  publisher: "LogMeIn, Inc."
+
+- id: radmin-vpn
+  name: "Radmin VPN"
+  category: network
+  description: "Radmin VPN allows you to securely connect computers, located behind firewalls."
+  homepage: https://www.radmin-vpn.com/
+  license: "Proprietary"
+  winget: Famatech.RadminVPN
+  publisher: "Famatech"
+
+- id: netbird
+  name: "Netbird"
+  category: network
+  description: "Connect your devices into a secure WireGuard®-based overlay network with SSO, MFA and granular access controls."
+  homepage: https://netbird.io/
+  license: "BSD-3-Clause"
+  winget: Netbird.Netbird
+  publisher: "NetBird GmbH"
+
+- id: angry-ip-scanner
+  name: "Angry IP Scanner"
+  category: network
+  description: "Angry IP scanner is a very fast IP address and port scanner."
+  homepage: https://angryip.org/
+  license: "GPL-2.0"
+  winget: angryziber.AngryIPScanner
+  publisher: "Angry IP Scanner"
+
+- id: advanced-ip-scanner
+  name: "Advanced IP Scanner"
+  category: network
+  description: "Advanced IP Scanner shows all network devices, gives you access to shared folders, and can even remotely switch computers off."
+  homepage: https://www.advanced-ip-scanner.com/
+  license: "Freeware"
+  winget: Famatech.AdvancedIPScanner
+  publisher: "Famatech"
+
+- id: netsetman
+  name: "NetSetMan"
+  category: network
+  description: "Manage all your network settings with ease"
+  homepage: https://www.netsetman.com/freeware
+  license: "Freeware"
+  winget: NetSetMan.NetSetMan
+  publisher: "NetSetMan GmbH"
+
+- id: sshfs-win
+  name: "SSHFS-Win"
+  category: network
+  description: "SSHFS for Windows"
+  homepage: https://github.com/billziss-gh/sshfs-win
+  license: "GPLv2"
+  winget: SSHFS-Win.SSHFS-Win
+  publisher: "Navimatics LLC"
+
+- id: winfsp-2025
+  name: "WinFsp 2025"
+  category: network
+  description: "Windows File System Proxy - FUSE for Windows"
+  homepage: https://winfsp.dev/
+  license: "GPLv3"
+  winget: WinFsp.WinFsp
+  publisher: "Navimatics LLC"
+
+- id: cyberduck
+  name: "Cyberduck"
+  category: network
+  description: "A libre server and cloud storage browser for Mac and Windows with support for FTP, SFTP, WebDAV, Amazon S3, OpenStack Swift, Backblaze B2, Microsoft Azure \u0026…"
+  homepage: https://cyberduck.io/
+  license: "GPL-3.0"
+  winget: Iterate.Cyberduck
+  publisher: "iterate GmbH"
+
+- id: transmission
+  name: "Transmission"
+  category: network
+  description: "Transmission is a cross-platform BitTorrent client"
+  homepage: https://transmissionbt.com/
+  license: "GPLv3"
+  winget: Transmission.Transmission
+  publisher: "Transmission Project"
+
+- id: tribler
+  name: "Tribler"
+  category: network
+  description: "Privacy enhanced BitTorrent client with P2P content discovery"
+  homepage: https://github.com/Tribler/tribler
+  license: "GPL-3.0"
+  winget: Tribler.Tribler
+  publisher: "The Tribler Team"
+
+- id: jackett
+  name: "Jackett"
+  category: network
+  description: "API Support for your favorite torrent trackers."
+  homepage: https://github.com/Jackett/Jackett
+  license: "GPL-2.0"
+  winget: Jackett.Jackett
+  publisher: "Jackett"
+
+- id: thorium-browser
+  name: "Thorium Browser"
+  category: browsers
+  description: "Chromium fork for Linux, Windows, macOS, Android, and Raspberry Pi named after radioactive element No."
+  homepage: https://thorium.rocks/
+  license: "BSD-3-Clause"
+  winget: Alex313031.Thorium
+  publisher: "The Thorium Authors"
+
+- id: bcuninstaller
+  name: "BCUninstaller"
+  category: system
+  description: "Bulk program uninstaller with advanced automation."
+  homepage: https://www.bcuninstaller.com/
+  license: "Apache-2.0"
+  winget: Klocman.BulkCrapUninstaller
+  publisher: "Marcin Szeniak"
+
+- id: cpuid-cpu-z-msi
+  name: "CPUID CPU-Z MSI"
+  category: system
+  description: "CPU-Z Customized for MSI Gaming"
+  homepage: https://www.cpuid.com/softwares/cpu-z.html
+  license: "Freeware"
+  winget: CPUID.CPU-Z.MSI
+  publisher: "CPUID, Inc."
+
+- id: geeks3d-furmark-2
+  name: "Geeks3D FurMark 2"
+  category: system
+  description: "GPU Stress Test, OpenGL and Vulkan Graphics Benchmark"
+  homepage: https://geeks3d.com/furmark/downloads/
+  license: "Proprietary"
+  winget: Geeks3D.FurMark.2
+  publisher: "Geeks3D"
+
+- id: crystaldiskmark-shizuku-edition
+  name: "CrystalDiskMark Shizuku Edition"
+  category: system
+  description: "A simple disk benchmark software."
+  homepage: https://crystalmark.info/en/software/crystaldiskmark/
+  license: "MIT"
+  winget: CrystalDewWorld.CrystalDiskMark.ShizukuEdition
+  publisher: "Crystal Dew World"
+
+- id: seatools
+  name: "SeaTools"
+  category: system
+  description: "Quick diagnostic tool that checks the health of your drive."
+  homepage: https://www.seagate.com/support/downloads/seatools/
+  license: "Proprietary"
+  winget: Seagate.SeaTools
+  publisher: "Seagate"
+
+- id: crucial-storage-executive
+  name: "Crucial Storage Executive"
+  category: system
+  description: "A free software tool that helps optimize the performance of your Crucial SSD."
+  homepage: https://www.crucial.com/support/storage-executive
+  license: "Freeware"
+  winget: Crucial.StorageExecutive
+  publisher: "Crucial"
+
+- id: aomei-partition-assistant
+  name: "AOMEI Partition Assistant"
+  category: system
+  description: "Safely partition and manage your hard disks without any data loss."
+  homepage: https://www.aomeitech.com/aomei-partition-assistant.html
+  license: "Proprietary"
+  winget: AOMEI.PartitionAssistant
+  publisher: "AOMEI International Network Limited."
+
+- id: easeus-todo-backup
+  name: "EaseUS Todo Backup"
+  category: system
+  description: "Complete Backup solutions for Home Users"
+  homepage: https://www.easeus.com/backup-software/tb-free.html
+  license: "Proprietary"
+  winget: EaseUS.TodoBackup
+  publisher: "EaseUS"
+
+- id: easeus-partition-master
+  name: "EaseUS Partition Master"
+  category: system
+  description: "A free partition software that can partition hard drive and reoragnize the disk space for better performance"
+  homepage: https://www.easeus.com/partition-manager/epm-free.html
+  license: "Freeware"
+  winget: EaseUS.PartitionMaster
+  publisher: "EaseUS"
+
+- id: testdisk
+  name: "TestDisk"
+  category: system
+  description: "Powerful free data recovery software designed to recover lost partitions and/or make non-booting disks bootable again."
+  homepage: https://www.cgsecurity.org/wiki/TestDisk
+  license: "GPL-2.0-or-later"
+  winget: CGSecurity.TestDisk
+  publisher: "CGSecurity"
+
+- id: diskinternals-linux-reader
+  name: "DiskInternals Linux Reader"
+  category: system
+  description: "Access files and folders on Ext, UFS, HFS, ReiserFS, or APFS file systems from Windows"
+  homepage: https://www.diskinternals.com/linux-reader/
+  license: "Freemium"
+  winget: DiskInternals.LinuxReader
+  publisher: "DiskInternals Research"
+
+- id: veeam-agent-for-microsoft-windows
+  name: "Veeam Agent for Microsoft Windows"
+  category: system
+  description: "FREE backup solution for Windows-based servers, desktops and laptops."
+  homepage: https://www.veeam.com/products/free/microsoft-windows.html
+  license: "Freeware"
+  winget: Veeam.VeeamAgent
+  publisher: "Veeam"
+
+- id: fastcopy
+  name: "FastCopy"
+  category: system
+  description: "The Fastest Copy/Backup Software on Windows"
+  homepage: https://fastcopy.jp/
+  license: "Proprietary"
+  winget: FastCopy.FastCopy
+  publisher: "H.Shirouzu \u0026 FastCopy Lab, LLC."
+
+- id: meld
+  name: "Meld"
+  category: utilities
+  description: "Visual diff and merge tool"
+  homepage: https://meldmerge.org/
+  license: "GPL-2.0-or-later"
+  winget: Meld.Meld
+  publisher: "Kai Willadsen"
+
+- id: araxis-merge
+  name: "Araxis Merge"
+  category: utilities
+  description: "Advanced 2 and 3-way file comparison (diff), merging, and folder synchronization"
+  homepage: https://www.araxis.com/url/merge/overview.uri
+  license: "Proprietary"
+  winget: Araxis.Merge
+  publisher: "Araxis Ltd"
+
+- id: battlenet
+  name: "Battle.net"
+  category: gaming
+  description: "Launcher client for Blizzard games."
+  homepage: https://download.battle.net/en-us/desktop
+  license: "Proprietary"
+  winget: Blizzard.BattleNet
+  publisher: "Blizzard Entertainment"
+
+- id: ubisoft-connect
+  name: "Ubisoft Connect"
+  category: gaming
+  description: "The ecosystem of players services for Ubisoft games across all platforms."
+  homepage: https://ubisoftconnect.com/
+  license: "Proprietary"
+  winget: Ubisoft.Connect
+  publisher: "Ubisoft"
+
+- id: rockstar-launcher
+  name: "Rockstar Games Launcher"
+  category: gaming
+  description: "Launcher hub for certain Rockstar Games PC games, including the Grand Theft Auto and Red Dead Redemption franchises."
+  homepage: https://socialclub.rockstargames.com/rockstar-games-launcher
+  license: "Proprietary (Freeware)"
+  winget: RockstarGames.Launcher
+  publisher: "Rockstar Games Inc."
+
+- id: ea-app
+  name: "EA app"
+  category: gaming
+  description: "Play great PC games and connect with your friends, all in one place."
+  homepage: https://www.ea.com/ea-app
+  license: "Proprietary"
+  winget: ElectronicArts.EADesktop
+  publisher: "Electronic Arts"
+
+- id: origin
+  name: "Origin"
+  category: gaming
+  description: "Play great PC games and connect with your friends, all in one place."
+  homepage: https://www.origin.com/nld/en-us/store/about
+  license: "Proprietary"
+  winget: ElectronicArts.Origin
+  publisher: "Electronic Arts, Inc."
+
+- id: gog-galaxy
+  name: "GOG GALAXY"
+  category: gaming
+  description: "All your games and friends in one place."
+  homepage: https://www.gog.com/galaxy
+  license: "Proprietary"
+  winget: GOG.Galaxy
+  publisher: "GOG.com"
+
+- id: amazon-games
+  name: "Amazon Games"
+  category: gaming
+  description: "Amazon Games app is a Windows PC game launcher that allows you to claim, download, and play new and classic Windows PC games every month from Prime Gaming."
+  homepage: https://gaming.amazon.com/home
+  license: "Proprietary"
+  winget: Amazon.Games
+  publisher: "Amazon.com Services, Inc."
+
+- id: itch
+  name: "itch"
+  category: gaming
+  description: "Install, update and play indie games"
+  homepage: https://itch.io/app
+  license: "MIT"
+  winget: ItchIo.Itch
+  publisher: "itch corp."
+
+- id: heroic
+  name: "Heroic"
+  category: gaming
+  description: "Heroic is an Open Source Game Launcher for Linux, Windows and MacOS."
+  homepage: https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher
+  license: "GPL-3.0"
+  winget: HeroicGamesLauncher.HeroicGamesLauncher
+  publisher: "Heroic Games Launcher"
+
+- id: playnite
+  name: "Playnite"
+  category: gaming
+  description: "Playnite is an open source video game library manager with one simple goal: To provide a unified interface for all of your games."
+  homepage: https://playnite.link/
+  license: "MIT"
+  winget: Playnite.Playnite
+  publisher: "Josef Nemec"
+
+- id: prism-launcher
+  name: "Prism Launcher"
+  category: gaming
+  description: "A custom launcher for Minecraft that allows you to easily manage multiple installations of Minecraft at once"
+  homepage: https://github.com/PrismLauncher/PrismLauncher
+  license: "GPL-3.0"
+  winget: PrismLauncher.PrismLauncher
+  publisher: "Prism Launcher Contributors"
+
+- id: multimc
+  name: "MultiMC"
+  category: gaming
+  description: "A custom launcher for Minecraft that allows you to easily manage multiple installations of Minecraft at once"
+  homepage: https://multimc.org/
+  license: "Dual License (Apache-2.0 and MS-PL)"
+  winget: MultiMC.MultiMC
+  publisher: "MultiMC"
+
+- id: curseforge
+  name: "CurseForge"
+  category: gaming
+  description: "Download and manage your addons and mods with the CurseForge app!"
+  homepage: https://curseforge.overwolf.com/
+  license: "Proprietary"
+  winget: Overwolf.CurseForge
+  publisher: "Overwolf"
+
+- id: modrinth-app
+  name: "Modrinth App"
+  category: gaming
+  description: "The Modrinth App is a unique, open source Minecraft launcher that allows you to play your favorite mods, and keep them up to date, all in one neat little…"
+  homepage: https://modrinth.com/app
+  license: "GPL-3.0"
+  winget: Modrinth.ModrinthApp
+  publisher: "Modrinth"
+
+- id: atlauncher
+  name: "ATLauncher"
+  category: gaming
+  description: "ATLauncher is a simple and easy to use Minecraft Launcher which contains hundreds of modpacks for you to choose from."
+  homepage: https://atlauncher.com/about
+  license: "GNU GENERAL PUBLIC LICENSE"
+  winget: ATLauncher.ATLauncher
+  publisher: "ATLauncher"
+
+- id: vortex
+  name: "Vortex"
+  category: gaming
+  description: "Vortex is the new, modern mod manager from Nexus Mods."
+  homepage: https://github.com/Nexus-Mods/Vortex
+  license: "GPL-3.0"
+  winget: NexusMods.Vortex
+  publisher: "Black Tree Gaming Ltd."
+
+- id: wemod
+  name: "WeMod"
+  category: gaming
+  description: "Free cheats and trainers for your favorite PC games in one easy app."
+  homepage: https://www.wemod.com
+  license: "Proprietary"
+  winget: WeMod.WeMod
+  publisher: "WeMod"
+
+- id: paradox-launcher
+  name: "Paradox Launcher"
+  category: gaming
+  description: "Game launcher for selected Paradox games."
+  homepage: https://play.paradoxplaza.com/
+  license: "Copyright (c) 2016 Paradox Interactive AB"
+  winget: ParadoxInteractive.ParadoxLauncher
+  publisher: "Paradox Interactive"
+
+- id: wargaming-net-game-center
+  name: "Wargaming.net Game Center"
+  category: gaming
+  description: "WGC is a game launcher app that lets you keep all your Wargaming games in one place."
+  homepage: https://wargaming.net/wgc
+  license: "Proprietary"
+  winget: Wargaming.GameCenter
+  publisher: "Wargaming.net"
+
+- id: xivlauncher
+  name: "XIVLauncher"
+  category: gaming
+  description: "XIVLauncher (abbreviated as XL) is a faster launcher for Final Fantasy XIV, with various available addons and enhancements to the game!"
+  homepage: https://github.com/goatcorp/FFXIVQuickLauncher
+  license: "GPL-3.0"
+  winget: goatcorp.XIVLauncher
+  publisher: "goaaats"
+
+- id: discord-ptb
+  name: "Discord PTB"
+  category: gaming
+  description: "Your Place to Talk and Hang Out"
+  homepage: https://discord.com/download
+  license: "Proprietary"
+  winget: Discord.Discord.PTB
+  publisher: "Discord Inc."
+
+- id: blitz
+  name: "Blitz"
+  category: gaming
+  description: "Blitz App - Your personal gaming coach"
+  homepage: https://blitz.gg/
+  license: "Custom use license"
+  winget: Blitz.Blitz
+  publisher: "Blitz, Inc."
+
+- id: steamcmd
+  name: "SteamCMD"
+  category: gaming
+  description: "A command-line version of the Steam Client."
+  homepage: https://developer.valvesoftware.com/wiki/SteamCMD
+  license: "Proprietary"
+  winget: Valve.SteamCMD
+  publisher: "Valve Corporation"
+
+- id: special-k
+  name: "Special K"
+  category: gaming
+  description: "The Swiss Army Knife of PC Gaming"
+  homepage: https://special-k.info/
+  license: "GPL-3.0"
+  winget: SpecialK.SpecialK
+  publisher: "The Special K Group"
+
+- id: retroarch
+  name: "RetroArch"
+  category: gaming
+  description: "RetroArch is a frontend for emulators, game engines and media players."
+  homepage: https://www.retroarch.com/?page=platforms
+  license: "GPL-3.0-only"
+  winget: Libretro.RetroArch
+  publisher: "Libretro"
+
+- id: cemu
+  name: "Cemu"
+  category: gaming
+  description: "Nintendo Wii U Emulator"
+  homepage: https://github.com/cemu-project/Cemu
+  license: "MPL-2.0"
+  winget: Cemu.Cemu
+  publisher: "Cemu"
+
+- id: duckstation
+  name: "DuckStation"
+  category: gaming
+  description: "Fast PlayStation 1 emulator for x86-64/AArch64."
+  homepage: https://github.com/stenzek/duckstation
+  license: "CC BY-NC-ND 4.0"
+  winget: Stenzek.DuckStation
+  publisher: "Stenzek"
+
+- id: xemu
+  name: "xemu"
+  category: gaming
+  description: "Original Xbox Emulator"
+  homepage: https://github.com/xemu-project/xemu
+  license: "GPL-2.0"
+  winget: xemu-project.xemu
+  publisher: "xemu Project"
+
+- id: dosbox
+  name: "DOSBox"
+  category: gaming
+  description: "DOSBox is an emulator program which emulates an IBM PC compatible computer running a DOS operating system."
+  homepage: https://sourceforge.net/projects/dosbox/
+  license: "GNU General Public License v2.0 (GPL-2.0)"
+  winget: DOSBox.DOSBox
+  publisher: "DOSBox"
+
+- id: dosbox-staging
+  name: "DOSBox Staging"
+  category: gaming
+  description: "DOSBox Staging is a modern continuation of DOSBox — your existing configurations will continue to work, and you will have access to many advanced features."
+  homepage: https://www.dosbox-staging.org/
+  license: "GPL-2.0-or-later"
+  winget: DOSBoxStaging.DOSBoxStaging
+  publisher: "DOSBox Staging"
+
+- id: scummvm
+  name: "ScummVM"
+  category: gaming
+  description: "ScummVM is a program which allows you to run certain classic graphical adventure and role-playing games, provided you already have their data files."
+  homepage: https://www.scummvm.org/
+  license: "GPL-2.0"
+  winget: ScummVM.ScummVM
+  publisher: "The ScummVM Team"
+
+- id: openttd
+  name: "OpenTTD"
+  category: gaming
+  description: "OpenTTD is a transport simulation game based upon the popular game Transport Tycoon Deluxe, written by Chris Sawyer."
+  homepage: https://www.openttd.org/
+  license: "GPL-2.0"
+  winget: OpenTTD.OpenTTD
+  publisher: "OpenTTD"
+
+- id: supertuxkart
+  name: "SuperTuxKart"
+  category: gaming
+  description: "Arcade 3D racer with a variety of characters, tracks and modes"
+  homepage: https://supertuxkart.net/
+  license: "GPL 3.0 or later"
+  winget: SuperTuxKart.SuperTuxKart
+  publisher: "SuperTuxKart Team"
+
+- id: 0-a-d
+  name: "0 A.D."
+  category: gaming
+  description: "0 A.D. is a real-time strategy video game under development by Wildfire Games."
+  homepage: https://play0ad.com/
+  license: "GPLv2"
+  winget: WildfireGames.0AD
+  publisher: "Wildfire Games"
+
+- id: xonotic
+  name: "Xonotic"
+  category: gaming
+  description: "The Free and Fast Arena Shooter"
+  homepage: https://xonotic.org/download/
+  license: "GPL-3.0"
+  winget: Xonotic.Xonotic
+  publisher: "Team Xonotic"
+
+- id: openrct2
+  name: "OpenRCT2"
+  category: gaming
+  description: "Open source re-implementation of RollerCoaster Tycoon 2"
+  homepage: https://openrct2.io/download
+  license: "GPL-3.0"
+  winget: OpenRCT2.OpenRCT2
+  publisher: "OpenRCT2"
+
+- id: freeciv
+  name: "Freeciv"
+  category: gaming
+  description: "Freeciv is a Free and Open Source empire-building strategy game inspired by the history of human civilization."
+  homepage: https://www.freeciv.org/
+  license: "GPL"
+  winget: FreeCiv.FreeCiv
+  publisher: "The FreeCiv Project"
+
+- id: celestia
+  name: "Celestia"
+  category: gaming
+  description: "Real-time 3D visualization of space."
+  homepage: https://github.com/CelestiaProject/Celestia
+  license: "GPL-2.0"
+  winget: Celestia.Celestia
+  publisher: "Celestia Development Team"
+
+- id: stellarium
+  name: "Stellarium"
+  category: gaming
+  description: "A free open source planetarium for your computer."
+  homepage: https://stellarium.org/
+  license: "GPL-2.0"
+  winget: Stellarium.Stellarium
+  publisher: "Stellarium team"
+
+- id: hedgewars
+  name: "Hedgewars"
+  category: gaming
+  description: "Hedgewars is a turn-based strategy, artillery, action and comedy game, featuring the antics of pink hedgehogs with attitude as they battle from the depths of…"
+  homepage: https://hedgewars.org
+  license: "GPLv2"
+  winget: Hedgewars.Hedgewars
+  publisher: "Hedgewars Project"
+
+- id: supertux
+  name: "SuperTux"
+  category: gaming
+  description: "SuperTux is a open-source classic 2D jump'n run sidescroller game in a style similar to the original Super Mario games."
+  homepage: https://www.supertux.org/
+  license: "GPL-3.0"
+  winget: SuperTux.SuperTux
+  publisher: "SuperTux Devel Team"
+
+- id: gcompris-educational-software
+  name: "GCompris Educational Software"
+  category: gaming
+  description: "Educational Game for Children"
+  homepage: https://gcompris.net/
+  license: "AGPL-3.0"
+  winget: KDE.GCompris
+  publisher: "GCompris team"
+
+- id: microsoft-gameinput
+  name: "Microsoft GameInput"
+  category: gaming
+  description: "A next-generation input API that exposes input devices of all kinds through a single consistent interface."
+  homepage: https://www.nuget.org/packages/Microsoft.GameInput
+  license: "Proprietary (Freeware)"
+  winget: Microsoft.GameInput
+  publisher: "Microsoft Corporation"
+
+- id: epic-online-services
+  name: "Epic Online Services"
+  category: gaming
+  description: "The online service backend used by certain videogames."
+  homepage: https://onlineservices.epicgames.com/sdk
+  license: "Proprietary (Freeware)"
+  winget: EpicGames.EpicOnlineServices
+  publisher: "Epic Games"
+
+- id: sidequest
+  name: "SideQuest"
+  category: gaming
+  description: "SideQuest is a place to get more apps for your Oculus Quest, it is a completely safe way to enjoy some cutting edge content in VR and expand the capability…"
+  homepage: https://sidequestvr.com
+  license: "MIT License"
+  winget: SideQuestVR.SideQuest
+  publisher: "Shane Harris"
+
+- id: voiceattack
+  name: "VoiceAttack"
+  category: gaming
+  description: "VoiceAttack is the premier voice control and macro creation system for your Windows games and applications."
+  homepage: https://voiceattack.com/
+  license: "Proprietary (ToS)"
+  winget: VoiceAttack.VoiceAttack
+  publisher: "VoiceAttack.com"
+
+- id: hidhide
+  name: "HidHide"
+  category: gaming
+  description: "Gaming input peripherals device firewall for Windows."
+  homepage: https://github.com/nefarius/HidHide
+  license: "MIT"
+  winget: Nefarius.HidHide
+  publisher: "Nefarius Software Solutions e.U."
+
+- id: vigem-bus-driver
+  name: "ViGEm Bus Driver"
+  category: gaming
+  description: "Windows kernel-mode driver emulating well-known USB game controllers."
+  homepage: https://vigem.org/projects/ViGEm
+  license: "BSD-3-Clause"
+  winget: ViGEm.ViGEmBus
+  publisher: "Nefarius Software Solutions e.U."
+
+- id: microsoft-visual-cplusplus-v14-redistributable-x64
+  name: "Microsoft Visual C++ v14 Redistributable (x64)"
+  category: runtimes
+  description: "The Microsoft Visual C++ v14 Redistributable Package (x64)."
+  homepage: https://learn.microsoft.com/cpp/windows/latest-supported-vc-redist
+  license: "Proprietary (Freeware)"
+  winget: Microsoft.VCRedist.2015+.x64
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-visual-cplusplus-v14-redistributable-x86
+  name: "Microsoft Visual C++ v14 Redistributable (x86)"
+  category: runtimes
+  description: "The Microsoft Visual C++ v14 Redistributable Package (x86)"
+  homepage: https://learn.microsoft.com/cpp/windows/latest-supported-vc-redist
+  license: "Proprietary"
+  winget: Microsoft.VCRedist.2015+.x86
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-visual-cplusplus-2013-redistributable-x64
+  name: "Microsoft Visual C++ 2013 Redistributable (x64)"
+  category: runtimes
+  description: "The Microsoft Visual C++ 2013 Redistributable Package (x64)."
+  homepage: https://support.microsoft.com/en-us/help/4032938/update-for-visual-c-2013-redistributable-package
+  license: "Proprietary (Freeware)"
+  winget: Microsoft.VCRedist.2013.x64
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-visual-cplusplus-2013-redistributable-x86
+  name: "Microsoft Visual C++ 2013 Redistributable (x86)"
+  category: runtimes
+  description: "The Microsoft Visual C++ 2013 Redistributable Package (x86)"
+  homepage: https://support.microsoft.com/en-us/help/4032938/update-for-visual-c-2013-redistributable-package
+  license: "Proprietary"
+  winget: Microsoft.VCRedist.2013.x86
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-visual-cplusplus-2012-redistributable-x64
+  name: "Microsoft Visual C++ 2012 Redistributable (x64)"
+  category: runtimes
+  description: "The Microsoft Visual C++ 2012 Redistributable Package (x64) installs runtime components of Visual C++ Libraries required to run 64-bit applications developed…"
+  homepage: https://www.microsoft.com/en-us/
+  license: "Proprietary (Freeware)"
+  winget: Microsoft.VCRedist.2012.x64
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-visual-cplusplus-2012-redistributable-x86
+  name: "Microsoft Visual C++ 2012 Redistributable (x86)"
+  category: runtimes
+  description: "The Microsoft Visual C++ 2012 Redistributable Package (x86) installs runtime components of Visual C++ Libraries required to run 32-bit applications developed…"
+  homepage: https://www.microsoft.com/en-us/download/details.aspx?id=30679
+  license: "Proprietary"
+  winget: Microsoft.VCRedist.2012.x86
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-visual-cplusplus-2010-x64-redistributable
+  name: "Microsoft Visual C++ 2010 x64 Redistributable"
+  category: runtimes
+  description: "The Microsoft Visual C++ 2010 SP1 Redistributable Package (x64) installs runtime components of Visual C++ Libraries required to run 64-bit applications…"
+  homepage: https://www.microsoft.com/download/details.aspx?id=26999
+  license: "Proprietary (Freeware)"
+  winget: Microsoft.VCRedist.2010.x64
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-visual-cplusplus-2010-x86-redistributable
+  name: "Microsoft Visual C++ 2010 x86 Redistributable"
+  category: runtimes
+  description: "The Microsoft Visual C++ 2010 SP1 Redistributable Package (x86) installs runtime components of Visual C++ Libraries required to run 32-bit applications…"
+  homepage: https://www.microsoft.com/download/details.aspx?id=26999
+  license: "Freeware"
+  winget: Microsoft.VCRedist.2010.x86
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-visual-cplusplus-2008-redistributable
+  name: "Microsoft Visual C++ 2008 Redistributable"
+  category: runtimes
+  description: "The Microsoft Visual C++ 2008 SP1 Redistributable Package (x64) installs runtime components of Visual C++ Libraries required to run 64-bit applications…"
+  homepage: https://www.microsoft.com/en-US/download/details.aspx?id=26368
+  license: "Proprietary (Freeware)"
+  winget: Microsoft.VCRedist.2008.x64
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-corporation-microsoft-visual-cplusplus-2008-redistributable
+  name: "Microsoft Visual C++ 2008 Redistributable"
+  category: runtimes
+  description: "The Microsoft Visual C++ 2008 SP1 Redistributable Package (x86) installs runtime components of Visual C++ Libraries required to run 32-bit applications…"
+  homepage: https://www.microsoft.com/en-US/download/details.aspx?id=26368
+  license: "Freeware"
+  winget: Microsoft.VCRedist.2008.x86
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-visual-cplusplus-2005-redistributable-x64
+  name: "Microsoft Visual C++ 2005 Redistributable (x64)"
+  category: runtimes
+  description: "The Microsoft Visual C++ 2005 SP1 Redistributable Package (x64) installs runtime components of Visual C++ Libraries required to run 64-bit applications…"
+  homepage: https://www.microsoft.com/en-US/download/details.aspx?id=26347
+  license: "Proprietary (Freeware)"
+  winget: Microsoft.VCRedist.2005.x64
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-visual-cplusplus-2005-redistributable-x86
+  name: "Microsoft Visual C++ 2005 Redistributable (x86)"
+  category: runtimes
+  description: "The Microsoft Visual C++ 2005 SP1 Redistributable Package (x86) installs runtime components of Visual C++ Libraries required to run 32-bit applications…"
+  homepage: https://www.microsoft.com/en-US/download/details.aspx?id=26347
+  license: "Freeware"
+  winget: Microsoft.VCRedist.2005.x86
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-net-windows-desktop-runtime-6-0
+  name: "Microsoft .NET Windows Desktop Runtime 6.0"
+  category: runtimes
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com/en-us/download/dotnet/6.0
+  license: "MIT"
+  winget: Microsoft.DotNet.DesktopRuntime.6
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-net-windows-desktop-runtime-7-0
+  name: "Microsoft .NET Windows Desktop Runtime 7.0"
+  category: runtimes
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com
+  license: "MIT"
+  winget: Microsoft.DotNet.DesktopRuntime.7
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-net-windows-desktop-runtime-8-0
+  name: "Microsoft .NET Windows Desktop Runtime 8.0"
+  category: runtimes
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com
+  license: "MIT"
+  winget: Microsoft.DotNet.DesktopRuntime.8
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-net-windows-desktop-runtime-9-0
+  name: "Microsoft .NET Windows Desktop Runtime 9.0"
+  category: runtimes
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com
+  license: "MIT"
+  winget: Microsoft.DotNet.DesktopRuntime.9
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-net-windows-desktop-runtime-10-0
+  name: "Microsoft .NET Windows Desktop Runtime 10.0"
+  category: runtimes
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com
+  license: "MIT"
+  winget: Microsoft.DotNet.DesktopRuntime.10
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-net-runtime-6-0
+  name: "Microsoft .NET Runtime 6.0"
+  category: runtimes
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com
+  license: "MIT"
+  winget: Microsoft.DotNet.Runtime.6
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-net-runtime-10-0
+  name: "Microsoft .NET Runtime 10.0"
+  category: runtimes
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com
+  license: "MIT"
+  winget: Microsoft.DotNet.Runtime.10
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-asp-net-core-runtime-6-0
+  name: "Microsoft ASP.NET Core Runtime 6.0"
+  category: runtimes
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com
+  license: "MIT"
+  winget: Microsoft.DotNet.AspNetCore.6
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-asp-net-core-runtime-10-0
+  name: "Microsoft ASP.NET Core Runtime 10.0"
+  category: runtimes
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com
+  license: "MIT"
+  winget: Microsoft.DotNet.AspNetCore.10
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-asp-net-core-hosting-bundle-8-0
+  name: "Microsoft ASP.NET Core Hosting Bundle 8.0"
+  category: runtimes
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com
+  license: "MIT"
+  winget: Microsoft.DotNet.HostingBundle.8
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-asp-net-core-hosting-bundle-9-0
+  name: "Microsoft ASP.NET Core Hosting Bundle 9.0"
+  category: runtimes
+  description: ".NET is a free, cross-platform, open-source developer platform for building many different types of applications."
+  homepage: https://dotnet.microsoft.com
+  license: "MIT"
+  winget: Microsoft.DotNet.HostingBundle.9
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-net-framework-developer-pack
+  name: "Microsoft .NET Framework Developer Pack"
+  category: runtimes
+  description: "A technology that supports building and running Windows apps and web services."
+  homepage: https://dotnet.microsoft.com/download/dotnet-framework
+  license: "Proprietary"
+  winget: Microsoft.DotNet.Framework.DeveloperPack_4
+  publisher: "Microsoft Corporation"
+
+- id: windows-app-runtime-1-8
+  name: "Windows App Runtime 1.8"
+  category: runtimes
+  description: "Microsoft Windows App Runtime 1.8"
+  homepage: https://learn.microsoft.com/windows/apps/windows-app-sdk/downloads
+  license: "Proprietary"
+  winget: Microsoft.WindowsAppRuntime.1.8
+  publisher: "Microsoft Corporation"
+
+- id: windows-app-runtime-1-7
+  name: "Windows App Runtime 1.7"
+  category: runtimes
+  description: "Microsoft Windows App Runtime 1.7"
+  homepage: https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/downloads-archive
+  license: "Proprietary"
+  winget: Microsoft.WindowsAppRuntime.1.7
+  publisher: "Microsoft Corporation"
+
+- id: windows-app-runtime-1-6
+  name: "Windows App Runtime 1.6"
+  category: runtimes
+  description: "Microsoft Windows App Runtime 1.6"
+  homepage: https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/downloads-archive
+  license: "Proprietary"
+  winget: Microsoft.WindowsAppRuntime.1.6
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-ui-xaml
+  name: "Microsoft.UI.Xaml"
+  category: runtimes
+  description: "Windows UI Library: the latest Windows 10 native controls and Fluent styles for your applications"
+  homepage: https://github.com/microsoft/microsoft-ui-xaml
+  license: "MIT"
+  winget: Microsoft.UI.Xaml.2.8
+  publisher: "Microsoft Corporation"
+
+- id: microsoft-visual-cplusplus-2015-uwp-desktop-runtime-package
+  name: "Microsoft Visual C++ 2015 UWP Desktop Runtime Package"
+  category: runtimes
+  description: "C++ Runtime framework packages for Desktop Bridge."
+  homepage: https://learn.microsoft.com/en-us/troubleshoot/developer/visualstudio/cpp/libraries/c-runtime-packages-desktop-bridge
+  license: "Proprietary (Freeware)"
+  winget: Microsoft.VCLibs.Desktop.14
+  publisher: "Microsoft Platform Extensions"
+
+- id: java-8
+  name: "Java 8"
+  category: runtimes
+  description: "Java allows you to play online games, chat with people around the world, calculate your mortgage interest, and view images in 3D, just to name a few."
+  homepage: https://www.oracle.com/
+  license: "Proprietary"
+  winget: Oracle.JavaRuntimeEnvironment
+  publisher: "Oracle Corporation"
+
+- id: eclipse-temurin-jre-with-hotspot-21
+  name: "Eclipse Temurin JRE with Hotspot 21"
+  category: runtimes
+  description: "Eclipse Temurin JRE is the open source Java SE build based upon OpenJRE."
+  homepage: https://adoptium.net/
+  license: "GPL-2.0 with Classpath Exception"
+  winget: EclipseAdoptium.Temurin.21.JRE
+  publisher: "Eclipse Adoptium"
+
+- id: eclipse-temurin-jre-with-hotspot-17
+  name: "Eclipse Temurin JRE with Hotspot 17"
+  category: runtimes
+  description: "Eclipse Temurin JRE is the open source Java SE build based upon OpenJRE."
+  homepage: https://adoptium.net/
+  license: "GPL-2.0 with Classpath Exception"
+  winget: EclipseAdoptium.Temurin.17.JRE
+  publisher: "Eclipse Adoptium"
+
+- id: eclipse-temurin-jre-with-hotspot-11
+  name: "Eclipse Temurin JRE with Hotspot 11"
+  category: runtimes
+  description: "Eclipse Temurin JRE is the open source Java SE build based upon OpenJRE."
+  homepage: https://adoptium.net/
+  license: "GPL-2.0 with Classpath Exception"
+  winget: EclipseAdoptium.Temurin.11.JRE
+  publisher: "Eclipse Adoptium"
+
+- id: eclipse-temurin-jre-with-hotspot-8
+  name: "Eclipse Temurin JRE with Hotspot 8"
+  category: runtimes
+  description: "Eclipse Temurin JRE is the open source Java SE build based upon OpenJRE."
+  homepage: https://adoptium.net/
+  license: "GPL-2.0 with Classpath Exception"
+  winget: EclipseAdoptium.Temurin.8.JRE
+  publisher: "Eclipse Adoptium"
+
+- id: eclipse-temurin-jdk-with-hotspot-8
+  name: "Eclipse Temurin JDK with Hotspot 8"
+  category: runtimes
+  description: "Eclipse Temurin JDK is the open source Java SE build based upon OpenJDK."
+  homepage: https://adoptium.net/
+  license: "GPL-2.0 with Classpath Exception"
+  winget: EclipseAdoptium.Temurin.8.JDK
+  publisher: "Eclipse Adoptium"
+
+- id: eclipse-temurin-jdk-with-hotspot-11
+  name: "Eclipse Temurin JDK with Hotspot 11"
+  category: runtimes
+  description: "Eclipse Temurin JDK is the open source Java SE build based upon OpenJDK."
+  homepage: https://adoptium.net/
+  license: "GPL-2.0 with Classpath Exception"
+  winget: EclipseAdoptium.Temurin.11.JDK
+  publisher: "Eclipse Adoptium"
+
+- id: eclipse-temurin-jre-with-hotspot-25
+  name: "Eclipse Temurin JRE with Hotspot 25"
+  category: runtimes
+  description: "Eclipse Temurin JRE is the open source Java SE build based upon OpenJRE."
+  homepage: https://adoptium.net/
+  license: "GPL-2.0 with Classpath Exception"
+  winget: EclipseAdoptium.Temurin.25.JRE
+  publisher: "Eclipse Adoptium"
+
+- id: python-3-10
+  name: "Python 3.10"
+  category: runtimes
+  description: "Python is a programming language that lets you work more quickly and integrate your systems more effectively."
+  homepage: https://www.python.org/
+  license: "PSF-2.0"
+  winget: Python.Python.3.10
+  publisher: "Python Software Foundation"
+
+- id: node-js-20
+  name: "Node.js 20"
+  category: runtimes
+  description: "Run JavaScript Everywhere"
+  homepage: https://nodejs.org/
+  license: "MIT"
+  winget: OpenJS.NodeJS.20
+  publisher: "Node.js Foundation"
+
+- id: node-js-22
+  name: "Node.js 22"
+  category: runtimes
+  description: "Run JavaScript Everywhere"
+  homepage: https://nodejs.org/
+  license: "MIT"
+  winget: OpenJS.NodeJS.22
+  publisher: "Node.js Foundation"
+
+- id: microsoft-build-of-openjdk-with-hotspot-11
+  name: "Microsoft Build of OpenJDK with Hotspot 11"
+  category: runtimes
+  description: "The Microsoft Build of OpenJDK is a new no-cost long-term supported distribution and Microsoft's new way to collaborate and contribute to the Java ecosystem."
+  homepage: https://www.microsoft.com/openjdk
+  license: "GPL2 with Classpath Exception"
+  winget: Microsoft.OpenJDK.11
+  publisher: "Microsoft"
+
+- id: microsoft-build-of-openjdk-with-hotspot-25
+  name: "Microsoft Build of OpenJDK with Hotspot 25"
+  category: runtimes
+  description: "The Microsoft Build of OpenJDK is a new no-cost long-term supported distribution and Microsoft's new way to collaborate and contribute to the Java ecosystem."
+  homepage: https://www.microsoft.com/openjdk
+  license: "GPL2 with Classpath Exception"
+  winget: Microsoft.OpenJDK.25
+  publisher: "Microsoft"
+
+- id: microsoft-access-database-engine-2016
+  name: "Microsoft Access database engine 2016"
+  category: runtimes
+  description: "Facilitate transfer of data between Microsoft Office System files and non-Microsoft Office applications."
+  homepage: https://www.microsoft.com/download/details.aspx?id=54920
+  license: "Proprietary"
+  winget: Microsoft.AccessDatabaseEngine.2016
+  publisher: "Microsoft Corporation"
+
+- id: geogebra-classic
+  name: "GeoGebra Classic"
+  category: education
+  description: "Apps bundle including free tools for geometry, spreadsheet, probability, and CAS"
+  homepage: https://www.geogebra.org/download
+  license: "Proprietary"
+  winget: GeoGebra.Classic
+  publisher: "International GeoGebra Institute"
+
+- id: scilab
+  name: "scilab"
+  category: education
+  description: "Scilab is free and open source software for numerical computation providing a powerful computing environment for engineering and scientific applications."
+  homepage: https://www.scilab.org/
+  license: "GPL 2.0 only"
+  winget: Scilab.Scilab
+  publisher: "Dassault Systèmes"
+
+- id: jasp
+  name: "JASP"
+  category: education
+  description: "JASP is cross-platform software that allows you to conduct statistical analyses."
+  homepage: https://github.com/jasp-stats/jasp-desktop
+  license: "AGPL-3.0"
+  winget: JASP.JASP
+  publisher: "JASP"
+
+- id: qgis
+  name: "QGIS"
+  category: education
+  description: "A Free and Open Source Geographic Information System (GIS)"
+  homepage: https://www.qgis.org/
+  license: "GPL-2.0"
+  winget: OSGeo.QGIS
+  publisher: "QGIS.org"
+
+- id: google-earth-pro
+  name: "Google Earth Pro"
+  category: education
+  description: "The world's most detailed globe"
+  homepage: https://www.google.com/earth/about/
+  license: "Freeware"
+  winget: Google.EarthPro
+  publisher: "Google"
+
+- id: kstars-desktop-planetarium
+  name: "KStars Desktop Planetarium"
+  category: education
+  description: "The most feature-rich free astronomy software"
+  homepage: https://kstars.kde.org/
+  license: "GPL-2.0-or-later"
+  winget: KDE.KStars
+  publisher: "KDE e.V."
+
+- id: labplot2
+  name: "LabPlot2"
+  category: education
+  description: "FREE, open source and cross-platform Data Visualization and Analysis software accessible to everyone and trusted by professionals"
+  homepage: https://labplot.org/
+  license: "GPL-2.0-or-later"
+  winget: KDE.LabPlot
+  publisher: "KDE e.V."
+
+- id: spyder
+  name: "Spyder"
+  category: education
+  description: "Scientific Python Development Environment similar to matlab"
+  homepage: https://www.spyder-ide.org/
+  license: "MIT"
+  winget: Spyder.Spyder
+  publisher: "Spyder Project Contributors and others"
+
+- id: positron
+  name: "Positron"
+  category: education
+  description: "A next-generation data science IDE"
+  homepage: https://positron.posit.co/
+  license: "Elastic-2.0"
+  winget: Posit.Positron
+  publisher: "Posit Software, PBC"
+
+- id: lm-studio
+  name: "LM Studio"
+  category: ai
+  description: "Discover, download, and run local LLMs"
+  homepage: https://lmstudio.ai/
+  license: "Freeware"
+  winget: ElementLabs.LMStudio
+  publisher: "LM Studio"
+
+- id: jan
+  name: "Jan"
+  category: ai
+  description: "Turn your computer into an AI computer"
+  homepage: https://jan.ai/
+  license: "AGPL-3.0"
+  winget: Jan.Jan
+  publisher: "Jan"
+
+- id: open-webui
+  name: "Open WebUI"
+  category: ai
+  description: "Your AI, right on your desktop."
+  homepage: https://openwebui.com/
+  license: "AGPL-3.0"
+  winget: OpenWebUI.OpenWebUI
+  publisher: "Open WebUI Inc."
+
+- id: buzz
+  name: "Buzz"
+  category: ai
+  description: "Buzz transcribes and translates audio offline on your personal computer."
+  homepage: https://github.com/chidiwilliams/buzz
+  license: "MIT"
+  winget: ChidiWilliams.Buzz
+  publisher: "Chidi Williams"
+
+- id: codex-cli
+  name: "Codex CLI"
+  category: ai
+  description: "Codex CLI is an open‑source local coding agent that runs in your terminal, letting you write, edit, and understand code without leaving the command line."
+  homepage: https://github.com/openai/codex
+  license: "Apache-2.0"
+  winget: OpenAI.Codex
+  publisher: "OpenAI, Inc."
+
+- id: kiro
+  name: "Kiro"
+  category: ai
+  description: "An agentic IDE that helps you do your best work with features such as specs, steering, and hooks."
+  homepage: https://kiro.dev/downloads/
+  license: "Proprietary"
+  winget: Amazon.Kiro
+  publisher: "Amazon Web Services"
+
+- id: crush
+  name: "crush"
+  category: ai
+  description: "A powerful terminal-based AI assistant for developers, providing intelligent coding assistance directly in your terminal."
+  homepage: https://charm.sh/crush
+  license: "FSL-1.1-MIT"
+  winget: charmbracelet.crush
+  publisher: "charmbracelet"
+
+- id: qwen
+  name: "Qwen"
+  category: ai
+  description: "Chat about email, screenshots, files, and anything on your screen."
+  homepage: https://qwen.ai/download
+  license: "Proprietary"
+  winget: Alibaba.Qwen
+  publisher: "qwen.ai"
+
+- id: trae
+  name: "Trae"
+  category: ai
+  description: "An adaptive AI IDE that transforms how you work, collaborating with you to run faster."
+  homepage: https://www.trae.ai/
+  license: "Proprietary"
+  winget: ByteDance.Trae
+  publisher: "SPRING (SG) PTE. LTD"
+
+- id: tabbyml-tabby
+  name: "Tabby"
+  category: ai
+  description: "Self-hosted AI coding assistant"
+  homepage: https://tabby.tabbyml.com/
+  license: "Apache 2.0"
+  winget: TabbyML.Tabby
+  publisher: "TabbyML"
+
+- id: signal
+  name: "Signal"
+  category: communication
+  description: "Signal is an encrypted communications application."
+  homepage: https://www.signal.org/
+  license: "AGPL-3.0"
+  winget: OpenWhisperSystems.Signal
+  publisher: "Signal Messenger, LLC"
+
+- id: zotero
+  name: "Zotero"
+  category: productivity
+  description: "Your personal research assistant"
+  homepage: https://www.zotero.org/
+  license: "AGPL-3.0"
+  winget: DigitalScholar.Zotero
+  publisher: "Corporation for Digital Scholarship"
+
+- id: hwinfo
+  name: "HWiNFO"
+  category: system
+  description: "Comprehensive Hardware Analysis, Monitoring and Reporting for Windows and DOS."
+  homepage: https://www.hwinfo.com/
+  license: "Freeware"
+  winget: REALiX.HWiNFO
+  publisher: "Martin Malik, REALiX s.r.o."
+
+- id: pcsx2
+  name: "PCSX2"
+  category: gaming
+  description: "A free and open-source PlayStation 2 (PS2) emulator."
+  homepage: https://github.com/PCSX2/pcsx2
+  license: "GPL-3.0"
+  winget: PCSX2Team.PCSX2
+  publisher: "PCSX2 Team"
+
+- id: ppsspp
+  name: "PPSSPP"
+  category: gaming
+  description: "PPSSPP can run your PSP games on your PC in full HD resolution; it can even upscale textures that would otherwise be too blurry as they were made for the…"
+  homepage: https://www.ppsspp.org/
+  license: "GPL-2.0"
+  winget: PPSSPPTeam.PPSSPP
+  publisher: "PPSSPP Project"
+
+- id: autohotkey
+  name: "AutoHotkey"
+  category: productivity
+  description: "Macro-creation and automation-oriented scripting utility for Windows."
+  homepage: https://www.autohotkey.com/
+  license: "GPL-2.0"
+  winget: AutoHotkey.AutoHotkey
+  publisher: "AutoHotkey Foundation LLC"
+
+- id: anydesk
+  name: "AnyDesk"
+  category: productivity
+  description: "AnyDesk is a German proprietary remote desktop tool distributed by AnyDesk Software GmbH."
+  homepage: https://anydesk.com/
+  license: "Proprietary"
+  winget: AnyDesk.AnyDesk
+  publisher: "AnyDesk Software GmbH"
+
+- id: realvnc-server
+  name: "RealVNC Server"
+  category: productivity
+  description: "The original VNC Server and the most secure way to control your remote devices."
+  homepage: https://www.realvnc.com/
+  license: "Proprietary"
+  winget: RealVNC.VNCServer
+  publisher: "RealVNC"
+
+- id: axcrypt
+  name: "AxCrypt"
+  category: security
+  description: "AxCrypt File Encryption Software - Free Personal Privacy and Security for Windows 2000/XP/Vista or later with AES-128 File Encryption, Compression and…"
+  homepage: https://axcrypt.net/
+  license: "Copyright (c) Svante Seleborg/Axantum Software AB - GPL 2.0 or later"
+  winget: AxCrypt.AxCrypt
+  publisher: "AxCrypt AB"
+
+- id: msi-afterburner
+  name: "MSI Afterburner"
+  category: system
+  description: "MSI Afterburner monitoring and GPU overclocking tool."
+  homepage: https://www.msi.com/Landing/afterburner
+  license: "Freeware"
+  winget: Guru3D.Afterburner
+  publisher: "MSI Co., LTD"
+
+- id: intel-driver-support-assistant
+  name: "Intel® Driver \u0026 Support Assistant"
+  category: system
+  description: "The Intel® Driver \u0026 Support Assistant enables you to scan computing devices for the latest drivers available from Intel."
+  homepage: https://www.intel.com/content/www/us/en/support/detect.html
+  license: "Proprietary"
+  winget: Intel.IntelDriverAndSupportAssistant
+  publisher: "Intel"
+
+- id: corsair-icue5-software
+  name: "Corsair iCUE5 Software"
+  category: utilities
+  description: "iCUE unites all of your compatible CORSAIR components and devices, making your PC greater than the sum of its parts."
+  homepage: https://www.corsair.com/icue
+  license: "Proprietary"
+  winget: Corsair.iCUE.5
+  publisher: "Corsair"
+
+- id: nordvpn
+  name: "NordVPN"
+  category: utilities
+  description: "A VPN for Windows will improve your security while you’re connected to the internet on your PC."
+  homepage: https://nordvpn.com/
+  license: "Proprietary"
+  winget: NordSecurity.NordVPN
+  publisher: "Nord Security"
+
+- id: amass
+  name: "Amass"
+  category: utilities
+  description: "The OWASP Amass Project performs network mapping of attack surfaces and external asset discovery using open source information gathering and active…"
+  homepage: https://owasp.org/www-project-amass/
+  license: "Apache-2.0"
+  winget: OWASP.Amass
+  publisher: "The OWASP Foundation"
+
+- id: kingston-ssd-manager-x64
+  name: "Kingston SSD Manager x64"
+  category: utilities
+  description: "Kingston® SSD Manager is an application that provides users with the ability to monitor and manage various aspects of their Kingston® Solid State Drive."
+  homepage: https://www.kingston.com/en/support/technical/ssdmanager
+  license: "Proprietary"
+  winget: Kingston.SSDManager
+  publisher: "Kingston Digital, Inc."
+
+- id: minecraft-launcher
+  name: "Minecraft Launcher"
+  category: gaming
+  description: "Official launcher for Minecraft, a sandbox voxel game"
+  homepage: https://www.minecraft.net/
+  license: "Proprietary"
+  winget: Mojang.MinecraftLauncher
+  publisher: "Mojang"
+
+- id: openmw
+  name: "OpenMW"
+  category: gaming
+  description: "Open-source engine reimplementation for the role-playing game Morrowind."
+  homepage: https://openmw.org/
+  license: "GPL-3.0"
+  winget: OpenMW.OpenMW
+  publisher: "OpenMW.org"
+
+- id: virtual-desktop-streamer
+  name: "Virtual Desktop Streamer"
+  category: gaming
+  description: "Watch movies, browse the web or play games on a giant virtual screen."
+  homepage: https://www.vrdesktop.net/
+  license: "Proprietary"
+  winget: VirtualDesktop.Streamer
+  publisher: "Virtual Desktop, Inc."
+
+- id: perplexity
+  name: "Perplexity"
+  category: education
+  description: "Ask questions, get instant answers with sources."
+  homepage: https://www.perplexity.ai/
+  license: "Proprietary"
+  winget: Perplexity.Perplexity
+  publisher: "Perplexity"
+
+- id: comet
+  name: "Comet"
+  category: education
+  description: "A personal AI assistant."
+  homepage: https://www.perplexity.ai/comet
+  license: "Proprietary"
+  winget: Perplexity.Comet
+  publisher: "The Comet Authors"
+
+- id: blender
+  name: "Blender"
+  category: design
+  description: "Free and Open 3D Creation Software"
+  homepage: https://www.blender.org/
+  license: "GPL-3.0-or-later"
+  winget: BlenderFoundation.Blender
+  publisher: "Blender Foundation"
+
+- id: musescore
+  name: "MuseScore"
+  category: media
+  description: "Create, play back and print beautiful sheet music with free and easy to use music notation software MuseScore."
+  homepage: https://musescore.org/en
+  license: "GPL-3.0 License"
+  winget: Musescore.Musescore
+  publisher: "MuseScore BVBA and Others"
+
+- id: calibre
+  name: "calibre"
+  category: media
+  description: "calibre is the one stop solution to all your e-book needs."
+  homepage: https://calibre-ebook.com/
+  license: "GPL-3.0"
+  winget: calibre.calibre
+  publisher: "Kovid Goyal"
+
+- id: standard-notes
+  name: "Standard Notes"
+  category: productivity
+  description: "An end-to-end encrypted notes app for digitalists and professionals."
+  homepage: https://standardnotes.com/
+  license: "AGPL-3.0"
+  winget: StandardNotes.StandardNotes
+  publisher: "Standard Notes"
+
+- id: megasync
+  name: "MEGAsync"
+  category: productivity
+  description: "Easy automated synchronisation between your computer and your MEGA cloud."
+  homepage: https://mega.nz/sync
+  license: "Proprietary"
+  winget: Mega.MEGASync
+  publisher: "Mega Limited"
+
+- id: onlyoffice-desktop-editors
+  name: "ONLYOFFICE Desktop Editors"
+  category: productivity
+  description: "All the tools you need to work with text documents, spreadsheets, presentations, and fillable forms on Windows, Linux, and macOS."
+  homepage: https://www.onlyoffice.com/en/desktop.aspx
+  license: "AGPL-3.0"
+  winget: ONLYOFFICE.DesktopEditors
+  publisher: "Ascensio System SIA"
+
+- id: adwcleaner
+  name: "AdwCleaner"
+  category: security
+  description: "Adware cleaner"
+  homepage: https://www.malwarebytes.com/adwcleaner
+  license: "Freeware"
+  winget: Malwarebytes.AdwCleaner
+  publisher: "Malwarebytes"
+
+- id: core-temp
+  name: "Core Temp"
+  category: security
+  description: "This application can monitor and visualize your processor's temperature."
+  homepage: https://www.alcpu.com/CoreTemp/
+  license: "Freeware"
+  winget: ALCPU.CoreTemp
+  publisher: "ALCPU"
+
+- id: explorerpatcher
+  name: "ExplorerPatcher"
+  category: utilities
+  description: "This project aims to enhance the working environment on Windows"
+  homepage: https://github.com/valinet/ExplorerPatcher
+  license: "GPL-2.0"
+  winget: valinet.ExplorerPatcher
+  publisher: "VALINET Solutions SRL"
+
+- id: dnscrypt-proxy
+  name: "dnscrypt-proxy"
+  category: utilities
+  description: "A flexible DNS proxy, with support for modern encrypted DNS protocols."
+  homepage: https://github.com/DNSCrypt/dnscrypt-proxy
+  license: "ISC"
+  winget: DNSCrypt.dnscrypt-proxy
+  publisher: "DNSCrypt"
+
+- id: system-informer
+  name: "System Informer"
+  category: utilities
+  description: "System Informer is a free, powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware."
+  homepage: https://system-informer.com/
+  license: "MIT License"
+  winget: WinsiderSS.SystemInformer
+  publisher: "Winsider Seminars \u0026 Solutions, Inc."
+
+- id: flightgear
+  name: "FlightGear"
+  category: gaming
+  description: "FlightGear is an open-source flight simulator."
+  homepage: https://www.flightgear.org/
+  license: "GNU GPLv2 or later"
+  winget: FlightGear.FlightGear
+  publisher: "The FlightGear Team"
+
+- id: opentrack
+  name: "opentrack"
+  category: gaming
+  description: "Head tracking software for MS Windows, Linux, and Apple OSX"
+  homepage: https://github.com/opentrack/opentrack
+  license: "ISC license"
+  winget: opentrack.opentrack
+  publisher: "opentrack"
+

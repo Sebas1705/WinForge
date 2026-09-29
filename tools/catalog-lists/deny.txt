@@ -1,0 +1,33 @@
+# winget ids the importer must never add, with the reason.
+Microsoft.WindowsSDK.10.0.26100       # name carries a build number; not a stable product entry
+Microsoft.WindowsWDK.10.0.26100
+Xmind.Xmind                            # not a developer tool
+Amazon.EC2Launch                       # server agent
+GnuWin32.UnZip                         # abandoned 2010 ports
+Hibbiki.Chromium                       # unofficial Chromium builds
+Git.MinGit                             # subset of Git
+Gyan.FFmpeg.Shared                     # duplicate of FFmpeg
+Python.Launcher                        # installed by Python itself
+Adobe.CreativeCloud                    # proprietary subscription launcher
+Microsoft.WindowsTerminal.Canary
+Microsoft.Windows.Sandbox
+IObit.AdvancedSystemCare               # bundled-offer / PUP reputation
+IObit.DriverBooster
+IObit.SmartDefrag
+IObit.IObitUninstaller
+Glarysoft.GlaryUtilities               # registry-cleaner suites
+WiseCleaner.WiseCare365
+Piriform.CCleaner                      # bundling and 2017 supply-chain incident
+Piriform.Defraggler                    # abandoned
+Bitdefender.Bitdefender                # agent component, not the product
+RiotGames.LeagueOfLegends.EUW          # per-server game installs
+RiotGames.LeagueOfLegends.NA
+RiotGames.Valorant.EU
+RiotGames.Valorant.NA
+DigitalExtremes.Warframe               # a game, not a launcher
+Python.Python.3.8                      # end of life
+Python.Python.3.9
+SanDisk.Dashboard                      # generic name, single vendor tool
+Zoom.ZoomOutlookPlugin
+Microsoft.Office                       # manifest is the enterprise deployment tool
+ImageMagick.Q16-HDRI                   # duplicate of ImageMagick.ImageMagick

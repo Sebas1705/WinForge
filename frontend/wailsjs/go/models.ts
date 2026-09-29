@@ -141,6 +141,7 @@ export namespace main {
 	    requires?: string[];
 	    recipes?: string[];
 	    notes?: string;
+	    openSource: boolean;
 	    installed: boolean;
 	    version?: string;
 	    sources?: string[];
@@ -168,6 +169,7 @@ export namespace main {
 	        this.requires = source["requires"];
 	        this.recipes = source["recipes"];
 	        this.notes = source["notes"];
+	        this.openSource = source["openSource"];
 	        this.installed = source["installed"];
 	        this.version = source["version"];
 	        this.sources = source["sources"];

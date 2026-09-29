@@ -11,6 +11,7 @@ export interface App {
     winget: string;
     publisher: string;
     admin?: boolean;
+    openSource: boolean;
     requires?: string[];
     installed: boolean;
     version?: string;
@@ -74,6 +75,7 @@ export interface Filter {
     query: string;
     category: string;
     installed: "all" | "installed" | "missing";
+    openSourceOnly: boolean;
 }
 
 export function categories(apps: App[]): string[] {
@@ -86,6 +88,7 @@ export function filterApps(apps: App[], f: Filter): App[] {
         if (f.category && a.category.split("/")[0] !== f.category) return false;
         if (f.installed === "installed" && !a.installed) return false;
         if (f.installed === "missing" && a.installed) return false;
+        if (f.openSourceOnly && !a.openSource) return false;
         if (!q) return true;
         return [a.id, a.name, a.description, a.publisher, a.category, a.winget]
             .some((s) => s.toLowerCase().includes(q));

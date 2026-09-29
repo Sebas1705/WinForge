@@ -1,0 +1,90 @@
+- id: runtimes
+  name: "Runtimes (Visual C++ and .NET)"
+  kind: base
+  description: "The Visual C++ redistributables and .NET desktop runtimes that games and older programs ask for."
+  apps: [{id: microsoft-visual-cplusplus-v14-redistributable-x64}, {id: microsoft-visual-cplusplus-v14-redistributable-x86}, {id: microsoft-visual-cplusplus-2013-redistributable-x64}, {id: microsoft-visual-cplusplus-2013-redistributable-x86}, {id: microsoft-visual-cplusplus-2012-redistributable-x64}, {id: microsoft-visual-cplusplus-2012-redistributable-x86}, {id: microsoft-visual-cplusplus-2010-x64-redistributable}, {id: microsoft-visual-cplusplus-2010-x86-redistributable}, {id: microsoft-net-windows-desktop-runtime-8-0}, {id: microsoft-net-windows-desktop-runtime-9-0}, {id: microsoft-edge-webview2-runtime}, {id: directx-end-user-runtime-installer}]
+
+- id: gaming-launchers
+  name: "Game launchers"
+  kind: base
+  description: "Every major store and launcher, on top of the Gaming profile."
+  extends: [gaming, runtimes]
+  apps: [{id: gog-galaxy}, {id: battlenet}, {id: ubisoft-connect}, {id: ea-app}, {id: rockstar-launcher}, {id: playnite}, {id: curseforge}, {id: prism-launcher}, {id: heroic}, {id: itch}, {id: vortex}]
+
+- id: retro-gaming
+  name: "Retro gaming"
+  kind: base
+  description: "Open-source emulators and engines: RetroArch, PCSX2, RPCS3, Dolphin-class and more."
+  apps: [{id: retroarch}, {id: cemu}, {id: duckstation}, {id: xemu}, {id: dosbox-staging}, {id: scummvm}, {id: openttd}, {id: pcsx2}, {id: ppsspp}, {id: openmw}]
+
+- id: opensource
+  name: "Open-source essentials"
+  kind: base
+  description: "A full desktop built only from open-source software."
+  apps: [{id: firefox}, {id: thunderbird}, {id: libreoffice}, {id: vlc}, {id: gimp}, {id: inkscape}, {id: krita}, {id: obs-studio}, {id: audacity}, {id: kdenlive}, {id: 7zip}, {id: keepassxc}, {id: qbittorrent}, {id: syncthing}, {id: everything}, {id: flameshot}, {id: bleachbit}]
+
+- id: privacy
+  name: "Privacy and security"
+  kind: base
+  description: "Password manager, encrypted storage, private browsers and messaging."
+  apps: [{id: bitwarden}, {id: keepassxc}, {id: veracrypt}, {id: cryptomator}, {id: element}, {id: tor-browser}, {id: librewolf}, {id: brave}, {id: mullvad-vpn}, {id: proton-vpn}, {id: gpg4win}, {id: malwarebytes}, {id: signal}]
+
+- id: writing-research
+  name: "Writing and research"
+  kind: base
+  description: "Notes, references, LaTeX/Typst and e-books."
+  apps: [{id: obsidian}, {id: logseq}, {id: joplin}, {id: anki}, {id: pandoc}, {id: miktex}, {id: texstudio}, {id: typst}, {id: zettlr}, {id: zotero}]
+
+- id: system-tools
+  name: "System tools"
+  kind: base
+  description: "Disk, hardware and file utilities for maintaining a PC."
+  apps: [{id: sysinternals}, {id: crystaldiskinfo}, {id: crystaldiskmark}, {id: cpu-z}, {id: gpu-z}, {id: librehardwaremonitor}, {id: wiztree}, {id: windirstat}, {id: everything}, {id: rufus}, {id: ventoy}, {id: balenaetcher}, {id: nanazip}, {id: bcuninstaller}, {id: hwinfo}]
+
+- id: network-tools
+  name: "Network tools"
+  kind: base
+  description: "Scanners, transfer clients and private networking."
+  apps: [{id: wireshark}, {id: nmap}, {id: putty}, {id: winscp}, {id: angry-ip-scanner}, {id: tailscale}, {id: wireguard}, {id: cyberduck}, {id: rclone}]
+
+- id: ai-local
+  name: "Local AI"
+  kind: dev
+  description: "Run and chat with models on your own machine."
+  extends: [dev-base]
+  apps: [{id: ollama}, {id: lm-studio}, {id: jan}, {id: open-webui}, {id: claude-code}]
+
+- id: dev-data-science
+  name: "Data science"
+  kind: dev
+  description: "Python, conda, R and notebooks tooling."
+  extends: [dev-base]
+  apps: [{id: python-3-13}, {id: uv}, {id: anaconda3}, {id: pixi}, {id: r-for-windows}, {id: rstudio}, {id: spyder}, {id: positron}, {id: duckdb}]
+
+- id: dev-games
+  name: "Game development"
+  kind: dev
+  description: "Engines, art and level-editing tools."
+  extends: [dev-base]
+  apps: [{id: godot-engine}, {id: unity-hub}, {id: tiled}, {id: gdevelop}, {id: krita}, {id: audacity}]
+
+- id: dev-embedded
+  name: "Embedded and electronics"
+  kind: dev
+  description: "Arduino, PlatformIO-class toolchains and PCB design."
+  extends: [dev-base]
+  apps: [{id: kicad}, {id: putty}, {id: qmk-toolbox}, {id: arduino-ide}, {id: esp-idf-manager}]
+
+- id: dev-security
+  name: "Reverse engineering and security"
+  kind: dev
+  description: "Debuggers, disassemblers, proxies and scanners. For authorised testing and research."
+  extends: [dev-base]
+  apps: [{id: x64dbg}, {id: imhex}, {id: dnspy}, {id: ilspy}, {id: rizin}, {id: nmap}, {id: burp-suite-community-edition}, {id: wireshark}, {id: sysinternals-process-explorer}, {id: sysinternals-process-monitor}, {id: dependencies}]
+
+- id: dev-jvm-extras
+  name: "JVM extras"
+  kind: dev
+  description: "More JDK vendors and Kotlin/Scala tooling."
+  extends: [dev-java]
+  apps: [{id: microsoft-build-of-openjdk-with-hotspot-21}, {id: azul-zulu-jdk-21}, {id: amazon-corretto-21}, {id: liberica-jdk-21}, {id: intellij-idea-ultimate-edition}, {id: apache-netbeans-ide}]
