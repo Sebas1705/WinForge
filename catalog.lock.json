@@ -1,0 +1,1009 @@
+{
+  "7zip": {
+    "version": "26.03",
+    "publisher": "Igor Pavlov",
+    "installerHosts": [
+      "www.7-zip.org"
+    ],
+    "installerSha256": [
+      "0859c524b8a63551848f0c246abddcb1d0b7b656b0fbfe879f8d85e61a9e6edd",
+      "0f6ec2eda1f8c5dc4c267ee761c0dad8a9d5e8863e0c84b7ac026bc9625a1560",
+      "23b5a8843b09db629b6f6a63364bae5430f66d6ecd4b38e11e1661bfaff5d2c6",
+      "74144f45945359fce65c67228a7975eaa55c897cc7255942746654f4ab66cad6",
+      "c0680064d698a62dd4a5a47f403db356a6531a5473e4c4b1d090ea2590513926",
+      "e22ce71c11dcf503c448fe51e56f41830eb4e1344fa5c7731ae63bce533a8e8e"
+    ]
+  },
+  "android-studio": {
+    "version": "2026.1.4.7",
+    "publisher": "Google LLC",
+    "installerHosts": [
+      "edgedl.me.gvt1.com"
+    ],
+    "installerSha256": [
+      "3be4f63119ca6bbb449948bd71ceffc3cf0805b505b07630f4ac8b43cc8ee45c"
+    ]
+  },
+  "audacity": {
+    "version": "4.0.0.262451524",
+    "publisher": "Audacity",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "2aecc44d28a004d15ae7c23c099f232ba8c5b3e6b19ebdbaf7d6c596316dc5b3",
+      "a5b222a9cf8f03cccef57c912428427eb9387f0e88fa590d9c2b1d83794b222c"
+    ]
+  },
+  "aws-cli": {
+    "version": "2.37.5",
+    "publisher": "Amazon Web Services",
+    "installerHosts": [
+      "awscli.amazonaws.com"
+    ],
+    "installerSha256": [
+      "20c3764b3d67462a219cf31505195e5e38bbf87f7ec6ae48b67aed6b78e57e51"
+    ]
+  },
+  "azure-cli": {
+    "version": "2.90.0",
+    "publisher": "Microsoft Corporation",
+    "installerHosts": [
+      "azcliprod.blob.core.windows.net"
+    ],
+    "installerSha256": [
+      "2a8f25ce14cac8824401be6ae3fbba374c0bded85b2f9ade17c6767d3e0d0192",
+      "d5c1918eab32063219bea575e0d545149969c24751cb5f90ad2388b5df72222f"
+    ]
+  },
+  "bitwarden": {
+    "version": "2026.9.0",
+    "publisher": "Bitwarden Inc.",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "34442f678f0080d20efac34fea46064e7c58fe0db4eeeaecde049a2a575f8b20",
+      "6af475c43bea3e5578f6e441ac6d90e830e77c54e0707db738af9f0dc53f5180"
+    ]
+  },
+  "brave": {
+    "version": "154.1.96.59",
+    "publisher": "Brave Software Inc",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "1566209eb989ab794698c39eab5356eb8026ae8505ae4446ee6a35a4a04340be",
+      "57eeb2ae1b7e7d7fdf3623d8ed4fea2fc173a2dabab34a2c1d4d24046d176d58",
+      "68d3e5b6ec56216bbbfc0df87982417e55cca53ec9c90e3dfcd94123e50e04d4",
+      "825237818b6800270cf3be49b5c692992f088b6ab7eacd44f46e1745952e615d",
+      "9d8babee2f409a8ed11aa162da2ec30a72bdaa8d2ef2a3bab19daa09a8c543e2",
+      "d982f660d2b2a30138cccb6a76a7e31ed5a3f668cb76421dabb231c72f51d006"
+    ]
+  },
+  "bruno": {
+    "version": "4.2.0",
+    "publisher": "Anoop M D",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "02cba006b3ab60fd17a33e97719dbeec4806014a523ef695a54e6d87be9035b0",
+      "1b3e01507b8785f6d9780e91d21df19135d4802e96694af0674cce038deaa91a",
+      "75c82e04e4a04edae3696f43338a4d995a1ce0459cf2a832aeae2387d571929b",
+      "9444dd83f0d708b40e0a59e2dc709c4df3a88a07ac41759b2f1990586f87974b",
+      "9f343fd5e9a21b2418727f08e43575836b5172491ed31ff03cd834c8752ddd63",
+      "cdd0ba8a0f9bc1862f26adaa6b6fbbba7924cb2fb570218a6b9385c476f6b805"
+    ]
+  },
+  "bun": {
+    "version": "1.4.2",
+    "publisher": "Oven-sh",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "a7a16b876a305fd1029c66dbd27007b4f6112ae896532f675878731a21e50cfd",
+      "ce4c17497b2f29712a99d3d53f028de28cd42e3bacb8589599e7f000e49b6405"
+    ]
+  },
+  "chrome": {
+    "version": "154.0.8037.93",
+    "publisher": "Google LLC",
+    "installerHosts": [
+      "dl.google.com"
+    ],
+    "installerSha256": [
+      "7a9995e6c8ad214f4870ce9105b4fc3b6672e5b941761e087db610c16d8d8feb",
+      "d81917ef4b03b8b70156eb70b70ca433bbf25dc59b33dfb23119ea88e2826f99",
+      "e744ffd35f5af8d453443a1a20d96a749f396c39d2e6238868f375ea519d8dc9"
+    ]
+  },
+  "claude-code": {
+    "version": "2.1.283",
+    "publisher": "Anthropic PBC",
+    "installerHosts": [
+      "downloads.claude.ai"
+    ],
+    "installerSha256": [
+      "1d0aaa255e3b9ba304840f260f4993b98f10516d3aa5b7d60ecd3392cca34df4",
+      "9dbe16dafed59da5cdabbfe11ad0335738c753fad794989b47f9446accd6de3a"
+    ]
+  },
+  "claude-desktop": {
+    "version": "1.44121.2",
+    "publisher": "Anthropic, PBC",
+    "installerHosts": [
+      "downloads.claude.ai"
+    ],
+    "installerSha256": [
+      "003474c93652732f325ff0fbbbc23b8db520f312ba35d350fd716a07157aaa80",
+      "2383e18b72c1b064433b54082498e6408740d200bc9b4c095e7f4db1a07d4bb3",
+      "38aa4ebd4a2a91a64c696a89a3d4011955a0555007046050ef73b6fba3b007d6",
+      "7f0a448cb2dfab9619b43c2251182e13a4282b7be80eb793c9712dc2c817e616"
+    ]
+  },
+  "cmake": {
+    "version": "4.4.3",
+    "publisher": "Kitware",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "018024d05e2fc77d386046da87f90345f9beea21e35c5c8ab02fd15421b7da18",
+      "417c4cd9c7e699aada088a2ebf63d3e9ec2cedb1ab2e2d2d687781005d686bf9",
+      "4d52ebab7193a698651639ed80d8d04fd903358843572cf44c7fd234cb7c26ab",
+      "7b410ddd00e24c7250eec7452da2348a4a70437aa87e9cda0a20d6a85662fcff",
+      "d999596e3f3fd1ac3a5eea62362b89dd71691122e25a187998cca348e574dc00",
+      "f3b27c83979727b73540db53dbe610967656b4631746a94b17a1dd0329dd7868"
+    ]
+  },
+  "dbeaver": {
+    "version": "26.2.0",
+    "publisher": "DBeaver Corp",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "009e8a99be478261d09fdeb40ab5ef64bfe1f5faf79288cac670164719d921d2",
+      "eec0a2e2d737a93b61681ea4b2f9b96ee4a587cc2c92298ee8a8576b6cee61c0"
+    ]
+  },
+  "discord": {
+    "version": "1.0.9260",
+    "publisher": "Discord Inc.",
+    "installerHosts": [
+      "stable.dl2.discordapp.net"
+    ],
+    "installerSha256": [
+      "be1dee4c52227f743bc277a33a47620b6ff119e1387fe899205a8fe5d6575a90"
+    ]
+  },
+  "docker-desktop": {
+    "version": "4.93.0",
+    "publisher": "Docker Inc.",
+    "installerHosts": [
+      "desktop.docker.com"
+    ],
+    "installerSha256": [
+      "c139124c9cf71477dc565c3c0ea5a18f90b93d68ebe9aaa848a065960416c0bc",
+      "d1b281009f289c3c163db65e28b93c9637465c075ddd6b6fb097a7d2a18ae24a"
+    ]
+  },
+  "doppler-cli": {
+    "version": "3.76.6",
+    "publisher": "Doppler",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "1b339c1a4cdedbcd08507ca27ae05830629bca87c79e3e6041aa9bfa98c62db1",
+      "fe6157c7294b859335116aa2f8d96a9f149d66ec0307bee02b273e30107e9a3f"
+    ]
+  },
+  "dotnet-sdk-10": {
+    "version": "10.0.401",
+    "publisher": "Microsoft Corporation",
+    "installerHosts": [
+      "download.microsoft.com"
+    ],
+    "installerSha256": [
+      "c4c36d27dd98edbeca236628611b617a6cb0e9623563e3ffd97f3b83952405d9",
+      "cf698e090dfa5ce116d6e64c9f09ed9697c148cd70fa70a73a0f4caeda85b6ea",
+      "faa807ca98afcc9134c8a2ca8c81f21f30bfce3bce7e5804708d601c579ba3b8"
+    ]
+  },
+  "dotnet-sdk-8": {
+    "version": "8.0.425",
+    "publisher": "Microsoft Corporation",
+    "installerHosts": [
+      "download.microsoft.com"
+    ],
+    "installerSha256": [
+      "0563984bc248a68fcca712d97378639d11137ce6192fb3d591f27269edce1e1a",
+      "0ab542193e31c7d1a4808b399f5dfdfb1527b4b1de37a5ffaabd635debcf6e06",
+      "48c31649ed0c37a161704e68fc9f5f67be9eb01edbd8f92b54b4c2e374ef6dfb"
+    ]
+  },
+  "dotnet-sdk-9": {
+    "version": "9.0.318",
+    "publisher": "Microsoft Corporation",
+    "installerHosts": [
+      "download.microsoft.com"
+    ],
+    "installerSha256": [
+      "029a9761df90a7ce3ff3fc5af8db8d6a689b27d9afe06e8f1853b7b43c030b96",
+      "738aacb1b8c0f0df0269e75a63e36dae73fddf0f2e09e862783c9cf017c79933",
+      "fe7e5608e8165b179017cb1b709f266dc84d66a5d8ae187cf852ddaa3b96bc4c"
+    ]
+  },
+  "epic-games": {
+    "version": "1.3.210.0",
+    "publisher": "Epic Games, Inc.",
+    "installerHosts": [
+      "epicgames-download1.akamaized.net"
+    ],
+    "installerSha256": [
+      "d55d79710edfeaa107a62f2ea007bec1eeeac8b715a43c2ba3858eec7bc60337"
+    ]
+  },
+  "everything": {
+    "version": "1.4.1.1032",
+    "publisher": "voidtools",
+    "installerHosts": [
+      "www.voidtools.com"
+    ],
+    "installerSha256": [
+      "156db5beb747d69470518a7b9b55af11efc4d3285ddb7cc013c0cc13ced5f237",
+      "23dca1a64574bf30c9988bbaf5f1d201a0ec7ee9a15e12270ae92a52183cccc8",
+      "2c8da8e569a3ddc19cf80f071edb0545e3d4ceca751b5c5d2515279400705086",
+      "4e7a80885aab8566b750c56a2a2b3e7c3c1f4920bcc53777e07f5eeb9e1f7485",
+      "698df475ec44e638f66f1b6a32d28fea613cec78d3b6310e6abe53431eeb940c",
+      "781a31b440045219752a1bb40fbd204b1d96964d4bf56af01b18e3d549b037aa",
+      "94b85272410089afa7f513f3cccc4411bf94994c05ed25a24499165f9112450f",
+      "c42efad041d4c0bb4d4ac97ae7cbe89f153ec1fe078772392e749c7f5d5282d3"
+    ]
+  },
+  "figma": {
+    "version": "126.9.10",
+    "publisher": "Figma, Inc.",
+    "installerHosts": [
+      "desktop.figma.com"
+    ],
+    "installerSha256": [
+      "37e9c34167fe6e506ed0950e50ef4eb26283cd28c93bd4962f6b818ef6474b6f",
+      "42e8d523abf90b0f96c34831eaf915b55ba1298ad778b5ea7951d882558296a4",
+      "f7f23a8007e5ed29f99108a0fa0397d92b40b00c41ebdefc354c9087e70772e1"
+    ]
+  },
+  "firefox": {
+    "version": "157.0",
+    "publisher": "Mozilla",
+    "installerHosts": [
+      "download-installer.cdn.mozilla.net"
+    ],
+    "installerSha256": [
+      "511f539825c249db351eb0616db8c7860c49dbd39499264105081e7536fcf670",
+      "58c90afab6e4b9a6b34d2958fe06d1a143dd9226ea8834377e5cd45e815936d7",
+      "e74c47e51599631ed9513df97375f2731082f2e7fbe624a539ef9f038ec7f79a"
+    ]
+  },
+  "fzf": {
+    "version": "0.74.4",
+    "publisher": "Junegunn Choi",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "558df4dac9c65a63c732909a06abc1891a42adcae4d6be92a9b0ccc0ef05b4ff",
+      "5e63c0e798406fcb9c51a9fed4988398e25fdabf8c670e32c16caf7b4a7ed02d"
+    ]
+  },
+  "gimp": {
+    "version": "3.2.6.0",
+    "publisher": "The GIMP Team",
+    "installerHosts": [
+      "download.gimp.org"
+    ],
+    "installerSha256": [
+      "9337cccbc01d4098ee7a3dab215b3afbe6ece99c5287c92441d6f12cf541ebca"
+    ]
+  },
+  "git": {
+    "version": "2.55.0.5",
+    "publisher": "The Git Development Community",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "c955de342b1465bc637f0e71fddf4e28e8d0b829668ec1866ab32a839303e8e3",
+      "d065a4e23c3d9a6b5073d609b5be0830227ec3ca053c083ba385061ddfaf94c6"
+    ]
+  },
+  "git-lfs": {
+    "version": "3.8.0",
+    "publisher": "GitHub, Inc.",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "aa2d69214905d6b348f1b038beb2d68e4828342f9b3fe47dae5a5f023823fe92"
+    ]
+  },
+  "github-cli": {
+    "version": "2.101.0",
+    "publisher": "GitHub, Inc.",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "02895f2f9cfc4f5be0daade8314f0f8c1bfc88bf0ed16add284b95fa06461dff",
+      "0ea9bea4419606573a776673d0eef3b46e910b301882cff12cf158cb3afbf70c",
+      "582afded5ab57cd0713fecda2e680bc0a39c320181b35c8f024a95a4f695f93c",
+      "9ba92256a431d254706844ee1991f6f4a9559a3c3646ff7ae7fe23724bfaef83",
+      "bc6c814367b193cd8e713611d61e36013c0ef843b8f516458fe3eda039192794",
+      "e6cbb2d4afdad3e70f3d38b8d1ebaa3a0870a897cfc0e4cf569826710b96b4fd"
+    ]
+  },
+  "github-desktop": {
+    "version": "3.6.6",
+    "publisher": "GitHub, Inc.",
+    "installerHosts": [
+      "desktop.githubusercontent.com"
+    ],
+    "installerSha256": [
+      "0b46a53f4ac1a5ece408eb5a0eed87e435d4b7c09e0fadd066faa296c0927f2a",
+      "30520cb99c0873627a7234f3f60cf7a178d4c702ed1c0abd864cd90a49b0184b",
+      "988d17208b6801d9cf09c7cadc9831e62588c105cd680e62ce9d5c95559e2021",
+      "b01f33ffaaf5febe399eef8bdf72444e38d580c3530c05fc35eae166596227a2"
+    ]
+  },
+  "go": {
+    "version": "1.27.0",
+    "publisher": "https://go.dev",
+    "installerHosts": [
+      "go.dev"
+    ],
+    "installerSha256": [
+      "728e9318c061b95082bcf167bab8b6c6e0d91a045f89f403b3285fa39f0c455b",
+      "9259168cda232152f3ef0c51149e842e93e4f67df84713b55ca31128518e97e3",
+      "a75fe7151e3d9c8c0d43759c92ae320525b49e238510b8fa082b32c1fadfd369"
+    ]
+  },
+  "google-cloud-sdk": {
+    "version": "587.0.0",
+    "publisher": "Google LLC",
+    "installerHosts": [
+      "dl.google.com"
+    ],
+    "installerSha256": [
+      "6b78840bb1b1d04bc9dfd2bd7cff34db1e3ef1c0f34e48dd5daa4c32bf13291f"
+    ]
+  },
+  "handbrake": {
+    "version": "1.11.2",
+    "publisher": "The HandBrake Team",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "6becb8e5a041941d5f2fd6fe83c66fc15b2b16190e2e79f5ad47eb4cd18df8cd",
+      "fb69bafceb4e0ec208e3a7ea08eb1d119c49eb42e9954ad665cc75aa94d020b8"
+    ]
+  },
+  "helm": {
+    "version": "4.3.0",
+    "publisher": "Helm",
+    "installerHosts": [
+      "get.helm.sh"
+    ],
+    "installerSha256": [
+      "304ea163cce4d9ad14e189c01846c6a34de9cfdfe48536ae54b2e8ba7884e67c",
+      "4a9eefa30d26eb73900a9a0f16e97eae678582172204db60cbd454c68acea246"
+    ]
+  },
+  "inkscape": {
+    "version": "1.4.4",
+    "publisher": "Inkscape",
+    "installerHosts": [
+      "media.inkscape.org"
+    ],
+    "installerSha256": [
+      "25c67a2e4b8d83deade457b1291801921d3cf78c05bc0232521d52ab9a8b37ef",
+      "2fa033e95113ae83d6430b2479e7e63e4266d0632a5b03f99ee3db9360e3b8b8",
+      "fa21d25e56dbfe41e9b014a4f37689edda4bb41d5a3597fe2787dff6c10e651f"
+    ]
+  },
+  "intellij-idea-community": {
+    "version": "2025.2.6.2",
+    "publisher": "JetBrains s.r.o.",
+    "installerHosts": [
+      "download.jetbrains.com"
+    ],
+    "installerSha256": [
+      "35590effdd271636333aed21728f50f77f310da4a22ab990b37097f14c285fe7",
+      "8393c2c9ccbd8581d646f01f0b6f0e7f78e58ebbe5cd8cbd95f9e236518e9fe8"
+    ]
+  },
+  "jetbrains-toolbox": {
+    "version": "3.8.1.0",
+    "publisher": "JetBrains",
+    "installerHosts": [
+      "download.jetbrains.com"
+    ],
+    "installerSha256": [
+      "172b6e029f7ed7d310494993a462a446b3ea3b18f65520a9aefe714e56138fb5",
+      "c3d119512751309369b41bde0e7c6c20b73dd58e2a5a13e5549103b5c813e1e6"
+    ]
+  },
+  "jq": {
+    "version": "1.8.2",
+    "publisher": "jqlang",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "083b5377392bc57cf27052b6d20a2d927770683bca844632901ff38b4b7b0ac7",
+      "a6fc67fedaf9128a3309a1e2ebb8b986aeccf70122ee46d2cb4849e423f0c627",
+      "a99cb668f95bdd788d9ee20529613b115e5d2a0d7f9127ee6976607e878558ba"
+    ]
+  },
+  "keepassxc": {
+    "version": "2.7.12",
+    "publisher": "KeePassXC Team",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "feee096c1d5d0d7bb7b36b18174818f7bac889be7668c550ff0e5ef9206ea9a5"
+    ]
+  },
+  "kubectl": {
+    "version": "1.37.1",
+    "publisher": "The Kubernetes Authors",
+    "installerHosts": [
+      "dl.k8s.io"
+    ],
+    "installerSha256": [
+      "14b93c4916a6f37a06fbc1f46b0a1d2404c4f9741be09f00d6caf8af3b05f1d3",
+      "1f0ce2ba3384a082ee846f74dc27f3877d7ecb03082ee3c0cd58c5fc027c2a1b",
+      "2e6751fc80ccd8e39ea8f029c7bb4509d9e4d121e75745ac8727006bcbe0bd24"
+    ]
+  },
+  "libreoffice": {
+    "version": "26.8.0.3",
+    "publisher": "The Document Foundation",
+    "installerHosts": [
+      "download.documentfoundation.org"
+    ],
+    "installerSha256": [
+      "4aa6c6e1895f4055104effcb556bd3362d20c6ad707c149543304f395ef9db95",
+      "7ea33f771223a68c49538438e5f57e7805bc951edc8d22dcdf4ef26e3ab2fbe0",
+      "e8ef8a6bec96ae53834a076c859af392ecd91f3651c46e16fe50ec0aaf6c9a3c"
+    ]
+  },
+  "llvm": {
+    "version": "23.1.2",
+    "publisher": "LLVM",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "72fd68d6dc22723ef55fbb150033bf38c8e860a2b4015ddc59dad841db1a30c8",
+      "e9d9141524f2c9fe4bf9f37012efe34f0aa745617be9e21fface9104703c55e5"
+    ]
+  },
+  "msys2": {
+    "version": "20260611",
+    "publisher": "The MSYS2 Developers",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "3150d7d9aa5dedd900a7f52300d4d918271e3a8fc47de94848818fd5a430e6b0",
+      "6e29f2a62a7beb9181b14fa4a72a920527726e4f5c366fd13f5df36ae82600c4"
+    ]
+  },
+  "neovim": {
+    "version": "0.12.5",
+    "publisher": "neovim.io",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "2dbd0c41b7462f6c48fe750cea456ad500b534bfe9af9e95295ab715ce6ec417",
+      "bcc9fedb87e696e76fae7494d9c2e184026f8ff0c6d0bf830acdb2277b5bad3f"
+    ]
+  },
+  "ninja": {
+    "version": "1.13.2",
+    "publisher": "ninja-build",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "07fc8261b42b20e71d1720b39068c2e14ffcee6396b76fb7a795fb460b78dc65",
+      "e52f0bdef9dfb1003229dbd6508a508c4073fd017247002adc66e5e806cb0391"
+    ]
+  },
+  "nodejs-lts": {
+    "version": "24.19.0",
+    "publisher": "Node.js Foundation",
+    "installerHosts": [
+      "nodejs.org"
+    ],
+    "installerSha256": [
+      "47b16e1b1012b1b9ad62169b3a466adb6bc758b2cb8bd8224683c086836484f8",
+      "57f71ab3652e797d84acddc79c81cc9ff1c6ddb2a1974cdb83f00fee9bff4c73",
+      "8502f4a50b458d4cc38ed8f2001556c2cd239d464920f74017926ccb1e1c157f",
+      "f0f66c2a80c08a30a5ab5179ee9ea9e45f9b46289436a8cc87ff833b852db351"
+    ]
+  },
+  "notepad-plus-plus": {
+    "version": "8.9.8.1",
+    "publisher": "Notepad++ Team",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "0c4f4fe82babd7688f5c1431b1357392491563af6ffedf4e37f5de0bd71babb4",
+      "26f3bcced788fadbac4e7e577b430ea2ce6060cf3bcad993ef4612ecd7d743da",
+      "43bf78c7569fd43b03d4f86a1073ac4306b31099e4487bdbf536c42d16d03f48",
+      "65d3435b5dcbefde47c401a2666132138e76a2b62e189ad4ffe568581b6adfd2",
+      "a53c5116b55ac93fedd7808e71096badecbf10a55f2be9b28b741591b8917a73",
+      "beddf5548e75c97930d1575ba1c7d113e6e2b33d0a200310e734ca08e225f414",
+      "ee848aa54df153921678b343857a83861da81ce0c9dbb217b6f55a8780e60f5e"
+    ]
+  },
+  "notion": {
+    "version": "7.36.0",
+    "publisher": "Notion Labs, Inc",
+    "installerHosts": [
+      "desktop-release.notion-static.com"
+    ],
+    "installerSha256": [
+      "5b4a016b24d0a6d49da9494e61cf6112a4f070971565cb013cfb22647bd25920",
+      "668ba4250dd9664c0a78924f5ae82a342431a1f11a06d3aae57c61aa81754cce",
+      "69c61c34493aa690667ae7a7520087355f9e4d430328f21048e30f2f59fb57b6",
+      "a3e7a1f0f2ab8b00039145fff9c7a2ff3ab637fda61894c3c14ceea1a2ce4c6e"
+    ]
+  },
+  "obs-studio": {
+    "version": "32.2.2",
+    "publisher": "OBS Project",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "4d6e40e3ab155f56b30de517380566a206d74b63cdf5ad49aa596924768f97e1",
+      "b16b41c3cf89b8a919738359a46acb25d207ec1e488563139d7c276cfffb0906",
+      "c3a0b880adbe64dc4bcb68f93016916ab5b55ae43fd227115287bf80257d92dc"
+    ]
+  },
+  "obsidian": {
+    "version": "1.13.7",
+    "publisher": "Obsidian",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "f233dc24896b3f2d5f9e4b01111181a561d0760b2105f0a474024c5f3143a9bc"
+    ]
+  },
+  "oh-my-posh": {
+    "version": "31.3.0",
+    "publisher": "Jan De Dobbeleer",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "d163d4c6d167e04923213676b0ffdbf601a4cfa20b51b16d4986eeade31922a2",
+      "f22499218a1bdea3708c45341e07c9302de644fdd22b71a734d7c768f1e5b654"
+    ]
+  },
+  "ollama": {
+    "version": "0.34.4",
+    "publisher": "Ollama",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "4a6514323eb8c131f6c8bb651b4fe2edf5f1525f4fd8b84315ba20f1af3e210f"
+    ]
+  },
+  "pnpm": {
+    "version": "12.6.0",
+    "publisher": "pnpm",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "8152a1c9d14d38fb1cd98a211bcc48e4ae0c921ad918c52ffce19c222268f8b8",
+      "ba6df1e929ef5b2a8c683d7e9177978d2b63aed9bdfaf0a8935c96876c79b0b7"
+    ]
+  },
+  "postgresql-17": {
+    "version": "17.11-4",
+    "publisher": "PostgreSQL Global Development Group",
+    "installerHosts": [
+      "get.enterprisedb.com"
+    ],
+    "installerSha256": [
+      "c9828fd3a4daebbeeace19bec2de5f38d73c047fce47278148b525cfbe28a5e4"
+    ]
+  },
+  "postman": {
+    "version": "12.30.3",
+    "publisher": "Postman",
+    "installerHosts": [
+      "dl.pstmn.io"
+    ],
+    "installerSha256": [
+      "b7e7245b7e44fff61a210649d30fcf39753519587563e1c3010129e2fc5960c6"
+    ]
+  },
+  "powershell": {
+    "version": "7.6.6.0",
+    "publisher": "Microsoft Corporation",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "34cfd071b83d5bba4f7e913d3545a35e8cce97b5e7b46a3b44d167d48c361dd6",
+      "387d0af8e92ba97f73616c91fa8f29a284e8f82ee6c40fe12dade971bb05bac4",
+      "958838ff55091e1c8705d89efed0cc7e8245a3a6ef6c0ccfae20015227108ad8",
+      "ad992bc654ad8e6fa7070baedfbc0edbf8cab5b6bcb4f9f7a891fd2438fafe4b"
+    ]
+  },
+  "powertoys": {
+    "version": "0.101.2362.0",
+    "publisher": "Microsoft Corporation",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "4c2ae5156b7e4f1f5ba744ba6e1cf6bfe3d9614978356e6b00aa47cab86350db",
+      "bee299302c0cd59e282bdc92cc8aaf737713eabcca77bb8bf09f43745d43cd93",
+      "d56fa7130fa68afe553068c15a59a6b24c8dbcc9a0989a43ef0fc5a373230de3",
+      "f27e4b4b01bff1a74bfa0116c99f9205f7138db6f7dfcaa9223fb8b635fe6050"
+    ]
+  },
+  "python-3-13": {
+    "version": "3.13.15",
+    "publisher": "Python Software Foundation",
+    "installerHosts": [
+      "www.python.org"
+    ],
+    "installerSha256": [
+      "741c07276eb2d57e7ee012d643f021c58cb38d11c5389be46c15d41d1a10b447",
+      "c252c676087c49e6b94e95a273536b78921c28a5fc9f86d15d25392328247249",
+      "edec09c4853aeae9ac36efb8c9f95b6b8e2fee65eee56d9767a8b7c69c574403"
+    ]
+  },
+  "qbittorrent": {
+    "version": "5.2.4",
+    "publisher": "The qBittorrent project",
+    "installerHosts": [
+      "sourceforge.net"
+    ],
+    "installerSha256": [
+      "ef6efe581d80efeb0a77df281d93f93021fbdcc48e4d8f7b341dc864f53c30dd"
+    ]
+  },
+  "ripgrep": {
+    "version": "15.2.0",
+    "publisher": "BurntSushi",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "71b2fef860abe467217a538ff31de02f5258807c0129f771846f87bd029aafc5",
+      "9bf73bdb3fda9ad4b0235e1295b02c717031c986afa4d7c05dd0af8b74010a95",
+      "e4abca10c3a64ebea742667dd7009449d49403db5460dd6873e389fa2945360f"
+    ]
+  },
+  "rustup": {
+    "version": "1.29.1",
+    "publisher": "The Rust Programming Language",
+    "installerHosts": [
+      "static.rust-lang.org"
+    ],
+    "installerSha256": [
+      "01aa49cf9574a8bd0ae52005d7de2590e8f27181ded6748236e702c92aef826d",
+      "6f4bef66261261fcb43131be8720bab817d403a09edec7455c371974b90bdb7e",
+      "c036fd639f3a1df5ba673e5f5c2decc685c3881dfb3ea8dbd21c439f9ed643a0"
+    ]
+  },
+  "sharex": {
+    "version": "21.0.0",
+    "publisher": "ShareX Team",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "f213aca04d30e0e2dc7c43bc79acae8622be291cee6014a90962ed87ea5f10cc"
+    ]
+  },
+  "slack": {
+    "version": "4.52.171",
+    "publisher": "Slack Technologies Inc.",
+    "installerHosts": [
+      "downloads.slack-edge.com"
+    ],
+    "installerSha256": [
+      "bb75e748c210c48e902364e7917dcdf0e2f42d280a6dd7c857c23d0d35806a73",
+      "c09f8097c08e5179679262e0f88dd2fc7eed3004285b3d0cb23add822b9f3817",
+      "e5d36004f24963ad423864786e80ada9e5a6db61413c914c4c1a4745ba19e407"
+    ]
+  },
+  "spotify": {
+    "version": "1.3.1.234.g59d6bf59",
+    "publisher": "Spotify AB",
+    "installerHosts": [
+      "download.scdn.co"
+    ],
+    "installerSha256": [
+      "6c25d92dd38ddbfc1e4970765e865766d8ae2ef1758c6af8e9122c5050ee66dc",
+      "fb6d58a6c733136472c7a8dd4470fb6e41c891f6df303d8ce4d7ce93664d10c2"
+    ]
+  },
+  "sqlite-browser": {
+    "version": "3.13.1",
+    "publisher": "DB Browser for SQLite Team",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "89bf0adafad492f44d850d76c188204f0639f185b50482a3cbd59afe509b1d84",
+      "d023d54b3a5db10c7e896089bb3dbe6e7f4bc4eaa9bbecb34ca414be5970f688",
+      "e0b9f86d3da4d8d800e144295487e43de306c1bd27f14dccfe41e904736f25f7"
+    ]
+  },
+  "steam": {
+    "version": "2.10.91.91",
+    "publisher": "Valve Corporation",
+    "installerHosts": [
+      "cdn.akamai.steamstatic.com"
+    ],
+    "installerSha256": [
+      "7d3654531c32d941b8cae81c4137fc542172bfa9635f169cb392f245a0a12bcb"
+    ]
+  },
+  "sumatrapdf": {
+    "version": "3.6.1",
+    "publisher": "Krzysztof Kowalczyk",
+    "installerHosts": [
+      "www.sumatrapdfreader.org"
+    ],
+    "installerSha256": [
+      "1eee71cccd2ea6e94d5bcea54ee2f759844da3e1a0ee2f6045035b1d17b94381",
+      "670e694a5c91633d28ab0df689b4dbf92021183cfe82270ae552cb617a0a07ed",
+      "758e6e870ffeb87ea44f4424f47043578ca35462cf026f43f6ff9fd334b3d0fa",
+      "98b33a518d42986856d225064b0cd2d3643ecf78cbf84ab873d26cc51877a544",
+      "e232308a77e2293bafe4ac4079ddb8ef00ca10de43b9477ca55f17a03419770b",
+      "f21091ca6741e4049b0ca375121708a7959803d39336f0468084808943667ffe"
+    ]
+  },
+  "sysinternals": {
+    "version": "2026-09-10",
+    "publisher": "Sysinternals",
+    "installerHosts": [
+      "download.sysinternals.com"
+    ],
+    "installerSha256": [
+      "6317b8cdd05b1e9f91186da65819a2d5b21a5a8db2b045ba3a4254ec9c2c76be",
+      "e1c73a31b575c9cb216a94484a5b162bd585deb8bd1a8775c8103ced39cc67ce"
+    ]
+  },
+  "telegram": {
+    "version": "7.2.9",
+    "publisher": "Telegram FZ-LLC",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "0e857e62fac5865469374a440e6791262c4d099032f2a38ae97a4d75792acf7d",
+      "55bdf26ed8160ef40cbb8889f2715e2c9f41733a3715a5e0c23a03bd2988095f",
+      "9cebb5b0d486e4870fe28df96bfab8f42230315721ebedbe9826e255822c26ba",
+      "aab60a75cd6ad15fdc4ae11f013272205422c376813e8b05dd2d039ee15b989c",
+      "c08d045a07ee6a55fbaab437844facd7881ddeb1af662b95305c6ac6bb1eb0c7",
+      "e0fb305c44b9690d0b5e8e086ef83f5e607ca67dff241a652186eaee191699fb"
+    ]
+  },
+  "temurin-17": {
+    "version": "17.0.20.101",
+    "publisher": "Eclipse Adoptium",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "a6013774c5e4a34951e11c1997d8b4641d2de7736d3eac839231f4266bd1116f"
+    ]
+  },
+  "temurin-21": {
+    "version": "21.0.12.101",
+    "publisher": "Eclipse Adoptium",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "454cfd334b9ca91c96dd8c2de97fcef6b9f1f98be9172ff076711f1c6b44e4e0"
+    ]
+  },
+  "temurin-25": {
+    "version": "25.0.4.101",
+    "publisher": "Eclipse Adoptium",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "517b3590be43120c34c3891d09c97a1eddc12da982208c4f5adf1bdc1b5e3f15"
+    ]
+  },
+  "terraform": {
+    "version": "1.16.2",
+    "publisher": "HashiCorp",
+    "installerHosts": [
+      "releases.hashicorp.com"
+    ],
+    "installerSha256": [
+      "6a22d1e6065483022f92512319178311dcf8207258be802dc3efce0730112e02",
+      "6ef140ce1d399dc43b8315194176ddc2dfb5c21d607968e82ef20a55cfff40d0"
+    ]
+  },
+  "thunderbird": {
+    "version": "156.0.1",
+    "publisher": "Mozilla",
+    "installerHosts": [
+      "download-installer.cdn.mozilla.net"
+    ],
+    "installerSha256": [
+      "009b001c751cf21dfc89bd5a63b14343ef56ec4fd76ae24566f45b1752a425ac",
+      "5543fe82422f734ab43ea3747477d05324318192dba69afd998847d07a15ea77"
+    ]
+  },
+  "ubuntu-2404": {
+    "version": "2404.0.5.0",
+    "publisher": "Canonical Group Limited",
+    "installerHosts": [
+      "publicwsldistros.blob.core.windows.net"
+    ],
+    "installerSha256": [
+      "510639de5934e003ffb5b5c4f91cfae6823fb75388c2464f7bc909baf4dc5dd6"
+    ]
+  },
+  "uv": {
+    "version": "0.12.20",
+    "publisher": "Astral Software Inc.",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "1a372c273370ae9a7e9aa84020ce91fc1d9ebecbd287c3447e7e99cada0b14f3",
+      "95f9bc30fbb3574d276e28ac4a6de932d25153645853d13da8c21eec3bc88d06",
+      "b6bd9218855591742ffd3b00fcf2044b4d2fb6446b6a3545e0dfee447e950388"
+    ]
+  },
+  "visual-studio-2022-community": {
+    "version": "17.14.41",
+    "publisher": "Microsoft Corporation",
+    "installerHosts": [
+      "download.visualstudio.microsoft.com"
+    ],
+    "installerSha256": [
+      "7041ccc4d8d52901e386b0d96d9f11394244fb2b09fc6aae2c573f16c20ccdcc"
+    ]
+  },
+  "vlc": {
+    "version": "3.0.23",
+    "publisher": "VideoLAN",
+    "installerHosts": [
+      "download.videolan.org"
+    ],
+    "installerSha256": [
+      "20ad191348684b470ddc4e05204316f3d8e39655f412b3e392a0eef97639daaf",
+      "875037fdc5cccaa93aebbabd42275a7fd412e640c7d3633b32b241220d208033",
+      "8a12a33416ecb319ee06569fd7b5319af7362dfb6ef680df74b4a2c49af6515a",
+      "992d19dbd0b8a7cde9167d2f7780b1ef6f92acc8a71acfa736101a21f35181e1",
+      "9c0917dc521ffc8ce30e70bca7f6c9dc8fec80909d763e75cd976351dee8db0b",
+      "bc4b902a480b98a4a5479327a7f210f06369a59bf727649e320faba5b4ef1f5e",
+      "ecc17f097ee0801f04faabb5ef9992ff00ea4c98c8fa005f6508ee74b41b6a53",
+      "f1feeeefbe76299c9e0fe8df3d9dd7b30a96d6aef5dc842a22f5cfb577822427",
+      "fd8c2a39efcfc57b26379d890db5159782147a543f3145ffec681a32da0153d1"
+    ]
+  },
+  "vs-build-tools-2022": {
+    "version": "17.14.41",
+    "publisher": "Microsoft Corporation",
+    "installerHosts": [
+      "download.visualstudio.microsoft.com"
+    ],
+    "installerSha256": [
+      "37bb0fb429d163ecebd272a865d11a37b906d152bef960da2ddb29c2e2fd6eeb"
+    ]
+  },
+  "vscode": {
+    "version": "1.139.1",
+    "publisher": "Microsoft Corporation",
+    "installerHosts": [
+      "vscode.download.prss.microsoft.com"
+    ],
+    "installerSha256": [
+      "1547b6d1d5b5f3e51b684dd30a209ac7ddf43e6ae420441fba28bea1cbca41ed",
+      "1ee431093a7fe77215afd5391a6199f9e663b891fe65b7a4a711d025595a8016",
+      "650901df632c3acefbad9e7ab82b1cf9188122f1f6a9ca82b7de2525b85ea84f",
+      "8543af48a4639b7d31f53e2a005f285213de229b725364964e679ed4526a7342"
+    ]
+  },
+  "windirstat": {
+    "version": "2.8.0",
+    "publisher": "The WinDirStat Team",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "107420f704fefefdd5b1e6ad44037057a70db24dbbaf792182f7e8d751a7706f",
+      "72badd76510fe1d38333bc9c2a2d0f2aa5d30586fcb0953d814b4e20948587ef",
+      "c40a6ec73497b18eb4ce2cbe071983b4f637cd04644bfca73c176d624794f79a"
+    ]
+  },
+  "windows-terminal": {
+    "version": "1.24.11911.0",
+    "publisher": "Microsoft Corporation",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "54ef0c69a912de511475df02e57e5193e69193a4cf95a19d508d2705fd602e42"
+    ]
+  },
+  "winmerge": {
+    "version": "2.16.58.2",
+    "publisher": "Thingamahoochie Software",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "26f794838bc4e545d7b9f36dc8beeb5a65a12bd4627fa3b4fe87068abef925b0",
+      "3dcd40d79fee3f01da7e12765d5dc3f4cbec8e038749b791697b573ba1d3a8ce",
+      "6ac1e3c0028c39e49962dacd662ab553989d7e817a5cdf96ebbbc1fb345bcff4",
+      "6bb69e48757307c7b258e381c3578dc0523fe71f677b536cb7eb6be726bbf2b2"
+    ]
+  },
+  "wireshark": {
+    "version": "4.6.8",
+    "publisher": "The Wireshark developer community, https://www.wireshark.org",
+    "installerHosts": [
+      "2.na.dl.wireshark.org"
+    ],
+    "installerSha256": [
+      "779ee66f846376942a3b631a78bba8c3d509697d07743349e1893056211d05e3",
+      "8eba737cb6875d9b3709228d37893f71125bdc50d7148e24d9cdc755259e9c3a",
+      "d23b030f5a18394b262fa6686f985f1cc2129be5e3077e378322a2cb78626e0e"
+    ]
+  },
+  "wsl": {
+    "version": "2.7.13",
+    "publisher": "Microsoft Corp.",
+    "installerHosts": [
+      "github.com"
+    ],
+    "installerSha256": [
+      "3c481b5739a988b22cb81f21737d0f496473ee69bffb1885cc52a77a02ce9fa2",
+      "62f0c3a1bec3fd3d1afd30c517bcfbb7b875c702b35225f74040148961cd035e",
+      "a3505a50f4cc585551d11d9de824ba4375448d7a68f2e71d3fb315fa986fc754"
+    ]
+  },
+  "zoom": {
+    "version": "7.2.48556",
+    "publisher": "Zoom",
+    "installerHosts": [
+      "zoom.us"
+    ],
+    "installerSha256": [
+      "b0dac9fa5237d2e18144ca723644460e7cc26675e5d3db0f89fdfe47ad8c429b",
+      "df451142eea229b371c732a354a16c578744a48b4b69d2e2e0c4529ef590bee5"
+    ]
+  }
+}

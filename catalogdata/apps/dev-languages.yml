@@ -1,0 +1,131 @@
+- id: temurin-17
+  name: Eclipse Temurin JDK 17
+  category: dev/languages
+  description: OpenJDK 17 LTS build from Eclipse Adoptium.
+  homepage: https://adoptium.net/
+  license: GPL-2.0 with Classpath Exception
+  winget: EclipseAdoptium.Temurin.17.JDK
+  publisher: "Eclipse Adoptium"
+  detect: {registry: ["Temurin.*17"]}
+
+- id: temurin-21
+  name: Eclipse Temurin JDK 21
+  category: dev/languages
+  description: OpenJDK 21 LTS build from Eclipse Adoptium.
+  homepage: https://adoptium.net/
+  license: GPL-2.0 with Classpath Exception
+  winget: EclipseAdoptium.Temurin.21.JDK
+  publisher: "Eclipse Adoptium"
+  detect: {registry: ["Temurin.*21"]}
+
+- id: temurin-25
+  name: Eclipse Temurin JDK 25
+  category: dev/languages
+  description: OpenJDK 25 LTS build from Eclipse Adoptium.
+  homepage: https://adoptium.net/
+  license: GPL-2.0 with Classpath Exception
+  winget: EclipseAdoptium.Temurin.25.JDK
+  publisher: "Eclipse Adoptium"
+  detect: {registry: ["Temurin.*25"]}
+
+- id: nodejs-lts
+  name: Node.js LTS
+  category: dev/languages
+  description: JavaScript runtime, long-term support line, with npm.
+  homepage: https://nodejs.org/
+  license: MIT
+  winget: OpenJS.NodeJS.LTS
+  publisher: "Node.js Foundation"
+  detect: {commands: [node]}
+
+- id: pnpm
+  name: pnpm
+  category: dev/languages
+  description: Fast, disk-efficient Node package manager.
+  homepage: https://pnpm.io/
+  license: MIT
+  winget: pnpm.pnpm
+  publisher: "pnpm"
+  detect: {commands: [pnpm]}
+
+- id: bun
+  name: Bun
+  category: dev/languages
+  description: All-in-one JavaScript runtime, bundler and package manager.
+  homepage: https://bun.sh/
+  license: MIT
+  winget: Oven-sh.Bun
+  publisher: "Oven-sh"
+  detect: {commands: [bun]}
+
+- id: python-3-13
+  name: Python 3.13
+  category: dev/languages
+  description: Python interpreter with pip and the py launcher.
+  homepage: https://www.python.org/
+  license: PSF
+  winget: Python.Python.3.13
+  publisher: "Python Software Foundation"
+  detect: {registry: ["^Python 3\\.13"]}
+
+- id: uv
+  name: uv
+  category: dev/languages
+  description: Extremely fast Python package and project manager.
+  homepage: https://docs.astral.sh/uv/
+  license: MIT OR Apache-2.0
+  winget: astral-sh.uv
+  publisher: "Astral Software Inc."
+  detect: {commands: [uv]}
+
+- id: go
+  name: Go
+  category: dev/languages
+  description: The Go programming language toolchain.
+  homepage: https://go.dev/
+  license: BSD-3-Clause
+  winget: GoLang.Go
+  publisher: "https://go.dev"
+  detect: {commands: [go]}
+
+- id: rustup
+  name: Rustup
+  category: dev/languages
+  description: Rust toolchain installer (rustc, cargo). Needs the MSVC build tools.
+  homepage: https://rustup.rs/
+  license: MIT OR Apache-2.0
+  winget: Rustlang.Rustup
+  publisher: "The Rust Programming Language"
+  detect: {commands: [rustup, cargo]}
+  requires: [vs-build-tools-2022]
+  recipes: [rust-stable]
+
+- id: dotnet-sdk-8
+  name: .NET SDK 8
+  category: dev/languages
+  description: .NET 8 LTS SDK.
+  homepage: https://dotnet.microsoft.com/
+  license: MIT
+  winget: Microsoft.DotNet.SDK.8
+  publisher: "Microsoft Corporation"
+  detect: {registry: ["Microsoft \\.NET SDK 8\\."]}
+
+- id: dotnet-sdk-9
+  name: .NET SDK 9
+  category: dev/languages
+  description: .NET 9 SDK.
+  homepage: https://dotnet.microsoft.com/
+  license: MIT
+  winget: Microsoft.DotNet.SDK.9
+  publisher: "Microsoft Corporation"
+  detect: {registry: ["Microsoft \\.NET SDK 9\\."]}
+
+- id: dotnet-sdk-10
+  name: .NET SDK 10
+  category: dev/languages
+  description: .NET 10 LTS SDK.
+  homepage: https://dotnet.microsoft.com/
+  license: MIT
+  winget: Microsoft.DotNet.SDK.10
+  publisher: "Microsoft Corporation"
+  detect: {registry: ["Microsoft \\.NET SDK 10\\."]}

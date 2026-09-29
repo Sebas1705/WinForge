@@ -1,0 +1,269 @@
+- id: firefox
+  name: Firefox
+  category: browsers
+  description: Open-source browser from Mozilla.
+  homepage: https://www.mozilla.org/firefox/
+  license: MPL-2.0
+  winget: Mozilla.Firefox
+  publisher: "Mozilla"
+
+- id: chrome
+  name: Google Chrome
+  category: browsers
+  description: Web browser from Google.
+  homepage: https://www.google.com/chrome/
+  license: Proprietary
+  winget: Google.Chrome
+  publisher: "Google LLC"
+
+- id: brave
+  name: Brave
+  category: browsers
+  description: Privacy-focused Chromium browser.
+  homepage: https://brave.com/
+  license: MPL-2.0
+  winget: Brave.Brave
+  publisher: "Brave Software Inc"
+
+- id: 7zip
+  name: 7-Zip
+  category: utilities
+  description: File archiver with a high compression ratio.
+  homepage: https://www.7-zip.org/
+  license: LGPL-2.1
+  winget: 7zip.7zip
+  publisher: "Igor Pavlov"
+
+- id: everything
+  name: Everything
+  category: utilities
+  description: Instant file-name search.
+  homepage: https://www.voidtools.com/
+  license: MIT
+  winget: voidtools.Everything
+  publisher: "voidtools"
+
+- id: sysinternals
+  name: Sysinternals Suite
+  category: utilities
+  description: Microsoft's advanced system utilities (Process Explorer, Autoruns, ...).
+  homepage: https://learn.microsoft.com/sysinternals/
+  license: Proprietary
+  winget: Microsoft.Sysinternals.Suite
+  publisher: "Sysinternals"
+
+- id: windirstat
+  name: WinDirStat
+  category: utilities
+  description: Disk usage statistics viewer.
+  homepage: https://windirstat.net/
+  license: GPL-2.0
+  winget: WinDirStat.WinDirStat
+  publisher: "The WinDirStat Team"
+
+- id: sharex
+  name: ShareX
+  category: utilities
+  description: Screen capture and sharing tool.
+  homepage: https://getsharex.com/
+  license: GPL-3.0
+  winget: ShareX.ShareX
+  publisher: "ShareX Team"
+
+- id: vlc
+  name: VLC media player
+  category: media
+  description: Plays nearly any media format.
+  homepage: https://www.videolan.org/vlc/
+  license: GPL-2.0
+  winget: VideoLAN.VLC
+  publisher: "VideoLAN"
+
+- id: obs-studio
+  name: OBS Studio
+  category: media
+  description: Recording and live streaming.
+  homepage: https://obsproject.com/
+  license: GPL-2.0
+  winget: OBSProject.OBSStudio
+  publisher: "OBS Project"
+
+- id: handbrake
+  name: HandBrake
+  category: media
+  description: Video transcoder.
+  homepage: https://handbrake.fr/
+  license: GPL-2.0
+  winget: HandBrake.HandBrake
+  publisher: "The HandBrake Team"
+
+- id: audacity
+  name: Audacity
+  category: media
+  description: Multi-track audio editor.
+  homepage: https://www.audacityteam.org/
+  license: GPL-3.0
+  winget: Audacity.Audacity
+  publisher: "Audacity"
+
+- id: spotify
+  name: Spotify
+  category: media
+  description: Music streaming client.
+  homepage: https://www.spotify.com/download/
+  license: Proprietary
+  winget: Spotify.Spotify
+  publisher: "Spotify AB"
+
+- id: gimp
+  name: GIMP
+  category: design
+  description: Raster image editor.
+  homepage: https://www.gimp.org/
+  license: GPL-3.0
+  winget: GIMP.GIMP.3
+  publisher: "The GIMP Team"
+
+- id: inkscape
+  name: Inkscape
+  category: design
+  description: Vector graphics editor.
+  homepage: https://inkscape.org/
+  license: GPL-3.0
+  winget: Inkscape.Inkscape
+  publisher: "Inkscape"
+
+- id: figma
+  name: Figma
+  category: design
+  description: Collaborative interface design.
+  homepage: https://www.figma.com/
+  license: Proprietary
+  winget: Figma.Figma
+  publisher: "Figma, Inc."
+
+- id: obsidian
+  name: Obsidian
+  category: productivity
+  description: Markdown knowledge base.
+  homepage: https://obsidian.md/
+  license: Proprietary
+  winget: Obsidian.Obsidian
+  publisher: "Obsidian"
+
+- id: notion
+  name: Notion
+  category: productivity
+  description: Notes, docs and projects.
+  homepage: https://www.notion.so/
+  license: Proprietary
+  winget: Notion.Notion
+  publisher: "Notion Labs, Inc"
+
+- id: libreoffice
+  name: LibreOffice
+  category: productivity
+  description: Free office suite.
+  homepage: https://www.libreoffice.org/
+  license: MPL-2.0
+  winget: TheDocumentFoundation.LibreOffice
+  publisher: "The Document Foundation"
+
+- id: sumatrapdf
+  name: SumatraPDF
+  category: productivity
+  description: Minimal, fast PDF and ebook reader.
+  homepage: https://www.sumatrapdfreader.org/
+  license: GPL-3.0
+  winget: SumatraPDF.SumatraPDF
+  publisher: "Krzysztof Kowalczyk"
+
+- id: bitwarden
+  name: Bitwarden
+  category: security
+  description: Open-source password manager.
+  homepage: https://bitwarden.com/
+  license: GPL-3.0
+  winget: Bitwarden.Bitwarden
+  publisher: "Bitwarden Inc."
+
+- id: keepassxc
+  name: KeePassXC
+  category: security
+  description: Offline, open-source password manager.
+  homepage: https://keepassxc.org/
+  license: GPL-3.0
+  winget: KeePassXCTeam.KeePassXC
+  publisher: "KeePassXC Team"
+
+- id: discord
+  name: Discord
+  category: communication
+  description: Voice, video and text chat.
+  homepage: https://discord.com/
+  license: Proprietary
+  winget: Discord.Discord
+  publisher: "Discord Inc."
+
+- id: telegram
+  name: Telegram Desktop
+  category: communication
+  description: Messaging client.
+  homepage: https://desktop.telegram.org/
+  license: GPL-3.0
+  winget: Telegram.TelegramDesktop
+  publisher: "Telegram FZ-LLC"
+
+- id: slack
+  name: Slack
+  category: communication
+  description: Team messaging.
+  homepage: https://slack.com/
+  license: Proprietary
+  winget: SlackTechnologies.Slack
+  publisher: "Slack Technologies Inc."
+
+- id: zoom
+  name: Zoom Workplace
+  category: communication
+  description: Video meetings.
+  homepage: https://zoom.us/
+  license: Proprietary
+  winget: Zoom.Zoom
+  publisher: "Zoom"
+
+- id: thunderbird
+  name: Thunderbird
+  category: communication
+  description: Open-source email client from Mozilla.
+  homepage: https://www.thunderbird.net/
+  license: MPL-2.0
+  winget: Mozilla.Thunderbird
+  publisher: "Mozilla"
+
+- id: steam
+  name: Steam
+  category: gaming
+  description: Game store and launcher from Valve.
+  homepage: https://store.steampowered.com/
+  license: Proprietary
+  winget: Valve.Steam
+  publisher: "Valve Corporation"
+
+- id: epic-games
+  name: Epic Games Launcher
+  category: gaming
+  description: Game store and launcher from Epic Games.
+  homepage: https://store.epicgames.com/
+  license: Proprietary
+  winget: EpicGames.EpicGamesLauncher
+  publisher: "Epic Games, Inc."
+
+- id: qbittorrent
+  name: qBittorrent
+  category: utilities
+  description: Open-source BitTorrent client.
+  homepage: https://www.qbittorrent.org/
+  license: GPL-2.0
+  winget: qBittorrent.qBittorrent
+  publisher: "The qBittorrent project"

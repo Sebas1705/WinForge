@@ -1,0 +1,236 @@
+- id: wsl
+  name: Windows Subsystem for Linux
+  category: dev/containers
+  description: Runs Linux distributions natively on Windows. May require a reboot.
+  homepage: https://learn.microsoft.com/windows/wsl/
+  license: MIT
+  winget: Microsoft.WSL
+  publisher: "Microsoft Corp."
+  admin: true
+  detect: {commands: [wsl]}
+
+- id: ubuntu-2404
+  name: Ubuntu 24.04 (WSL)
+  category: dev/containers
+  description: Ubuntu LTS distribution for WSL.
+  homepage: https://ubuntu.com/wsl
+  license: Various
+  winget: Canonical.Ubuntu.2404
+  publisher: "Canonical Group Limited"
+  requires: [wsl]
+
+- id: docker-desktop
+  name: Docker Desktop
+  category: dev/containers
+  description: Container engine and tooling. Uses the WSL 2 backend.
+  homepage: https://www.docker.com/products/docker-desktop/
+  license: Proprietary (free for personal and small business)
+  winget: Docker.DockerDesktop
+  publisher: "Docker Inc."
+  admin: true
+  requires: [wsl]
+  detect: {commands: [docker]}
+
+- id: kubectl
+  name: kubectl
+  category: dev/cloud
+  description: Kubernetes command-line client.
+  homepage: https://kubernetes.io/docs/reference/kubectl/
+  license: Apache-2.0
+  winget: Kubernetes.kubectl
+  publisher: "The Kubernetes Authors"
+  detect: {commands: [kubectl]}
+
+- id: helm
+  name: Helm
+  category: dev/cloud
+  description: Kubernetes package manager.
+  homepage: https://helm.sh/
+  license: Apache-2.0
+  winget: Helm.Helm
+  publisher: "Helm"
+  detect: {commands: [helm]}
+
+- id: terraform
+  name: Terraform
+  category: dev/cloud
+  description: Infrastructure as code by HashiCorp.
+  homepage: https://www.terraform.io/
+  license: BUSL-1.1
+  winget: Hashicorp.Terraform
+  publisher: "HashiCorp"
+  detect: {commands: [terraform]}
+
+- id: azure-cli
+  name: Azure CLI
+  category: dev/cloud
+  description: Command-line tools for Microsoft Azure.
+  homepage: https://learn.microsoft.com/cli/azure/
+  license: MIT
+  winget: Microsoft.AzureCLI
+  publisher: "Microsoft Corporation"
+  detect: {commands: [az]}
+
+- id: aws-cli
+  name: AWS CLI
+  category: dev/cloud
+  description: Command-line tools for Amazon Web Services.
+  homepage: https://aws.amazon.com/cli/
+  license: Apache-2.0
+  winget: Amazon.AWSCLI
+  publisher: "Amazon Web Services"
+  detect: {commands: [aws]}
+
+- id: google-cloud-sdk
+  name: Google Cloud CLI
+  category: dev/cloud
+  description: gcloud and related tools for Google Cloud.
+  homepage: https://cloud.google.com/sdk
+  license: Apache-2.0
+  winget: Google.CloudSDK
+  publisher: "Google LLC"
+  detect: {commands: [gcloud]}
+
+- id: doppler-cli
+  name: Doppler CLI
+  category: dev/cloud
+  description: Secrets management CLI.
+  homepage: https://docs.doppler.com/docs/cli
+  license: Apache-2.0
+  winget: Doppler.doppler
+  publisher: "Doppler"
+  detect: {commands: [doppler]}
+
+- id: postman
+  name: Postman
+  category: dev/api
+  description: API client and collaboration platform.
+  homepage: https://www.postman.com/
+  license: Proprietary
+  winget: Postman.Postman
+  publisher: "Postman"
+
+- id: bruno
+  name: Bruno
+  category: dev/api
+  description: Open-source, offline-first API client.
+  homepage: https://www.usebruno.com/
+  license: MIT
+  winget: Bruno.Bruno
+  publisher: "Anoop M D"
+
+- id: dbeaver
+  name: DBeaver Community
+  category: dev/database
+  description: Universal database client.
+  homepage: https://dbeaver.io/
+  license: Apache-2.0
+  winget: DBeaver.DBeaver.Community
+  publisher: "DBeaver Corp"
+
+- id: postgresql-17
+  name: PostgreSQL 17
+  category: dev/database
+  description: PostgreSQL server, pgAdmin and command-line tools.
+  homepage: https://www.postgresql.org/
+  license: PostgreSQL
+  winget: PostgreSQL.PostgreSQL.17
+  publisher: "PostgreSQL Global Development Group"
+  admin: true
+
+- id: sqlite-browser
+  name: DB Browser for SQLite
+  category: dev/database
+  description: Visual tool for SQLite databases.
+  homepage: https://sqlitebrowser.org/
+  license: GPL-3.0
+  winget: DBBrowserForSQLite.DBBrowserForSQLite
+  publisher: "DB Browser for SQLite Team"
+
+- id: wireshark
+  name: Wireshark
+  category: dev/network
+  description: Network protocol analyzer.
+  homepage: https://www.wireshark.org/
+  license: GPL-2.0
+  winget: WiresharkFoundation.Wireshark
+  publisher: "The Wireshark developer community, https://www.wireshark.org"
+  admin: true
+
+- id: ripgrep
+  name: ripgrep
+  category: dev/cli
+  description: Fast recursive search.
+  homepage: https://github.com/BurntSushi/ripgrep
+  license: MIT OR Unlicense
+  winget: BurntSushi.ripgrep.MSVC
+  publisher: "BurntSushi"
+  detect: {commands: [rg]}
+
+- id: fzf
+  name: fzf
+  category: dev/cli
+  description: Command-line fuzzy finder.
+  homepage: https://github.com/junegunn/fzf
+  license: MIT
+  winget: junegunn.fzf
+  publisher: "Junegunn Choi"
+  detect: {commands: [fzf]}
+
+- id: jq
+  name: jq
+  category: dev/cli
+  description: Command-line JSON processor.
+  homepage: https://jqlang.org/
+  license: MIT
+  winget: jqlang.jq
+  publisher: "jqlang"
+  detect: {commands: [jq]}
+
+- id: oh-my-posh
+  name: Oh My Posh
+  category: dev/terminal
+  description: Prompt theme engine for any shell.
+  homepage: https://ohmyposh.dev/
+  license: MIT
+  winget: JanDeDobbeleer.OhMyPosh
+  publisher: "Jan De Dobbeleer"
+  detect: {commands: [oh-my-posh]}
+
+- id: winmerge
+  name: WinMerge
+  category: dev/editors
+  description: Visual diff and merge for files and folders.
+  homepage: https://winmerge.org/
+  license: GPL-2.0
+  winget: WinMerge.WinMerge
+  publisher: "Thingamahoochie Software"
+
+- id: ollama
+  name: Ollama
+  category: ai
+  description: Run large language models locally.
+  homepage: https://ollama.com/
+  license: MIT
+  winget: Ollama.Ollama
+  publisher: "Ollama"
+  detect: {commands: [ollama]}
+
+- id: claude-desktop
+  name: Claude
+  category: ai
+  description: Claude desktop app from Anthropic.
+  homepage: https://claude.ai/download
+  license: Proprietary
+  winget: Anthropic.Claude
+  publisher: "Anthropic, PBC"
+
+- id: claude-code
+  name: Claude Code
+  category: ai
+  description: Anthropic's agentic coding tool for the terminal.
+  homepage: https://code.claude.com/
+  license: Proprietary
+  winget: Anthropic.ClaudeCode
+  publisher: "Anthropic PBC"
+  detect: {commands: [claude]}

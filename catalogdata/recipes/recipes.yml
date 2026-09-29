@@ -1,0 +1,48 @@
+- id: git-defaults
+  description: Sane Git defaults - main as default branch, long paths, Credential Manager. Never touches user.name or user.email.
+  after: [git]
+  check: |
+    if ((git config --global init.defaultBranch) -eq 'main' -and (git config --global core.longpaths) -eq 'true') { exit 0 } else { exit 1 }
+  powershell: |
+    git config --global init.defaultBranch main
+    git config --global core.longpaths true
+    git config --global credential.helper manager
+
+- id: rust-stable
+  description: Install the stable Rust toolchain for the MSVC target.
+  after: [rustup]
+  check: |
+    rustup show active-toolchain 2>$null | Select-String 'stable' | Out-Null; if ($?) { exit 0 } else { exit 1 }
+  powershell: |
+    rustup default stable-msvc
+
+- id: wsl-default-2
+  description: Make WSL 2 the default version for new distributions.
+  after: [wsl]
+  powershell: |
+    wsl --set-default-version 2
+
+- id: windows-long-paths
+  description: Enable Win32 long paths (over 260 characters), needed by many build tools.
+  admin: true
+  check: |
+    if ((Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name LongPathsEnabled -ErrorAction SilentlyContinue).LongPathsEnabled -eq 1) { exit 0 } else { exit 1 }
+  powershell: |
+    Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name LongPathsEnabled -Type DWord -Value 1
+
+- id: windows-developer-mode
+  description: Turn on Windows Developer Mode (symlinks without elevation, sideloading).
+  admin: true
+  check: |
+    if ((Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock' -Name AllowDevelopmentWithoutDevLicense -ErrorAction SilentlyContinue).AllowDevelopmentWithoutDevLicense -eq 1) { exit 0 } else { exit 1 }
+  powershell: |
+    New-Item 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock' -Force | Out-Null
+    Set-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock' -Name AllowDevelopmentWithoutDevLicense -Type DWord -Value 1
+
+- id: android-sdk-env
+  description: Point ANDROID_HOME at the SDK Android Studio downloads on first launch (skipped until that folder exists).
+  after: [android-studio]
+  check: |
+    if ([Environment]::GetEnvironmentVariable('ANDROID_HOME','User') -or -not (Test-Path "$env:LOCALAPPDATA\Android\Sdk")) { exit 0 } else { exit 1 }
+  powershell: |
+    [Environment]::SetEnvironmentVariable('ANDROID_HOME', "$env:LOCALAPPDATA\Android\Sdk", 'User')

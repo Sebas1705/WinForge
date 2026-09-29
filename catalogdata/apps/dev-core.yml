@@ -1,0 +1,190 @@
+- id: git
+  name: Git
+  category: dev/vcs
+  description: Distributed version control system.
+  homepage: https://git-scm.com/
+  license: GPL-2.0
+  winget: Git.Git
+  publisher: "The Git Development Community"
+  detect: {commands: [git]}
+  recipes: [git-defaults]
+
+- id: git-lfs
+  name: Git LFS
+  category: dev/vcs
+  description: Large file storage extension for Git.
+  homepage: https://git-lfs.com/
+  license: MIT
+  winget: GitHub.GitLFS
+  publisher: "GitHub, Inc."
+  detect: {commands: [git-lfs]}
+  requires: [git]
+
+- id: github-cli
+  name: GitHub CLI
+  category: dev/vcs
+  description: GitHub from the terminal - pull requests, issues, releases.
+  homepage: https://cli.github.com/
+  license: MIT
+  winget: GitHub.cli
+  publisher: "GitHub, Inc."
+  detect: {commands: [gh]}
+  requires: [git]
+
+- id: github-desktop
+  name: GitHub Desktop
+  category: dev/vcs
+  description: Graphical Git client for GitHub.
+  homepage: https://desktop.github.com/
+  license: MIT
+  winget: GitHub.GitHubDesktop
+  publisher: "GitHub, Inc."
+  requires: [git]
+
+- id: vscode
+  name: Visual Studio Code
+  category: dev/editors
+  description: Extensible source-code editor from Microsoft.
+  homepage: https://code.visualstudio.com/
+  license: Proprietary (MIT source)
+  winget: Microsoft.VisualStudioCode
+  publisher: "Microsoft Corporation"
+  detect: {commands: [code]}
+
+- id: windows-terminal
+  name: Windows Terminal
+  category: dev/terminal
+  description: Modern multi-tab terminal for PowerShell, cmd and WSL.
+  homepage: https://aka.ms/terminal
+  license: MIT
+  winget: Microsoft.WindowsTerminal
+  publisher: "Microsoft Corporation"
+  detect: {commands: [wt]}
+
+- id: powershell
+  name: PowerShell 7
+  category: dev/terminal
+  description: Cross-platform PowerShell.
+  homepage: https://learn.microsoft.com/powershell/
+  license: MIT
+  winget: Microsoft.PowerShell
+  publisher: "Microsoft Corporation"
+  detect: {commands: [pwsh]}
+
+- id: powertoys
+  name: PowerToys
+  category: utilities
+  description: Microsoft's power-user utilities - FancyZones, Run, Keyboard Manager.
+  homepage: https://learn.microsoft.com/windows/powertoys/
+  license: MIT
+  winget: Microsoft.PowerToys
+  publisher: "Microsoft Corporation"
+
+- id: notepad-plus-plus
+  name: Notepad++
+  category: dev/editors
+  description: Lightweight text and code editor.
+  homepage: https://notepad-plus-plus.org/
+  license: GPL-3.0
+  winget: Notepad++.Notepad++
+  publisher: "Notepad++ Team"
+
+- id: neovim
+  name: Neovim
+  category: dev/editors
+  description: Hyperextensible Vim-based editor.
+  homepage: https://neovim.io/
+  license: Apache-2.0
+  winget: Neovim.Neovim
+  publisher: "neovim.io"
+  detect: {commands: [nvim]}
+
+- id: jetbrains-toolbox
+  name: JetBrains Toolbox
+  category: dev/editors
+  description: Installer and updater for all JetBrains IDEs.
+  homepage: https://www.jetbrains.com/toolbox-app/
+  license: Proprietary
+  winget: JetBrains.Toolbox
+  publisher: "JetBrains"
+
+- id: intellij-idea-community
+  name: IntelliJ IDEA Community
+  category: dev/editors
+  description: Free JVM IDE for Java and Kotlin.
+  homepage: https://www.jetbrains.com/idea/
+  license: Apache-2.0
+  winget: JetBrains.IntelliJIDEA.Community
+  publisher: "JetBrains s.r.o."
+
+- id: android-studio
+  name: Android Studio
+  category: dev/editors
+  description: Official IDE for Android development, bundles the Android SDK manager.
+  homepage: https://developer.android.com/studio
+  license: Apache-2.0
+  winget: Google.AndroidStudio
+  publisher: "Google LLC"
+
+- id: visual-studio-2022-community
+  name: Visual Studio 2022 Community
+  category: dev/editors
+  description: Full Microsoft IDE for .NET and C++.
+  homepage: https://visualstudio.microsoft.com/vs/community/
+  license: Proprietary (free for individuals)
+  winget: Microsoft.VisualStudio.2022.Community
+  publisher: "Microsoft Corporation"
+  admin: true
+
+- id: vs-build-tools-2022
+  name: Visual Studio 2022 Build Tools (C++)
+  category: dev/build
+  description: MSVC compiler and Windows SDK without the IDE. Needed by Rust, node-gyp and native builds.
+  homepage: https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022
+  license: Proprietary
+  winget: Microsoft.VisualStudio.2022.BuildTools
+  publisher: "Microsoft Corporation"
+  admin: true
+  override: "--passive --wait --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+  detect:
+    paths: ["%ProgramFiles(x86)%\\Microsoft Visual Studio\\2022\\BuildTools"]
+
+- id: cmake
+  name: CMake
+  category: dev/build
+  description: Cross-platform build system generator.
+  homepage: https://cmake.org/
+  license: BSD-3-Clause
+  winget: Kitware.CMake
+  publisher: "Kitware"
+  detect: {commands: [cmake]}
+
+- id: ninja
+  name: Ninja
+  category: dev/build
+  description: Small, fast build system.
+  homepage: https://ninja-build.org/
+  license: Apache-2.0
+  winget: Ninja-build.Ninja
+  publisher: "ninja-build"
+  detect: {commands: [ninja]}
+
+- id: llvm
+  name: LLVM / Clang
+  category: dev/build
+  description: Clang compiler, lld, clang-format and clangd.
+  homepage: https://llvm.org/
+  license: Apache-2.0 with LLVM exceptions
+  winget: LLVM.LLVM
+  publisher: "LLVM"
+  detect: {commands: [clang]}
+
+- id: msys2
+  name: MSYS2
+  category: dev/build
+  description: GCC/MinGW toolchain and a Unix-like shell with the pacman package manager.
+  homepage: https://www.msys2.org/
+  license: BSD-3-Clause
+  winget: MSYS2.MSYS2
+  publisher: "The MSYS2 Developers"
+  detect: {paths: ["C:\\msys64"]}

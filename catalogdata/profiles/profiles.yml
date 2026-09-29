@@ -1,0 +1,129 @@
+- id: essentials
+  name: Essentials
+  kind: base
+  description: Small utilities almost every Windows PC benefits from.
+  apps: [{id: 7zip}, {id: everything}, {id: powertoys}, {id: vlc}, {id: sumatrapdf}, {id: firefox}]
+
+- id: everyday
+  name: Everyday
+  kind: base
+  description: Essentials plus communication, notes and a password manager.
+  extends: [essentials]
+  apps: [{id: bitwarden}, {id: discord}, {id: telegram}, {id: obsidian}, {id: libreoffice}, {id: thunderbird}]
+
+- id: creator
+  name: Creator
+  kind: base
+  description: Recording, editing and design tools.
+  extends: [essentials]
+  apps: [{id: obs-studio}, {id: audacity}, {id: handbrake}, {id: gimp}, {id: inkscape}, {id: sharex}]
+
+- id: gaming
+  name: Gaming
+  kind: base
+  description: Game launchers and chat.
+  extends: [essentials]
+  apps: [{id: steam}, {id: epic-games}, {id: discord}]
+
+- id: dev-base
+  name: Developer base
+  kind: dev
+  description: Git, an editor, a modern terminal and the everyday command-line tools every developer profile builds on.
+  apps:
+    - {id: git}
+    - {id: github-cli}
+    - {id: vscode}
+    - {id: windows-terminal}
+    - {id: powershell}
+    - {id: powertoys}
+    - {id: jq}
+    - {id: ripgrep}
+    - {id: fzf}
+    - {id: winmerge}
+  recipes: [windows-long-paths, windows-developer-mode]
+
+- id: dev-java
+  name: Java / Kotlin
+  kind: dev
+  description: JDK 21 LTS and IntelliJ IDEA. Projects bring their own Gradle and Maven through the wrapper scripts.
+  extends: [dev-base]
+  apps: [{id: temurin-21}, {id: intellij-idea-community}]
+
+- id: dev-android
+  name: Android
+  kind: dev
+  description: Java toolchain plus Android Studio. The SDK itself downloads on Android Studio's first run.
+  extends: [dev-java]
+  apps: [{id: android-studio}]
+  recipes: [android-sdk-env]
+
+- id: dev-web
+  name: Web / Node
+  kind: dev
+  description: Node.js LTS, pnpm and an API client.
+  extends: [dev-base]
+  apps: [{id: nodejs-lts}, {id: pnpm}, {id: bruno}, {id: chrome}]
+
+- id: dev-python
+  name: Python
+  kind: dev
+  description: Python 3.13 and uv.
+  extends: [dev-base]
+  apps: [{id: python-3-13}, {id: uv}]
+
+- id: dev-go
+  name: Go
+  kind: dev
+  description: The Go toolchain.
+  extends: [dev-base]
+  apps: [{id: go}]
+
+- id: dev-rust
+  name: Rust
+  kind: dev
+  description: Rustup with the stable toolchain. Pulls in the MSVC build tools it links with.
+  extends: [dev-base]
+  apps: [{id: rustup}]
+
+- id: dev-dotnet
+  name: .NET
+  kind: dev
+  description: .NET 9 SDK and Visual Studio Community.
+  extends: [dev-base]
+  apps: [{id: dotnet-sdk-9}, {id: visual-studio-2022-community}]
+
+- id: dev-cpp
+  name: C / C++
+  kind: dev
+  description: MSVC build tools, CMake, Ninja and LLVM/Clang.
+  extends: [dev-base]
+  apps: [{id: vs-build-tools-2022}, {id: cmake}, {id: ninja}, {id: llvm}]
+
+- id: dev-containers
+  name: Containers
+  kind: dev
+  description: WSL 2, Ubuntu, Docker Desktop, kubectl and Helm.
+  extends: [dev-base]
+  apps: [{id: wsl}, {id: ubuntu-2404}, {id: docker-desktop}, {id: kubectl}, {id: helm}]
+  recipes: [wsl-default-2]
+
+- id: dev-cloud
+  name: Cloud and infrastructure
+  kind: dev
+  description: Cloud provider CLIs and Terraform.
+  extends: [dev-base]
+  apps: [{id: azure-cli}, {id: aws-cli}, {id: google-cloud-sdk}, {id: terraform}, {id: doppler-cli}]
+
+- id: dev-data
+  name: Databases
+  kind: dev
+  description: A database client, PostgreSQL and a SQLite browser.
+  extends: [dev-base]
+  apps: [{id: dbeaver}, {id: postgresql-17}, {id: sqlite-browser}]
+
+- id: dev-ai
+  name: AI tooling
+  kind: dev
+  description: Local models and agentic coding tools.
+  extends: [dev-base]
+  apps: [{id: ollama}, {id: claude-desktop}, {id: claude-code}]
