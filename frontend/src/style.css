@@ -94,3 +94,6 @@ button.icon { padding: 5px 9px; font-size: 16px; line-height: 1; }
 :root[data-density=compact] .list li { padding: 4px 10px; }
 :root[data-density=compact] .apps li { padding: 5px 10px; }
 :root[data-density=compact] aside .row { padding: 3px 10px; }
+
+.banner.info { background: color-mix(in srgb, var(--accent) 14%, var(--panel)); }
+.banner progress { flex: 1; max-width: 320px; accent-color: var(--accent); }

@@ -30,7 +30,7 @@ jobs:
           node-version: "22"
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - name: Build the frontend
+      - name: Frontend tests and build
         # main.go embeds frontend/dist, so Go cannot compile without it.
         working-directory: frontend
         run: |
@@ -44,9 +44,8 @@ jobs:
       - run: go build ./...
       - run: go test ./...
 
-  # Windows is the only real target, so the detection code (registry, winget
-  # export, elevation) is compiled and vetted there; this job proves the pure
-  # logic also builds elsewhere.
+  # Windows is the only real target, so registry/winget/elevation code is
+  # compiled and vetted above; this proves the pure logic builds elsewhere too.
   portable-logic:
     runs-on: ubuntu-latest
     steps:
@@ -70,3 +69,56 @@ jobs:
       - name: Lock file is current
         # A changed installer host or hash shows up as a diff to review.
         run: git diff --exit-code -- catalog.lock.json || echo "::warning::catalog.lock.json is stale; run winforge-verify -lock and commit it"
+
+  # Builds the real installer and proves it works: silent install, the app
+  # starts, silent uninstall leaves nothing behind. The release workflow builds
+  # the same artifact, so a broken installer is found here, not on a tag.
+  installer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: go install github.com/wailsapp/wails/v2/cmd/wails@v2.13.0
+      - name: Install NSIS
+        shell: pwsh
+        run: |
+          choco install nsis -y --no-progress
+          Add-Content $env:GITHUB_PATH "C:\Program Files (x86)\NSIS"
+      - name: Build app and installer
+        run: wails build -nsis -ldflags "-X main.version=v0.0.0-ci"
+      - name: Install silently
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem build/bin -Filter "*installer.exe" | Select-Object -First 1
+          if (-not $installer) { throw "no installer built" }
+          Start-Process $installer.FullName -ArgumentList "/S" -Wait
+          $exe = @("$env:ProgramFiles\Sebas1705\WinForge\WinForge.exe", "$env:LOCALAPPDATA\Programs\WinForge\WinForge.exe") |
+            Where-Object { Test-Path $_ } | Select-Object -First 1
+          if (-not $exe) { throw "installer did not put WinForge.exe anywhere expected" }
+          "WINFORGE_EXE=$exe" | Add-Content $env:GITHUB_ENV
+      - name: App starts
+        shell: pwsh
+        run: |
+          $p = Start-Process $env:WINFORGE_EXE -PassThru
+          Start-Sleep -Seconds 8
+          if ($p.HasExited) { throw "WinForge exited with code $($p.ExitCode) right after start" }
+          Stop-Process $p -Force
+      - name: Uninstall silently
+        shell: pwsh
+        run: |
+          $dir = Split-Path $env:WINFORGE_EXE
+          # _?= keeps the uninstaller in place so -Wait really waits.
+          Start-Process "$dir\uninstall.exe" -ArgumentList "/S", "_?=$dir" -Wait
+          if (Test-Path $env:WINFORGE_EXE) { throw "uninstall left WinForge.exe behind" }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installer
+          path: build/bin/*installer.exe
+          retention-days: 7

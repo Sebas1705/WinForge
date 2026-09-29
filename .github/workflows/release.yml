@@ -1,14 +1,23 @@
 name: Release
 
+# Push a tag like v0.1.0 to publish. Run it by hand (workflow_dispatch) for a
+# dry run: it builds and uploads the artifacts but publishes nothing.
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Version to build for the dry run (vX.Y.Z)
+        required: true
+        default: v0.0.0-dryrun
 
 permissions:
   contents: write
 
 jobs:
-  windows:
+  # Nothing is built or published unless the tests pass on the tagged commit.
+  test:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,28 +27,84 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Install Wails CLI
-        run: go install github.com/wailsapp/wails/v2/cmd/wails@v2.13.0
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Frontend tests and build
+        working-directory: frontend
+        run: |
+          npm ci
+          npm test
+          npm run build
+      - run: go vet ./...
+      - run: go test ./...
+
+  build:
+    needs: test
+    runs-on: windows-latest
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Stamp the version
+        # The installer and the exe's file properties need a numeric x.y.z;
+        # the full tag (with any -rc suffix) goes into the binary itself.
+        shell: pwsh
+        run: |
+          if ($env:TAG -notmatch '^v(\d+\.\d+\.\d+)(-[0-9A-Za-z.]+)?$') { throw "tag '$env:TAG' is not vX.Y.Z[-suffix]" }
+          $v = $Matches[1]
+          $json = Get-Content wails.json -Raw | ConvertFrom-Json
+          $json.info.productVersion = $v
+          $json | ConvertTo-Json -Depth 10 | Set-Content wails.json -Encoding utf8
+          Write-Host "productVersion = $v"
+      - run: go install github.com/wailsapp/wails/v2/cmd/wails@v2.13.0
       - name: Install NSIS
         shell: pwsh
         run: |
           choco install nsis -y --no-progress
           Add-Content $env:GITHUB_PATH "C:\Program Files (x86)\NSIS"
       - name: Build app and installer
-        run: wails build -nsis -ldflags "-X main.version=${{ github.ref_name }}"
+        run: wails build -nsis -ldflags "-X main.version=${{ env.TAG }}"
       - name: Collect artifacts
         shell: pwsh
         run: |
           New-Item -ItemType Directory dist | Out-Null
-          Copy-Item "build/bin/WinForge.exe" "dist/WinForge-${{ github.ref_name }}-windows-amd64.exe"
-          $installer = Get-ChildItem "build/bin" -Filter "*installer*.exe" | Select-Object -First 1
+          Copy-Item "build/bin/WinForge.exe" "dist/WinForge-$env:TAG-windows-amd64.exe"
+          $installer = Get-ChildItem "build/bin" -Filter "*installer.exe" | Select-Object -First 1
           if (-not $installer) { throw "no installer artifact found" }
-          Copy-Item $installer.FullName "dist/WinForge-${{ github.ref_name }}-windows-installer.exe"
+          # The in-app updater looks for exactly this suffix and verifies the
+          # download against SHA256SUMS from the same release.
+          Copy-Item $installer.FullName "dist/WinForge-$env:TAG-windows-installer.exe"
           Get-ChildItem dist | ForEach-Object {
             $h = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower()
-            "$h  $($_.Name)" | Add-Content dist/SHA256SUMS
+            "$h  $($_.Name)" | Add-Content dist/SHA256SUMS -Encoding ascii
           }
+          Get-Content dist/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ env.TAG }}
+          path: dist/*
+
+  publish:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
           files: dist/*
           generate_release_notes: true
+          # A -rc/-beta tag must not become /releases/latest, or every user's
+          # updater would offer it.
+          prerelease: ${{ contains(github.ref_name, '-') }}

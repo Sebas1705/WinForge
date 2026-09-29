@@ -28,6 +28,7 @@ internal/
   system/        winget export, registry, PATH detection, elevation
   install/       plan (diff against the PC) and runner (winget + recipes)
   profile/       store, export/import, `winget import` export
+  updater/       release lookup, semver compare, SHA-256-verified installer download
 cmd/winforge-cli headless: scan | profiles | plan | apply | export | check
 cmd/winforge-verify  catalog verifier
 app.go, main.go, frontend/   Wails desktop app (Go + React/TypeScript)
@@ -54,6 +55,12 @@ go run ./cmd/winforge-cli scan
 ```
 
 Requires Go 1.26, Node 22 and the [Wails CLI](https://wails.io) v2.
+
+## Releases, installer and updates
+
+- **CI** (`ci.yml`): frontend tests + build, gofmt, vet and Go tests on Windows; portable-logic tests on Linux; the catalog verifier (weekly too); and an **installer job** that builds the NSIS installer, installs it silently, starts the app, uninstalls silently and fails if anything is left behind.
+- **Release** (`release.yml`): push a tag `vX.Y.Z` to publish. Tests gate the build; the tag is stamped into the binary and the installer; assets are `WinForge-<tag>-windows-installer.exe`, the portable `.exe` and `SHA256SUMS`. Tags with a suffix (`-rc1`) publish as pre-releases so they never reach the updater. Run the workflow by hand for a dry run that publishes nothing.
+- **Updater** (in the app, Appearance > Updates): checks GitHub's latest release at startup (can be turned off) and offers **Update now**. It downloads the installer, **verifies it against the release's `SHA256SUMS`** (and that the URLs belong to this repository), then launches it and quits. Development builds are never offered updates.
 
 ## Roadmap
 

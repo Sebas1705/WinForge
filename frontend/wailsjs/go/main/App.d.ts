@@ -8,6 +8,8 @@ export function Apply(arg1:catalog.Profile):Promise<void>;
 
 export function Cancel():Promise<void>;
 
+export function CheckUpdate():Promise<main.UpdateInfo>;
+
 export function DeleteProfile(arg1:string):Promise<void>;
 
 export function ExportProfile(arg1:catalog.Profile):Promise<string>;
@@ -17,6 +19,8 @@ export function ExportWinget(arg1:catalog.Profile):Promise<string>;
 export function GetState():Promise<main.State>;
 
 export function ImportProfile():Promise<main.ImportResult>;
+
+export function InstallUpdate():Promise<void>;
 
 export function OpenURL(arg1:string):Promise<void>;
 

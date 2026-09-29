@@ -10,6 +10,10 @@ export function Cancel() {
   return window['go']['main']['App']['Cancel']();
 }
 
+export function CheckUpdate() {
+  return window['go']['main']['App']['CheckUpdate']();
+}
+
 export function DeleteProfile(arg1) {
   return window['go']['main']['App']['DeleteProfile'](arg1);
 }
@@ -28,6 +32,10 @@ export function GetState() {
 
 export function ImportProfile() {
   return window['go']['main']['App']['ImportProfile']();
+}
+
+export function InstallUpdate() {
+  return window['go']['main']['App']['InstallUpdate']();
 }
 
 export function OpenURL(arg1) {

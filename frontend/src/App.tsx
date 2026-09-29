@@ -24,7 +24,11 @@ const api = Go as unknown as {
     ImportProfile(): Promise<{ profile: Profile; unknownApps: string[]; unknownRecipes: string[] } | null>;
     RestartAsAdmin(): Promise<void>;
     OpenURL(u: string): Promise<void>;
+    CheckUpdate(): Promise<UpdateInfo>;
+    InstallUpdate(): Promise<void>;
 };
+
+interface UpdateInfo { current: string; latest: string; available: boolean; url: string; notes: string }
 
 type Tab = "profiles" | "catalog";
 
@@ -48,6 +52,8 @@ export default function App() {
     const [run, setRun] = useState<Run | null>(null);
     const [settings, setSettings] = useState<prefs.Settings>(prefs.load);
     const [showSettings, setShowSettings] = useState(false);
+    const [update, setUpdate] = useState<UpdateInfo | null>(null);
+    const [updating, setUpdating] = useState<{ done: number; total: number } | null>(null);
     const [naming, setNaming] = useState<null | { title: string; initial: string; onOk: (n: string) => void }>(null);
 
     const say = useCallback((m: string) => {
@@ -67,6 +73,25 @@ export default function App() {
     }, [say]);
 
     useEffect(() => { void refresh(); }, [refresh]);
+
+    const checkUpdate = useCallback(async (announce: boolean) => {
+        try {
+            const u = await api.CheckUpdate();
+            setUpdate(u.available ? u : null);
+            if (announce) say(u.available ? `WinForge ${u.latest} is available.` : "WinForge is up to date.");
+        } catch (e) {
+            if (announce) say(errText(e));
+        }
+    }, [say]);
+
+    useEffect(() => { if (settings.checkUpdates) void checkUpdate(false); }, []); // once, at startup
+
+    useEffect(() => EventsOn("update:progress", (p: { done: number; total: number }) => setUpdating(p)), []);
+
+    const installUpdate = async () => {
+        setUpdating({done: 0, total: 0});
+        try { await api.InstallUpdate(); } catch (e) { setUpdating(null); say(errText(e)); }
+    };
 
     useEffect(() => {
         const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -165,6 +190,20 @@ export default function App() {
                 <button className="icon" title="Appearance" aria-label="Appearance" onClick={() => setShowSettings(true)}>⚙</button>
             </header>
 
+            {update && (
+                <div className="banner info">
+                    <span>WinForge <b>{update.latest}</b> is available (you have {update.current}).</span>
+                    {updating ? (
+                        <progress value={updating.done} max={updating.total || undefined}/>
+                    ) : (
+                        <>
+                            <button className="primary" onClick={() => void installUpdate()}>Update now</button>
+                            <a href="#" onClick={(e) => { e.preventDefault(); void api.OpenURL(update.url); }}>Release notes</a>
+                        </>
+                    )}
+                </div>
+            )}
+
             {state?.wingetError && (
                 <div className="banner">{state.wingetError}. Detection works, but installing needs winget.</div>
             )}
@@ -184,7 +223,7 @@ export default function App() {
             {run && <RunModal run={run} state={state} onConfirm={() => void confirmRun()}
                               onCancel={() => void api.Cancel()} onClose={() => setRun(null)}
                               onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>}
-            {showSettings && <SettingsDialog value={settings} onChange={setSettings} onClose={() => setShowSettings(false)}/>}
+            {showSettings && <SettingsDialog value={settings} onChange={setSettings} version={state?.version ?? ""} onCheck={() => void checkUpdate(true)} onClose={() => setShowSettings(false)}/>}
             {naming && <NameDialog {...naming} onClose={() => setNaming(null)}/>}
             {toast && <div className="toast" role="status">{toast}</div>}
         </div>
@@ -363,7 +402,7 @@ function NameDialog(p: { title: string; initial: string; onOk: (n: string) => vo
     );
 }
 
-function SettingsDialog(p: { value: prefs.Settings; onChange: (s: prefs.Settings) => void; onClose: () => void }) {
+function SettingsDialog(p: { version: string; onCheck: () => void; value: prefs.Settings; onChange: (s: prefs.Settings) => void; onClose: () => void }) {
     const set = (patch: Partial<prefs.Settings>) => p.onChange({...p.value, ...patch});
     return (
         <div className="overlay" onClick={p.onClose}>
@@ -392,6 +431,10 @@ function SettingsDialog(p: { value: prefs.Settings; onChange: (s: prefs.Settings
                         ))}
                     </div>
                 </div>
+                <div className="field"><span>Updates</span>
+                    <label><input type="checkbox" checked={p.value.checkUpdates} onChange={(e) => set({checkUpdates: e.target.checked})}/> Check at startup</label>
+                </div>
+                <div className="field"><span className="muted">Version {p.version}</span><button onClick={p.onCheck}>Check now</button></div>
                 <div className="actions end"><button className="primary" onClick={p.onClose}>Done</button></div>
             </div>
         </div>

@@ -8,6 +8,7 @@ export interface Settings {
     theme: Theme;
     accent: string;
     density: Density;
+    checkUpdates: boolean;
 }
 
 export const ACCENTS: { name: string; value: string }[] = [
@@ -18,7 +19,7 @@ export const ACCENTS: { name: string; value: string }[] = [
     {name: "Pink", value: "#ff6b9d"},
 ];
 
-export const DEFAULTS: Settings = {theme: "system", accent: ACCENTS[0].value, density: "comfortable"};
+export const DEFAULTS: Settings = {theme: "system", accent: ACCENTS[0].value, density: "comfortable", checkUpdates: true};
 
 const KEY = "winforge.settings";
 
@@ -29,6 +30,7 @@ export function normalize(raw: unknown): Settings {
         theme: r.theme === "dark" || r.theme === "light" || r.theme === "system" ? r.theme : DEFAULTS.theme,
         accent: typeof r.accent === "string" && /^#[0-9a-f]{6}$/i.test(r.accent) ? r.accent : DEFAULTS.accent,
         density: r.density === "compact" || r.density === "comfortable" ? r.density : DEFAULTS.density,
+        checkUpdates: typeof r.checkUpdates === "boolean" ? r.checkUpdates : DEFAULTS.checkUpdates,
     };
 }
 
