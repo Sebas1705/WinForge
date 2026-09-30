@@ -3,23 +3,25 @@
 
 export type Theme = "system" | "dark" | "light";
 export type Density = "comfortable" | "compact";
+export type LangSetting = "auto" | "en" | "es";
 
 export interface Settings {
     theme: Theme;
     accent: string;
     density: Density;
     checkUpdates: boolean;
+    language: LangSetting;
 }
 
 export const ACCENTS: { name: string; value: string }[] = [
+    {name: "Ember", value: "#ff9f2e"},
     {name: "Blue", value: "#4f9dff"},
     {name: "Violet", value: "#8b6cff"},
     {name: "Green", value: "#3ecf8e"},
-    {name: "Orange", value: "#ff9f43"},
     {name: "Pink", value: "#ff6b9d"},
 ];
 
-export const DEFAULTS: Settings = {theme: "system", accent: ACCENTS[0].value, density: "comfortable", checkUpdates: true};
+export const DEFAULTS: Settings = {theme: "system", accent: ACCENTS[0].value, density: "comfortable", checkUpdates: true, language: "auto"};
 
 const KEY = "winforge.settings";
 
@@ -31,6 +33,7 @@ export function normalize(raw: unknown): Settings {
         accent: typeof r.accent === "string" && /^#[0-9a-f]{6}$/i.test(r.accent) ? r.accent : DEFAULTS.accent,
         density: r.density === "compact" || r.density === "comfortable" ? r.density : DEFAULTS.density,
         checkUpdates: typeof r.checkUpdates === "boolean" ? r.checkUpdates : DEFAULTS.checkUpdates,
+        language: r.language === "en" || r.language === "es" || r.language === "auto" ? r.language : DEFAULTS.language,
     };
 }
 

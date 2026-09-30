@@ -1,97 +1,82 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import * as Go from "../wailsjs/go/main/App";
-import {EventsOn} from "../wailsjs/runtime/runtime";
+import {useCallback, useEffect, useState, type ReactNode} from "react";
+import {api, errText, on, type UpdateInfo} from "./api";
+import {NameDialog, RunModal, SettingsDialog, stepKey, type RunState} from "./components/Modals";
+import {resolveLang, setLang, t} from "./lib/i18n";
 import {
-    applyEvent, categories, filterApps, selectionProfile, slugify,
-    type App as AppInfo, type Filter, type InstallEvent, type Plan, type Profile,
-    type ProfileInfo, type State, type StepStatus,
+    applyEvent, selectionProfile, slugify,
+    type Profile, type ProfileInfo, type State, type UpgradeInfo,
 } from "./lib/model";
 import * as prefs from "./lib/settings";
 import logo from "./logo.svg";
+import {Catalog} from "./views/Catalog";
+import {Home} from "./views/Home";
+import {Profiles} from "./views/Profiles";
+import {Updates} from "./views/Updates";
 
-// The generated bindings use their own model classes; the JSON shapes are
-// identical, so the boundary is typed once here.
-const api = Go as unknown as {
-    GetState(): Promise<State>;
-    Plan(p: Profile): Promise<Plan>;
-    Apply(p: Profile): Promise<void>;
-    Cancel(): Promise<void>;
-    SaveProfile(p: Profile): Promise<void>;
-    DeleteProfile(id: string): Promise<void>;
-    ProfileFromPC(id: string, name: string, pin: boolean): Promise<Profile>;
-    ExportProfile(p: Profile): Promise<string>;
-    ExportWinget(p: Profile): Promise<string>;
-    ImportProfile(): Promise<{ profile: Profile; unknownApps: string[]; unknownRecipes: string[] } | null>;
-    RestartAsAdmin(): Promise<void>;
-    OpenURL(u: string): Promise<void>;
-    CheckUpdate(): Promise<UpdateInfo>;
-    InstallUpdate(): Promise<void>;
-};
+type Tab = "home" | "profiles" | "catalog" | "updates";
 
-interface UpdateInfo { current: string; latest: string; available: boolean; url: string; notes: string }
-
-type Tab = "profiles" | "catalog";
-
-interface Run {
-    profile: Profile;
-    plan: Plan;
-    status: Record<string, StepStatus>;
-    log: string[];
-    running: boolean;
-    failed: string[] | null;
+interface Runner {
+    /** Called when the person confirms the plan. */
+    start: () => Promise<void>;
+    profile?: Profile;
+    /** Runs after the plan finishes, to refresh what the screen shows. */
+    after?: () => void;
 }
 
-const errText = (e: unknown) => (e instanceof Error ? e.message : String(e));
+const ICONS: Record<Tab, ReactNode> = {
+    home: <path d="M3 11.5 12 4l9 7.5M6 10v10h12V10"/>,
+    profiles: <path d="M4 6h16M4 12h16M4 18h10"/>,
+    catalog: <path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/>,
+    updates: <path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/>,
+};
 
 export default function App() {
     const [state, setState] = useState<State | null>(null);
-    const [tab, setTab] = useState<Tab>("profiles");
+    const [tab, setTab] = useState<Tab>("home");
     const [busy, setBusy] = useState(true);
     const [toast, setToast] = useState<string | null>(null);
     const [selection, setSelection] = useState<Set<string>>(new Set());
-    const [run, setRun] = useState<Run | null>(null);
+    const [focusProfile, setFocusProfile] = useState<string | null>(null);
+    const [category, setCategory] = useState("");
+    const [run, setRun] = useState<RunState | null>(null);
+    const [runner, setRunner] = useState<Runner | null>(null);
+    const [naming, setNaming] = useState<null | { title: string; initial: string; onOk: (n: string) => void }>(null);
     const [settings, setSettings] = useState<prefs.Settings>(prefs.load);
     const [showSettings, setShowSettings] = useState(false);
     const [update, setUpdate] = useState<UpdateInfo | null>(null);
     const [updating, setUpdating] = useState<{ done: number; total: number } | null>(null);
-    const [naming, setNaming] = useState<null | { title: string; initial: string; onOk: (n: string) => void }>(null);
+    const [upgrades, setUpgrades] = useState<UpgradeInfo[] | null>(null);
+    const [upgradesBusy, setUpgradesBusy] = useState(false);
+
+    // The language is applied during render so every child translates with it.
+    setLang(resolveLang(settings.language, navigator.language));
+    useEffect(() => { document.documentElement.lang = resolveLang(settings.language, navigator.language); }, [settings.language]);
 
     const say = useCallback((m: string) => {
         setToast(m);
-        window.setTimeout(() => setToast((t) => (t === m ? null : t)), 5000);
+        window.setTimeout(() => setToast((x) => (x === m ? null : x)), 5000);
     }, []);
 
     const refresh = useCallback(async () => {
         setBusy(true);
-        try {
-            setState(await api.GetState());
-        } catch (e) {
-            say(errText(e));
-        } finally {
-            setBusy(false);
-        }
+        try { setState(await api.GetState()); } catch (e) { say(errText(e)); } finally { setBusy(false); }
     }, [say]);
-
     useEffect(() => { void refresh(); }, [refresh]);
+
+    const checkUpgrades = useCallback(async () => {
+        setUpgradesBusy(true);
+        try { setUpgrades(await api.Upgrades()); } catch (e) { say(errText(e)); } finally { setUpgradesBusy(false); }
+    }, [say]);
 
     const checkUpdate = useCallback(async (announce: boolean) => {
         try {
             const u = await api.CheckUpdate();
             setUpdate(u.available ? u : null);
-            if (announce) say(u.available ? `WinForge ${u.latest} is available.` : "WinForge is up to date.");
-        } catch (e) {
-            if (announce) say(errText(e));
-        }
+            if (announce) say(u.available ? t("banner.available", {v: u.latest, c: u.current}) : t("toast.upToDate"));
+        } catch (e) { if (announce) say(errText(e)); }
     }, [say]);
-
     useEffect(() => { if (settings.checkUpdates) void checkUpdate(false); }, []); // once, at startup
-
-    useEffect(() => EventsOn("update:progress", (p: { done: number; total: number }) => setUpdating(p)), []);
-
-    const installUpdate = async () => {
-        setUpdating({done: 0, total: 0});
-        try { await api.InstallUpdate(); } catch (e) { setUpdating(null); say(errText(e)); }
-    };
+    useEffect(() => on.progress(setUpdating), []);
 
     useEffect(() => {
         const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -102,64 +87,80 @@ export default function App() {
         return () => mq.removeEventListener("change", paint);
     }, [settings]);
 
+    // Installation events feed the open run.
     useEffect(() => {
-        const offEvent = EventsOn("install", (e: InstallEvent) => {
+        const offEvent = on.install((e) => {
             setRun((r) => {
                 if (!r) return r;
-                const key = `${e.step.kind}:${e.step.id}`;
+                const key = stepKey(e.step);
                 const log = e.status === "output" && e.line ? [...r.log.slice(-400), `${e.step.id}  ${e.line}`]
                     : e.error ? [...r.log, `${e.step.id}  ${e.status}: ${e.error}`] : r.log;
                 return {...r, log, status: {...r.status, [key]: applyEvent(r.status[key] ?? "pending", e)}};
             });
         });
-        const offDone = EventsOn("install:done", (failed: string[] | null) => {
+        const offDone = on.done((failed) => {
             setRun((r) => (r ? {...r, running: false, failed: failed ?? []} : r));
             void refresh();
+            setRunner((rn) => { rn?.after?.(); return rn; });
         });
         return () => { offEvent(); offDone(); };
     }, [refresh]);
 
-    const startRun = async (profile: Profile) => {
+    const openRun = (title: string, plan: RunState["plan"], rn: Runner) => {
+        if (plan.steps.length === 0) return say(t("toast.nothing"));
+        setRunner(rn);
+        setRun({title, plan, status: {}, log: [], running: false, failed: null, startedAt: null, canScript: !!rn.profile});
+    };
+
+    const startProfile = async (profile: Profile) => {
         try {
             const plan = await api.Plan(profile);
-            if (plan.steps.length === 0) return say("Nothing to install: everything in this profile is already on this PC.");
-            setRun({profile, plan, status: {}, log: [], running: false, failed: null});
+            openRun(t("run.install", {name: profile.name}), plan, {profile, start: () => api.Apply(profile)});
+        } catch (e) { say(errText(e)); }
+    };
+
+    const startUpgrades = async (ids: string[]) => {
+        try {
+            const plan = await api.PlanUpgrades(ids);
+            openRun(t("run.updateTitle"), plan, {start: () => api.ApplyUpgrades(ids), after: () => void checkUpgrades()});
         } catch (e) { say(errText(e)); }
     };
 
     const confirmRun = async () => {
-        if (!run) return;
+        if (!run || !runner) return;
         try {
-            await api.Apply(run.profile);
-            setRun({...run, running: true, log: [], status: {}, failed: null});
+            await runner.start();
+            setRun({...run, running: true, log: [], status: {}, failed: null, startedAt: Date.now()});
         } catch (e) { say(errText(e)); }
     };
 
-    const saveSelection = () => {
-        setNaming({
-            title: "Save selection as a profile",
-            initial: "",
-            onOk: async (name) => {
-                try {
-                    await api.SaveProfile({...selectionProfile(selection, name), id: slugify(name)});
-                    setSelection(new Set());
-                    setTab("profiles");
-                    await refresh();
-                    say(`Saved “${name}”.`);
-                } catch (e) { say(errText(e)); }
-            },
-        });
+    const closeRun = () => { setRun(null); setRunner(null); };
+
+    const copyLog = async () => {
+        try { await navigator.clipboard.writeText(run?.log.join("\n") ?? ""); say(t("run.copied")); } catch (e) { say(errText(e)); }
     };
 
+    const saveSelection = () => setNaming({
+        title: t("dlg.saveSelection"), initial: "",
+        onOk: async (name) => {
+            try {
+                await api.SaveProfile({...selectionProfile(selection, name), id: slugify(name)});
+                setSelection(new Set());
+                setTab("profiles");
+                await refresh();
+                say(t("toast.saved", {name}));
+            } catch (e) { say(errText(e)); }
+        },
+    });
+
     const saveFromPC = () => setNaming({
-        title: "Save this PC as a profile",
-        initial: "My PC",
+        title: t("dlg.saveFromPC"), initial: "",
         onOk: async (name) => {
             try {
                 const p = await api.ProfileFromPC(slugify(name), name, false);
                 await api.SaveProfile(p);
                 await refresh();
-                say(`Saved ${p.apps?.length ?? 0} installed apps as “${name}”.`);
+                say(t("toast.savedPC", {n: p.apps?.length ?? 0, name}));
             } catch (e) { say(errText(e)); }
         },
     });
@@ -171,294 +172,90 @@ export default function App() {
             await api.SaveProfile(r.profile);
             await refresh();
             const dropped = r.unknownApps.length + r.unknownRecipes.length;
-            say(`Imported “${r.profile.name}”` + (dropped ? `; ${dropped} entries are not in this catalog and were ignored.` : "."));
+            say(dropped ? t("toast.importedDropped", {name: r.profile.name, n: dropped}) : t("toast.imported", {name: r.profile.name}));
         } catch (e) { say(errText(e)); }
     };
 
+    const go = (next: Tab) => {
+        setTab(next);
+        if (next === "updates" && upgrades === null && !upgradesBusy) void checkUpgrades();
+    };
+    const editProfile = (p: ProfileInfo) => { setSelection(new Set(p.resolved)); setCategory(""); setTab("catalog"); };
+
+    const nav: [Tab, string, string | number | null][] = [
+        ["home", t("nav.home"), null],
+        ["profiles", t("nav.profiles"), state?.profiles.length ?? null],
+        ["catalog", t("nav.catalog"), state?.apps.length ?? null],
+        ["updates", t("nav.updates"), upgrades && upgrades.length > 0 ? upgrades.length : null],
+    ];
+
     return (
         <div className="shell">
-            <header>
-                <div className="brand"><img src={logo} alt="" width={26} height={26}/>Win<b>Forge</b> <span className="ver">{state?.version}</span></div>
-                <nav>
-                    <button className={tab === "profiles" ? "on" : ""} onClick={() => setTab("profiles")}>Profiles</button>
-                    <button className={tab === "catalog" ? "on" : ""} onClick={() => setTab("catalog")}>Catalog</button>
-                </nav>
-                <div className="grow"/>
-                {state && !state.admin && <span className="pill" title="Some installers and recipes need administrator rights">standard user</span>}
-                {state?.admin && <span className="pill ok">administrator</span>}
-                <button onClick={() => void refresh()} disabled={busy}>{busy ? "Scanning…" : "Rescan PC"}</button>
-                <button className="icon" title="Appearance" aria-label="Appearance" onClick={() => setShowSettings(true)}>⚙</button>
-            </header>
-
-            {update && (
-                <div className="banner info">
-                    <span>WinForge <b>{update.latest}</b> is available (you have {update.current}).</span>
-                    {updating ? (
-                        <progress value={updating.done} max={updating.total || undefined}/>
-                    ) : (
-                        <>
-                            <button className="primary" onClick={() => void installUpdate()}>Update now</button>
-                            <a href="#" onClick={(e) => { e.preventDefault(); void api.OpenURL(update.url); }}>Release notes</a>
-                        </>
-                    )}
-                </div>
-            )}
-
-            {state?.wingetError && (
-                <div className="banner">{state.wingetError}. Detection works, but installing needs winget.</div>
-            )}
-
-            <main>
-                {!state ? <p className="muted pad">Scanning this PC…</p> : tab === "profiles" ? (
-                    <ProfilesView state={state} onInstall={startRun} onChanged={refresh} say={say}
-                                  onImport={importProfile} onFromPC={saveFromPC}
-                                  onEdit={(p) => { setSelection(new Set(p.resolved)); setTab("catalog"); }}/>
-                ) : (
-                    <CatalogView apps={state.apps} selection={selection} setSelection={setSelection}
-                                 onInstall={() => void startRun(selectionProfile(selection))}
-                                 onInstallOne={(a) => void startRun(selectionProfile([a.id], a.name))}
-                                 onSave={saveSelection} openURL={(u) => void api.OpenURL(u)}/>
+            <nav className="rail" aria-label="Main">
+                <div className="brand"><img src={logo} alt="" width={28} height={28}/><span>Win<b>Forge</b></span></div>
+                {nav.map(([id, label, count]) => (
+                    <button key={id} className={"navitem" + (tab === id ? " on" : "")} aria-current={tab === id ? "page" : undefined} onClick={() => go(id)}>
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>{ICONS[id]}</svg>
+                        <span>{label}</span>
+                        {count !== null && <em className="mono">{count}</em>}
+                    </button>
+                ))}
+                <span className="grow"/>
+                {state && (
+                    <span className={"pill" + (state.admin ? " ok" : "")} title={state.admin ? "" : t("status.userHint")}>
+                        {state.admin ? t("status.admin") : t("status.user")}
+                    </span>
                 )}
-            </main>
+                <button className="ghost" disabled={busy} onClick={() => void refresh()}>{busy ? t("rail.scanning") : t("rail.rescan")}</button>
+                <div className="railfoot">
+                    <span className="mono muted">{state?.version}</span>
+                    <button className="icon" title={t("rail.appearance")} aria-label={t("rail.appearance")} onClick={() => setShowSettings(true)}>⚙</button>
+                </div>
+            </nav>
 
-            {run && <RunModal run={run} state={state} onConfirm={() => void confirmRun()}
-                              onCancel={() => void api.Cancel()} onClose={() => setRun(null)}
-                              onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>}
-            {showSettings && <SettingsDialog value={settings} onChange={setSettings} version={state?.version ?? ""} onCheck={() => void checkUpdate(true)} onClose={() => setShowSettings(false)}/>}
+            <div className="content">
+                {update && (
+                    <div className="banner info">
+                        <span>{t("banner.available", {v: update.latest, c: update.current})}</span>
+                        {updating ? <progress value={updating.done} max={updating.total || undefined}/> : (
+                            <>
+                                <button className="primary sm" onClick={() => { setUpdating({done: 0, total: 0}); api.InstallUpdate().catch((e) => { setUpdating(null); say(errText(e)); }); }}>{t("banner.now")}</button>
+                                <a href="#" onClick={(e) => { e.preventDefault(); void api.OpenURL(update.url); }}>{t("banner.notes")}</a>
+                            </>
+                        )}
+                    </div>
+                )}
+                {state?.wingetError && <div className="banner warn">{state.wingetError}. {t("wingetOnlyDetect")}</div>}
+
+                <main>
+                    {!state ? <p className="muted pad">{t("rail.scanning")}</p> : tab === "home" ? (
+                        <Home apps={state.apps} profiles={state.profiles} upgrades={upgrades} upgradesBusy={upgradesBusy}
+                              onInstall={(p) => void startProfile(p)}
+                              onOpenProfile={(id) => { setFocusProfile(id); setTab("profiles"); }}
+                              onCheckUpgrades={() => void checkUpgrades()} onOpenUpdates={() => go("updates")}
+                              onOpenCategory={(top) => { setCategory(top); setTab("catalog"); }}/>
+                    ) : tab === "profiles" ? (
+                        <Profiles state={state} focus={focusProfile} onInstall={(p) => void startProfile(p)} onChanged={refresh} say={say}
+                                  onImport={() => void importProfile()} onFromPC={saveFromPC} onEdit={editProfile}/>
+                    ) : tab === "catalog" ? (
+                        <Catalog apps={state.apps} selection={selection} setSelection={setSelection} initialCategory={category}
+                                 onInstall={() => void startProfile(selectionProfile(selection))}
+                                 onInstallOne={(a) => void startProfile(selectionProfile([a.id], a.name))}
+                                 onSave={saveSelection} openURL={(u) => void api.OpenURL(u)}/>
+                    ) : (
+                        <Updates upgrades={upgrades} busy={upgradesBusy} onCheck={() => void checkUpgrades()} onUpdate={(ids) => void startUpgrades(ids)}/>
+                    )}
+                </main>
+            </div>
+
+            {run && <RunModal run={run} admin={!!state?.admin} onConfirm={() => void confirmRun()} onCancel={() => void api.Cancel()}
+                              onClose={closeRun} onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}
+                              onScript={() => runner?.profile && api.ExportScript(runner.profile).then((p) => p && say(t("toast.savedTo", {path: p}))).catch((e) => say(errText(e)))}
+                              onCopy={() => void copyLog()}/>}
+            {showSettings && <SettingsDialog value={settings} onChange={setSettings} version={state?.version ?? ""}
+                                             onCheck={() => void checkUpdate(true)} onClose={() => setShowSettings(false)}/>}
             {naming && <NameDialog {...naming} onClose={() => setNaming(null)}/>}
             {toast && <div className="toast" role="status">{toast}</div>}
-        </div>
-    );
-}
-
-function ProfilesView(p: {
-    state: State; onInstall: (p: Profile) => void; onChanged: () => Promise<void>; say: (m: string) => void;
-    onImport: () => void; onFromPC: () => void; onEdit: (p: ProfileInfo) => void;
-}) {
-    const [sel, setSel] = useState<string>(p.state.profiles[0]?.id ?? "");
-    const [skip, setSkip] = useState<Set<string>>(new Set());
-    const choose = (id: string) => { setSel(id); setSkip(new Set()); };
-    const current = p.state.profiles.find((x) => x.id === sel) ?? p.state.profiles[0];
-    const apps = useMemo(() => new Map(p.state.apps.map((a) => [a.id, a])), [p.state.apps]);
-    const groups: [string, ProfileInfo[]][] = [
-        ["Developer", p.state.profiles.filter((x) => x.builtin && x.kind === "dev")],
-        ["General", p.state.profiles.filter((x) => x.builtin && x.kind !== "dev")],
-        ["Mine", p.state.profiles.filter((x) => !x.builtin)],
-    ];
-    const toInstall = current ? current.resolved.filter((id) => !skip.has(id) && !apps.get(id)?.installed) : [];
-    const installSelected = () => {
-        if (!current) return;
-        // Untouched selection = the whole profile (its own recipes included).
-        if (skip.size === 0) p.onInstall(current);
-        else p.onInstall(selectionProfile(toInstall, current.name));
-    };
-    const run = (fn: () => Promise<string | void>, ok?: string) => fn().then((r) => {
-        if (r) p.say(`Saved to ${r}`); else if (ok) p.say(ok);
-    }).catch((e) => p.say(errText(e)));
-
-    return (
-        <div className="split">
-            <aside>
-                {groups.map(([title, list]) => list.length > 0 && (
-                    <section key={title}>
-                        <h4>{title}</h4>
-                        {list.map((x) => {
-                            const have = x.resolved.filter((id) => apps.get(id)?.installed).length;
-                            return (
-                                <button key={x.id} className={"row" + (x.id === current?.id ? " on" : "")} onClick={() => choose(x.id)}>
-                                    <span>{x.name}</span><em>{have}/{x.resolved.length}</em>
-                                </button>
-                            );
-                        })}
-                    </section>
-                ))}
-                <div className="stack">
-                    <button onClick={p.onFromPC}>Save this PC as profile…</button>
-                    <button onClick={p.onImport}>Import profile…</button>
-                </div>
-            </aside>
-            {current && (
-                <section className="detail">
-                    <h2>{current.name}</h2>
-                    <p className="muted">{current.description}</p>
-                    <div className="actions">
-                        <button className="primary" disabled={toInstall.length === 0} onClick={installSelected}>
-                            {skip.size === 0 ? "Install what’s missing…" : `Install ${toInstall.length} selected…`}
-                        </button>
-                        <button onClick={() => run(() => api.ExportProfile(current))}>Export</button>
-                        <button onClick={() => run(() => api.ExportWinget(current))} title="A file `winget import` understands">Export for winget</button>
-                        <button onClick={() => p.onEdit(current)}>Edit in catalog</button>
-                        {!current.builtin && <button className="danger" onClick={() => run(async () => { await api.DeleteProfile(current.id); await p.onChanged(); }, "Deleted.")}>Delete</button>}
-                    </div>
-                    <ul className="apps">
-                        {current.resolved.map((id) => {
-                            const a = apps.get(id);
-                            return a && (
-                                <li key={id} className={skip.has(id) ? "off" : ""}>
-                                    {!a.installed && (
-                                        <input type="checkbox" checked={!skip.has(id)} aria-label={`Include ${a.name}`}
-                                               onChange={() => { const n = new Set(skip); if (n.has(id)) n.delete(id); else n.add(id); setSkip(n); }}/>
-                                    )}
-                                    <span className={"dot " + (a.installed ? "ok" : "miss")} title={a.installed ? `installed ${a.version ?? ""}` : "not installed"}/>
-                                    <b>{a.name}</b><span className="muted"> {a.publisher}</span>
-                                    {a.admin && <span className="tag">admin</span>}
-                                    {!a.installed && <button className="mini" onClick={() => p.onInstall(selectionProfile([id], a.name))}>Install</button>}
-                                </li>
-                            );
-                        })}
-                    </ul>
-                    {current.resolvedRecipes.length > 0 && <p className="muted">After installing: {current.resolvedRecipes.join(", ")}</p>}
-                </section>
-            )}
-        </div>
-    );
-}
-
-function CatalogView(p: {
-    apps: AppInfo[]; selection: Set<string>; setSelection: (s: Set<string>) => void;
-    onInstall: () => void; onInstallOne: (a: AppInfo) => void; onSave: () => void; openURL: (u: string) => void;
-}) {
-    const [f, setF] = useState<Filter>({query: "", category: "", installed: "all", openSourceOnly: false});
-    const cats = useMemo(() => categories(p.apps), [p.apps]);
-    const list = useMemo(() => filterApps(p.apps, f), [p.apps, f]);
-    const toggle = (id: string) => {
-        const n = new Set(p.selection);
-        if (n.has(id)) n.delete(id); else n.add(id);
-        p.setSelection(n);
-    };
-    const missing = [...p.selection].filter((id) => !p.apps.find((a) => a.id === id)?.installed).length;
-    return (
-        <div className="catalog">
-            <div className="toolbar">
-                <input placeholder="Search apps, publishers, winget ids…" value={f.query} autoFocus
-                       onChange={(e) => setF({...f, query: e.target.value})}/>
-                <select value={f.category} onChange={(e) => setF({...f, category: e.target.value})}>
-                    <option value="">All categories</option>
-                    {cats.map((c) => <option key={c}>{c}</option>)}
-                </select>
-                <select value={f.installed} onChange={(e) => setF({...f, installed: e.target.value as Filter["installed"]})}>
-                    <option value="all">Installed or not</option>
-                    <option value="installed">Installed</option>
-                    <option value="missing">Not installed</option>
-                </select>
-                <label className="check"><input type="checkbox" checked={f.openSourceOnly}
-                       onChange={(e) => setF({...f, openSourceOnly: e.target.checked})}/> Open source</label>
-            </div>
-            <ul className="list">
-                {list.map((a) => (
-                    <li key={a.id} className={p.selection.has(a.id) ? "sel" : ""}>
-                        <label>
-                            <input type="checkbox" checked={p.selection.has(a.id)} onChange={() => toggle(a.id)}/>
-                            <div className="grow">
-                                <b>{a.name}</b> <span className="muted">{a.category}</span>
-                                {a.admin && <span className="tag">admin</span>}
-                                {a.openSource && <span className="tag oss" title={a.license}>open source</span>}
-                                <div className="muted">{a.description}</div>
-                            </div>
-                        </label>
-                        <div className="meta">
-                            {a.installed
-                                ? <span className="pill ok">installed {a.version}</span>
-                                : <button className="mini" onClick={() => p.onInstallOne(a)}>Install</button>}
-                            <a href="#" onClick={(e) => { e.preventDefault(); p.openURL(a.homepage); }}>{a.publisher}</a>
-                        </div>
-                    </li>
-                ))}
-                {list.length === 0 && <li className="muted pad">No app matches.</li>}
-            </ul>
-            <footer>
-                <span>{list.length} of {p.apps.length} shown · {p.selection.size} selected, {missing} to install</span>
-                <div className="grow"/>
-                <button disabled={!p.selection.size} onClick={() => p.setSelection(new Set())}>Clear</button>
-                <button disabled={!p.selection.size} onClick={p.onSave}>Save as profile…</button>
-                <button className="primary" disabled={!missing} onClick={p.onInstall}>Install {missing || ""}…</button>
-            </footer>
-        </div>
-    );
-}
-
-function RunModal(p: {
-    run: Run; state: State | null; onConfirm: () => void; onCancel: () => void; onClose: () => void; onAdmin: () => void;
-}) {
-    const {run} = p;
-    const started = run.running || run.failed !== null;
-    const logRef = useRef<HTMLPreElement>(null);
-    useEffect(() => { logRef.current?.scrollTo(0, logRef.current.scrollHeight); }, [run.log]);
-    const icon = (s: StepStatus) => ({pending: "○", running: "◔", ok: "✓", failed: "✗", skipped: "–"}[s]);
-    return (
-        <div className="overlay">
-            <div className="modal">
-                <h3>{started ? (run.running ? "Installing…" : run.failed?.length ? "Finished with errors" : "Done") : `Install “${run.profile.name}”`}</h3>
-                {!started && run.plan.needsAdmin && !p.state?.admin && (
-                    <div className="banner">Some steps need administrator rights. <button onClick={p.onAdmin}>Restart as administrator</button></div>
-                )}
-                <ul className="steps">
-                    {run.plan.steps.map((s) => {
-                        const st = run.status[`${s.kind}:${s.id}`] ?? "pending";
-                        return <li key={s.kind + s.id} className={st}><span>{icon(st)}</span> {s.kind === "recipe" ? "Setup: " : ""}{s.name}{s.admin && <span className="tag">admin</span>}</li>;
-                    })}
-                </ul>
-                {started && <pre ref={logRef} className="log">{run.log.join("\n")}</pre>}
-                <div className="actions end">
-                    {!started && <><button onClick={p.onClose}>Cancel</button><button className="primary" onClick={p.onConfirm}>Install {run.plan.steps.length} steps</button></>}
-                    {run.running && <button className="danger" onClick={p.onCancel}>Stop</button>}
-                    {started && !run.running && <button className="primary" onClick={p.onClose}>Close</button>}
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function NameDialog(p: { title: string; initial: string; onOk: (n: string) => void; onClose: () => void }) {
-    const [v, setV] = useState(p.initial);
-    const submit = () => { if (v.trim()) { p.onOk(v.trim()); p.onClose(); } };
-    return (
-        <div className="overlay" onClick={p.onClose}>
-            <div className="modal small" onClick={(e) => e.stopPropagation()}>
-                <h3>{p.title}</h3>
-                <input autoFocus value={v} placeholder="Profile name" onChange={(e) => setV(e.target.value)}
-                       onKeyDown={(e) => { if (e.key === "Enter") submit(); if (e.key === "Escape") p.onClose(); }}/>
-                <div className="actions end"><button onClick={p.onClose}>Cancel</button><button className="primary" disabled={!v.trim()} onClick={submit}>Save</button></div>
-            </div>
-        </div>
-    );
-}
-
-function SettingsDialog(p: { version: string; onCheck: () => void; value: prefs.Settings; onChange: (s: prefs.Settings) => void; onClose: () => void }) {
-    const set = (patch: Partial<prefs.Settings>) => p.onChange({...p.value, ...patch});
-    return (
-        <div className="overlay" onClick={p.onClose}>
-            <div className="modal small" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.key === "Escape" && p.onClose()}>
-                <h3>Appearance</h3>
-                <div className="field"><span>Theme</span>
-                    <div className="seg">
-                        {(["system", "dark", "light"] as const).map((t) => (
-                            <button key={t} className={p.value.theme === t ? "on" : ""} onClick={() => set({theme: t})}>{t}</button>
-                        ))}
-                    </div>
-                </div>
-                <div className="field"><span>Accent</span>
-                    <div className="swatches">
-                        {prefs.ACCENTS.map((c) => (
-                            <button key={c.value} title={c.name} aria-label={c.name} aria-pressed={p.value.accent === c.value}
-                                    className={"swatch" + (p.value.accent === c.value ? " on" : "")} style={{background: c.value}}
-                                    onClick={() => set({accent: c.value})}/>
-                        ))}
-                    </div>
-                </div>
-                <div className="field"><span>Density</span>
-                    <div className="seg">
-                        {(["comfortable", "compact"] as const).map((d) => (
-                            <button key={d} className={p.value.density === d ? "on" : ""} onClick={() => set({density: d})}>{d}</button>
-                        ))}
-                    </div>
-                </div>
-                <div className="field"><span>Updates</span>
-                    <label><input type="checkbox" checked={p.value.checkUpdates} onChange={(e) => set({checkUpdates: e.target.checked})}/> Check at startup</label>
-                </div>
-                <div className="field"><span className="muted">Version {p.version}</span><button onClick={p.onCheck}>Check now</button></div>
-                <div className="actions end"><button className="primary" onClick={p.onClose}>Done</button></div>
-            </div>
         </div>
     );
 }

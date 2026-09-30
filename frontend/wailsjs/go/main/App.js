@@ -6,6 +6,10 @@ export function Apply(arg1) {
   return window['go']['main']['App']['Apply'](arg1);
 }
 
+export function ApplyUpgrades(arg1) {
+  return window['go']['main']['App']['ApplyUpgrades'](arg1);
+}
+
 export function Cancel() {
   return window['go']['main']['App']['Cancel']();
 }
@@ -20,6 +24,10 @@ export function DeleteProfile(arg1) {
 
 export function ExportProfile(arg1) {
   return window['go']['main']['App']['ExportProfile'](arg1);
+}
+
+export function ExportScript(arg1) {
+  return window['go']['main']['App']['ExportScript'](arg1);
 }
 
 export function ExportWinget(arg1) {
@@ -46,6 +54,10 @@ export function Plan(arg1) {
   return window['go']['main']['App']['Plan'](arg1);
 }
 
+export function PlanUpgrades(arg1) {
+  return window['go']['main']['App']['PlanUpgrades'](arg1);
+}
+
 export function ProfileFromPC(arg1, arg2, arg3) {
   return window['go']['main']['App']['ProfileFromPC'](arg1, arg2, arg3);
 }
@@ -56,4 +68,8 @@ export function RestartAsAdmin() {
 
 export function SaveProfile(arg1) {
   return window['go']['main']['App']['SaveProfile'](arg1);
+}
+
+export function Upgrades() {
+  return window['go']['main']['App']['Upgrades']();
 }

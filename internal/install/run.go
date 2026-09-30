@@ -41,6 +41,7 @@ type Executor interface {
 // winget exit codes that mean "nothing to do".
 const (
 	wingetAlreadyInstalled = -1978335135 // 0x8A150061
+	wingetNoUpgrade        = -1978335189 // 0x8A15002B: no newer version applies
 )
 
 // WingetArgs builds the install command line for an app.
@@ -53,6 +54,16 @@ func WingetArgs(app *catalog.App, version string) []string {
 	if app.Scope != "" {
 		args = append(args, "--scope", app.Scope)
 	}
+	if app.Override != "" {
+		args = append(args, "--override", app.Override)
+	}
+	return args
+}
+
+// WingetUpgradeArgs builds the upgrade command line for an installed app.
+func WingetUpgradeArgs(app *catalog.App) []string {
+	args := []string{"upgrade", "--id", app.Winget, "--exact", "--source", "winget",
+		"--silent", "--accept-package-agreements", "--accept-source-agreements", "--disable-interactivity"}
 	if app.Override != "" {
 		args = append(args, "--override", app.Override)
 	}
@@ -78,7 +89,9 @@ func Run(ctx context.Context, cat *catalog.Catalog, plan Plan, ex Executor, emit
 		var err error
 		switch s.Kind {
 		case StepApp:
-			err = runApp(ctx, cat.Apps[s.ID], s, ex, emit)
+			err = runWinget(ctx, WingetArgs(cat.Apps[s.ID], s.Version), s, ex, emit)
+		case StepUpgrade:
+			err = runWinget(ctx, WingetUpgradeArgs(cat.Apps[s.ID]), s, ex, emit)
 		case StepRecipe:
 			err = runRecipe(ctx, cat.Recipes[s.ID], s, ex, emit)
 		}
@@ -98,6 +111,8 @@ func brokenDependency(cat *catalog.Catalog, s Step, broken map[string]bool) stri
 	switch s.Kind {
 	case StepApp:
 		deps = cat.Apps[s.ID].Requires
+	case StepUpgrade:
+		deps = nil
 	case StepRecipe:
 		deps = cat.Recipes[s.ID].After
 	}
@@ -109,13 +124,13 @@ func brokenDependency(cat *catalog.Catalog, s Step, broken map[string]bool) stri
 	return ""
 }
 
-func runApp(ctx context.Context, app *catalog.App, s Step, ex Executor, emit func(Event)) error {
+func runWinget(ctx context.Context, args []string, s Step, ex Executor, emit func(Event)) error {
 	onLine := func(l string) { emit(Event{Step: s, Status: StatusOutput, Line: l}) }
-	code, err := ex.Run(ctx, "winget", WingetArgs(app, s.Version), onLine)
+	code, err := ex.Run(ctx, "winget", args, onLine)
 	if err != nil {
 		return fmt.Errorf("could not run winget: %w", err)
 	}
-	if code != 0 && code != wingetAlreadyInstalled {
+	if code != 0 && code != wingetAlreadyInstalled && code != wingetNoUpgrade {
 		return fmt.Errorf("winget exited with code %#x", uint32(code))
 	}
 	return nil

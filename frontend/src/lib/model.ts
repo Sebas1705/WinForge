@@ -48,11 +48,19 @@ export interface State {
 }
 
 export interface Step {
-    kind: "app" | "recipe";
+    kind: "app" | "recipe" | "upgrade";
     id: string;
     name: string;
     version?: string;
     admin?: boolean;
+}
+
+export interface UpgradeInfo {
+    id: string;
+    name: string;
+    publisher: string;
+    current: string;
+    available: string;
 }
 
 export interface Plan {

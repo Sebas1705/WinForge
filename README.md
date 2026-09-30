@@ -8,6 +8,9 @@ WinForge scans the PC, shows which apps of a **curated catalog** are installed, 
 - **Profiles**: 31 — base (Essentials, Everyday, Creator, Gaming, Runtimes, Open-source essentials, Privacy, System tools, …) and developer (Developer base, Java/Kotlin, Android, Web/Node, Python, Go, Rust, .NET, C/C++, Containers, Cloud, Databases, AI tooling). Profiles `extend` each other and apps `require` each other, so `dev-rust` brings the MSVC build tools Rust links with, in the right order.
 - **Recipes**: vetted, idempotent post-install steps (Git defaults, `rustup default stable-msvc`, WSL 2 as default, long paths, Developer Mode, `ANDROID_HOME`).
 - **Detection**: winget's inventory, the Uninstall registry keys, PATH and known folders - so tools installed by hand or by a version manager count as installed.
+- **Install what you choose**: a whole profile, a subset of it (per-app checkboxes), or a single app from the catalog.
+- **Updates**: lists catalog apps that have a newer version (parsed from `winget upgrade`, locale-independent) and updates the ones you tick. Apps outside the catalog are never touched.
+- **Portable plans**: any plan can be exported as a readable PowerShell script (`winforge-cli script <profile>` too), so a setup can be replayed on a PC without WinForge.
 
 ## Trust model
 
@@ -85,4 +88,6 @@ Requires Go 1.26, Node 22 and the [Wails CLI](https://wails.io) v2.
 
 ## Appearance
 
-The gear button sets theme (system, dark, light), accent colour and list density; choices persist per user. The logo source is `frontend/src/logo.svg`; `build/appicon.png` and `build/windows/icon.ico` are rendered from it.
+The gear button sets language (automatic, Spanish, English), theme (system, dark, light), accent colour and list density; choices persist per user. Catalog text (app names, descriptions, profile names) comes from the catalog and is not translated.
+
+The visual language is "steel and ember": slate surfaces and one warm accent that lights only what is done or chosen. Its recurring motif is the **tally strip**, one cell per app (or per step during an install), lit when installed; the home screen shows every catalog app as one tick on a ruler. Fonts (Bricolage Grotesque, IBM Plex Sans and Mono, latin subsets) are bundled, so the app works offline. The logo source is `frontend/src/logo.svg`; `build/appicon.png` and `build/windows/icon.ico` are rendered from it.

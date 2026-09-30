@@ -21,6 +21,7 @@ const usage = `usage:
   winforge-cli profiles                 list catalog profiles
   winforge-cli plan <profile>           show what applying a profile would do
   winforge-cli apply <profile>          install what is missing, then run recipes
+  winforge-cli script <profile>         print a PowerShell script for what is missing
   winforge-cli export <id> [pin]        write this PC's catalog apps as a profile (stdout)
   winforge-cli check <file.json>        validate a profile file against the catalog`
 
@@ -52,6 +53,15 @@ func main() {
 			fmt.Printf("%-28s %-16s %v\n", id, i.Version, i.Sources)
 		}
 		fmt.Printf("\n%d of %d catalog apps installed\n", len(installed), len(cat.Apps))
+	case "script":
+		if len(os.Args) < 3 {
+			fatal(fmt.Errorf(usage))
+		}
+		res, err := cat.Resolve(os.Args[2])
+		if err != nil {
+			fatal(err)
+		}
+		fmt.Print(install.Script(cat, install.BuildPlan(cat, res, scan(ctx, cat)), cat.Profiles[os.Args[2]].Name))
 	case "plan", "apply":
 		if len(os.Args) < 3 {
 			fatal(fmt.Errorf(usage))

@@ -25,6 +25,7 @@ type App struct {
 
 	mu        sync.Mutex
 	installed map[string]system.Installed
+	upgrades  []system.Upgrade
 	running   bool
 	cancel    context.CancelFunc
 }
@@ -151,6 +152,11 @@ func (a *App) Apply(p catalog.Profile) error {
 	if err != nil {
 		return err
 	}
+	return a.start(plan)
+}
+
+// start runs a plan in the background; only one runs at a time.
+func (a *App) start(plan install.Plan) error {
 	a.mu.Lock()
 	if a.running {
 		a.mu.Unlock()
@@ -284,4 +290,66 @@ func (a *App) OpenURL(u string) {
 	if len(u) > 8 && u[:8] == "https://" {
 		runtime.BrowserOpenURL(a.ctx, u)
 	}
+}
+
+// UpgradeInfo is an installed catalog app with a newer version available.
+type UpgradeInfo struct {
+	ID        string `json:"id"` // catalog id
+	Name      string `json:"name"`
+	Publisher string `json:"publisher"`
+	Current   string `json:"current"`
+	Available string `json:"available"`
+}
+
+// Upgrades asks winget which installed packages have updates and keeps those
+// the catalog knows; everything else on the PC is left alone.
+func (a *App) Upgrades() ([]UpgradeInfo, error) {
+	ups, err := system.WingetUpgrades(a.ctx)
+	if err != nil {
+		return nil, err
+	}
+	a.mu.Lock()
+	a.upgrades = ups
+	a.mu.Unlock()
+	out := []UpgradeInfo{}
+	for _, s := range install.UpgradePlan(a.cat, ups, nil).Steps {
+		app := a.cat.Apps[s.ID]
+		cur := ""
+		for _, u := range ups {
+			if u.ID == app.Winget {
+				cur = u.Current
+			}
+		}
+		out = append(out, UpgradeInfo{ID: s.ID, Name: app.Name, Publisher: app.Publisher, Current: cur, Available: s.Version})
+	}
+	return out, nil
+}
+
+// PlanUpgrades previews updating the given catalog apps (all when empty).
+func (a *App) PlanUpgrades(ids []string) install.Plan {
+	a.mu.Lock()
+	ups := a.upgrades
+	a.mu.Unlock()
+	return install.UpgradePlan(a.cat, ups, ids)
+}
+
+// ApplyUpgrades updates the given catalog apps in the background.
+func (a *App) ApplyUpgrades(ids []string) error {
+	plan := a.PlanUpgrades(ids)
+	if len(plan.Steps) == 0 {
+		return errors.New("nothing to update")
+	}
+	return a.start(plan)
+}
+
+// ExportScript writes a PowerShell script for what applying the profile would
+// do on this PC. It returns the chosen path, or "" if the dialog was cancelled.
+func (a *App) ExportScript(p catalog.Profile) (string, error) {
+	plan, err := a.Plan(p)
+	if err != nil {
+		return "", err
+	}
+	return a.saveWith(p.ID+".ps1", "PowerShell script (*.ps1)", "*.ps1", func() ([]byte, error) {
+		return []byte(install.Script(a.cat, plan, p.Name)), nil
+	})
 }

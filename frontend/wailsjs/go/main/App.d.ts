@@ -6,6 +6,8 @@ import {install} from '../models';
 
 export function Apply(arg1:catalog.Profile):Promise<void>;
 
+export function ApplyUpgrades(arg1:Array<string>):Promise<void>;
+
 export function Cancel():Promise<void>;
 
 export function CheckUpdate():Promise<main.UpdateInfo>;
@@ -13,6 +15,8 @@ export function CheckUpdate():Promise<main.UpdateInfo>;
 export function DeleteProfile(arg1:string):Promise<void>;
 
 export function ExportProfile(arg1:catalog.Profile):Promise<string>;
+
+export function ExportScript(arg1:catalog.Profile):Promise<string>;
 
 export function ExportWinget(arg1:catalog.Profile):Promise<string>;
 
@@ -26,8 +30,12 @@ export function OpenURL(arg1:string):Promise<void>;
 
 export function Plan(arg1:catalog.Profile):Promise<install.Plan>;
 
+export function PlanUpgrades(arg1:Array<string>):Promise<install.Plan>;
+
 export function ProfileFromPC(arg1:string,arg2:string,arg3:boolean):Promise<catalog.Profile>;
 
 export function RestartAsAdmin():Promise<void>;
 
 export function SaveProfile(arg1:catalog.Profile):Promise<void>;
+
+export function Upgrades():Promise<Array<main.UpgradeInfo>>;

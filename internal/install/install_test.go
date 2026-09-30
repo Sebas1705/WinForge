@@ -118,3 +118,40 @@ func TestPowerShellArgsAreEncoded(t *testing.T) {
 		t.Fatalf("%v", a)
 	}
 }
+
+func TestUpgradePlanOnlyTouchesCatalogApps(t *testing.T) {
+	cat, _ := catalog.Load(catalogdata.FS)
+	ups := []system.Upgrade{
+		{ID: "Git.Git", Name: "Git", Current: "2.50", Available: "2.55"},
+		{ID: "Some.Unrelated", Name: "Unrelated", Current: "1", Available: "2"},
+		{ID: "Microsoft.VisualStudioCode", Name: "VS Code", Current: "1", Available: "2"},
+	}
+	p := install.UpgradePlan(cat, ups, nil)
+	if len(p.Steps) != 2 || p.Steps[0].Kind != install.StepUpgrade || p.Steps[0].ID != "git" {
+		t.Fatalf("%+v", p.Steps)
+	}
+	if only := install.UpgradePlan(cat, ups, []string{"vscode"}); len(only.Steps) != 1 || only.Steps[0].ID != "vscode" {
+		t.Fatalf("%+v", only.Steps)
+	}
+	ex := &fakeExec{exit: map[string]int{"Git.Git": -1978335189}}
+	if failed := install.Run(context.Background(), cat, p, ex, func(install.Event) {}); len(failed) != 0 {
+		t.Fatalf("\"no newer version\" is not a failure: %v", failed)
+	}
+	if !strings.Contains(ex.calls[0], "upgrade --id Git.Git") {
+		t.Fatal(ex.calls[0])
+	}
+}
+
+func TestScriptIsReadableAndSafelyQuoted(t *testing.T) {
+	cat, p := plan(t, "dev-base", nil)
+	s := install.Script(cat, p, "Developer base")
+	for _, want := range []string{"winget install --id Git.Git --exact", "function Invoke-Recipe", "Invoke-Recipe '", "@'\n", "elevated PowerShell"} {
+		if !strings.Contains(s, want) {
+			t.Errorf("script lacks %q", want)
+		}
+	}
+	vs := install.Script(cat, install.Plan{Steps: []install.Step{{Kind: install.StepApp, ID: "vs-build-tools-2022", Name: "It's VS"}}}, "x")
+	if !strings.Contains(vs, "--override '--passive --wait --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended'") || !strings.Contains(vs, "Write-Host '== It''s VS'") {
+		t.Fatalf("quoting: %s", vs)
+	}
+}

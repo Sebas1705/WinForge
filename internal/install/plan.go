@@ -12,6 +12,8 @@ type StepKind string
 const (
 	StepApp    StepKind = "app"
 	StepRecipe StepKind = "recipe"
+	// StepUpgrade updates an app that is already installed.
+	StepUpgrade StepKind = "upgrade"
 )
 
 // Step is one unit of work.
