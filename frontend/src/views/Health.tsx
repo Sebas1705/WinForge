@@ -1,10 +1,11 @@
 import {useEffect, useMemo, useRef, useState} from "react";
 import {Icon, type IconName} from "../components/Icon";
+import {ScanProgress} from "../components/ScanProgress";
 import {Strip} from "../components/Strip";
 import {Ring, Tip} from "../components/Visual";
 import {t, type Key} from "../lib/i18n";
 import {
-    byGroup, filterDrivers, findingText, isThirdParty,
+    byGroup, driverDownload, filterDrivers, findingText, isThirdParty,
     type Finding, type Group, type HealthLink, type HealthResult, type Severity,
 } from "../lib/health";
 import type {App} from "../lib/model";
@@ -22,7 +23,7 @@ function tone(fs: Finding[]): "ok" | "warn" | "bad" | "muted" {
 }
 
 export function Health(p: {
-    result: HealthResult | null; busy: boolean; updatesBusy: boolean; admin: boolean; advanced: boolean; byId: Map<string, App>;
+    result: HealthResult | null; busy: boolean; step: string | null; updatesBusy: boolean; admin: boolean; advanced: boolean; byId: Map<string, App>;
     onScan: () => void; onUpdates: () => void; onExport: () => void; onAdmin: () => void;
     onLink: (l: HealthLink) => void; onInstallApp: (a: App) => void; onDetail: (a: App) => void;
 }) {
@@ -51,13 +52,14 @@ export function Health(p: {
                     <p className="muted">{t("health.readOnly")}</p>
                 </div>
                 <span className="grow"/>
-                <button className="primary" disabled={p.busy} onClick={p.onScan}><Icon name="refresh" size={15}/> {p.busy ? t("health.scanning") : t("health.scan")}</button>
+                <button className="primary" disabled={p.busy} onClick={p.onScan}><Icon name="refresh" size={15}/> {p.busy ? t("rail.scanning") : t("health.scan")}</button>
                 <button disabled={p.busy || p.updatesBusy} onClick={p.onUpdates}>{p.updatesBusy ? t("health.checkingUpdates") : t("health.checkUpdates")}</button>
                 <button className="ghost" disabled={!r} onClick={p.onExport}>{t("health.export")}</button>
             </header>
 
             {!r && !p.busy && <p className="muted empty">{t("health.empty")}</p>}
-            {!r && p.busy && <div className="scanning"><Ring size={72} stroke={7} value={0.3} tone="accent"><Icon name="pulse" size={26}/></Ring><span>{t("health.scanning")}</span></div>}
+            {p.busy && <section className="scanning"><ScanProgress kind="health" current={p.step}/></section>}
+            {p.updatesBusy && <p className="muted" role="status"><Icon name="pulse" size={14}/> {t("health.checkingUpdates")}</p>}
 
             {r && (
                 <>
@@ -150,7 +152,7 @@ export function Health(p: {
                                     <table>
                                         <thead><tr>
                                             <th>{t("health.col.device")}</th><th>{t("health.col.class")}</th><th>{t("health.col.maker")}</th>
-                                            <th>{t("health.col.version")}</th><th>{t("health.col.date")}</th>
+                                            <th>{t("health.col.version")}</th><th>{t("health.col.date")}</th><th>{t("health.col.get")}</th>
                                         </tr></thead>
                                         <tbody>
                                             {drivers.map((d, i) => (
@@ -158,6 +160,12 @@ export function Health(p: {
                                                     <td>{d.device}</td><td className="mono">{d.class}</td><td>{d.manufacturer}</td>
                                                     <td className="mono">{d.version}</td>
                                                     <td className="mono">{d.date}{isThirdParty(d) ? "" : " ·"}</td>
+                                                    <td>{isThirdParty(d) && (
+                                                        <button className="sm" aria-label={`${t("health.getDriver")}: ${d.device}`}
+                                                                onClick={() => p.onLink({kind: "catalog", label: d.device, url: driverDownload(d)})}>
+                                                            <Icon name="download" size={13}/>{t("health.getDriver")}
+                                                        </button>
+                                                    )}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -192,7 +200,7 @@ function FindingCard(p: {
                 {open && hasMore && (
                     <div className="actions tight">
                         {f.links?.map((l) => (
-                            <button key={l.url} className="sm" onClick={() => p.onLink(l)}>{t(`link.${l.kind}` as "link.support", {label: l.label})} <Icon name="external" size={13}/></button>
+                            <button key={l.url} className={"sm" + (l.kind === "download" || l.kind === "catalog" ? " primary" : "")} onClick={() => p.onLink(l)}>{t(`link.${l.kind}` as "link.support", {label: l.label})} <Icon name="external" size={13}/></button>
                         ))}
                         {app && !app.installed && <button className="sm primary" onClick={() => p.onInstallApp(app)}>{t("health.installTool", {name: app.name})}</button>}
                         {app && app.installed && <button className="sm" onClick={() => p.onDetail(app)}>{app.name}</button>}

@@ -13,8 +13,11 @@ function Section([string]$Name, [scriptblock]$Body) {
 }
 function Day($d) { if ($d -is [datetime]) { $d.ToString('yyyy-MM-dd') } else { '' } }
 function Gb($n) { [math]::Round(([double]$n) / 1GB, 1) }
+# Progress lines for the app; the JSON document comes last.
+function Step([string]$k) { [Console]::Out.WriteLine('##STEP ' + $k); [Console]::Out.Flush() }
 
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+Step 'system'
 $os   = Section 'os'    { Get-CimInstance Win32_OperatingSystem }
 $cs   = Section 'system'{ Get-CimInstance Win32_ComputerSystem }
 $bios = Section 'bios'  { Get-CimInstance Win32_BIOS }
@@ -30,6 +33,7 @@ foreach ($k in 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based 
 }
 if ((Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager' -Name PendingFileRenameOperations -ErrorAction SilentlyContinue).PendingFileRenameOperations) { $pending = $true }
 
+Step 'firmware'
 # UEFI and Secure Boot state are readable without administrator rights here.
 $uefi = $null; $sb = $null
 $sbKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\SecureBoot\State'
@@ -41,6 +45,7 @@ if (Test-Path $sbKey) {
     $fw = (Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control' -Name PEFirmwareType -ErrorAction SilentlyContinue).PEFirmwareType
     if ($fw -eq 1) { $uefi = $false } elseif ($fw -eq 2) { $uefi = $true }
 }
+Step 'security'
 $tpm = Section 'tpm' { Get-Tpm }
 $bl = $null; try { $v = Get-BitLockerVolume -MountPoint $env:SystemDrive -ErrorAction Stop; $bl = ($v.ProtectionStatus -eq 'On' -or $v.ProtectionStatus -eq 1) } catch { $bl = $null }
 $def = Section 'defender' { Get-MpComputerStatus }
@@ -52,14 +57,19 @@ if ($def) {
     $defender = [ordered]@{ enabled = [bool]$def.AMServiceEnabled; realTime = [bool]$def.RealTimeProtectionEnabled; signatureAgeDays = [math]::Round($age, 1) }
 }
 
+Step 'hardware'
 $mem = Section 'memory' { Get-CimInstance Win32_PhysicalMemory }
 $gpus = Section 'gpu' { Get-CimInstance Win32_VideoController }
+Step 'storage'
 $disks = Section 'disks' { Get-PhysicalDisk }
 $vols = Section 'volumes' { Get-Volume | Where-Object { $_.DriveType -eq 'Fixed' -and $_.DriveLetter } }
+Step 'drivers'
 $drv = Section 'drivers' { Get-CimInstance Win32_PnPSignedDriver | Where-Object { $_.DeviceName } }
+Step 'devices'
 $bad = Section 'devices' { Get-CimInstance Win32_PnPEntity | Where-Object { $_.ConfigManagerErrorCode -and $_.ConfigManagerErrorCode -ne 0 -and $_.ConfigManagerErrorCode -ne 22 } }
 $nic = Section 'firewall' { Get-NetFirewallProfile }
 
+Step 'report'
 $uptime = 0; if ($os -and $os.LastBootUpTime -is [datetime]) { $uptime = [math]::Round(((Get-Date) - $os.LastBootUpTime).TotalDays, 1) }
 $virt = $null; if ($cpu -and $cpu.VirtualizationFirmwareEnabled -ne $null) { $virt = [bool]$cpu.VirtualizationFirmwareEnabled }
 

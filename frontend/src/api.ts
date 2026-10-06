@@ -34,6 +34,7 @@ export const api = Go as unknown as {
 };
 
 export const on = {
+    scan: (fn: (e: { scan: "pc" | "health"; step: string }) => void): (() => void) => EventsOn("scan:step", fn),
     install: (fn: (e: InstallEvent) => void): (() => void) => EventsOn("install", fn),
     done: (fn: (failed: string[] | null) => void): (() => void) => EventsOn("install:done", fn),
     progress: (fn: (p: { done: number; total: number }) => void): (() => void) => EventsOn("update:progress", fn),

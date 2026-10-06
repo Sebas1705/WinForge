@@ -127,8 +127,26 @@ func TestDeviceProblemsNameTheMissingDriver(t *testing.T) {
 	if f.Severity != health.Bad || f.Params["count"] != "2" || !strings.Contains(f.Params["devices"], `Realtek ACPI\RTK5452\1`) || !strings.Contains(f.Params["devices"], "Unknown device") {
 		t.Fatalf("%+v", f)
 	}
-	if len(f.Links) == 0 || f.Links[0].Label != "ASUS" {
-		t.Fatal("should point to the board vendor's support page")
+	var vendor, catalog, support bool
+	for _, l := range f.Links {
+		vendor = vendor || (l.Kind == "download" && l.Label == "Realtek")
+		catalog = catalog || (l.Kind == "catalog" && strings.Contains(l.URL, "q=ACPI%5CRTK5452") && !strings.Contains(l.URL, "1&"))
+		support = support || l.Label == "ASUS"
+	}
+	if f.Links[0].Kind == "support" || !vendor || !catalog || !support {
+		t.Fatalf("downloads must come first and the board vendor stays available: %+v", f.Links)
+	}
+}
+
+func TestChipIDKeepsOnlyTheChipPart(t *testing.T) {
+	for in, want := range map[string]string{
+		`ACPI\RTK5452\1`: `ACPI\RTK5452`,
+		`PCI\VEN_10EC&DEV_8168&SUBSYS_1&REV_15\4`: `PCI\VEN_10EC&DEV_8168`,
+		`USB\VID_046D&PID_C52B`:                   `USB\VID_046D&PID_C52B`,
+	} {
+		if got := health.CatalogLink("x", in); !strings.HasSuffix(got.URL, "q="+strings.NewReplacer(`\`, "%5C", "&", "%26").Replace(want)) {
+			t.Errorf("%s -> %s", in, got.URL)
+		}
 	}
 }
 

@@ -68,8 +68,19 @@ func WingetInventory(ctx context.Context) (map[string]string, error) {
 
 // Snapshot takes a full inventory of the machine. Winget being unavailable is
 // not fatal: registry, PATH and file detection still work.
-func Snapshot(ctx context.Context) (Inventory, error) {
+func Snapshot(ctx context.Context) (Inventory, error) { return SnapshotWith(ctx, nil) }
+
+// SnapshotWith is Snapshot that reports its stages ("registry", "winget") as
+// they start, for progress display.
+func SnapshotWith(ctx context.Context, onStep func(step string)) (Inventory, error) {
+	step := func(s string) {
+		if onStep != nil {
+			onStep(s)
+		}
+	}
+	step("registry")
 	inv := Inventory{LookPath: LookPath, Exists: Exists, DisplayNames: RegistryDisplayNames()}
+	step("winget")
 	w, err := WingetInventory(ctx)
 	if err != nil {
 		inv.Winget = map[string]string{}

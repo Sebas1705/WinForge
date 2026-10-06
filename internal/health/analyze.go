@@ -131,9 +131,16 @@ func Analyze(r *Report, updates *UpdateScan, now time.Time) []Finding {
 				}
 			}
 			names = append(names, label)
+			if len(names) <= 3 {
+				// Straight to the download for each broken device.
+				links = appendUnique(links, DriverLinks(label, p.HardwareID)...)
+			}
 		}
 		if l, ok := SupportLink(mfr); ok {
 			links = append(links, l)
+		}
+		if model != "" {
+			links = append(links, SearchLink(strings.TrimSpace(mfr+" "+model+" drivers download")))
 		}
 		add(Finding{Key: "device-problems", Group: GroupDrivers, Severity: Bad, Links: links,
 			Params: map[string]string{"count": fmt.Sprint(n), "devices": strings.Join(first(names, 4), "; ")}})
@@ -154,14 +161,14 @@ func Analyze(r *Report, updates *UpdateScan, now time.Time) []Finding {
 			old = append(old, d)
 		}
 	}
-	add(Finding{Key: "drivers-unsigned", Group: GroupDrivers, Severity: countSev(len(unsigned), Warn),
+	add(Finding{Key: "drivers-unsigned", Group: GroupDrivers, Severity: countSev(len(unsigned), Warn), Links: vendorDriverLinks(r.Drivers, func(d Driver) bool { return IsThirdParty(d) && !d.Signed }),
 		Params: map[string]string{"count": fmt.Sprint(len(unsigned)), "devices": strings.Join(first(unsigned, 4), "; ")}})
 	sort.Slice(old, func(i, j int) bool { return old[i].Date < old[j].Date })
 	var oldNames []string
 	for _, d := range old {
 		oldNames = append(oldNames, fmt.Sprintf("%s (%s)", d.Device, d.Date))
 	}
-	add(Finding{Key: "drivers-old", Group: GroupDrivers, Severity: countSev(len(old), Warn),
+	add(Finding{Key: "drivers-old", Group: GroupDrivers, Severity: countSev(len(old), Warn), Links: vendorDriverLinks(old, func(Driver) bool { return true }),
 		Params: map[string]string{"count": fmt.Sprint(len(old)), "devices": strings.Join(first(oldNames, 4), "; ")}})
 
 	for _, g := range r.GPUs {

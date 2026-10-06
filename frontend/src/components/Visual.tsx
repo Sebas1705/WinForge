@@ -1,4 +1,5 @@
-import {useContext, type ReactNode} from "react";
+import {useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode} from "react";
+import {createPortal} from "react-dom";
 import {AppIcon} from "./AppIcon";
 import {Icon} from "./Icon";
 import {IconsContext, iconUrl} from "../lib/icons";
@@ -43,10 +44,49 @@ export function IconStack({apps, max = 5, size = 34}: { apps: App[]; max?: numbe
 }
 
 /** A small "?" that explains a term in plain words, on hover or keyboard focus. */
+/**
+ * A help bubble. The text is drawn in a layer on <body> and placed from the
+ * icon's position, so no scroll area, card or stacking context can clip it or
+ * hide part of it behind a neighbour.
+ */
 export function Tip({text}: { text: string }) {
+    const anchor = useRef<HTMLSpanElement>(null);
+    const bubble = useRef<HTMLDivElement>(null);
+    const [open, setOpen] = useState(false);
+    const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
+
+    useLayoutEffect(() => {
+        if (!open || !anchor.current || !bubble.current) return;
+        const a = anchor.current.getBoundingClientRect();
+        const b = bubble.current.getBoundingClientRect();
+        const gap = 8, edge = 8;
+        const above = a.top - b.height - gap >= edge;
+        setPos({
+            left: Math.min(Math.max(a.left + a.width / 2 - b.width / 2, edge), window.innerWidth - b.width - edge),
+            top: above ? a.top - b.height - gap : Math.min(a.bottom + gap, window.innerHeight - b.height - edge),
+        });
+    }, [open, text]);
+
+    useEffect(() => {
+        if (!open) return;
+        const close = () => setOpen(false);
+        const esc = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+        window.addEventListener("scroll", close, true);
+        window.addEventListener("resize", close);
+        window.addEventListener("keydown", esc);
+        return () => { window.removeEventListener("scroll", close, true); window.removeEventListener("resize", close); window.removeEventListener("keydown", esc); };
+    }, [open]);
+
+    const show = () => { setPos(null); setOpen(true); };
+    const hide = () => setOpen(false);
     return (
-        <span className="tip" tabIndex={0} role="note" aria-label={text} data-tip={text}>
+        <span ref={anchor} className="tip" tabIndex={0} role="note" aria-label={text}
+              onMouseEnter={show} onMouseLeave={hide} onFocus={show} onBlur={hide}>
             <Icon name="help" size={14}/>
+            {open && createPortal(
+                <div ref={bubble} className="tooltip" role="tooltip" aria-hidden="true"
+                     style={{left: pos?.left ?? 0, top: pos?.top ?? 0, visibility: pos ? "visible" : "hidden"}}>{text}</div>,
+                document.body)}
         </span>
     );
 }

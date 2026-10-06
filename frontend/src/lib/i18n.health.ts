@@ -49,6 +49,9 @@ export const healthEn = {
     "group.windows": "Windows",
     "link.support": "{label} support",
     "link.download": "{label} drivers",
+    "link.catalog": "Download: {label}",
+    "health.col.get": "Get driver",
+    "health.getDriver": "Download",
     "link.search": "Search with {label}",
     "link.settings": "Open {label}",
 
@@ -178,6 +181,9 @@ export const healthEs: Record<keyof typeof healthEn, string> = {
     "group.windows": "Windows",
     "link.support": "Soporte de {label}",
     "link.download": "Drivers de {label}",
+    "link.catalog": "Descargar: {label}",
+    "health.col.get": "Conseguir driver",
+    "health.getDriver": "Descargar",
     "link.search": "Buscar con {label}",
     "link.settings": "Abrir {label}",
 

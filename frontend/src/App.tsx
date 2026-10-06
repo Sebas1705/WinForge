@@ -2,6 +2,7 @@ import {useCallback, useEffect, useRef, useState} from "react";
 import {api, errText, on, type UpdateInfo} from "./api";
 import {AppDetail} from "./components/AppDetail";
 import {Icon, type IconName} from "./components/Icon";
+import {ScanProgress, type ScanKind} from "./components/ScanProgress";
 import {NameDialog, RunModal, Segmented, SettingsDialog, Tour, stepKey, type RunState} from "./components/Modals";
 import {POPULAR} from "./views/Catalog";
 import {IconsContext, loadIcons, type IconIndex} from "./lib/icons";
@@ -92,8 +93,13 @@ export default function App() {
         return () => { window.removeEventListener("unhandledrejection", rejected); window.removeEventListener("error", failed); };
     }, [say]);
 
+    // The stage each running scan reported last, so a slow scan shows what it is doing.
+    const [scanStep, setScanStep] = useState<Partial<Record<ScanKind, string | null>>>({});
+    useEffect(() => on.scan((e) => setScanStep((s) => ({...s, [e.scan]: e.step}))), []);
+
     const refresh = useCallback(async () => {
         setBusy(true);
+        setScanStep((s) => ({...s, pc: null}));
         try { setState(await api.GetState()); } catch (e) { say(errText(e)); } finally { setBusy(false); }
     }, [say]);
     useEffect(() => { void refresh(); }, [refresh]);
@@ -105,6 +111,7 @@ export default function App() {
 
     const scanHealth = useCallback(async () => {
         setHealthBusy(true);
+        setScanStep((s) => ({...s, health: null}));
         try { setHealth(await api.HealthScan()); } catch (e) { say(errText(e)); } finally { setHealthBusy(false); }
     }, [say]);
 
@@ -322,10 +329,11 @@ export default function App() {
                         )}
                     </div>
                 )}
-                {state?.wingetError && <div className="banner warn">{state.wingetError}. {t("wingetOnlyDetect")}</div>}
+                {state && busy && <div className="banner info"><ScanProgress kind="pc" compact current={scanStep.pc ?? null}/></div>}
+                {state?.wingetError &&<div className="banner warn">{state.wingetError}. {t("wingetOnlyDetect")}</div>}
 
                 <main>
-                    {!state ? <p className="muted pad">{t("rail.scanning")}</p> : tab === "home" ? (
+                    {!state ? <div className="pad"><h2>{t("rail.scanning")}</h2><ScanProgress kind="pc" current={scanStep.pc ?? null}/></div> : tab === "home" ? (
                         <Home apps={state.apps} profiles={state.profiles} featured={state.featured ?? []} upgrades={upgrades} upgradesBusy={upgradesBusy}
                               health={health} onOpenHealth={() => go("health")} onOpenPopular={() => { setCategory(POPULAR); setTab("catalog"); }}
                               onInstallApp={(a) => void startProfile(selectionProfile([a.id], a.name))} onDetail={setDetail}
@@ -342,7 +350,7 @@ export default function App() {
                                  onInstallOne={(a) => void startProfile(selectionProfile([a.id], a.name))}
                                  onSave={saveSelection} openURL={(u) => safe(api.OpenURL(u))} onDetail={setDetail}/>
                     ) : tab === "health" ? (
-                        <Health advanced={advanced} result={health} busy={healthBusy} updatesBusy={healthUpdBusy} admin={state.admin} byId={byId}
+                        <Health advanced={advanced} result={health} busy={healthBusy} step={scanStep.health ?? null} updatesBusy={healthUpdBusy} admin={state.admin} byId={byId}
                                 onScan={() => void scanHealth()} onUpdates={() => void healthUpdates()} onExport={() => void exportHealth()}
                                 onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))} onLink={openLink}
                                 onInstallApp={(a) => void startProfile(selectionProfile([a.id], a.name))} onDetail={setDetail}/>

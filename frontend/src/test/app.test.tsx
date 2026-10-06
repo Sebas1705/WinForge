@@ -305,6 +305,19 @@ describe("PC health", () => {
         expect(api.OpenLink).toHaveBeenCalledWith("https://www.asus.com/support/");
     });
 
+    it("shows which stage the scan is on while it runs", async () => {
+        let finish: (r: ReturnType<typeof healthResult>) => void = () => {};
+        api.HealthScan.mockReturnValue(new Promise((res) => { finish = res; }));
+        const user = await openApp();
+        await go(user, /PC health/);
+        await emit.scan("health", "drivers");
+        expect(await screen.findByText("Listing installed drivers (the slowest part)")).toBeInTheDocument();
+        expect(screen.getByText("BIOS and Secure Boot")).toBeInTheDocument();
+        finish(healthResult());
+        expect(await screen.findByRole("heading", {name: "Something needs fixing"})).toBeInTheDocument();
+        expect(screen.queryByText("Listing installed drivers (the slowest part)")).not.toBeInTheDocument();
+    });
+
     it("offers to restart as administrator when checks could not be answered", async () => {
         api.HealthScan.mockResolvedValue(healthResult());
         const user = await openApp();
@@ -418,7 +431,7 @@ describe("robustness", () => {
     it("survives the PC scan itself failing at startup", async () => {
         api.GetState.mockRejectedValueOnce(new Error("catalog unavailable"));
         render(<App/>);
-        expect(await screen.findByRole("status")).toHaveTextContent("catalog unavailable");
+        expect(await screen.findByText("catalog unavailable")).toHaveAttribute("role", "status");
     });
 
     it("shows a friendly screen, not a blank window, if rendering crashes", async () => {

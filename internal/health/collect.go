@@ -14,19 +14,51 @@ import (
 	"unicode/utf16"
 )
 
+// CollectSteps lists the collector's stages in the order it reports them.
+var CollectSteps = []string{"system", "firmware", "security", "hardware", "storage", "drivers", "devices", "report"}
+
 // Collect scans the PC. It takes 10-40 seconds, mostly reading the driver list.
-func Collect(ctx context.Context) (*Report, error) {
-	out, err := runPowerShell(ctx, collectScript, 2*time.Minute)
+func Collect(ctx context.Context) (*Report, error) { return CollectWith(ctx, nil) }
+
+// CollectWith is Collect that calls onStep with the name of each stage as the
+// collector starts it, so the UI can show what is being read.
+func CollectWith(ctx context.Context, onStep func(step string)) (*Report, error) {
+	out, err := runPowerShell(ctx, collectScript, 2*time.Minute, onStep)
 	if err != nil {
 		return nil, err
 	}
 	return ParseReport(out, time.Now())
 }
 
+// stepWriter keeps everything written and reports each "##STEP name" line.
+type stepWriter struct {
+	buf    bytes.Buffer
+	onStep func(string)
+	line   []byte
+}
+
+func (w *stepWriter) Write(p []byte) (int, error) {
+	w.buf.Write(p)
+	if w.onStep == nil {
+		return len(p), nil
+	}
+	for _, c := range p {
+		if c != '\n' {
+			w.line = append(w.line, c)
+			continue
+		}
+		if s := strings.TrimSpace(string(w.line)); strings.HasPrefix(s, "##STEP ") {
+			w.onStep(strings.TrimPrefix(s, "##STEP "))
+		}
+		w.line = w.line[:0]
+	}
+	return len(p), nil
+}
+
 // ScanUpdates searches Windows Update for pending items, drivers and firmware
 // included. It never installs anything.
 func ScanUpdates(ctx context.Context) (*UpdateScan, error) {
-	out, err := runPowerShell(ctx, updateScript, 4*time.Minute)
+	out, err := runPowerShell(ctx, updateScript, 4*time.Minute, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +98,7 @@ func jsonPart(b []byte) []byte {
 	return bytes.TrimSpace(b)
 }
 
-func runPowerShell(ctx context.Context, script string, timeout time.Duration) ([]byte, error) {
+func runPowerShell(ctx context.Context, script string, timeout time.Duration, onStep func(string)) ([]byte, error) {
 	if runtime.GOOS != "windows" {
 		return nil, errors.New("PC health is only available on Windows")
 	}
@@ -80,8 +112,9 @@ func runPowerShell(ctx context.Context, script string, timeout time.Duration) ([
 	cmd := exec.CommandContext(ctx, "powershell", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass",
 		"-EncodedCommand", base64.StdEncoding.EncodeToString(buf))
 	hide(cmd)
-	var stdout, stderr bytes.Buffer
-	cmd.Stdout, cmd.Stderr = &stdout, &stderr
+	stdout := &stepWriter{onStep: onStep}
+	var stderr bytes.Buffer
+	cmd.Stdout, cmd.Stderr = stdout, &stderr
 	if err := cmd.Run(); err != nil {
 		if ctx.Err() != nil {
 			return nil, fmt.Errorf("timed out after %s", timeout)
@@ -92,7 +125,7 @@ func runPowerShell(ctx context.Context, script string, timeout time.Duration) ([
 		}
 		return nil, errors.New(msg)
 	}
-	return stdout.Bytes(), nil
+	return stdout.buf.Bytes(), nil
 }
 
 // normalize fills derived fields and replaces nil slices with empty ones so the

@@ -5,6 +5,7 @@ import {makeState, planFor} from "./fixtures";
 
 type Handler<T> = (e: T) => void;
 const handlers = {
+    scan: new Set<Handler<{ scan: "pc" | "health"; step: string }>>(),
     install: new Set<Handler<InstallEvent>>(),
     done: new Set<Handler<string[] | null>>(),
     progress: new Set<Handler<{ done: number; total: number }>>(),
@@ -41,6 +42,7 @@ export const moduleMock = {
     api,
     errText: (e: unknown) => (e instanceof Error ? e.message : String(e)),
     on: {
+        scan: (fn: Handler<{ scan: "pc" | "health"; step: string }>) => { handlers.scan.add(fn); return () => handlers.scan.delete(fn); },
         install: (fn: Handler<InstallEvent>) => { handlers.install.add(fn); return () => handlers.install.delete(fn); },
         done: (fn: Handler<string[] | null>) => { handlers.done.add(fn); return () => handlers.done.delete(fn); },
         progress: (fn: Handler<{ done: number; total: number }>) => { handlers.progress.add(fn); return () => handlers.progress.delete(fn); },
@@ -49,6 +51,7 @@ export const moduleMock = {
 
 /** Events the Go side would emit while a plan runs. */
 export const emit = {
+    scan: (scan: "pc" | "health", step: string) => act(() => { handlers.scan.forEach((h) => h({scan, step})); }),
     install: (e: InstallEvent) => act(() => { handlers.install.forEach((h) => h(e)); }),
     done: (failed: string[] | null = []) => act(() => { handlers.done.forEach((h) => h(failed)); }),
 };

@@ -2,6 +2,7 @@ package health
 
 import (
 	"net/url"
+	"sort"
 	"strings"
 )
 
@@ -99,6 +100,85 @@ func gpuDownload(vendor string) (Link, string) {
 		return Link{Kind: "download", Label: "Intel", URL: "https://www.intel.com/content/www/us/en/download-center/home.html"}, "Intel.IntelDriverAndSupportAssistant"
 	}
 	return Link{}, ""
+}
+
+// driverPages are the vendors' own driver download pages, for the chip makers
+// whose drivers a PC most often lacks.
+var driverPages = map[string]Link{
+	"AMD":     {Kind: "download", Label: "AMD", URL: "https://www.amd.com/en/support/download/drivers.html"},
+	"Intel":   {Kind: "download", Label: "Intel", URL: "https://www.intel.com/content/www/us/en/download-center/home.html"},
+	"NVIDIA":  {Kind: "download", Label: "NVIDIA", URL: "https://www.nvidia.com/Download/index.aspx"},
+	"Realtek": {Kind: "download", Label: "Realtek", URL: "https://www.realtek.com/Download"},
+}
+
+func appendUnique(ls []Link, more ...Link) []Link {
+next:
+	for _, m := range more {
+		for _, l := range ls {
+			if l.URL == m.URL {
+				continue next
+			}
+		}
+		ls = append(ls, m)
+	}
+	return ls
+}
+
+// vendorDriverLinks collects the download pages of the makers behind the
+// drivers that match, so an outdated or unsigned driver is one click from its
+// replacement.
+func vendorDriverLinks(drivers []Driver, match func(Driver) bool) []Link {
+	var ls []Link
+	for _, d := range drivers {
+		if !match(d) {
+			continue
+		}
+		m := strings.ToLower(d.Manufacturer)
+		for name, l := range driverPages {
+			if strings.Contains(m, strings.ToLower(name)) || (name == "AMD" && strings.Contains(m, "advanced micro")) {
+				ls = appendUnique(ls, l)
+			}
+		}
+	}
+	sort.Slice(ls, func(i, j int) bool { return ls[i].Label < ls[j].Label })
+	return ls
+}
+
+// CatalogLink searches the Microsoft Update Catalog, where Windows drivers are
+// published as plain downloads, for a hardware id such as ACPI\RTK5452\1 or
+// PCI\VEN_10EC&DEV_8168&SUBSYS_...; only the part that names the chip is used.
+func CatalogLink(label, hardwareID string) Link {
+	return Link{Kind: "catalog", Label: label, URL: "https://www.catalog.update.microsoft.com/Search.aspx?q=" + url.QueryEscape(chipID(hardwareID))}
+}
+
+func chipID(id string) string {
+	parts := strings.Split(id, "\\")
+	if len(parts) > 2 {
+		parts = parts[:2]
+	}
+	s := strings.Join(parts, "\\")
+	if i := strings.Index(strings.ToUpper(s), "&SUBSYS"); i > 0 {
+		s = s[:i]
+	}
+	return s
+}
+
+// DriverLinks are the download places for a device that has no working driver:
+// the chip maker's driver page when the hardware id names one, then the
+// Microsoft Update Catalog entry for that exact id.
+func DriverLinks(device, hardwareID string) []Link {
+	var ls []Link
+	if l, ok := driverPages[HardwareHint(hardwareID)]; ok {
+		ls = append(ls, l)
+	}
+	label := strings.TrimSpace(device)
+	if label == "" {
+		label = chipID(hardwareID)
+	}
+	if hardwareID != "" {
+		ls = append(ls, CatalogLink(label, hardwareID))
+	}
+	return ls
 }
 
 // HardwareHint names the vendor behind an ACPI or PCI hardware id, so "unknown

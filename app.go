@@ -49,6 +49,13 @@ func NewApp() *App {
 
 func (a *App) startup(ctx context.Context) { a.ctx = ctx }
 
+// scanStep tells the UI which stage of a scan ("pc" or "health") just began.
+func (a *App) scanStep(scan, step string) {
+	if a.ctx != nil {
+		runtime.EventsEmit(a.ctx, "scan:step", map[string]string{"scan": scan, "step": step})
+	}
+}
+
 // AppInfo is a catalog app as the UI needs it.
 type AppInfo struct {
 	catalog.App
@@ -80,7 +87,8 @@ type ProfileInfo struct {
 
 // GetState rescans the PC and returns the full UI state.
 func (a *App) GetState() (State, error) {
-	inv, err := system.Snapshot(a.ctx)
+	inv, err := system.SnapshotWith(a.ctx, func(s string) { a.scanStep("pc", s) })
+	a.scanStep("pc", "match")
 	st := State{Version: version, Admin: system.IsElevated(), Apps: []AppInfo{}, Profiles: []ProfileInfo{}, Featured: append([]string{}, a.cat.Featured...)}
 	if err != nil {
 		st.WingetError = err.Error()

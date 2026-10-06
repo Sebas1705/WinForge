@@ -5,7 +5,24 @@ export type Severity = "ok" | "info" | "warn" | "bad" | "unknown";
 export type Group = "firmware" | "drivers" | "storage" | "security" | "windows";
 export const GROUPS: Group[] = ["firmware", "drivers", "storage", "security", "windows"];
 
-export interface HealthLink { kind: "support" | "download" | "search" | "settings"; label: string; url: string }
+export interface HealthLink { kind: "support" | "download" | "catalog" | "search" | "settings"; label: string; url: string }
+
+/** Chip makers' own driver pages, keyed by the manufacturer name a driver reports. */
+const DRIVER_PAGES: [RegExp, string][] = [
+    [/realtek/i, "https://www.realtek.com/Download"],
+    [/nvidia/i, "https://www.nvidia.com/Download/index.aspx"],
+    [/advanced micro|\bamd\b|ati tech/i, "https://www.amd.com/en/support/download/drivers.html"],
+    [/intel/i, "https://www.intel.com/content/www/us/en/download-center/home.html"],
+];
+
+/**
+ * Where to download a replacement for an installed driver: its maker's driver
+ * page when known, otherwise the Microsoft Update Catalog search for the device.
+ */
+export function driverDownload(d: Pick<HDriver, "device" | "manufacturer">): string {
+    const hit = DRIVER_PAGES.find(([re]) => re.test(d.manufacturer));
+    return hit ? hit[1] : "https://www.catalog.update.microsoft.com/Search.aspx?q=" + encodeURIComponent(d.device);
+}
 
 export interface Finding {
     key: string;
