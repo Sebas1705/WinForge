@@ -1,19 +1,30 @@
 import {useEffect, useMemo, useRef, useState} from "react";
-import {categoryLabel, t} from "../lib/i18n";
-import {filterApps, type App, type Filter} from "../lib/model";
+import {AppCard} from "../components/AppCard";
 import {AppIcon} from "../components/AppIcon";
-import {categoryStats, sortApps, topCategory, type SortKey} from "../lib/tally";
+import {Icon, categoryIcon} from "../components/Icon";
+import {categoryLabel, getLang, t} from "../lib/i18n";
+import {filterApps, type App, type Filter} from "../lib/model";
+import {categoryStats, featuredApps, sortApps, taglineFor, topCategory, type SortKey} from "../lib/tally";
+
+export const POPULAR = "__popular";
+type View = "grid" | "list";
+
+function loadView(): View {
+    try { return localStorage.getItem("winforge.catalogView") === "list" ? "list" : "grid"; } catch { return "grid"; }
+}
 
 export function Catalog(p: {
-    apps: App[]; selection: Set<string>; setSelection: (s: Set<string>) => void;
-    initialCategory: string;
+    apps: App[]; featured: string[]; selection: Set<string>; setSelection: (s: Set<string>) => void;
+    initialCategory: string; advanced: boolean;
     onInstall: () => void; onInstallOne: (a: App) => void; onSave: () => void; openURL: (u: string) => void;
     onDetail: (a: App) => void;
 }) {
     const [f, setF] = useState<Filter>({query: "", category: p.initialCategory, installed: "all", openSourceOnly: false});
     const [sort, setSort] = useState<SortKey>("name");
+    const [view, setView] = useState<View>(loadView);
     const search = useRef<HTMLInputElement>(null);
     useEffect(() => { setF((x) => ({...x, category: p.initialCategory})); }, [p.initialCategory]);
+    useEffect(() => { try { localStorage.setItem("winforge.catalogView", view); } catch { /* not persisted */ } }, [view]);
 
     // "/" jumps to search unless the user is already typing.
     useEffect(() => {
@@ -25,8 +36,14 @@ export function Catalog(p: {
         return () => window.removeEventListener("keydown", key);
     }, []);
 
+    const popular = f.category === POPULAR;
+    const source = useMemo(() => (popular ? featuredApps(p.apps, p.featured) : p.apps), [popular, p.apps, p.featured]);
     const stats = useMemo(() => categoryStats(p.apps), [p.apps]);
-    const list = useMemo(() => sortApps(filterApps(p.apps, f), sort), [p.apps, f, sort]);
+    const list = useMemo(() => {
+        const filtered = filterApps(source, {...f, category: popular ? "" : f.category});
+        // The popular shelf keeps its curated order unless the person picks a sort.
+        return popular && sort === "name" ? filtered : sortApps(filtered, sort);
+    }, [source, f, sort, popular]);
     const byId = useMemo(() => new Map(p.apps.map((a) => [a.id, a])), [p.apps]);
     const missing = [...p.selection].filter((id) => !byId.get(id)?.installed).length;
 
@@ -36,12 +53,20 @@ export function Catalog(p: {
         p.setSelection(n);
     };
     const selectVisible = () => p.setSelection(new Set([...p.selection, ...list.filter((a) => !a.installed).map((a) => a.id)]));
+    const chip = (key: string, icon: Parameters<typeof Icon>[0]["name"], label: string, count: number) => (
+        <button key={key} role="tab" aria-selected={f.category === key} className={f.category === key ? "on" : ""} onClick={() => setF({...f, category: key})}>
+            <Icon name={icon} size={15}/>{label} <em>{count}</em>
+        </button>
+    );
 
     return (
         <div className="catalog">
             <div className="toolbar">
-                <input ref={search} className="search" placeholder={t("catalog.search")} value={f.query}
-                       onChange={(e) => setF({...f, query: e.target.value})}/>
+                <div className="searchbox">
+                    <Icon name="search" size={16}/>
+                    <input ref={search} className="search" placeholder={t("catalog.search")} value={f.query}
+                           onChange={(e) => setF({...f, query: e.target.value})}/>
+                </div>
                 <select aria-label={t("catalog.state.all")} value={f.installed}
                         onChange={(e) => setF({...f, installed: e.target.value as Filter["installed"]})}>
                     <option value="all">{t("catalog.state.all")}</option>
@@ -55,43 +80,50 @@ export function Catalog(p: {
                 </select>
                 <label className="check"><input type="checkbox" checked={f.openSourceOnly}
                        onChange={(e) => setF({...f, openSourceOnly: e.target.checked})}/> {t("catalog.oss")}</label>
+                <div className="seg" role="group">
+                    <button className={view === "grid" ? "on" : ""} aria-pressed={view === "grid"} title={t("catalog.view.grid")} aria-label={t("catalog.view.grid")} onClick={() => setView("grid")}><Icon name="grid" size={15}/></button>
+                    <button className={view === "list" ? "on" : ""} aria-pressed={view === "list"} title={t("catalog.view.list")} aria-label={t("catalog.view.list")} onClick={() => setView("list")}><Icon name="list" size={15}/></button>
+                </div>
             </div>
             <div className="chips" role="tablist">
-                <button role="tab" aria-selected={f.category === ""} className={f.category === "" ? "on" : ""} onClick={() => setF({...f, category: ""})}>
-                    {t("catalog.all")} <em>{p.apps.length}</em>
-                </button>
-                {stats.map((s) => (
-                    <button key={s.top} role="tab" aria-selected={f.category === s.top} className={f.category === s.top ? "on" : ""}
-                            onClick={() => setF({...f, category: s.top})}>
-                        {categoryLabel(s.top)} <em>{s.total}</em>
-                    </button>
-                ))}
+                {chip("", "layers", t("catalog.all"), p.apps.length)}
+                {p.featured.length > 0 && chip(POPULAR, "star", t("catalog.popular"), p.featured.length)}
+                {stats.map((s) => chip(s.top, categoryIcon(s.top), categoryLabel(s.top), s.total))}
             </div>
 
-            <ul className="list">
-                {list.map((a) => (
-                    <li key={a.id} className={p.selection.has(a.id) ? "sel" : ""}>
-                        <label>
-                            <input type="checkbox" checked={p.selection.has(a.id)} onChange={() => toggle(a.id)} aria-label={a.name}/>
-                            <AppIcon id={a.id} name={a.name} category={a.category}/>
-                            <span className="grow">
-                                <button type="button" className="link name" onClick={(e) => { e.preventDefault(); p.onDetail(a); }}>{a.name}</button>
-                                <span className="muted small"> {categoryLabel(topCategory(a))}</span>
-                                {a.admin && <span className="tag">{t("badge.admin")}</span>}
-                                {a.openSource && <span className="tag oss" title={a.license}>{t("badge.oss")}</span>}
-                                <span className="desc muted">{a.description}</span>
-                            </span>
-                        </label>
-                        <div className="meta">
-                            {a.installed
-                                ? <span className="pill ok mono">{t("catalog.installed", {v: a.version ?? ""})}</span>
-                                : <button className="mini" onClick={() => p.onInstallOne(a)}>{t("common.install")}</button>}
-                            <a href="#" className="mono site" title={a.homepage} onClick={(e) => { e.preventDefault(); p.openURL(a.homepage); }}>{a.publisher} ↗</a>
-                        </div>
-                    </li>
-                ))}
-                {list.length === 0 && <li className="empty muted">{t("catalog.empty")}</li>}
-            </ul>
+            {view === "grid" ? (
+                <div className="cardgrid">
+                    {list.map((a) => (
+                        <AppCard key={a.id} app={a} selected={p.selection.has(a.id)} onToggle={() => toggle(a.id)}
+                                 onOpen={() => p.onDetail(a)} onInstall={() => p.onInstallOne(a)}/>
+                    ))}
+                    {list.length === 0 && <p className="empty muted">{t("catalog.empty")}</p>}
+                </div>
+            ) : (
+                <ul className="list">
+                    {list.map((a) => (
+                        <li key={a.id} className={p.selection.has(a.id) ? "sel" : ""}>
+                            <label>
+                                <input type="checkbox" checked={p.selection.has(a.id)} onChange={() => toggle(a.id)} aria-label={a.name}/>
+                                <AppIcon id={a.id} name={a.name} category={a.category}/>
+                                <span className="grow">
+                                    <button type="button" className="link name" onClick={(e) => { e.preventDefault(); p.onDetail(a); }}>{a.name}</button>
+                                    <span className="muted small"> {categoryLabel(topCategory(a))}</span>
+                                    {a.openSource && <span className="tag oss">{t("badge.oss")}</span>}
+                                    <span className="desc muted">{taglineFor(a, getLang())}</span>
+                                </span>
+                            </label>
+                            <div className="meta">
+                                {a.installed
+                                    ? <span className="chip done"><Icon name="check" size={13}/>{t("catalog.installedBadge")}</span>
+                                    : <button className="mini" onClick={() => p.onInstallOne(a)}>{t("common.install")}</button>}
+                                {p.advanced && <a href="#" className="mono site" title={a.homepage} onClick={(e) => { e.preventDefault(); p.openURL(a.homepage); }}>{a.publisher} ↗</a>}
+                            </div>
+                        </li>
+                    ))}
+                    {list.length === 0 && <li className="empty muted">{t("catalog.empty")}</li>}
+                </ul>
+            )}
 
             <footer>
                 <span className="mono muted small">{t("catalog.shown", {shown: list.length, total: p.apps.length})} · {t("catalog.selected", {n: p.selection.size, m: missing})}</span>

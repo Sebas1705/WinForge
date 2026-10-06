@@ -39,6 +39,7 @@ const outDir = "frontend/public/icons"
 func main() {
 	force := flag.Bool("force", false, "refetch icons that already exist")
 	only := flag.String("only", "", "fetch a single app id")
+	github := flag.Bool("github", false, "refetch apps whose homepage is on GitHub (after changing avatar rules)")
 	flag.Parse()
 
 	cat, err := catalog.Load(catalogdata.FS)
@@ -64,14 +65,27 @@ func main() {
 	}
 	wp := wingetpkgs.New()
 	wp.CacheDir = ".winget-cache"
+	owners := &ownerTypes{client: client, token: wp.Token, seen: map[string]string{}}
 
 	var ids []string
 	for id := range cat.Apps {
-		if (*only == "" || *only == id) && (*force || *only != "" || index[id] == "") {
+		_, onGitHub := icons.GitHubOwner(cat.Apps[id].Homepage)
+		if (*only == "" || *only == id) && (*force || *only != "" || index[id] == "" || (*github && onGitHub)) {
 			ids = append(ids, id)
 		}
 	}
 	sort.Strings(ids)
+	if *github {
+		// Start clean: an app that no longer qualifies for an icon must lose the
+		// old one, not keep it because nothing replaced it.
+		for _, id := range ids {
+			old, _ := filepath.Glob(filepath.Join(outDir, id+".*"))
+			for _, o := range old {
+				os.Remove(o)
+			}
+			delete(index, id)
+		}
+	}
 
 	type result struct {
 		file, via string
@@ -85,7 +99,7 @@ func main() {
 			defer wg.Done()
 			sem <- struct{}{}
 			defer func() { <-sem }()
-			file, via := fetchApp(context.Background(), client, wp, cat.Apps[id])
+			file, via := fetchApp(context.Background(), client, wp, owners, cat.Apps[id])
 			results[i] = result{file, via}
 		}()
 	}
@@ -124,9 +138,9 @@ func main() {
 	}
 }
 
-func fetchApp(ctx context.Context, c *http.Client, wp *wingetpkgs.Client, a *catalog.App) (file, via string) {
+func fetchApp(ctx context.Context, c *http.Client, wp *wingetpkgs.Client, owners *ownerTypes, a *catalog.App) (file, via string) {
 	var cands []string
-	if owner, ok := icons.GitHubOwner(a.Homepage); ok {
+	if owner, ok := icons.GitHubOwner(a.Homepage); ok && icons.UseAvatar(owners.typeOf(ctx, owner)) {
 		cands = append(cands, icons.AvatarURL(owner))
 	}
 	if p, err := wp.Package(ctx, a.Winget); err == nil {
@@ -165,6 +179,46 @@ func fetchApp(ctx context.Context, c *http.Client, wp *wingetpkgs.Client, a *cat
 		return name, u
 	}
 	return "", ""
+}
+
+// ownerTypes looks up whether a GitHub account is an Organization or a User,
+// once per owner. Personal avatars are photos of people, so only organizations'
+// are used; a failed lookup counts as "not an organization".
+type ownerTypes struct {
+	client *http.Client
+	token  string
+	mu     sync.Mutex
+	seen   map[string]string
+}
+
+func (o *ownerTypes) typeOf(ctx context.Context, owner string) string {
+	o.mu.Lock()
+	if t, ok := o.seen[owner]; ok {
+		o.mu.Unlock()
+		return t
+	}
+	o.mu.Unlock()
+	t := ""
+	req, err := http.NewRequestWithContext(ctx, "GET", "https://api.github.com/users/"+url.PathEscape(owner), nil)
+	if err == nil {
+		req.Header.Set("Accept", "application/vnd.github+json")
+		if o.token != "" {
+			req.Header.Set("Authorization", "Bearer "+o.token)
+		}
+		if resp, err := o.client.Do(req); err == nil {
+			var body struct {
+				Type string `json:"type"`
+			}
+			if resp.StatusCode == http.StatusOK && json.NewDecoder(io.LimitReader(resp.Body, 1<<20)).Decode(&body) == nil {
+				t = body.Type
+			}
+			resp.Body.Close()
+		}
+	}
+	o.mu.Lock()
+	o.seen[owner] = t
+	o.mu.Unlock()
+	return t
 }
 
 // get fetches a URL, returning at most limit bytes and the final URL. Failures

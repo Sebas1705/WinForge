@@ -14,6 +14,7 @@ export interface App {
     openSource: boolean;
     requires?: string[];
     recipes?: string[];
+    tagline?: { en: string; es: string };
     installed: boolean;
     version?: string;
     sources?: string[];
@@ -45,6 +46,7 @@ export interface State {
     admin: boolean;
     apps: App[];
     profiles: ProfileInfo[];
+    featured: string[];
     wingetError?: string;
 }
 

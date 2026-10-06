@@ -47,6 +47,10 @@ type App struct {
 	Recipes []string `yaml:"recipes,omitempty" json:"recipes,omitempty"`
 	Notes   string   `yaml:"notes,omitempty" json:"notes,omitempty"`
 
+	// Tagline is a short plain-language description in each interface language,
+	// set at load time for the apps listed in featured.yml.
+	Tagline *Tagline `yaml:"-" json:"tagline,omitempty"`
+
 	// OpenSource is derived from License at load time, never written in YAML.
 	OpenSource bool `yaml:"-" json:"openSource"`
 }
@@ -104,4 +108,17 @@ type Recipe struct {
 type DetectOverlay struct {
 	ID       string   `yaml:"id"`
 	Registry []string `yaml:"registry"`
+}
+
+// Tagline is one line about an app, per interface language.
+type Tagline struct {
+	EN string `json:"en"`
+	ES string `json:"es"`
+}
+
+// FeaturedEntry is a line of featured.yml.
+type FeaturedEntry struct {
+	ID string `yaml:"id"`
+	EN string `yaml:"en"`
+	ES string `yaml:"es"`
 }

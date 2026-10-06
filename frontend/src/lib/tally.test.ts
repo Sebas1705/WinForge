@@ -61,3 +61,20 @@ describe("helpers", () => {
         expect(formatElapsed(65_000)).toBe("1:05");
     });
 });
+
+describe("cards", () => {
+    const withTag = {...app("git", "dev/vcs"), tagline: {en: "Version control", es: "Control de versiones"}};
+    const list = [withTag, app("vlc", "media"), app("gimp", "design")];
+    it("prefers the tagline in the interface language and falls back to the description", async () => {
+        const {taglineFor} = await import("./tally");
+        expect(taglineFor(withTag, "es")).toBe("Control de versiones");
+        expect(taglineFor(withTag, "en")).toBe("Version control");
+        expect(taglineFor({...list[1], description: "From the manifest"}, "es")).toBe("From the manifest");
+    });
+    it("lists featured apps in featured order, skipping ids that do not exist", async () => {
+        const {featuredApps, profileApps} = await import("./tally");
+        expect(featuredApps(list, ["gimp", "nope", "git"]).map((a) => a.id)).toEqual(["gimp", "git"]);
+        expect(featuredApps(list, ["gimp", "git", "vlc"], 2)).toHaveLength(2);
+        expect(profileApps(["vlc", "zzz", "git"], new Map(list.map((a) => [a.id, a]))).map((a) => a.id)).toEqual(["vlc", "git"]);
+    });
+});

@@ -16,6 +16,8 @@ type Catalog struct {
 	Apps     map[string]*App
 	Profiles map[string]*Profile
 	Recipes  map[string]*Recipe
+	// Featured lists the popular apps in display order.
+	Featured []string
 }
 
 // Load reads apps/*.yml, profiles/*.yml and recipes/*.yml from fsys and
@@ -70,6 +72,9 @@ func Load(fsys fs.FS) (*Catalog, error) {
 	}
 	for _, a := range c.Apps {
 		a.OpenSource = IsOpenSource(a.License)
+	}
+	if err := c.loadFeatured(fsys); err != nil {
+		return nil, err
 	}
 	if errs := c.Validate(); len(errs) > 0 {
 		msgs := make([]string, len(errs))
@@ -202,4 +207,35 @@ func sortedKeys[V any](m map[string]V) []string {
 	}
 	sort.Strings(keys)
 	return keys
+}
+
+// loadFeatured reads featured.yml (optional) and attaches taglines. Every id
+// must exist and every line needs both languages, kept short enough for a card.
+func (c *Catalog) loadFeatured(fsys fs.FS) error {
+	b, err := fs.ReadFile(fsys, "featured.yml")
+	if err != nil {
+		return nil // optional
+	}
+	var entries []FeaturedEntry
+	if err := yaml.UnmarshalWithOptions(b, &entries, yaml.Strict()); err != nil {
+		return fmt.Errorf("featured.yml: %w", err)
+	}
+	seen := map[string]bool{}
+	for _, e := range entries {
+		a := c.Apps[e.ID]
+		switch {
+		case a == nil:
+			return fmt.Errorf("featured.yml: unknown app %q", e.ID)
+		case seen[e.ID]:
+			return fmt.Errorf("featured.yml: %q listed twice", e.ID)
+		case e.EN == "" || e.ES == "":
+			return fmt.Errorf("featured.yml: %q needs en and es", e.ID)
+		case len([]rune(e.EN)) > 60 || len([]rune(e.ES)) > 60:
+			return fmt.Errorf("featured.yml: %q tagline is longer than 60 characters", e.ID)
+		}
+		seen[e.ID] = true
+		a.Tagline = &Tagline{EN: e.EN, ES: e.ES}
+		c.Featured = append(c.Featured, e.ID)
+	}
+	return nil
 }

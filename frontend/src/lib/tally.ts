@@ -86,3 +86,19 @@ export function formatElapsed(ms: number): string {
     const s = Math.max(0, Math.floor(ms / 1000));
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 }
+
+/** The one-line description to show on a card: the plain-language tagline when there is one. */
+export function taglineFor(a: App, lang: "en" | "es"): string {
+    return a.tagline?.[lang] || a.description;
+}
+
+/** Popular apps, in the catalog's featured order, limited to ones that exist. */
+export function featuredApps(apps: App[], featured: string[], limit = featured.length): App[] {
+    const byId = new Map(apps.map((a) => [a.id, a]));
+    return featured.flatMap((id) => byId.get(id) ?? []).slice(0, limit);
+}
+
+/** The apps of a profile, in order, for its icon stack. */
+export function profileApps(resolved: string[], byId: Map<string, App>): App[] {
+    return resolved.flatMap((id) => byId.get(id) ?? []);
+}

@@ -63,6 +63,8 @@ type State struct {
 	Admin    bool          `json:"admin"`
 	Apps     []AppInfo     `json:"apps"`
 	Profiles []ProfileInfo `json:"profiles"`
+	// Featured lists popular catalog ids in display order.
+	Featured []string `json:"featured"`
 	// WingetError is set when winget is missing; the app still works for
 	// detection but cannot install.
 	WingetError string `json:"wingetError,omitempty"`
@@ -79,7 +81,7 @@ type ProfileInfo struct {
 // GetState rescans the PC and returns the full UI state.
 func (a *App) GetState() (State, error) {
 	inv, err := system.Snapshot(a.ctx)
-	st := State{Version: version, Admin: system.IsElevated(), Apps: []AppInfo{}, Profiles: []ProfileInfo{}}
+	st := State{Version: version, Admin: system.IsElevated(), Apps: []AppInfo{}, Profiles: []ProfileInfo{}, Featured: append([]string{}, a.cat.Featured...)}
 	if err != nil {
 		st.WingetError = err.Error()
 	}

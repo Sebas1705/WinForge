@@ -9,7 +9,9 @@ describe("settings", () => {
     });
     it("keeps valid values", () => {
         expect(normalize({theme: "light", accent: "#AABBCC", density: "compact"}))
-            .toEqual({theme: "light", accent: "#AABBCC", density: "compact", checkUpdates: true, language: "auto"});
+            .toEqual({theme: "light", accent: "#AABBCC", density: "compact", checkUpdates: true, language: "auto", detail: "simple"});
+        expect(normalize({detail: "advanced"}).detail).toBe("advanced");
+        expect(normalize({detail: "expert"}).detail).toBe("simple");
         expect(normalize({language: "es"}).language).toBe("es");
         expect(normalize({language: "klingon"}).language).toBe("auto");
         expect(normalize({checkUpdates: false}).checkUpdates).toBe(false);
@@ -21,7 +23,7 @@ describe("settings", () => {
     });
     it("applies to the document root", () => {
         const root = document.createElement("html");
-        apply({theme: "system", accent: "#3ecf8e", density: "compact", checkUpdates: true, language: "auto"}, root, false);
+        apply({theme: "system", accent: "#3ecf8e", density: "compact", checkUpdates: true, language: "auto", detail: "simple"}, root, false);
         expect(root.dataset.theme).toBe("light");
         expect(root.dataset.density).toBe("compact");
         expect(root.style.getPropertyValue("--accent")).toBe("#3ecf8e");

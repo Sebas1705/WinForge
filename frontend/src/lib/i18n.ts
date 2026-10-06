@@ -1,4 +1,5 @@
 import {healthEn, healthEs} from "./i18n.health";
+import {uiEn, uiEs} from "./i18n.ui";
 
 // Interface strings in English and Spanish. Catalog content (app names,
 // descriptions, profile names) comes from the catalog and stays as written
@@ -160,7 +161,7 @@ const baseEn = {
     "cat.utilities": "Utilities",
 } as const;
 
-const en = {...baseEn, ...healthEn} as const;
+const en = {...baseEn, ...healthEn, ...uiEn} as const;
 
 export type Key = keyof typeof en;
 
@@ -320,7 +321,7 @@ const baseEs: Record<keyof typeof baseEn, string> = {
     "cat.utilities": "Utilidades",
 };
 
-const es: Record<Key, string> = {...baseEs, ...healthEs};
+const es: Record<Key, string> = {...baseEs, ...healthEs, ...uiEs};
 
 export type Lang = "en" | "es";
 export type LangSetting = Lang | "auto";

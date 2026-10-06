@@ -1,0 +1,110 @@
+# Popular apps, in the order the store-style views show them, with a one-line
+# plain-language description in each interface language. The catalog's own
+# descriptions come from winget manifests (English, often long); these are what
+# a person scanning a grid of cards actually reads. Keep each under 60 characters.
+- {id: firefox, en: "Fast, private web browser", es: "Navegador rápido y privado"}
+- {id: chrome, en: "Google's popular web browser", es: "El navegador de Google"}
+- {id: brave, en: "Browser that blocks ads and trackers", es: "Navegador que bloquea anuncios y rastreadores"}
+- {id: opera-gx, en: "Browser made for gamers", es: "Navegador pensado para jugadores"}
+- {id: vivaldi, en: "Highly customizable browser", es: "Navegador muy personalizable"}
+- {id: tor-browser, en: "Browse with maximum anonymity", es: "Navega con el máximo anonimato"}
+- {id: vlc, en: "Plays any video or audio file", es: "Reproduce cualquier vídeo o audio"}
+- {id: 7zip, en: "Open and create ZIP, RAR and 7z files", es: "Abre y crea archivos ZIP, RAR y 7z"}
+- {id: vscode, en: "The most popular code editor", es: "El editor de código más popular"}
+- {id: git, en: "Version control for your code", es: "Control de versiones para tu código"}
+- {id: github-desktop, en: "Use GitHub without the command line", es: "Usa GitHub sin línea de comandos"}
+- {id: github-cli, en: "GitHub from the terminal", es: "GitHub desde la terminal"}
+- {id: discord, en: "Chat and voice for gaming groups", es: "Chat y voz para grupos de juego"}
+- {id: telegram, en: "Fast messaging app", es: "Mensajería rápida"}
+- {id: signal, en: "Private messaging", es: "Mensajería privada"}
+- {id: element, en: "Open, secure chat (Matrix)", es: "Chat abierto y seguro (Matrix)"}
+- {id: microsoft-teams, en: "Meetings and chat", es: "Reuniones y chat"}
+- {id: zoom, en: "Video meetings", es: "Videollamadas"}
+- {id: slack, en: "Team chat", es: "Chat de equipo"}
+- {id: steam, en: "The biggest PC game store", es: "La mayor tienda de juegos de PC"}
+- {id: epic-games, en: "Game store with free weekly games", es: "Tienda con juegos gratis cada semana"}
+- {id: gog-galaxy, en: "DRM-free games, one library", es: "Juegos sin DRM, una sola biblioteca"}
+- {id: battlenet, en: "Blizzard games launcher", es: "Lanzador de juegos de Blizzard"}
+- {id: playnite, en: "All your game launchers in one", es: "Todos tus lanzadores de juegos en uno"}
+- {id: prism-launcher, en: "Minecraft launcher", es: "Lanzador de Minecraft"}
+- {id: curseforge, en: "Game mods manager", es: "Gestor de mods de juegos"}
+- {id: retroarch, en: "Retro game emulation", es: "Emulación de juegos clásicos"}
+- {id: pcsx2, en: "PlayStation 2 emulator", es: "Emulador de PlayStation 2"}
+- {id: sunshine, en: "Stream your games to other devices", es: "Juega desde otros dispositivos"}
+- {id: parsec, en: "Low-latency game streaming", es: "Juego en remoto con baja latencia"}
+- {id: obs-studio, en: "Record and stream your screen", es: "Graba y retransmite tu pantalla"}
+- {id: sharex, en: "Screenshots and screen recording", es: "Capturas y grabación de pantalla"}
+- {id: gimp, en: "Free photo editor", es: "Editor de fotos gratuito"}
+- {id: inkscape, en: "Free vector drawing", es: "Dibujo vectorial gratuito"}
+- {id: blender, en: "Free 3D modeling and animation", es: "Modelado 3D y animación gratis"}
+- {id: krita, en: "Digital painting", es: "Pintura digital"}
+- {id: audacity, en: "Record and edit audio", es: "Graba y edita audio"}
+- {id: kdenlive, en: "Free video editor", es: "Editor de vídeo gratuito"}
+- {id: handbrake, en: "Convert video formats", es: "Convierte formatos de vídeo"}
+- {id: spotify, en: "Music streaming", es: "Música en streaming"}
+- {id: libreoffice, en: "Free Word, Excel and PowerPoint alternative", es: "Alternativa gratuita a Word, Excel y PowerPoint"}
+- {id: thunderbird, en: "Email client", es: "Cliente de correo"}
+- {id: notepad-plus-plus, en: "Quick text and code editor", es: "Editor rápido de texto y código"}
+- {id: obsidian, en: "Notes linked like a personal wiki", es: "Notas enlazadas como una wiki personal"}
+- {id: notion, en: "Notes, tasks and docs together", es: "Notas, tareas y documentos juntos"}
+- {id: joplin, en: "Notes with sync", es: "Notas con sincronización"}
+- {id: logseq, en: "Outliner notes", es: "Notas en esquema"}
+- {id: anki, en: "Flashcards that help you remember", es: "Tarjetas para memorizar mejor"}
+- {id: zotero, en: "Manage research references", es: "Gestiona referencias de investigación"}
+- {id: calibre, en: "E-book library", es: "Biblioteca de libros electrónicos"}
+- {id: pandoc, en: "Convert between document formats", es: "Convierte entre formatos de documento"}
+- {id: miktex, en: "LaTeX for Windows", es: "LaTeX para Windows"}
+- {id: bitwarden, en: "Password manager", es: "Gestor de contraseñas"}
+- {id: keepassxc, en: "Offline password manager", es: "Gestor de contraseñas sin conexión"}
+- {id: veracrypt, en: "Encrypt files and drives", es: "Cifra archivos y unidades"}
+- {id: malwarebytes, en: "Malware scanner", es: "Buscador de malware"}
+- {id: proton-vpn, en: "Private VPN", es: "VPN privada"}
+- {id: mullvad-vpn, en: "Anonymous VPN", es: "VPN anónima"}
+- {id: wireguard, en: "Fast modern VPN", es: "VPN moderna y rápida"}
+- {id: tailscale, en: "Private network between your devices", es: "Red privada entre tus dispositivos"}
+- {id: qbittorrent, en: "Torrent downloads, no ads", es: "Descargas torrent sin anuncios"}
+- {id: syncthing, en: "Sync folders between PCs", es: "Sincroniza carpetas entre PCs"}
+- {id: dropbox, en: "Cloud file storage", es: "Archivos en la nube"}
+- {id: google-drive, en: "Cloud storage from Google", es: "Almacenamiento en la nube de Google"}
+- {id: anydesk, en: "Remote desktop", es: "Escritorio remoto"}
+- {id: teamviewer, en: "Remote support", es: "Soporte remoto"}
+- {id: everything, en: "Find any file instantly", es: "Encuentra cualquier archivo al instante"}
+- {id: powertoys, en: "Microsoft's power tools for Windows", es: "Utilidades avanzadas de Microsoft para Windows"}
+- {id: windows-terminal, en: "Modern command line", es: "Línea de comandos moderna"}
+- {id: autohotkey, en: "Automate keys and clicks", es: "Automatiza teclas y clics"}
+- {id: flow-launcher, en: "Quick app launcher", es: "Lanzador rápido de aplicaciones"}
+- {id: rainmeter, en: "Desktop widgets", es: "Widgets de escritorio"}
+- {id: lively-wallpaper, en: "Animated wallpapers", es: "Fondos de pantalla animados"}
+- {id: twinkle-tray, en: "Control monitor brightness", es: "Controla el brillo del monitor"}
+- {id: openrgb, en: "Control RGB lights", es: "Controla las luces RGB"}
+- {id: fancontrol, en: "Control PC fans", es: "Controla los ventiladores"}
+- {id: msi-afterburner, en: "Tune your graphics card", es: "Ajusta tu tarjeta gráfica"}
+- {id: cpu-z, en: "See your processor's details", es: "Datos detallados de tu procesador"}
+- {id: hwinfo, en: "Full hardware report and sensors", es: "Informe completo de hardware y sensores"}
+- {id: crystaldiskinfo, en: "Check your disk health", es: "Comprueba la salud de tus discos"}
+- {id: wiztree, en: "See what fills your disk", es: "Descubre qué ocupa tu disco"}
+- {id: windirstat, en: "Disk usage map", es: "Mapa de uso del disco"}
+- {id: treesize-free, en: "Folder sizes at a glance", es: "Tamaño de carpetas de un vistazo"}
+- {id: revo-uninstaller, en: "Uninstall apps completely", es: "Desinstala apps por completo"}
+- {id: bleachbit, en: "Free up disk space", es: "Libera espacio en disco"}
+- {id: rufus, en: "Make a bootable USB", es: "Crea un USB de arranque"}
+- {id: ventoy, en: "One USB, many installers", es: "Un USB para muchos instaladores"}
+- {id: wireshark, en: "Analyze network traffic", es: "Analiza el tráfico de red"}
+- {id: nmap, en: "Scan networks", es: "Escanea redes"}
+- {id: putty, en: "SSH and serial client", es: "Cliente SSH y serie"}
+- {id: winscp, en: "Transfer files over SFTP", es: "Transfiere archivos por SFTP"}
+- {id: python-3-13, en: "The Python language", es: "El lenguaje Python"}
+- {id: nodejs-lts, en: "JavaScript outside the browser", es: "JavaScript fuera del navegador"}
+- {id: go, en: "The Go language", es: "El lenguaje Go"}
+- {id: rustup, en: "Installer for the Rust language", es: "Instalador del lenguaje Rust"}
+- {id: temurin-21, en: "Java 21: runtime and tools", es: "Java 21: ejecución y herramientas"}
+- {id: intellij-idea-community, en: "Java and Kotlin IDE", es: "Entorno para Java y Kotlin"}
+- {id: android-studio, en: "Build Android apps", es: "Crea apps para Android"}
+- {id: docker-desktop, en: "Run apps in containers", es: "Ejecuta aplicaciones en contenedores"}
+- {id: wsl, en: "Linux inside Windows", es: "Linux dentro de Windows"}
+- {id: ubuntu-2404, en: "Ubuntu Linux for WSL", es: "Ubuntu Linux para WSL"}
+- {id: postman, en: "Test web APIs", es: "Prueba APIs web"}
+- {id: dbeaver, en: "Browse any database", es: "Explora cualquier base de datos"}
+- {id: ollama, en: "Run AI models on your PC", es: "Ejecuta modelos de IA en tu PC"}
+- {id: claude-desktop, en: "The Claude AI assistant", es: "El asistente de IA Claude"}
+- {id: claude-code, en: "AI coding agent for the terminal", es: "Agente de IA para programar en terminal"}

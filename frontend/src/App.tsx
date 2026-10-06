@@ -1,10 +1,13 @@
-import {useCallback, useEffect, useState, type ReactNode} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {api, errText, on, type UpdateInfo} from "./api";
 import {AppDetail} from "./components/AppDetail";
-import {NameDialog, RunModal, SettingsDialog, stepKey, type RunState} from "./components/Modals";
+import {Icon, type IconName} from "./components/Icon";
+import {NameDialog, RunModal, Segmented, SettingsDialog, Tour, stepKey, type RunState} from "./components/Modals";
+import {POPULAR} from "./views/Catalog";
 import {IconsContext, loadIcons, type IconIndex} from "./lib/icons";
 import {reportMarkdown, type HealthLink, type HealthResult} from "./lib/health";
-import {resolveLang, setLang, t} from "./lib/i18n";
+import {getLang, resolveLang, setLang, t} from "./lib/i18n";
+import {profileText} from "./lib/profileText";
 import {
     applyEvent, selectionProfile, slugify,
     type App as CatalogApp, type Profile, type ProfileInfo, type State, type UpgradeInfo,
@@ -27,13 +30,11 @@ interface Runner {
     after?: () => void;
 }
 
-const ICONS: Record<Tab, ReactNode> = {
-    home: <path d="M3 11.5 12 4l9 7.5M6 10v10h12V10"/>,
-    profiles: <path d="M4 6h16M4 12h16M4 18h10"/>,
-    catalog: <path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/>,
-    updates: <path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/>,
-    health: <path d="M3 12h4l2-5 4 10 2-5h6"/>,
-};
+const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse"};
+
+function tourSeen(): boolean {
+    try { return localStorage.getItem("winforge.tour") === "1"; } catch { return true; }
+}
 
 export default function App() {
     const [state, setState] = useState<State | null>(null);
@@ -57,6 +58,12 @@ export default function App() {
     const [healthUpdBusy, setHealthUpdBusy] = useState(false);
     const [icons, setIcons] = useState<IconIndex>({});
     const [detail, setDetail] = useState<CatalogApp | null>(null);
+    const [showTour, setShowTour] = useState(() => !tourSeen());
+    const advanced = settings.detail === "advanced";
+    const closeTour = () => {
+        setShowTour(false);
+        try { localStorage.setItem("winforge.tour", "1"); } catch { /* shown again next time */ }
+    };
     useEffect(() => { void loadIcons().then(setIcons); }, []);
 
     // The language is applied during render so every child translates with it.
@@ -150,7 +157,9 @@ export default function App() {
     const startProfile = async (profile: Profile) => {
         try {
             const plan = await api.Plan(profile);
-            openRun(t("run.install", {name: profile.name}), plan, {profile, start: () => api.Apply(profile)});
+            const info = state?.profiles.find((x) => x.id === profile.id);
+            const name = info?.builtin && info.name === profile.name ? profileText(info, getLang()).name : profile.name;
+            openRun(t("run.install", {name}), plan, {profile, start: () => api.Apply(profile)});
         } catch (e) { say(errText(e)); }
     };
 
@@ -241,7 +250,7 @@ export default function App() {
                 <div className="brand"><img src={logo} alt="" width={28} height={28}/><span>Win<b>Forge</b></span></div>
                 {nav.map(([id, label, count]) => (
                     <button key={id} className={"navitem" + (tab === id ? " on" : "")} aria-current={tab === id ? "page" : undefined} onClick={() => go(id)}>
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>{ICONS[id]}</svg>
+                        <Icon name={NAV_ICON[id]} size={19}/>
                         <span>{label}</span>
                         {count !== null && <em className="mono">{count}</em>}
                     </button>
@@ -252,10 +261,17 @@ export default function App() {
                         {state.admin ? t("status.admin") : t("status.user")}
                     </span>
                 )}
-                <button className="ghost" disabled={busy} onClick={() => void refresh()}>{busy ? t("rail.scanning") : t("rail.rescan")}</button>
+                <button className="ghost" disabled={busy} onClick={() => void refresh()}><Icon name="refresh" size={15}/> {busy ? t("rail.scanning") : t("rail.rescan")}</button>
+                <div title={t("mode.hint")}>
+                    <Segmented value={settings.detail} onChange={(detail) => setSettings({...settings, detail})}
+                               options={[["simple", t("mode.simple")], ["advanced", t("mode.advanced")]]}/>
+                </div>
                 <div className="railfoot">
                     <span className="mono muted">{state?.version}</span>
-                    <button className="icon" title={t("rail.appearance")} aria-label={t("rail.appearance")} onClick={() => setShowSettings(true)}>⚙</button>
+                    <span>
+                        <button className="icon" title={t("tour.help")} aria-label={t("tour.help")} onClick={() => setShowTour(true)}><Icon name="help" size={17}/></button>
+                        <button className="icon" title={t("rail.appearance")} aria-label={t("rail.appearance")} onClick={() => setShowSettings(true)}><Icon name="settings" size={17}/></button>
+                    </span>
                 </div>
             </nav>
 
@@ -275,21 +291,23 @@ export default function App() {
 
                 <main>
                     {!state ? <p className="muted pad">{t("rail.scanning")}</p> : tab === "home" ? (
-                        <Home apps={state.apps} profiles={state.profiles} upgrades={upgrades} upgradesBusy={upgradesBusy}
+                        <Home apps={state.apps} profiles={state.profiles} featured={state.featured ?? []} upgrades={upgrades} upgradesBusy={upgradesBusy}
+                              health={health} onOpenHealth={() => go("health")} onOpenPopular={() => { setCategory(POPULAR); setTab("catalog"); }}
+                              onInstallApp={(a) => void startProfile(selectionProfile([a.id], a.name))} onDetail={setDetail}
                               onInstall={(p) => void startProfile(p)}
                               onOpenProfile={(id) => { setFocusProfile(id); setTab("profiles"); }}
                               onCheckUpgrades={() => void checkUpgrades()} onOpenUpdates={() => go("updates")}
                               onOpenCategory={(top) => { setCategory(top); setTab("catalog"); }}/>
                     ) : tab === "profiles" ? (
-                        <Profiles state={state} focus={focusProfile} onInstall={(p) => void startProfile(p)} onChanged={refresh} say={say}
+                        <Profiles state={state} focus={focusProfile} advanced={advanced} onFocusDone={() => setFocusProfile(null)} onInstall={(p) => void startProfile(p)} onChanged={refresh} say={say}
                                   onImport={() => void importProfile()} onFromPC={saveFromPC} onEdit={editProfile} onDetail={setDetail}/>
                     ) : tab === "catalog" ? (
-                        <Catalog apps={state.apps} selection={selection} setSelection={setSelection} initialCategory={category}
+                        <Catalog apps={state.apps} featured={state.featured ?? []} advanced={advanced} selection={selection} setSelection={setSelection} initialCategory={category}
                                  onInstall={() => void startProfile(selectionProfile(selection))}
                                  onInstallOne={(a) => void startProfile(selectionProfile([a.id], a.name))}
                                  onSave={saveSelection} openURL={(u) => void api.OpenURL(u)} onDetail={setDetail}/>
                     ) : tab === "health" ? (
-                        <Health result={health} busy={healthBusy} updatesBusy={healthUpdBusy} admin={state.admin} byId={byId}
+                        <Health advanced={advanced} result={health} busy={healthBusy} updatesBusy={healthUpdBusy} admin={state.admin} byId={byId}
                                 onScan={() => void scanHealth()} onUpdates={() => void healthUpdates()} onExport={() => void exportHealth()}
                                 onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))} onLink={openLink}
                                 onInstallApp={(a) => void startProfile(selectionProfile([a.id], a.name))} onDetail={setDetail}/>
@@ -299,14 +317,15 @@ export default function App() {
                 </main>
             </div>
 
-            {run && <RunModal run={run} admin={!!state?.admin} onConfirm={() => void confirmRun()} onCancel={() => void api.Cancel()}
+            {run && <RunModal run={run} advanced={advanced} byId={byId} admin={!!state?.admin} onConfirm={() => void confirmRun()} onCancel={() => void api.Cancel()}
                               onClose={closeRun} onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}
                               onScript={() => runner?.profile && api.ExportScript(runner.profile).then((p) => p && say(t("toast.savedTo", {path: p}))).catch((e) => say(errText(e)))}
                               onCopy={() => void copyLog()}/>}
             {showSettings && <SettingsDialog value={settings} onChange={setSettings} version={state?.version ?? ""}
                                              onCheck={() => void checkUpdate(true)} onClose={() => setShowSettings(false)}/>}
             {naming && <NameDialog {...naming} onClose={() => setNaming(null)}/>}
-            {shown && <AppDetail app={shown} byId={byId} onClose={() => setDetail(null)} openURL={(u) => void api.OpenURL(u)}
+            {showTour && <Tour onClose={closeTour}/>}
+            {shown && <AppDetail advanced={advanced} app={shown} byId={byId} onClose={() => setDetail(null)} openURL={(u) => void api.OpenURL(u)}
                                  onInstall={(a) => { setDetail(null); void startProfile(selectionProfile([a.id], a.name)); }}
                                  onCopy={(c) => void copyText(c, t("detail.copied"))}/>}
             {toast && <div className="toast" role="status">{toast}</div>}

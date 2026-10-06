@@ -1,7 +1,10 @@
 import {useEffect, useRef, useState} from "react";
+import {AppIcon} from "./AppIcon";
+import {Icon} from "./Icon";
 import {Strip} from "./Strip";
+import {Ring} from "./Visual";
 import {t} from "../lib/i18n";
-import type {Plan, StepStatus} from "../lib/model";
+import type {App, Plan, Step, StepStatus} from "../lib/model";
 import * as prefs from "../lib/settings";
 import {formatElapsed} from "../lib/tally";
 
@@ -19,21 +22,25 @@ export interface RunState {
 
 export const stepKey = (s: { kind: string; id: string }) => `${s.kind}:${s.id}`;
 
-const ICON: Record<StepStatus, string> = {pending: "○", running: "◔", ok: "✓", failed: "✗", skipped: "–"};
+const ICON: Record<StepStatus, "check" | "x" | "play" | "chevron"> = {pending: "chevron", running: "play", ok: "check", failed: "x", skipped: "chevron"};
 
 export function RunModal(p: {
-    run: RunState; admin: boolean;
+    run: RunState; admin: boolean; advanced: boolean; byId: Map<string, App>;
     onConfirm: () => void; onCancel: () => void; onClose: () => void; onAdmin: () => void;
     onScript: () => void; onCopy: () => void;
 }) {
     const {run} = p;
     const started = run.running || run.failed !== null;
-    const done = run.plan.steps.filter((s) => ["ok", "failed", "skipped"].includes(run.status[stepKey(s)] ?? "")).length;
+    const stateOf = (s: Step): StepStatus => run.status[stepKey(s)] ?? "pending";
+    const done = run.plan.steps.filter((s) => ["ok", "failed", "skipped"].includes(stateOf(s))).length;
+    const failedCount = run.plan.steps.filter((s) => stateOf(s) === "failed").length;
+    const current = run.plan.steps.find((s) => stateOf(s) === "running");
     const logRef = useRef<HTMLPreElement>(null);
     const [now, setNow] = useState(Date.now());
     const [end, setEnd] = useState<number | null>(null);
+    const [showLog, setShowLog] = useState(p.advanced);
 
-    useEffect(() => { logRef.current?.scrollTo(0, logRef.current.scrollHeight); }, [run.log]);
+    useEffect(() => { logRef.current?.scrollTo(0, logRef.current.scrollHeight); }, [run.log, showLog]);
     useEffect(() => {
         if (!run.running) return;
         const id = window.setInterval(() => setNow(Date.now()), 500);
@@ -46,54 +53,82 @@ export function RunModal(p: {
         return () => window.removeEventListener("keydown", esc);
     });
 
-    const cells = run.plan.steps.map((s) => {
-        const st = run.status[stepKey(s)] ?? "pending";
-        return {on: st === "ok", state: st, name: s.name};
-    });
-    const heading = !started ? run.title : run.running ? t("run.installing") : run.failed?.length ? t("run.errors") : t("run.done");
+    const cells = run.plan.steps.map((s) => ({on: stateOf(s) === "ok", state: stateOf(s), name: s.name}));
+    const finished = started && !run.running;
+    const heading = !started ? run.title : run.running ? t("run.installing") : failedCount > 0 ? t("run.errors") : t("run.done");
     const elapsed = run.startedAt ? formatElapsed((end ?? now) - run.startedAt) : "";
-    const label = (s: { kind: string; name: string }) =>
+    const label = (s: Step) =>
         s.kind === "recipe" ? `${t("run.setup")}: ${s.name}` : s.kind === "upgrade" ? `${t("run.update")}: ${s.name}` : s.name;
+    const stepIcon = (s: Step) => {
+        const app = s.kind === "recipe" ? undefined : p.byId.get(s.id);
+        return app ? <AppIcon id={app.id} name={app.name} category={app.category} size={26}/>
+            : <span className="avatar recipe" style={{width: 26, height: 26}}><Icon name="settings" size={14}/></span>;
+    };
+    const currentApp = current && current.kind !== "recipe" ? p.byId.get(current.id) : undefined;
 
     return (
         <div className="overlay">
             <div className="modal" role="dialog" aria-modal="true" aria-label={heading}>
-                <h3>{heading}</h3>
-                {started && (
-                    <div className="progress">
-                        <Strip cells={cells} size="lg"/>
-                        <span className="mono muted">{t("run.stepOf", {done, total: cells.length})}{elapsed && ` · ${elapsed}`}</span>
+                {started ? (
+                    <div className="runhead">
+                        <Ring size={92} stroke={9} value={cells.length ? done / cells.length : 0} tone={finished ? (failedCount ? "warn" : "ok") : "accent"}>
+                            {finished ? <Icon name={failedCount ? "alert" : "check"} size={30}/> : <span className="ringnum">{done}<small>/{cells.length}</small></span>}
+                        </Ring>
+                        <div className="grow">
+                            <h3>{heading}</h3>
+                            {current && (
+                                <p className="now">
+                                    {currentApp ? <AppIcon id={currentApp.id} name={currentApp.name} category={currentApp.category} size={28}/> : null}
+                                    <span>{t("run.working", {name: current.name})}</span>
+                                </p>
+                            )}
+                            {finished && failedCount > 0 && <p className="muted">{t("run.reboot")}</p>}
+                            <Strip cells={cells} size="lg"/>
+                            <span className="mono muted small">{t("run.stepOf", {done, total: cells.length})}{elapsed && ` · ${elapsed}`}</span>
+                        </div>
                     </div>
-                )}
+                ) : <h3>{heading}</h3>}
+
                 {!started && run.plan.needsAdmin && !p.admin && (
                     <div className="banner warn">
+                        <Icon name="lock" size={16}/>
                         <span>{t("run.needsAdmin")}</span>
                         <button onClick={p.onAdmin}>{t("run.restartAdmin")}</button>
                     </div>
                 )}
+
                 <ul className="steps">
                     {run.plan.steps.map((s) => {
-                        const st = run.status[stepKey(s)] ?? "pending";
+                        const st = stateOf(s);
                         return (
                             <li key={stepKey(s)} className={st}>
-                                <span className="ico" aria-hidden>{ICON[st]}</span>
-                                <span>{label(s)}</span>
-                                {s.version && s.kind === "upgrade" && <span className="mono muted">→ {s.version}</span>}
-                                {s.admin && <span className="tag">{t("badge.admin")}</span>}
+                                {stepIcon(s)}
+                                <span className="grow">{label(s)}</span>
+                                {s.version && s.kind === "upgrade" && p.advanced && <span className="mono muted">→ {s.version}</span>}
+                                {s.admin && <span className="tag"><Icon name="lock" size={11}/></span>}
+                                <span className={`stat ${st}`} aria-label={st}><Icon name={ICON[st]} size={15}/></span>
                             </li>
                         );
                     })}
                 </ul>
-                {started && <pre ref={logRef} className="log mono">{run.log.join("\n")}</pre>}
-                {started && !run.running && run.failed !== null && <p className="muted small">{t("run.reboot")}</p>}
+
+                {started && (
+                    <>
+                        <button className="link toggle" onClick={() => setShowLog(!showLog)} aria-expanded={showLog}>
+                            <Icon name="chevron" size={14} className={showLog ? "turn" : ""}/> {t("run.details")}
+                        </button>
+                        {showLog && <pre ref={logRef} className="log mono">{run.log.join("\n")}</pre>}
+                    </>
+                )}
+
                 <div className="actions end">
-                    {!started && run.canScript && <button className="ghost" onClick={p.onScript}>{t("run.exportScript")}</button>}
-                    {started && <button className="ghost" onClick={p.onCopy}>{t("run.copyLog")}</button>}
+                    {!started && run.canScript && p.advanced && <button className="ghost" onClick={p.onScript}>{t("run.exportScript")}</button>}
+                    {started && showLog && <button className="ghost" onClick={p.onCopy}>{t("run.copyLog")}</button>}
                     <span className="grow"/>
                     {!started && <button onClick={p.onClose}>{t("common.cancel")}</button>}
-                    {!started && <button className="primary" onClick={p.onConfirm}>{t("run.steps", {n: run.plan.steps.length})}</button>}
+                    {!started && <button className="primary big" onClick={p.onConfirm}><Icon name="download" size={16}/> {t("run.steps", {n: run.plan.steps.length})}</button>}
                     {run.running && <button className="danger" onClick={p.onCancel}>{t("run.stop")}</button>}
-                    {started && !run.running && <button className="primary" onClick={p.onClose}>{t("common.close")}</button>}
+                    {finished && <button className="primary" onClick={p.onClose}>{t("common.close")}</button>}
                 </div>
             </div>
         </div>
@@ -118,7 +153,7 @@ export function NameDialog(p: { title: string; initial: string; onOk: (n: string
     );
 }
 
-function Segmented<T extends string>(p: { value: T; options: [T, string][]; onChange: (v: T) => void }) {
+export function Segmented<T extends string>(p: { value: T; options: [T, string][]; onChange: (v: T) => void }) {
     return (
         <div className="seg" role="group">
             {p.options.map(([v, label]) => (
@@ -141,6 +176,11 @@ export function SettingsDialog(p: {
         <div className="overlay" onClick={p.onClose}>
             <div className="modal small" role="dialog" aria-modal="true" aria-label={t("settings.title")} onClick={(e) => e.stopPropagation()}>
                 <h3>{t("settings.title")}</h3>
+                <div className="field"><span>{t("settings.detail")}</span>
+                    <Segmented value={p.value.detail} onChange={(detail) => set({detail})}
+                               options={[["simple", t("mode.simple")], ["advanced", t("mode.advanced")]]}/>
+                </div>
+                <p className="muted small nogap">{t("mode.hint")}</p>
                 <div className="field"><span>{t("settings.language")}</span>
                     <Segmented value={p.value.language} onChange={(language) => set({language})}
                                options={[["auto", t("settings.auto")], ["es", "Español"], ["en", "English"]]}/>
@@ -170,6 +210,37 @@ export function SettingsDialog(p: {
                     <button onClick={p.onCheck}>{t("settings.checkNow")}</button>
                 </div>
                 <div className="actions end"><button className="primary" onClick={p.onClose}>{t("common.done")}</button></div>
+            </div>
+        </div>
+    );
+}
+
+/** First-run guide: three screens, each one idea, one picture. */
+export function Tour(p: { onClose: () => void }) {
+    const [i, setI] = useState(0);
+    const slides = [
+        {icon: "layers" as const, title: t("tour.1.title"), body: t("tour.1.body")},
+        {icon: "check" as const, title: t("tour.2.title"), body: t("tour.2.body")},
+        {icon: "pulse" as const, title: t("tour.3.title"), body: t("tour.3.body")},
+    ];
+    const s = slides[i];
+    const last = i === slides.length - 1;
+    useEffect(() => {
+        const esc = (e: KeyboardEvent) => { if (e.key === "Escape") p.onClose(); };
+        window.addEventListener("keydown", esc);
+        return () => window.removeEventListener("keydown", esc);
+    });
+    return (
+        <div className="overlay">
+            <div className="modal tour" role="dialog" aria-modal="true" aria-label={s.title}>
+                <span className="bubble hero"><Icon name={s.icon} size={44}/></span>
+                <h3>{s.title}</h3>
+                <p>{s.body}</p>
+                <div className="dots" aria-hidden>{slides.map((_, n) => <i key={n} className={n === i ? "on" : ""}/>)}</div>
+                <div className="actions end">
+                    {!last && <button className="ghost" onClick={p.onClose}>{t("tour.skip")}</button>}
+                    <button className="primary big" onClick={() => (last ? p.onClose() : setI(i + 1))}>{last ? t("tour.start") : t("tour.next")}</button>
+                </div>
             </div>
         </div>
     );

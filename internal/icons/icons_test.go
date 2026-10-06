@@ -80,3 +80,11 @@ func TestSniffIdentifiesByContentAndRejectsDangerousFiles(t *testing.T) {
 		}
 	}
 }
+
+func TestOnlyOrganizationAvatarsAreUsed(t *testing.T) {
+	for typ, want := range map[string]bool{"Organization": true, "organization": true, "User": false, "Bot": false, "": false} {
+		if got := icons.UseAvatar(typ); got != want {
+			t.Errorf("UseAvatar(%q) = %v, want %v", typ, got, want)
+		}
+	}
+}

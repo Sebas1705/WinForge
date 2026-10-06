@@ -168,3 +168,11 @@ func safeSVG(s string) bool {
 	}
 	return true
 }
+
+// UseAvatar reports whether a GitHub account's avatar may stand in for a
+// project icon. Only organizations qualify: a personal account's avatar is a
+// person's photo, which has no business in an app list. When the type is
+// unknown (the lookup failed) the answer is no.
+func UseAvatar(accountType string) bool {
+	return strings.EqualFold(accountType, "Organization")
+}

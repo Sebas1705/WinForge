@@ -619,6 +619,8 @@ export namespace main {
 	    requires?: string[];
 	    recipes?: string[];
 	    notes?: string;
+	    // Go type: catalog
+	    tagline?: any;
 	    openSource: boolean;
 	    installed: boolean;
 	    version?: string;
@@ -647,6 +649,7 @@ export namespace main {
 	        this.requires = source["requires"];
 	        this.recipes = source["recipes"];
 	        this.notes = source["notes"];
+	        this.tagline = this.convertValues(source["tagline"], null);
 	        this.openSource = source["openSource"];
 	        this.installed = source["installed"];
 	        this.version = source["version"];
@@ -838,6 +841,7 @@ export namespace main {
 	    admin: boolean;
 	    apps: AppInfo[];
 	    profiles: ProfileInfo[];
+	    featured: string[];
 	    wingetError?: string;
 	
 	    static createFrom(source: any = {}) {
@@ -850,6 +854,7 @@ export namespace main {
 	        this.admin = source["admin"];
 	        this.apps = this.convertValues(source["apps"], AppInfo);
 	        this.profiles = this.convertValues(source["profiles"], ProfileInfo);
+	        this.featured = source["featured"];
 	        this.wingetError = source["wingetError"];
 	    }
 	

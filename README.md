@@ -13,6 +13,8 @@ WinForge scans the PC, shows which apps of a **curated catalog** are installed, 
 - **Portable plans**: any plan can be exported as a readable PowerShell script (`winforge-cli script <profile>` too), so a setup can be replayed on a PC without WinForge.
 - **Icons and links**: each app shows its own icon and opens a detail panel with its website, publisher, license and install command.
 - **PC health**: firmware (BIOS age, UEFI, Secure Boot, TPM, virtualization), drivers (missing, unsigned, old, GPU freshness), storage (disk health, free space), security (antivirus, firewall, BitLocker), Windows (support status, pending restart) and Windows Update (pending drivers and firmware). Read-only, with links to the right vendor pages.
+- **Made to be scanned, not read**: a store-style catalog of icon cards (grid or list), profiles as cards with their apps' icons and a progress ring, quick-start tiles and a "popular" shelf on the home screen, a health score with one card per area, short plain-language descriptions in Spanish and English for ~100 popular apps and every built-in profile, "?" help bubbles, and a three-screen first-run guide.
+- **Simple or advanced**: simple (the default) hides ids, versions, publishers' links, logs and script/winget exports; advanced shows them. Switch in the sidebar.
 
 ## Trust model
 
@@ -72,9 +74,13 @@ Apps that are not in winget (Gradle, Maven) are deliberately absent rather than 
 - **Wording**: findings are keys plus parameters, worded in the interface language; a test checks every key the Go analyzer can emit has text in both languages.
 - Run `go test -tags live -run Live -v ./internal/health` on a Windows PC to see the raw scan.
 
+## Plain-language text
+
+Winget manifests are written in English for maintainers. For what people actually read: `catalogdata/featured.yml` gives ~100 popular apps a one-line description in each language (validated: known id, both languages, at most 60 characters; its order is the "Popular" shelf), and `frontend/src/lib/profileText.ts` does the same for every built-in profile (a test fails if a profile has none). Everything else falls back to the catalog's own text. Profiles you create keep your words.
+
 ## Icons
 
-`go run ./cmd/winforge-icons` downloads each app's icon into `frontend/public/icons` (shipped inside the app, so the interface never contacts a vendor). Sources, in order: the GitHub owner avatar for GitHub-hosted projects, the winget manifest's own icon, the icons the homepage declares, then `/favicon.ico`. Content is identified by its bytes, SVGs with scripts are refused, and an icon that is byte-identical across three or more different brands (a host's default) is dropped, leaving the initials avatar. Icons are the projects' own marks, shown only to identify the app.
+`go run ./cmd/winforge-icons` downloads each app's icon into `frontend/public/icons` (shipped inside the app, so the interface never contacts a vendor). Sources, in order: the GitHub owner avatar for GitHub-hosted projects, the winget manifest's own icon, the icons the homepage declares, then `/favicon.ico`. Content is identified by its bytes, SVGs with scripts are refused, and an icon that is byte-identical across three or more different brands (a host's default) is dropped, leaving the initials avatar. Icons are the projects' own marks, shown only to identify the app. **GitHub avatars are used only for organizations**: a personal account's avatar is a photo of a person, so projects owned by an individual show initials instead (`go run ./cmd/winforge-icons -github` re-applies the rule).
 
 ## Develop
 
