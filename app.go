@@ -29,6 +29,8 @@ type App struct {
 	upgrades      []system.Upgrade
 	healthReport  *health.Report
 	healthUpdates *health.UpdateScan
+	pending       *install.PendingStore
+	restorePath   string
 	running       bool
 	cancel        context.CancelFunc
 }
@@ -44,7 +46,11 @@ func NewApp() *App {
 	if err != nil {
 		panic(err)
 	}
-	return &App{cat: cat, store: store}
+	pending, err := install.DefaultPendingStore()
+	if err != nil {
+		panic(err)
+	}
+	return &App{cat: cat, store: store, pending: pending}
 }
 
 func (a *App) startup(ctx context.Context) { a.ctx = ctx }
@@ -75,6 +81,9 @@ type State struct {
 	// WingetError is set when winget is missing; the app still works for
 	// detection but cannot install.
 	WingetError string `json:"wingetError,omitempty"`
+	// Pending is a run that stopped before finishing (failed steps, a restart,
+	// a crash) and can be continued.
+	Pending *install.Pending `json:"pending,omitempty"`
 }
 
 // ProfileInfo is a profile plus its flattened contents.
@@ -115,6 +124,7 @@ func (a *App) GetState() (State, error) {
 	for _, id := range ids {
 		st.Profiles = append(st.Profiles, a.profileInfo(*profiles[id], true))
 	}
+	st.Pending = a.livePending(installed)
 	user, err := a.store.List(a.cat)
 	if err != nil {
 		return st, err
@@ -165,11 +175,11 @@ func (a *App) Apply(p catalog.Profile) error {
 	if err != nil {
 		return err
 	}
-	return a.start(plan)
+	return a.start(plan, p.Name)
 }
 
 // start runs a plan in the background; only one runs at a time.
-func (a *App) start(plan install.Plan) error {
+func (a *App) start(plan install.Plan, title string) error {
 	a.mu.Lock()
 	if a.running {
 		a.mu.Unlock()
@@ -180,8 +190,17 @@ func (a *App) start(plan install.Plan) error {
 	a.cancel = cancel
 	a.mu.Unlock()
 
+	// The whole plan is stored first and shrinks as steps finish, so whatever
+	// is left when the run ends - or when the PC restarts mid-run - can be resumed.
+	_ = a.pending.Save(install.Pending{Title: title, Steps: plan.Steps})
+	done := map[string]bool{}
+
 	go func() {
 		failed := install.Run(ctx, a.cat, plan, install.OSExecutor{}, func(e install.Event) {
+			if e.Status == install.StatusOK {
+				done[install.StepKey(e.Step)] = true
+				_ = a.pending.Save(install.Pending{Title: title, Steps: install.Without(plan.Steps, done)})
+			}
 			runtime.EventsEmit(a.ctx, "install", e)
 		})
 		a.mu.Lock()
@@ -352,7 +371,7 @@ func (a *App) ApplyUpgrades(ids []string) error {
 	if len(plan.Steps) == 0 {
 		return errors.New("nothing to update")
 	}
-	return a.start(plan)
+	return a.start(plan, "updates")
 }
 
 // ExportScript writes a PowerShell script for what applying the profile would

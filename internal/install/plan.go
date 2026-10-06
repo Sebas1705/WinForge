@@ -14,6 +14,8 @@ const (
 	StepRecipe StepKind = "recipe"
 	// StepUpgrade updates an app that is already installed.
 	StepUpgrade StepKind = "upgrade"
+	// StepUninstall removes an installed app.
+	StepUninstall StepKind = "uninstall"
 )
 
 // Step is one unit of work.
@@ -66,6 +68,21 @@ func BuildPlan(cat *catalog.Catalog, res *catalog.Resolved, installed map[string
 		}
 		p.Steps = append(p.Steps, Step{Kind: StepRecipe, ID: id, Name: r.Description, Admin: r.Admin})
 		p.NeedsAdmin = p.NeedsAdmin || r.Admin
+	}
+	return p
+}
+
+// UninstallPlan removes the given catalog apps. Only apps in the catalog can be
+// named, so WinForge never uninstalls anything it does not know.
+func UninstallPlan(cat *catalog.Catalog, ids []string) Plan {
+	p := Plan{Steps: []Step{}, AlreadyInstalled: []string{}}
+	for _, id := range ids {
+		app := cat.Apps[id]
+		if app == nil {
+			continue
+		}
+		p.Steps = append(p.Steps, Step{Kind: StepUninstall, ID: id, Name: app.Name, Admin: app.Admin})
+		p.NeedsAdmin = p.NeedsAdmin || app.Admin
 	}
 	return p
 }

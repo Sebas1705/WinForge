@@ -36,6 +36,8 @@ func Script(cat *catalog.Catalog, plan Plan, title string) string {
 			fmt.Fprintf(&b, "Write-Host '== %s'\nwinget %s\n\n", psEscape(s.Name), joinArgs(WingetArgs(cat.Apps[s.ID], s.Version)))
 		case StepUpgrade:
 			fmt.Fprintf(&b, "Write-Host '== Update %s'\nwinget %s\n\n", psEscape(s.Name), joinArgs(WingetUpgradeArgs(cat.Apps[s.ID])))
+		case StepUninstall:
+			fmt.Fprintf(&b, "Write-Host '== Remove %s'\nwinget %s\n\n", psEscape(s.Name), joinArgs(WingetUninstallArgs(cat.Apps[s.ID])))
 		case StepRecipe:
 			r := cat.Recipes[s.ID]
 			fmt.Fprintf(&b, "Invoke-Recipe '%s' @'\n%s\n'@ @'\n%s\n'@\n\n", psEscape(r.Description), strings.TrimSpace(r.Check), strings.TrimSpace(r.PowerShell))
