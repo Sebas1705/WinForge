@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"errors"
-	"os"
 	"os/exec"
 	"time"
 
@@ -12,7 +11,6 @@ import (
 	"github.com/Sebas1705/WinForge/internal/catalog"
 	"github.com/Sebas1705/WinForge/internal/install"
 	"github.com/Sebas1705/WinForge/internal/profile"
-	"github.com/Sebas1705/WinForge/internal/settings"
 	"github.com/Sebas1705/WinForge/internal/system"
 )
 
@@ -129,84 +127,4 @@ func (a *App) ImportCode(code string) (*ImportResult, error) {
 		return nil, err
 	}
 	return &ImportResult{Profile: imp.Profile, UnknownApps: imp.UnknownApps, UnknownRecipes: imp.UnknownRecipes}, nil
-}
-
-// BackupSets lists the app settings that exist on this PC and can be saved.
-func (a *App) BackupSets() []settings.Found {
-	found := settings.Detect(settings.DefaultRoots(), settings.OSRunner{})
-	if found == nil {
-		return []settings.Found{}
-	}
-	return found
-}
-
-// BackupSettings asks where to save and writes the chosen sets as a zip. It
-// returns the path, or "" if the dialog was cancelled.
-func (a *App) BackupSettings(ids []string) (string, error) {
-	var buf bytes.Buffer
-	if _, err := settings.Backup(&buf, ids, settings.DefaultRoots(), settings.OSRunner{}); err != nil {
-		return "", err
-	}
-	path, err := runtime.SaveFileDialog(a.ctx, runtime.SaveDialogOptions{
-		DefaultFilename: "winforge-settings.zip",
-		Filters:         []runtime.FileFilter{{DisplayName: "WinForge settings (*.zip)", Pattern: "*.zip"}},
-	})
-	if err != nil || path == "" {
-		return "", err
-	}
-	return path, os.WriteFile(path, buf.Bytes(), 0o644)
-}
-
-// RestorePreview is what a settings backup holds, shown before anything is written.
-type RestorePreview struct {
-	Sets []settings.Found `json:"sets"`
-}
-
-// PickRestore asks for a settings backup and reports what is in it. Nothing is
-// written; RestoreSettings does that for the sets the person keeps ticked.
-func (a *App) PickRestore() (*RestorePreview, error) {
-	path, err := runtime.OpenFileDialog(a.ctx, runtime.OpenDialogOptions{
-		Filters: []runtime.FileFilter{{DisplayName: "WinForge settings (*.zip)", Pattern: "*.zip"}},
-	})
-	if err != nil || path == "" {
-		return nil, err
-	}
-	f, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	fi, err := f.Stat()
-	if err != nil {
-		return nil, err
-	}
-	m, err := settings.ReadManifest(f, fi.Size())
-	if err != nil {
-		return nil, err
-	}
-	a.mu.Lock()
-	a.restorePath = path
-	a.mu.Unlock()
-	return &RestorePreview{Sets: m.Sets}, nil
-}
-
-// RestoreSettings writes the chosen sets of the backup picked by PickRestore.
-// Files it replaces are kept next to the new ones with a .winforge-bak suffix.
-func (a *App) RestoreSettings(ids []string) (*settings.Result, error) {
-	a.mu.Lock()
-	path := a.restorePath
-	a.mu.Unlock()
-	if path == "" {
-		return nil, errors.New("choose a backup first")
-	}
-	f, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	fi, err := f.Stat()
-	if err != nil {
-		return nil, err
-	}
-	return settings.Restore(f, fi.Size(), ids, settings.DefaultRoots(), settings.OSRunner{})
 }
