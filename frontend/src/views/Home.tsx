@@ -77,7 +77,7 @@ export function Home(p: {
                     </div>
                     <div className="shelf">
                         {popular.map((a) => (
-                            <AppCard key={a.id} app={a} compact onOpen={() => p.onDetail(a)} onInstall={() => p.onInstallApp(a)}/>
+                            <AppCard key={a.id} app={a} compact lang={getLang()} onOpen={p.onDetail} onInstall={p.onInstallApp}/>
                         ))}
                     </div>
                 </section>

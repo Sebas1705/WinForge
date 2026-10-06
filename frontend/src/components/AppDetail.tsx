@@ -1,6 +1,7 @@
-import {useEffect} from "react";
+import {useRef} from "react";
 import {AppIcon} from "./AppIcon";
 import {Icon} from "./Icon";
+import {useModal} from "./useModal";
 import {categoryLabel, getLang, t} from "../lib/i18n";
 import type {App} from "../lib/model";
 import {taglineFor, topCategory} from "../lib/tally";
@@ -11,17 +12,14 @@ export function AppDetail(p: {
     onClose: () => void; onInstall: (a: App) => void; openURL: (u: string) => void; onCopy: (text: string) => void;
 }) {
     const {app: a, advanced} = p;
-    useEffect(() => {
-        const esc = (e: KeyboardEvent) => { if (e.key === "Escape") p.onClose(); };
-        window.addEventListener("keydown", esc);
-        return () => window.removeEventListener("keydown", esc);
-    });
+    const panel = useRef<HTMLElement>(null);
+    useModal(panel, p.onClose);
     const command = `winget install --id ${a.winget} --exact`;
     const needs = (a.requires ?? []).map((id) => p.byId.get(id)?.name ?? id);
 
     return (
         <div className="drawer-overlay" onClick={p.onClose}>
-            <aside className="drawer" role="dialog" aria-modal="true" aria-label={a.name} onClick={(e) => e.stopPropagation()}>
+            <aside className="drawer" ref={panel} role="dialog" aria-modal="true" aria-label={a.name} onClick={(e) => e.stopPropagation()}>
                 <button className="icon close" aria-label={t("common.close")} onClick={p.onClose}><Icon name="x" size={18}/></button>
                 <header>
                     <AppIcon id={a.id} name={a.name} category={a.category} size={64}/>
@@ -52,7 +50,7 @@ export function AppDetail(p: {
                     {needs.length > 0 && <><dt>{t("detail.requires")}</dt><dd>{needs.join(", ")}</dd></>}
                     {advanced && a.installed && a.sources && a.sources.length > 0 && <><dt>{t("detail.detected")}</dt><dd className="mono">{a.sources.join(", ")}</dd></>}
                     {advanced && <><dt>{t("detail.homepage")}</dt>
-                    <dd><a href="#" className="mono" onClick={(e) => { e.preventDefault(); p.openURL(a.homepage); }}>{a.homepage}</a></dd></>}
+                    <dd><button type="button" className="linkbtn mono" onClick={() => p.openURL(a.homepage)}>{a.homepage}</button></dd></>}
                 </dl>
                 {advanced && <button className="ghost" onClick={() => p.onCopy(command)}><Icon name="copy" size={14}/> {t("detail.copyCommand")}</button>}
             </aside>

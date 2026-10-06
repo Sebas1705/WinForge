@@ -1,4 +1,4 @@
-import {useMemo, useRef, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {Icon, type IconName} from "../components/Icon";
 import {Strip} from "../components/Strip";
 import {Ring, Tip} from "../components/Visual";
@@ -30,6 +30,7 @@ export function Health(p: {
     const [vendorOnly, setVendorOnly] = useState(true);
     const [old, setOld] = useState(false);
     const [showDrivers, setShowDrivers] = useState(p.advanced);
+    useEffect(() => { setShowDrivers(p.advanced); }, [p.advanced]);
     const sections = useRef<Record<string, HTMLElement | null>>({});
     const r = p.result;
     const now = useMemo(() => new Date(), [r]);
@@ -81,7 +82,7 @@ export function Health(p: {
                             const tn = tone(list);
                             const issues = list.filter((f) => f.severity === "bad" || f.severity === "warn").length;
                             return (
-                                <button key={g} className={`area ${tn}`} onClick={() => sections.current[g]?.scrollIntoView({behavior: "smooth", block: "start"})}>
+                                <button key={g} className={`area ${tn}`} onClick={() => (sections.current[g] ?? sections.current.attention)?.scrollIntoView({behavior: "smooth", block: "start"})}>
                                     <span className="bubble"><Icon name={GROUP_ICON[g]} size={22}/></span>
                                     <b>{t(`group.${g}` as Key)}</b>
                                     <span className="status"><Icon name={issues ? "alert" : "check"} size={14}/>{issues ? issues : ""}</span>
@@ -91,7 +92,7 @@ export function Health(p: {
                     </div>
 
                     {attention.length > 0 && (
-                        <section>
+                        <section ref={(el) => { sections.current.attention = el; }}>
                             <h2><Icon name="alert" size={18}/> {t("health.fix")}</h2>
                             <ul className="findings">
                                 {attention.map((f, i) => <FindingCard key={f.key + i} f={f} {...p} open/>)}
@@ -101,16 +102,21 @@ export function Health(p: {
 
                     <Specs r={r}/>
 
-                    {byGroup(r.findings).map(([g, list]) => (
-                        <section key={g} ref={(el) => { sections.current[g] = el; }}>
-                            <h2><Icon name={GROUP_ICON[g]} size={18}/> {t(`group.${g}` as Key)}</h2>
-                            <ul className="findings compact">
-                                {[...list].sort((a, b) => RANK[a.severity] - RANK[b.severity]).map((f, i) => (
-                                    <FindingCard key={f.key + i} f={f} {...p} open={f.severity === "bad" || f.severity === "warn"}/>
-                                ))}
-                            </ul>
-                        </section>
-                    ))}
+                    {/* What needs fixing is shown once, above; groups list the rest. */}
+                    {byGroup(r.findings).map(([g, list]) => {
+                        const rest = list.filter((f) => f.severity !== "bad" && f.severity !== "warn");
+                        if (rest.length === 0) return null;
+                        return (
+                            <section key={g} ref={(el) => { sections.current[g] = el; }}>
+                                <h2><Icon name={GROUP_ICON[g]} size={18}/> {t(`group.${g}` as Key)}</h2>
+                                <ul className="findings compact">
+                                    {[...rest].sort((a, b) => RANK[a.severity] - RANK[b.severity]).map((f, i) => (
+                                        <FindingCard key={f.key + i} f={f} {...p}/>
+                                    ))}
+                                </ul>
+                            </section>
+                        );
+                    })}
 
                     <section>
                         <h2><Icon name="download" size={18}/> {t("health.updates")}</h2>

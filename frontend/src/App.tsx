@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {api, errText, on, type UpdateInfo} from "./api";
 import {AppDetail} from "./components/AppDetail";
 import {Icon, type IconName} from "./components/Icon";
@@ -9,7 +9,7 @@ import {reportMarkdown, type HealthLink, type HealthResult} from "./lib/health";
 import {getLang, resolveLang, setLang, t} from "./lib/i18n";
 import {profileText} from "./lib/profileText";
 import {
-    applyEvent, selectionProfile, slugify,
+    applyEvent, selectionProfile, uniqueProfile,
     type App as CatalogApp, type Profile, type ProfileInfo, type State, type UpgradeInfo,
 } from "./lib/model";
 import * as prefs from "./lib/settings";
@@ -46,6 +46,9 @@ export default function App() {
     const [category, setCategory] = useState("");
     const [run, setRun] = useState<RunState | null>(null);
     const [runner, setRunner] = useState<Runner | null>(null);
+    const runnerRef = useRef<Runner | null>(null);
+    runnerRef.current = runner;
+    const starting = useRef(false);
     const [naming, setNaming] = useState<null | { title: string; initial: string; onOk: (n: string) => void }>(null);
     const [settings, setSettings] = useState<prefs.Settings>(prefs.load);
     const [showSettings, setShowSettings] = useState(false);
@@ -70,10 +73,24 @@ export default function App() {
     setLang(resolveLang(settings.language, navigator.language));
     useEffect(() => { document.documentElement.lang = resolveLang(settings.language, navigator.language); }, [settings.language]);
 
+    const toastTimer = useRef<number>(0);
     const say = useCallback((m: string) => {
         setToast(m);
-        window.setTimeout(() => setToast((x) => (x === m ? null : x)), 5000);
+        window.clearTimeout(toastTimer.current);
+        toastTimer.current = window.setTimeout(() => setToast(null), 5000);
     }, []);
+    // Fire-and-forget calls still report failure instead of failing silently.
+    const safe = useCallback((p: Promise<unknown>) => { p.catch((e) => say(errText(e))); }, [say]);
+
+    // Anything that escapes a handler becomes a message, never a dead button.
+    useEffect(() => {
+        const rejected = (e: PromiseRejectionEvent) => { e.preventDefault(); say(errText(e.reason)); };
+        // "ResizeObserver loop..." is a harmless browser notice, not a failure.
+        const failed = (e: ErrorEvent) => { if (!/ResizeObserver/i.test(e.message)) say(e.message || "Error"); };
+        window.addEventListener("unhandledrejection", rejected);
+        window.addEventListener("error", failed);
+        return () => { window.removeEventListener("unhandledrejection", rejected); window.removeEventListener("error", failed); };
+    }, [say]);
 
     const refresh = useCallback(async () => {
         setBusy(true);
@@ -143,7 +160,7 @@ export default function App() {
         const offDone = on.done((failed) => {
             setRun((r) => (r ? {...r, running: false, failed: failed ?? []} : r));
             void refresh();
-            setRunner((rn) => { rn?.after?.(); return rn; });
+            runnerRef.current?.after?.();
         });
         return () => { offEvent(); offDone(); };
     }, [refresh]);
@@ -155,27 +172,37 @@ export default function App() {
     };
 
     const startProfile = async (profile: Profile) => {
+        if (starting.current) return; // a second click while the plan is being worked out
+        starting.current = true;
         try {
             const plan = await api.Plan(profile);
             const info = state?.profiles.find((x) => x.id === profile.id);
             const name = info?.builtin && info.name === profile.name ? profileText(info, getLang()).name : profile.name;
             openRun(t("run.install", {name}), plan, {profile, start: () => api.Apply(profile)});
-        } catch (e) { say(errText(e)); }
+        } catch (e) { say(errText(e)); } finally { starting.current = false; }
     };
 
     const startUpgrades = async (ids: string[]) => {
+        if (starting.current) return;
+        starting.current = true;
         try {
             const plan = await api.PlanUpgrades(ids);
             openRun(t("run.updateTitle"), plan, {start: () => api.ApplyUpgrades(ids), after: () => void checkUpgrades()});
-        } catch (e) { say(errText(e)); }
+        } catch (e) { say(errText(e)); } finally { starting.current = false; }
     };
 
     const confirmRun = async () => {
-        if (!run || !runner) return;
+        if (!run || !runner || run.running || starting.current) return;
+        starting.current = true;
+        // Show "running" first: the first events can arrive before the call
+        // returns, and a second click must not start a second run.
+        setRun({...run, running: true, log: [], status: {}, failed: null, startedAt: Date.now()});
         try {
             await runner.start();
-            setRun({...run, running: true, log: [], status: {}, failed: null, startedAt: Date.now()});
-        } catch (e) { say(errText(e)); }
+        } catch (e) {
+            say(errText(e));
+            setRun((r) => (r ? {...r, running: false, failed: null, startedAt: null} : r));
+        } finally { starting.current = false; }
     };
 
     const closeRun = () => { setRun(null); setRunner(null); };
@@ -188,27 +215,33 @@ export default function App() {
         try { await navigator.clipboard.writeText(run?.log.join("\n") ?? ""); say(t("run.copied")); } catch (e) { say(errText(e)); }
     };
 
+    // Ids and names of every profile that exists, built-ins included: a new
+    // profile must never replace one, nor collide with a built-in id.
+    const free = (name: string) => uniqueProfile(name, (state?.profiles ?? []).map((x) => x.id), (state?.profiles ?? []).map((x) => x.name));
+
     const saveSelection = () => setNaming({
         title: t("dlg.saveSelection"), initial: "",
-        onOk: async (name) => {
+        onOk: async (typed) => {
+            const u = free(typed);
             try {
-                await api.SaveProfile({...selectionProfile(selection, name), id: slugify(name)});
+                await api.SaveProfile({...selectionProfile(selection, u.name), id: u.id, name: u.name});
                 setSelection(new Set());
                 setTab("profiles");
                 await refresh();
-                say(t("toast.saved", {name}));
+                say(t("toast.saved", {name: u.name}));
             } catch (e) { say(errText(e)); }
         },
     });
 
     const saveFromPC = () => setNaming({
         title: t("dlg.saveFromPC"), initial: "",
-        onOk: async (name) => {
+        onOk: async (typed) => {
+            const u = free(typed);
             try {
-                const p = await api.ProfileFromPC(slugify(name), name, false);
+                const p = await api.ProfileFromPC(u.id, u.name, false);
                 await api.SaveProfile(p);
                 await refresh();
-                say(t("toast.savedPC", {n: p.apps?.length ?? 0, name}));
+                say(t("toast.savedPC", {n: p.apps?.length ?? 0, name: u.name}));
             } catch (e) { say(errText(e)); }
         },
     });
@@ -217,15 +250,17 @@ export default function App() {
         try {
             const r = await api.ImportProfile();
             if (!r) return;
-            await api.SaveProfile(r.profile);
+            const u = free(r.profile.name);
+            await api.SaveProfile({...r.profile, id: u.id, name: u.name});
             await refresh();
             const dropped = r.unknownApps.length + r.unknownRecipes.length;
-            say(dropped ? t("toast.importedDropped", {name: r.profile.name, n: dropped}) : t("toast.imported", {name: r.profile.name}));
+            say(dropped ? t("toast.importedDropped", {name: u.name, n: dropped}) : t("toast.imported", {name: u.name}));
         } catch (e) { say(errText(e)); }
     };
 
     const go = (next: Tab) => {
         setTab(next);
+        if (next === "catalog") setCategory(""); // the nav always opens the whole catalog
         if (next === "updates" && upgrades === null && !upgradesBusy) void checkUpgrades();
         if (next === "health" && health === null && !healthBusy) void scanHealth();
     };
@@ -246,7 +281,7 @@ export default function App() {
     return (
         <IconsContext.Provider value={icons}>
         <div className="shell">
-            <nav className="rail" aria-label="Main">
+            <nav className="rail" aria-label={t("nav.main")}>
                 <div className="brand"><img src={logo} alt="" width={28} height={28}/><span>Win<b>Forge</b></span></div>
                 {nav.map(([id, label, count]) => (
                     <button key={id} className={"navitem" + (tab === id ? " on" : "")} aria-current={tab === id ? "page" : undefined} onClick={() => go(id)}>
@@ -282,7 +317,7 @@ export default function App() {
                         {updating ? <progress value={updating.done} max={updating.total || undefined}/> : (
                             <>
                                 <button className="primary sm" onClick={() => { setUpdating({done: 0, total: 0}); api.InstallUpdate().catch((e) => { setUpdating(null); say(errText(e)); }); }}>{t("banner.now")}</button>
-                                <a href="#" onClick={(e) => { e.preventDefault(); void api.OpenURL(update.url); }}>{t("banner.notes")}</a>
+                                <button type="button" className="linkbtn" onClick={() => safe(api.OpenURL(update.url))}>{t("banner.notes")}</button>
                             </>
                         )}
                     </div>
@@ -305,7 +340,7 @@ export default function App() {
                         <Catalog apps={state.apps} featured={state.featured ?? []} advanced={advanced} selection={selection} setSelection={setSelection} initialCategory={category}
                                  onInstall={() => void startProfile(selectionProfile(selection))}
                                  onInstallOne={(a) => void startProfile(selectionProfile([a.id], a.name))}
-                                 onSave={saveSelection} openURL={(u) => void api.OpenURL(u)} onDetail={setDetail}/>
+                                 onSave={saveSelection} openURL={(u) => safe(api.OpenURL(u))} onDetail={setDetail}/>
                     ) : tab === "health" ? (
                         <Health advanced={advanced} result={health} busy={healthBusy} updatesBusy={healthUpdBusy} admin={state.admin} byId={byId}
                                 onScan={() => void scanHealth()} onUpdates={() => void healthUpdates()} onExport={() => void exportHealth()}
@@ -317,7 +352,7 @@ export default function App() {
                 </main>
             </div>
 
-            {run && <RunModal run={run} advanced={advanced} byId={byId} admin={!!state?.admin} onConfirm={() => void confirmRun()} onCancel={() => void api.Cancel()}
+            {run && <RunModal run={run} advanced={advanced} byId={byId} admin={!!state?.admin} onConfirm={() => void confirmRun()} onCancel={() => safe(api.Cancel())}
                               onClose={closeRun} onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}
                               onScript={() => runner?.profile && api.ExportScript(runner.profile).then((p) => p && say(t("toast.savedTo", {path: p}))).catch((e) => say(errText(e)))}
                               onCopy={() => void copyLog()}/>}
@@ -325,7 +360,7 @@ export default function App() {
                                              onCheck={() => void checkUpdate(true)} onClose={() => setShowSettings(false)}/>}
             {naming && <NameDialog {...naming} onClose={() => setNaming(null)}/>}
             {showTour && <Tour onClose={closeTour}/>}
-            {shown && <AppDetail advanced={advanced} app={shown} byId={byId} onClose={() => setDetail(null)} openURL={(u) => void api.OpenURL(u)}
+            {shown && <AppDetail advanced={advanced} app={shown} byId={byId} onClose={() => setDetail(null)} openURL={(u) => safe(api.OpenURL(u))}
                                  onInstall={(a) => { setDetail(null); void startProfile(selectionProfile([a.id], a.name)); }}
                                  onCopy={(c) => void copyText(c, t("detail.copied"))}/>}
             {toast && <div className="toast" role="status">{toast}</div>}

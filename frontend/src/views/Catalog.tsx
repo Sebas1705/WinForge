@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState} from "react";
+import {useCallback, useDeferredValue, useEffect, useMemo, useRef, useState} from "react";
 import {AppCard} from "../components/AppCard";
 import {AppIcon} from "../components/AppIcon";
 import {Icon, categoryIcon} from "../components/Icon";
@@ -36,22 +36,28 @@ export function Catalog(p: {
         return () => window.removeEventListener("keydown", key);
     }, []);
 
+    // Typing stays instant; the 749-card list catches up a moment later.
+    const query = useDeferredValue(f.query);
     const popular = f.category === POPULAR;
     const source = useMemo(() => (popular ? featuredApps(p.apps, p.featured) : p.apps), [popular, p.apps, p.featured]);
     const stats = useMemo(() => categoryStats(p.apps), [p.apps]);
     const list = useMemo(() => {
-        const filtered = filterApps(source, {...f, category: popular ? "" : f.category});
+        const filtered = filterApps(source, {...f, query, category: popular ? "" : f.category});
         // The popular shelf keeps its curated order unless the person picks a sort.
         return popular && sort === "name" ? filtered : sortApps(filtered, sort);
-    }, [source, f, sort, popular]);
+    }, [source, f.category, f.installed, f.openSourceOnly, query, sort, popular]);
     const byId = useMemo(() => new Map(p.apps.map((a) => [a.id, a])), [p.apps]);
     const missing = [...p.selection].filter((id) => !byId.get(id)?.installed).length;
 
-    const toggle = (id: string) => {
-        const n = new Set(p.selection);
+    // A stable handler lets unchanged cards skip re-rendering.
+    const selection = useRef(p.selection);
+    selection.current = p.selection;
+    const setSelection = p.setSelection;
+    const toggle = useCallback((id: string) => {
+        const n = new Set(selection.current);
         if (n.has(id)) n.delete(id); else n.add(id);
-        p.setSelection(n);
-    };
+        setSelection(n);
+    }, [setSelection]);
     const selectVisible = () => p.setSelection(new Set([...p.selection, ...list.filter((a) => !a.installed).map((a) => a.id)]));
     const chip = (key: string, icon: Parameters<typeof Icon>[0]["name"], label: string, count: number) => (
         <button key={key} role="tab" aria-selected={f.category === key} className={f.category === key ? "on" : ""} onClick={() => setF({...f, category: key})}>
@@ -73,7 +79,7 @@ export function Catalog(p: {
                     <option value="installed">{t("catalog.state.installed")}</option>
                     <option value="missing">{t("catalog.state.missing")}</option>
                 </select>
-                <select aria-label="Sort" value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
+                <select aria-label={t("common.sort")} value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
                     <option value="name">{t("catalog.sort.name")}</option>
                     <option value="category">{t("catalog.sort.category")}</option>
                     <option value="missing">{t("catalog.sort.missing")}</option>
@@ -94,8 +100,8 @@ export function Catalog(p: {
             {view === "grid" ? (
                 <div className="cardgrid">
                     {list.map((a) => (
-                        <AppCard key={a.id} app={a} selected={p.selection.has(a.id)} onToggle={() => toggle(a.id)}
-                                 onOpen={() => p.onDetail(a)} onInstall={() => p.onInstallOne(a)}/>
+                        <AppCard key={a.id} app={a} selected={p.selection.has(a.id)} onToggle={toggle} lang={getLang()}
+                                 onOpen={p.onDetail} onInstall={p.onInstallOne}/>
                     ))}
                     {list.length === 0 && <p className="empty muted">{t("catalog.empty")}</p>}
                 </div>
@@ -117,7 +123,7 @@ export function Catalog(p: {
                                 {a.installed
                                     ? <span className="chip done"><Icon name="check" size={13}/>{t("catalog.installedBadge")}</span>
                                     : <button className="mini" onClick={() => p.onInstallOne(a)}>{t("common.install")}</button>}
-                                {p.advanced && <a href="#" className="mono site" title={a.homepage} onClick={(e) => { e.preventDefault(); p.openURL(a.homepage); }}>{a.publisher} ↗</a>}
+                                {p.advanced && <button type="button" className="linkbtn mono site" title={a.homepage} onClick={() => p.openURL(a.homepage)}>{a.publisher} ↗</button>}
                             </div>
                         </li>
                     ))}

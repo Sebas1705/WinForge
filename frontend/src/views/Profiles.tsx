@@ -1,6 +1,8 @@
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {api, errText} from "../api";
 import {AppIcon} from "../components/AppIcon";
+import {ConfirmDialog} from "../components/Modals";
+import {useDismiss} from "../components/useModal";
 import {Icon, type IconName} from "../components/Icon";
 import {IconStack, Ring, Tip} from "../components/Visual";
 import {getLang, t} from "../lib/i18n";
@@ -88,6 +90,9 @@ function ProfileDetail(p: {
     const text = profileText(current, getLang());
     const [skip, setSkip] = useState<Set<string>>(new Set());
     const [menu, setMenu] = useState(false);
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+    useDismiss(menuRef, menu, () => setMenu(false));
     const tally = profileTally(current.resolved, p.apps);
     const toInstall = current.resolved.filter((id) => !skip.has(id) && !p.apps.get(id)?.installed);
     const missingAll = tally.total - tally.have;
@@ -123,14 +128,14 @@ function ProfileDetail(p: {
                     {full ? t("profiles.complete") : skip.size === 0 ? t("profiles.installMissing") : t("profiles.installN", {n: toInstall.length})}
                 </button>
                 <button onClick={() => p.onEdit(current)}>{t("profiles.edit")}</button>
-                <div className="menu">
-                    <button className="ghost" aria-expanded={menu} onClick={() => setMenu(!menu)}>{t("profiles.more")} ▾</button>
+                <div className="menu" ref={menuRef}>
+                    <button className="ghost" aria-haspopup="menu" aria-expanded={menu} onClick={() => setMenu(!menu)}>{t("profiles.more")} ▾</button>
                     {menu && (
                         <div className="menu-pop" role="menu">
                             <button role="menuitem" onClick={() => run(() => api.ExportProfile(current))}>{t("profiles.export")}</button>
                             {p.advanced && <button role="menuitem" title={t("profiles.exportWingetHint")} onClick={() => run(() => api.ExportWinget(current))}>{t("profiles.exportWinget")}</button>}
                             {p.advanced && <button role="menuitem" title={t("profiles.exportScriptHint")} disabled={missingAll === 0} onClick={() => run(() => api.ExportScript(current))}>{t("profiles.exportScript")}</button>}
-                            {!current.builtin && <button role="menuitem" className="danger" onClick={() => run(async () => { await api.DeleteProfile(current.id); await p.onChanged(); }, t("toast.deleted"))}>{t("profiles.delete")}</button>}
+                            {!current.builtin && <button role="menuitem" className="danger" onClick={() => { setMenu(false); setConfirmDelete(true); }}>{t("profiles.delete")}</button>}
                         </div>
                     )}
                 </div>
@@ -160,6 +165,11 @@ function ProfileDetail(p: {
                     );
                 })}
             </div>
+            {confirmDelete && (
+                <ConfirmDialog danger title={t("confirm.deleteTitle", {name: text.name})} body={t("confirm.deleteBody")} confirm={t("common.delete")}
+                               onClose={() => setConfirmDelete(false)}
+                               onConfirm={() => void run(async () => { await api.DeleteProfile(current.id); await p.onChanged(); }, t("toast.deleted"))}/>
+            )}
             {current.resolvedRecipes.length > 0 && p.advanced && (
                 <p className="muted small">{t("profiles.after", {list: current.resolvedRecipes.join(", ")})}</p>
             )}

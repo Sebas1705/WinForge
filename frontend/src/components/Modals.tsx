@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from "react";
 import {AppIcon} from "./AppIcon";
 import {Icon} from "./Icon";
 import {Strip} from "./Strip";
+import {useModal} from "./useModal";
 import {Ring} from "./Visual";
 import {t} from "../lib/i18n";
 import type {App, Plan, Step, StepStatus} from "../lib/model";
@@ -31,30 +32,34 @@ export function RunModal(p: {
 }) {
     const {run} = p;
     const started = run.running || run.failed !== null;
+    const finished = started && !run.running;
     const stateOf = (s: Step): StepStatus => run.status[stepKey(s)] ?? "pending";
     const done = run.plan.steps.filter((s) => ["ok", "failed", "skipped"].includes(stateOf(s))).length;
     const failedCount = run.plan.steps.filter((s) => stateOf(s) === "failed").length;
     const current = run.plan.steps.find((s) => stateOf(s) === "running");
     const logRef = useRef<HTMLPreElement>(null);
+    const dialog = useRef<HTMLDivElement>(null);
     const [now, setNow] = useState(Date.now());
     const [end, setEnd] = useState<number | null>(null);
     const [showLog, setShowLog] = useState(p.advanced);
+    const [stopping, setStopping] = useState(false);
 
-    useEffect(() => { logRef.current?.scrollTo(0, logRef.current.scrollHeight); }, [run.log, showLog]);
+    // Escape closes the dialog only when nothing is running: stopping an
+    // installation is a deliberate act with its own button.
+    useModal(dialog, run.running ? undefined : p.onClose);
+
+    useEffect(() => { logRef.current?.scrollTo?.(0, logRef.current.scrollHeight); }, [run.log, showLog]);
     useEffect(() => {
         if (!run.running) return;
         const id = window.setInterval(() => setNow(Date.now()), 500);
         return () => window.clearInterval(id);
     }, [run.running]);
     useEffect(() => { if (run.failed !== null && end === null) setEnd(Date.now()); }, [run.failed, end]);
-    useEffect(() => {
-        const esc = (e: KeyboardEvent) => { if (e.key === "Escape" && !run.running) p.onClose(); };
-        window.addEventListener("keydown", esc);
-        return () => window.removeEventListener("keydown", esc);
-    });
+    useEffect(() => { if (!run.running) setStopping(false); }, [run.running]);
+    // A failed run should show its reason without a click.
+    useEffect(() => { if (finished && failedCount > 0) setShowLog(true); }, [finished, failedCount]);
 
     const cells = run.plan.steps.map((s) => ({on: stateOf(s) === "ok", state: stateOf(s), name: s.name}));
-    const finished = started && !run.running;
     const heading = !started ? run.title : run.running ? t("run.installing") : failedCount > 0 ? t("run.errors") : t("run.done");
     const elapsed = run.startedAt ? formatElapsed((end ?? now) - run.startedAt) : "";
     const label = (s: Step) =>
@@ -68,7 +73,7 @@ export function RunModal(p: {
 
     return (
         <div className="overlay">
-            <div className="modal" role="dialog" aria-modal="true" aria-label={heading}>
+            <div className="modal" ref={dialog} role="dialog" aria-modal="true" aria-label={heading}>
                 {started ? (
                     <div className="runhead">
                         <Ring size={92} stroke={9} value={cells.length ? done / cells.length : 0} tone={finished ? (failedCount ? "warn" : "ok") : "accent"}>
@@ -82,7 +87,7 @@ export function RunModal(p: {
                                     <span>{t("run.working", {name: current.name})}</span>
                                 </p>
                             )}
-                            {finished && failedCount > 0 && <p className="muted">{t("run.reboot")}</p>}
+                            {finished && <p className="muted">{failedCount > 0 ? t("run.failedHint") : t("run.reboot")}</p>}
                             <Strip cells={cells} size="lg"/>
                             <span className="mono muted small">{t("run.stepOf", {done, total: cells.length})}{elapsed && ` · ${elapsed}`}</span>
                         </div>
@@ -127,7 +132,11 @@ export function RunModal(p: {
                     <span className="grow"/>
                     {!started && <button onClick={p.onClose}>{t("common.cancel")}</button>}
                     {!started && <button className="primary big" onClick={p.onConfirm}><Icon name="download" size={16}/> {t("run.steps", {n: run.plan.steps.length})}</button>}
-                    {run.running && <button className="danger" onClick={p.onCancel}>{t("run.stop")}</button>}
+                    {run.running && (
+                        <button className="danger" disabled={stopping} onClick={() => { setStopping(true); p.onCancel(); }}>
+                            {stopping ? t("run.stopping") : t("run.stop")}
+                        </button>
+                    )}
                     {finished && <button className="primary" onClick={p.onClose}>{t("common.close")}</button>}
                 </div>
             </div>
@@ -137,16 +146,36 @@ export function RunModal(p: {
 
 export function NameDialog(p: { title: string; initial: string; onOk: (n: string) => void; onClose: () => void }) {
     const [v, setV] = useState(p.initial);
+    const dialog = useRef<HTMLDivElement>(null);
+    useModal(dialog, p.onClose);
     const submit = () => { if (v.trim()) { p.onOk(v.trim()); p.onClose(); } };
     return (
         <div className="overlay" onClick={p.onClose}>
-            <div className="modal small" role="dialog" aria-modal="true" aria-label={p.title} onClick={(e) => e.stopPropagation()}>
+            <div className="modal small" ref={dialog} role="dialog" aria-modal="true" aria-label={p.title} onClick={(e) => e.stopPropagation()}>
                 <h3>{p.title}</h3>
-                <input autoFocus value={v} placeholder={t("dlg.name")} onChange={(e) => setV(e.target.value)}
-                       onKeyDown={(e) => { if (e.key === "Enter") submit(); if (e.key === "Escape") p.onClose(); }}/>
+                <input data-autofocus value={v} maxLength={60} placeholder={t("dlg.name")} aria-label={t("dlg.name")} onChange={(e) => setV(e.target.value)}
+                       onKeyDown={(e) => { if (e.key === "Enter") submit(); }}/>
                 <div className="actions end">
                     <button onClick={p.onClose}>{t("common.cancel")}</button>
                     <button className="primary" disabled={!v.trim()} onClick={submit}>{t("dlg.save")}</button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/** Asks before something that cannot be undone. The safe answer is the focused one. */
+export function ConfirmDialog(p: { title: string; body: string; confirm: string; danger?: boolean; onConfirm: () => void; onClose: () => void }) {
+    const dialog = useRef<HTMLDivElement>(null);
+    useModal(dialog, p.onClose);
+    return (
+        <div className="overlay" onClick={p.onClose}>
+            <div className="modal small" ref={dialog} role="alertdialog" aria-modal="true" aria-label={p.title} onClick={(e) => e.stopPropagation()}>
+                <h3>{p.title}</h3>
+                <p className="muted">{p.body}</p>
+                <div className="actions end">
+                    <button data-autofocus onClick={p.onClose}>{t("common.cancel")}</button>
+                    <button className={p.danger ? "danger" : "primary"} onClick={() => { p.onConfirm(); p.onClose(); }}>{p.confirm}</button>
                 </div>
             </div>
         </div>
@@ -167,14 +196,11 @@ export function SettingsDialog(p: {
     version: string; value: prefs.Settings; onChange: (s: prefs.Settings) => void; onCheck: () => void; onClose: () => void;
 }) {
     const set = (patch: Partial<prefs.Settings>) => p.onChange({...p.value, ...patch});
-    useEffect(() => {
-        const esc = (e: KeyboardEvent) => { if (e.key === "Escape") p.onClose(); };
-        window.addEventListener("keydown", esc);
-        return () => window.removeEventListener("keydown", esc);
-    });
+    const dialog = useRef<HTMLDivElement>(null);
+    useModal(dialog, p.onClose);
     return (
         <div className="overlay" onClick={p.onClose}>
-            <div className="modal small" role="dialog" aria-modal="true" aria-label={t("settings.title")} onClick={(e) => e.stopPropagation()}>
+            <div className="modal small" ref={dialog} role="dialog" aria-modal="true" aria-label={t("settings.title")} onClick={(e) => e.stopPropagation()}>
                 <h3>{t("settings.title")}</h3>
                 <div className="field"><span>{t("settings.detail")}</span>
                     <Segmented value={p.value.detail} onChange={(detail) => set({detail})}
@@ -218,6 +244,8 @@ export function SettingsDialog(p: {
 /** First-run guide: three screens, each one idea, one picture. */
 export function Tour(p: { onClose: () => void }) {
     const [i, setI] = useState(0);
+    const dialog = useRef<HTMLDivElement>(null);
+    useModal(dialog, p.onClose);
     const slides = [
         {icon: "layers" as const, title: t("tour.1.title"), body: t("tour.1.body")},
         {icon: "check" as const, title: t("tour.2.title"), body: t("tour.2.body")},
@@ -225,14 +253,9 @@ export function Tour(p: { onClose: () => void }) {
     ];
     const s = slides[i];
     const last = i === slides.length - 1;
-    useEffect(() => {
-        const esc = (e: KeyboardEvent) => { if (e.key === "Escape") p.onClose(); };
-        window.addEventListener("keydown", esc);
-        return () => window.removeEventListener("keydown", esc);
-    });
     return (
         <div className="overlay">
-            <div className="modal tour" role="dialog" aria-modal="true" aria-label={s.title}>
+            <div className="modal tour" ref={dialog} role="dialog" aria-modal="true" aria-label={s.title}>
                 <span className="bubble hero"><Icon name={s.icon} size={44}/></span>
                 <h3>{s.title}</h3>
                 <p>{s.body}</p>

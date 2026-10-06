@@ -94,6 +94,8 @@ go run ./cmd/winforge-cli scan
 
 Requires Go 1.26, Node 22 and the [Wails CLI](https://wails.io) v2.
 
+UI tests (`cd frontend && npm test`) drive the whole app against a mocked Go API: install flow, profiles, health, language parity, dialogs and focus handling. Dialogs share one modal stack (`useModal`), a boundary catches render crashes, and text on accent colors uses `--accent-ink` to keep contrast in both themes.
+
 ## Releases, installer and updates
 
 - **CI** (`ci.yml`): frontend tests + build, gofmt, vet and Go tests on Windows; portable-logic tests on Linux; the catalog verifier (weekly too); and an **installer job** that builds the NSIS installer, installs it silently, starts the app, uninstalls silently and fails if anything is left behind.

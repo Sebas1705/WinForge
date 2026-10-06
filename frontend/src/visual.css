@@ -7,13 +7,13 @@ button.big { padding: 10px 18px; font-size: 15px; display: inline-flex; gap: 8px
 button svg { flex: none; }
 .chips button { display: inline-flex; align-items: center; gap: 6px; }
 .chip { display: inline-flex; align-items: center; gap: 4px; border-radius: 99px; padding: 2px 9px; font-size: 12px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
-.chip.done { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.chip.done { color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .chip.oss { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
 .chip.admin { padding: 2px 6px; }
 .lead { font-size: 15px; }
 .nogap { margin: -6px 0 0; }
 
-.bubble { display: inline-grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; flex: none; color: var(--accent); background: color-mix(in srgb, var(--accent) 15%, var(--surface2)); }
+.bubble { display: inline-grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; flex: none; color: var(--accent-ink); background: color-mix(in srgb, var(--accent) 15%, var(--surface2)); }
 .bubble.sm { width: 36px; height: 36px; border-radius: 11px; }
 .bubble.hero { width: 92px; height: 92px; border-radius: 28px; }
 .bubble.ok { background: var(--accent); color: var(--on-accent); }
@@ -74,12 +74,13 @@ h1 .tip, h2 .tip { font-size: 14px; }
 .profilecard .line { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 13px; line-height: 1.4; min-height: 2.8em; }
 .profilecard .foot { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: auto; }
 .sectionhead { display: flex; align-items: center; justify-content: space-between; }
-.seeall { display: inline-flex; align-items: center; gap: 2px; color: var(--accent); margin-bottom: 12px; }
+.seeall { display: inline-flex; align-items: center; gap: 2px; color: var(--accent-ink); margin-bottom: 12px; }
 
 /* home */
 .hero { display: flex; align-items: center; gap: 26px; margin-bottom: 30px; }
 .hero h1 { display: block; font-size: 28px; margin: 4px 0 16px; }
-.quick { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.quick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (min-width: 1160px) { .quick { grid-template-columns: repeat(6, 1fr); } }
 .quicktile { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 18px 10px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); transition: transform .12s, border-color .12s; }
 .quicktile:hover { transform: translateY(-2px); border-color: var(--accent); }
 .quicktile .bubble { width: 62px; height: 62px; border-radius: 19px; }
@@ -115,10 +116,11 @@ h1 .tip, h2 .tip { font-size: 14px; }
 .scorecard h2 { font-size: 26px; margin: 0 0 4px; }
 .scorecard p { margin: 0 0 12px; }
 .scanning { display: flex; align-items: center; gap: 18px; padding: 40px 8px; }
-.areas { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 0 0 24px; }
+.areas { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin: 0 0 24px; }
 .area { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); text-align: left; }
-.area b { flex: 1; }
-.area .status { display: inline-flex; gap: 3px; align-items: center; font: 600 12px var(--font-mono); color: var(--accent); }
+.area b { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: 14px; }
+.area .bubble { width: 38px; height: 38px; border-radius: 12px; }
+.area .status { display: inline-flex; gap: 3px; align-items: center; font: 600 12px var(--font-mono); color: var(--accent-ink); }
 .area.warn .bubble { color: var(--warn); background: color-mix(in srgb, var(--warn) 16%, var(--surface2)); }
 .area.warn .status { color: var(--warn); }
 .area.bad .bubble { color: var(--bad); background: color-mix(in srgb, var(--bad) 16%, var(--surface2)); }
@@ -140,7 +142,7 @@ h1 .tip, h2 .tip { font-size: 14px; }
 .steps li { align-items: center; gap: 10px; padding: 5px 0; }
 .steps .stat { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--cell); color: var(--muted); flex: none; }
 .steps .stat.ok { background: var(--accent); color: var(--on-accent); }
-.steps .stat.running { background: color-mix(in srgb, var(--accent) 25%, transparent); color: var(--accent); }
+.steps .stat.running { background: color-mix(in srgb, var(--accent) 25%, transparent); color: var(--accent-ink); }
 .steps .stat.failed { background: var(--bad); color: #fff; }
 .steps .avatar.recipe { display: grid; place-items: center; border-radius: 8px; background: var(--surface2); color: var(--muted); }
 .steps li.pending .stat, .steps li.skipped .stat { opacity: .5; }
@@ -163,3 +165,36 @@ h1 .tip, h2 .tip { font-size: 14px; }
 @media (max-width: 1000px) {
     .hero, .scorecard, .profilehead { flex-wrap: wrap; }
 }
+
+/* error screen */
+.crash { max-width: 520px; margin: 12vh auto; padding: 0 24px; display: flex; flex-direction: column; gap: 14px; }
+.crash h1 { font-size: 28px; }
+
+/* ---------- robustness: sizes, long names ---------- */
+/* The ruler has one tick per catalog app; ticks must be allowed to shrink below a pixel. */
+.ruler { gap: 6px; }
+.ruler-group { gap: 0; min-width: 0; }
+.ruler i { min-width: 0; box-shadow: inset -1px 0 0 var(--bg); }
+/* Click targets at least 24px tall (WCAG 2.2), without making the text bigger. */
+button.mini { min-height: 26px; padding-top: 3px; padding-bottom: 3px; }
+button.link { min-height: 24px; min-width: 24px; display: inline-flex; align-items: center; gap: 4px; padding: 3px 2px; }
+button.sm { min-height: 28px; }
+.fhead { min-height: 28px; }
+/* Names come from other people's manifests: never let one stretch a card. */
+.appcard .cardbody b, .tilebody b, .profilecard b, .quicktile b, .statuscard b, .spec b, .finding b,
+.steps .grow, .list .grow, .drawer h2, .profilehead h1, .appcard .line, .profilecard .line { overflow-wrap: anywhere; min-width: 0; }
+.cardbody, .tilebody, .profilecard, .appcard { min-width: 0; }
+.drawer dd, .finding p, .detail p, .modal p { overflow-wrap: anywhere; }
+.toast { max-width: min(80%, 560px); overflow-wrap: anywhere; }
+.crash pre { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+
+/* ---------- link-looking buttons, selection, dragging ---------- */
+/* Never an <a href="#">: in a webview a middle or Ctrl click on one can try to open a window. */
+.linkbtn { background: none; border: 0; padding: 0 2px; min-height: 24px; color: var(--accent-ink); cursor: pointer; text-align: left; overflow-wrap: anywhere; }
+.linkbtn:hover { text-decoration: underline; border: 0; }
+.meta .linkbtn { color: var(--muted); max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.meta .linkbtn:hover { color: var(--accent-ink); }
+/* This is an app, not a web page: interface text is not selectable, content is. */
+body { -webkit-user-select: none; user-select: none; }
+input, textarea, pre, td, .log, .finding p, .drawer dd, .drawer .lead, .toast, .spec b, .selectable { -webkit-user-select: text; user-select: text; }
+img, svg { -webkit-user-drag: none; user-drag: none; }

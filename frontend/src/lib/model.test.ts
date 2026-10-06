@@ -47,3 +47,23 @@ describe("applyEvent", () => {
         expect(applyEvent("running", {step, status: "failed"})).toBe("failed");
     });
 });
+
+describe("uniqueProfile", () => {
+    it("keeps a free name as it is", async () => {
+        const {uniqueProfile} = await import("./model");
+        expect(uniqueProfile("Mi PC", ["gaming"], ["Gaming"])).toEqual({id: "mi-pc", name: "Mi PC"});
+    });
+    it("never reuses an id, including the id of a built-in profile", async () => {
+        const {uniqueProfile} = await import("./model");
+        expect(uniqueProfile("Gaming", ["gaming"], [])).toEqual({id: "gaming-2", name: "Gaming (2)"});
+        expect(uniqueProfile("Gaming", ["gaming", "gaming-2"], [])).toEqual({id: "gaming-3", name: "Gaming (3)"});
+    });
+    it("also avoids a duplicate display name, ignoring case", async () => {
+        const {uniqueProfile} = await import("./model");
+        expect(uniqueProfile("my pc", [], ["My PC"])).toEqual({id: "my-pc-2", name: "my pc (2)"});
+    });
+    it("copes with names that slug to the fallback", async () => {
+        const {uniqueProfile} = await import("./model");
+        expect(uniqueProfile("!!!", ["profile"], []).id).toBe("profile-2");
+    });
+});

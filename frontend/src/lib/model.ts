@@ -132,3 +132,23 @@ export function applyEvent(prev: StepStatus, e: InstallEvent): StepStatus {
         default: return prev;
     }
 }
+
+/**
+ * A profile id and display name that collide with nothing that exists. Saving
+ * under an existing id would silently replace a profile, or fail against a
+ * built-in one, so a duplicate gets "-2", "-3"... and "(2)", "(3)"...
+ */
+export function uniqueProfile(name: string, takenIds: Iterable<string>, takenNames: Iterable<string> = []): { id: string; name: string } {
+    const ids = new Set(takenIds);
+    const names = new Set([...takenNames].map((n) => n.trim().toLowerCase()));
+    const base = slugify(name);
+    let n = 1;
+    let id = base;
+    let label = name.trim();
+    while (ids.has(id) || names.has(label.toLowerCase())) {
+        n++;
+        id = `${base}-${n}`;
+        label = `${name.trim()} (${n})`;
+    }
+    return {id, name: label};
+}
