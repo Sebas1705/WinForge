@@ -1,6 +1,7 @@
-import {useRef} from "react";
+import {useRef, useState} from "react";
 import {AppIcon} from "./AppIcon";
 import {Icon} from "./Icon";
+import {ConfirmDialog} from "./Modals";
 import {useModal} from "./useModal";
 import {categoryLabel, getLang, t} from "../lib/i18n";
 import type {App} from "../lib/model";
@@ -9,10 +10,11 @@ import {taglineFor, topCategory} from "../lib/tally";
 /** Side panel with everything the catalog knows about one app, and its links. */
 export function AppDetail(p: {
     app: App; byId: Map<string, App>; advanced: boolean;
-    onClose: () => void; onInstall: (a: App) => void; openURL: (u: string) => void; onCopy: (text: string) => void;
+    onClose: () => void; onInstall: (a: App) => void; onUninstall: (a: App) => void; openURL: (u: string) => void; onCopy: (text: string) => void;
 }) {
     const {app: a, advanced} = p;
     const panel = useRef<HTMLElement>(null);
+    const [confirmRemove, setConfirmRemove] = useState(false);
     useModal(panel, p.onClose);
     const command = `winget install --id ${a.winget} --exact`;
     const needs = (a.requires ?? []).map((id) => p.byId.get(id)?.name ?? id);
@@ -40,7 +42,10 @@ export function AppDetail(p: {
                 <div className="actions">
                     <button onClick={() => p.openURL(a.homepage)}>{t("detail.website")} <Icon name="external" size={14}/></button>
                     {a.installed
-                        ? <span className="pill ok mono">{t("catalog.installed", {v: a.version ?? ""})}</span>
+                        ? <>
+                            <span className="pill ok mono">{t("catalog.installed", {v: a.version ?? ""})}</span>
+                            <button className="danger" onClick={() => setConfirmRemove(true)}><Icon name="trash" size={14}/> {t("detail.uninstall")}</button>
+                        </>
                         : <button className="primary" onClick={() => p.onInstall(a)}><Icon name="download" size={15}/> {t("common.install")}</button>}
                 </div>
 
@@ -54,6 +59,10 @@ export function AppDetail(p: {
                 </dl>
                 {advanced && <button className="ghost" onClick={() => p.onCopy(command)}><Icon name="copy" size={14}/> {t("detail.copyCommand")}</button>}
             </aside>
+            {confirmRemove && (
+                <ConfirmDialog title={t("confirm.uninstallTitle", {name: a.name})} body={t("confirm.uninstallBody")} confirm={t("detail.uninstall")} danger
+                               onConfirm={() => p.onUninstall(a)} onClose={() => setConfirmRemove(false)}/>
+            )}
         </div>
     );
 }

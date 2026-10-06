@@ -82,6 +82,18 @@ Winget manifests are written in English for maintainers. For what people actuall
 
 `go run ./cmd/winforge-icons` downloads each app's icon into `frontend/public/icons` (shipped inside the app, so the interface never contacts a vendor). Sources, in order: the GitHub owner avatar for GitHub-hosted projects, the winget manifest's own icon, the icons the homepage declares, then `/favicon.ico`. Content is identified by its bytes, SVGs with scripts are refused, and an icon that is byte-identical across three or more different brands (a host's default) is dropped, leaving the initials avatar. Icons are the projects' own marks, shown only to identify the app. **GitHub avatars are used only for organizations**: a personal account's avatar is a photo of a person, so projects owned by an individual show initials instead (`go run ./cmd/winforge-icons -github` re-applies the rule).
 
+## When things go wrong
+
+A failed step says what to do about it in plain words (needs administrator rights, another installer is running, the download failed, out of disk space...), decided from winget's exit code and the installer's own. **Retry what failed** runs only the steps that did not finish; when administrator rights are the cause, one button restarts WinForge elevated. What a run leaves undone is stored in `%AppData%\WinForge\pending.json`, so after a Windows restart, a crash or an elevated relaunch the app offers to continue where it stopped.
+
+## Settings backup
+
+The *Settings backup* page saves the configuration of a fixed list of apps (VS Code with its extension list, Git, Windows Terminal, PowerShell profile, SSH config, Notepad++, VLC, winget) into one zip, and restores it on another PC. Only listed files are read or written; SSH keys, tokens and passwords are never on the list. A restore keeps every file it replaces as `*.winforge-bak`, and refuses archive entries that do not match the list.
+
+## Sharing and shortcuts
+
+A profile can be copied as a **share code**: one line of text (`WF1.…`) to paste in a message, imported through *Profiles > Import from code*. `Ctrl+K` (or `/`) jumps to catalog search from anywhere. Apps can be uninstalled from their detail panel, after a confirmation.
+
 ## Develop
 
 ```bash

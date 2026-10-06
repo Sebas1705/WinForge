@@ -559,6 +559,38 @@ export namespace install {
 	        this.admin = source["admin"];
 	    }
 	}
+	export class Pending {
+	    title: string;
+	    steps: Step[];
+	
+	    static createFrom(source: any = {}) {
+	        return new Pending(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.title = source["title"];
+	        this.steps = this.convertValues(source["steps"], Step);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class Plan {
 	    steps: Step[];
 	    alreadyInstalled: string[];
@@ -836,6 +868,36 @@ export namespace main {
 		    return a;
 		}
 	}
+	export class RestorePreview {
+	    sets: settings.Found[];
+	
+	    static createFrom(source: any = {}) {
+	        return new RestorePreview(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.sets = this.convertValues(source["sets"], settings.Found);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class State {
 	    version: string;
 	    admin: boolean;
@@ -843,6 +905,7 @@ export namespace main {
 	    profiles: ProfileInfo[];
 	    featured: string[];
 	    wingetError?: string;
+	    pending?: install.Pending;
 	
 	    static createFrom(source: any = {}) {
 	        return new State(source);
@@ -856,6 +919,7 @@ export namespace main {
 	        this.profiles = this.convertValues(source["profiles"], ProfileInfo);
 	        this.featured = source["featured"];
 	        this.wingetError = source["wingetError"];
+	        this.pending = this.convertValues(source["pending"], install.Pending);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -914,6 +978,47 @@ export namespace main {
 	        this.publisher = source["publisher"];
 	        this.current = source["current"];
 	        this.available = source["available"];
+	    }
+	}
+
+}
+
+export namespace settings {
+	
+	export class Found {
+	    id: string;
+	    files: number;
+	    bytes: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new Found(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.files = source["files"];
+	        this.bytes = source["bytes"];
+	    }
+	}
+	export class Result {
+	    restored: number;
+	    unchanged: number;
+	    backedUp: number;
+	    extensions: number;
+	    skipped: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new Result(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.restored = source["restored"];
+	        this.unchanged = source["unchanged"];
+	        this.backedUp = source["backedUp"];
+	        this.extensions = source["extensions"];
+	        this.skipped = source["skipped"];
 	    }
 	}
 

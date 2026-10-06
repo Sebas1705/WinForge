@@ -6,8 +6,20 @@ export function Apply(arg1) {
   return window['go']['main']['App']['Apply'](arg1);
 }
 
+export function ApplyUninstall(arg1) {
+  return window['go']['main']['App']['ApplyUninstall'](arg1);
+}
+
 export function ApplyUpgrades(arg1) {
   return window['go']['main']['App']['ApplyUpgrades'](arg1);
+}
+
+export function BackupSets() {
+  return window['go']['main']['App']['BackupSets']();
+}
+
+export function BackupSettings(arg1) {
+  return window['go']['main']['App']['BackupSettings'](arg1);
 }
 
 export function Cancel() {
@@ -20,6 +32,10 @@ export function CheckUpdate() {
 
 export function DeleteProfile(arg1) {
   return window['go']['main']['App']['DeleteProfile'](arg1);
+}
+
+export function DiscardPending() {
+  return window['go']['main']['App']['DiscardPending']();
 }
 
 export function ExportProfile(arg1) {
@@ -46,12 +62,20 @@ export function HealthUpdates() {
   return window['go']['main']['App']['HealthUpdates']();
 }
 
+export function ImportCode(arg1) {
+  return window['go']['main']['App']['ImportCode'](arg1);
+}
+
 export function ImportProfile() {
   return window['go']['main']['App']['ImportProfile']();
 }
 
 export function InstallUpdate() {
   return window['go']['main']['App']['InstallUpdate']();
+}
+
+export function InstallWinget() {
+  return window['go']['main']['App']['InstallWinget']();
 }
 
 export function OpenLink(arg1) {
@@ -62,8 +86,20 @@ export function OpenURL(arg1) {
   return window['go']['main']['App']['OpenURL'](arg1);
 }
 
+export function PickRestore() {
+  return window['go']['main']['App']['PickRestore']();
+}
+
 export function Plan(arg1) {
   return window['go']['main']['App']['Plan'](arg1);
+}
+
+export function PlanPending() {
+  return window['go']['main']['App']['PlanPending']();
+}
+
+export function PlanUninstall(arg1) {
+  return window['go']['main']['App']['PlanUninstall'](arg1);
 }
 
 export function PlanUpgrades(arg1) {
@@ -78,12 +114,24 @@ export function RestartAsAdmin() {
   return window['go']['main']['App']['RestartAsAdmin']();
 }
 
+export function RestoreSettings(arg1) {
+  return window['go']['main']['App']['RestoreSettings'](arg1);
+}
+
+export function ResumePending() {
+  return window['go']['main']['App']['ResumePending']();
+}
+
 export function SaveProfile(arg1) {
   return window['go']['main']['App']['SaveProfile'](arg1);
 }
 
 export function SaveTextFile(arg1, arg2) {
   return window['go']['main']['App']['SaveTextFile'](arg1, arg2);
+}
+
+export function ShareCode(arg1) {
+  return window['go']['main']['App']['ShareCode'](arg1);
 }
 
 export function Upgrades() {

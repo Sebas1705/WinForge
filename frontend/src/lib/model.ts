@@ -48,10 +48,12 @@ export interface State {
     profiles: ProfileInfo[];
     featured: string[];
     wingetError?: string;
+    /** A run that stopped before finishing and can be continued. */
+    pending?: { title: string; steps: Step[] };
 }
 
 export interface Step {
-    kind: "app" | "recipe" | "upgrade";
+    kind: "app" | "recipe" | "upgrade" | "uninstall";
     id: string;
     name: string;
     version?: string;
@@ -80,7 +82,13 @@ export interface InstallEvent {
     status: "start" | "output" | "ok" | "skipped" | "failed";
     line?: string;
     error?: string;
+    /** Why a step failed (or "reboot" on one that needs a restart); see Go install.Explain. */
+    reason?: string;
+    /** Download progress, 1-100, on output lines that carry it. */
+    percent?: number;
 }
+
+export type Reason = "admin" | "busy" | "network" | "hash" | "cancelled" | "reboot" | "disk" | "installer";
 
 export interface Filter {
     query: string;

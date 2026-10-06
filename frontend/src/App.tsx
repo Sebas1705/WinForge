@@ -1,9 +1,9 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import {api, errText, on, type UpdateInfo} from "./api";
+import {api, errText, on, type ImportResult, type UpdateInfo} from "./api";
 import {AppDetail} from "./components/AppDetail";
 import {Icon, type IconName} from "./components/Icon";
 import {ScanProgress, type ScanKind} from "./components/ScanProgress";
-import {NameDialog, RunModal, Segmented, SettingsDialog, Tour, stepKey, type RunState} from "./components/Modals";
+import {CodeDialog, NameDialog, RunModal, Segmented, SettingsDialog, Tour, stepKey, type RunState} from "./components/Modals";
 import {POPULAR} from "./views/Catalog";
 import {IconsContext, loadIcons, type IconIndex} from "./lib/icons";
 import {reportMarkdown, type HealthLink, type HealthResult} from "./lib/health";
@@ -17,11 +17,12 @@ import * as prefs from "./lib/settings";
 import logo from "./logo.svg";
 import {Catalog} from "./views/Catalog";
 import {Health} from "./views/Health";
+import {Backup} from "./views/Backup";
 import {Home} from "./views/Home";
 import {Profiles} from "./views/Profiles";
 import {Updates} from "./views/Updates";
 
-type Tab = "home" | "profiles" | "catalog" | "updates" | "health";
+type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup";
 
 interface Runner {
     /** Called when the person confirms the plan. */
@@ -31,7 +32,10 @@ interface Runner {
     after?: () => void;
 }
 
-const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse"};
+// Go names runs that have no profile by what they do; show that in the person's language.
+const pendingTitle = (title: string) => (title === "updates" ? t("run.updateTitle") : title === "uninstall" ? t("detail.uninstall") : title);
+
+const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive"};
 
 function tourSeen(): boolean {
     try { return localStorage.getItem("winforge.tour") === "1"; } catch { return true; }
@@ -62,6 +66,7 @@ export default function App() {
     const [healthUpdBusy, setHealthUpdBusy] = useState(false);
     const [icons, setIcons] = useState<IconIndex>({});
     const [detail, setDetail] = useState<CatalogApp | null>(null);
+    const [codeDialog, setCodeDialog] = useState(false);
     const [showTour, setShowTour] = useState(() => !tourSeen());
     const advanced = settings.detail === "advanced";
     const closeTour = () => {
@@ -161,7 +166,12 @@ export default function App() {
                 const key = stepKey(e.step);
                 const log = e.status === "output" && e.line ? [...r.log.slice(-400), `${e.step.id}  ${e.line}`]
                     : e.error ? [...r.log, `${e.step.id}  ${e.status}: ${e.error}`] : r.log;
-                return {...r, log, status: {...r.status, [key]: applyEvent(r.status[key] ?? "pending", e)}};
+                return {
+                    ...r, log, status: {...r.status, [key]: applyEvent(r.status[key] ?? "pending", e)},
+                    reasons: e.status === "failed" && e.reason ? {...r.reasons, [key]: e.reason} : r.reasons,
+                    percent: e.status === "output" && e.percent ? {...r.percent, [key]: e.percent} : e.status === "ok" || e.status === "failed" ? {...r.percent, [key]: 0} : r.percent,
+                    reboot: r.reboot || e.reason === "reboot" || (e.status === "failed" && e.reason === "reboot"),
+                };
             });
         });
         const offDone = on.done((failed) => {
@@ -175,7 +185,7 @@ export default function App() {
     const openRun = (title: string, plan: RunState["plan"], rn: Runner) => {
         if (plan.steps.length === 0) return say(t("toast.nothing"));
         setRunner(rn);
-        setRun({title, plan, status: {}, log: [], running: false, failed: null, startedAt: null, canScript: !!rn.profile});
+        setRun({title, plan, status: {}, log: [], reasons: {}, percent: {}, reboot: false, running: false, failed: null, startedAt: null, canScript: !!rn.profile});
     };
 
     const startProfile = async (profile: Profile) => {
@@ -198,12 +208,50 @@ export default function App() {
         } catch (e) { say(errText(e)); } finally { starting.current = false; }
     };
 
+    // Picks up what the last run left undone (failed or never reached). With
+    // review=false it starts at once: the person already said "retry".
+    const resume = async (review: boolean) => {
+        if (starting.current) return;
+        starting.current = true;
+        try {
+            const plan = await api.PlanPending();
+            if (plan.steps.length === 0) { say(t("toast.nothing")); return; }
+            const rn: Runner = {start: () => api.ResumePending()};
+            const title = state?.pending?.title ?? t("pending.title");
+            setRunner(rn);
+            const fresh = {title, plan, status: {}, log: [], reasons: {}, percent: {}, reboot: false, running: false, failed: null, startedAt: null, canScript: false};
+            if (review) { setRun(fresh); return; }
+            setRun({...fresh, running: true, startedAt: Date.now()});
+            await rn.start();
+        } catch (e) {
+            say(errText(e));
+            setRun((r) => (r ? {...r, running: false, failed: null, startedAt: null} : r));
+        } finally { starting.current = false; }
+    };
+
+    const startUninstall = async (a: CatalogApp) => {
+        if (starting.current) return;
+        starting.current = true;
+        try {
+            const plan = await api.PlanUninstall([a.id]);
+            openRun(t("run.uninstallTitle", {name: a.name}), plan, {start: () => api.ApplyUninstall([a.id])});
+        } catch (e) { say(errText(e)); } finally { starting.current = false; }
+    };
+
+    const retryAdmin = async () => {
+        try { await api.RestartAsAdmin(); } catch (e) { say(errText(e)); }
+    };
+
+    const setupWinget = async () => {
+        try { await api.InstallWinget(); say(t("winget.opened")); await refresh(); } catch (e) { say(errText(e)); }
+    };
+
     const confirmRun = async () => {
         if (!run || !runner || run.running || starting.current) return;
         starting.current = true;
         // Show "running" first: the first events can arrive before the call
         // returns, and a second click must not start a second run.
-        setRun({...run, running: true, log: [], status: {}, failed: null, startedAt: Date.now()});
+        setRun({...run, running: true, log: [], status: {}, reasons: {}, percent: {}, reboot: false, failed: null, startedAt: Date.now()});
         try {
             await runner.start();
         } catch (e) {
@@ -253,17 +301,36 @@ export default function App() {
         },
     });
 
+    const saveImported = async (r: ImportResult) => {
+        const u = free(r.profile.name);
+        await api.SaveProfile({...r.profile, id: u.id, name: u.name});
+        await refresh();
+        const dropped = r.unknownApps.length + r.unknownRecipes.length;
+        say(dropped ? t("toast.importedDropped", {name: u.name, n: dropped}) : t("toast.imported", {name: u.name}));
+    };
+
+    const importCode = (code: string) => api.ImportCode(code).then(saveImported).catch((e) => say(errText(e)));
+
     const importProfile = async () => {
         try {
             const r = await api.ImportProfile();
             if (!r) return;
-            const u = free(r.profile.name);
-            await api.SaveProfile({...r.profile, id: u.id, name: u.name});
-            await refresh();
-            const dropped = r.unknownApps.length + r.unknownRecipes.length;
-            say(dropped ? t("toast.importedDropped", {name: u.name, n: dropped}) : t("toast.imported", {name: u.name}));
+            await saveImported(r);
         } catch (e) { say(errText(e)); }
     };
+
+    // Ctrl+K (Cmd+K) jumps to catalog search from any screen, unless a dialog is open.
+    useEffect(() => {
+        const key = (e: KeyboardEvent) => {
+            if (!(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== "k" || document.querySelector(".overlay, .drawer-overlay")) return;
+            e.preventDefault();
+            setCategory("");
+            setTab("catalog");
+            window.setTimeout(() => document.querySelector<HTMLInputElement>("input.search")?.focus(), 30);
+        };
+        window.addEventListener("keydown", key);
+        return () => window.removeEventListener("keydown", key);
+    }, []);
 
     const go = (next: Tab) => {
         setTab(next);
@@ -279,6 +346,7 @@ export default function App() {
         ["catalog", t("nav.catalog"), state?.apps.length ?? null],
         ["updates", t("nav.updates"), upgrades && upgrades.length > 0 ? upgrades.length : null],
         ["health", t("nav.health"), health && health.ok < health.total ? health.total - health.ok : null],
+        ["backup", t("nav.backup"), null],
     ];
 
     const byId = new Map((state?.apps ?? []).map((a) => [a.id, a]));
@@ -330,7 +398,20 @@ export default function App() {
                     </div>
                 )}
                 {state && busy && <div className="banner info"><ScanProgress kind="pc" compact current={scanStep.pc ?? null}/></div>}
-                {state?.wingetError &&<div className="banner warn">{state.wingetError}. {t("wingetOnlyDetect")}</div>}
+                {state?.wingetError && (
+                    <div className="banner warn">
+                        <span className="grow">{state.wingetError}. {t("wingetOnlyDetect")}</span>
+                        <button className="sm primary" onClick={() => void setupWinget()}>{t("winget.setup")}</button>
+                    </div>
+                )}
+                {state?.pending && !run && (
+                    <div className="banner info" role="region" aria-label={t("pending.title")}>
+                        <Icon name="refresh" size={16}/>
+                        <span className="grow"><b>{t("pending.title")}.</b> {t("pending.body", {n: state.pending.steps.length, title: pendingTitle(state.pending.title)})}</span>
+                        <button className="sm primary" onClick={() => void resume(true)}>{t("pending.continue")}</button>
+                        <button className="sm" onClick={() => void api.DiscardPending().then(() => refresh()).catch((e) => say(errText(e)))}>{t("pending.discard")}</button>
+                    </div>
+                )}
 
                 <main>
                     {!state ? <div className="pad"><h2>{t("rail.scanning")}</h2><ScanProgress kind="pc" current={scanStep.pc ?? null}/></div> : tab === "home" ? (
@@ -343,7 +424,7 @@ export default function App() {
                               onOpenCategory={(top) => { setCategory(top); setTab("catalog"); }}/>
                     ) : tab === "profiles" ? (
                         <Profiles state={state} focus={focusProfile} advanced={advanced} onFocusDone={() => setFocusProfile(null)} onInstall={(p) => void startProfile(p)} onChanged={refresh} say={say}
-                                  onImport={() => void importProfile()} onFromPC={saveFromPC} onEdit={editProfile} onDetail={setDetail}/>
+                                  onImport={() => void importProfile()} onImportCode={() => setCodeDialog(true)} onFromPC={saveFromPC} onEdit={editProfile} onDetail={setDetail}/>
                     ) : tab === "catalog" ? (
                         <Catalog apps={state.apps} featured={state.featured ?? []} advanced={advanced} selection={selection} setSelection={setSelection} initialCategory={category}
                                  onInstall={() => void startProfile(selectionProfile(selection))}
@@ -354,6 +435,8 @@ export default function App() {
                                 onScan={() => void scanHealth()} onUpdates={() => void healthUpdates()} onExport={() => void exportHealth()}
                                 onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))} onLink={openLink}
                                 onInstallApp={(a) => void startProfile(selectionProfile([a.id], a.name))} onDetail={setDetail}/>
+                    ) : tab === "backup" ? (
+                        <Backup say={say} advanced={advanced}/>
                     ) : (
                         <Updates upgrades={upgrades} busy={upgradesBusy} onCheck={() => void checkUpgrades()} onUpdate={(ids) => void startUpgrades(ids)} byId={byId} onDetail={setDetail}/>
                     )}
@@ -363,13 +446,16 @@ export default function App() {
             {run && <RunModal run={run} advanced={advanced} byId={byId} admin={!!state?.admin} onConfirm={() => void confirmRun()} onCancel={() => safe(api.Cancel())}
                               onClose={closeRun} onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}
                               onScript={() => runner?.profile && api.ExportScript(runner.profile).then((p) => p && say(t("toast.savedTo", {path: p}))).catch((e) => say(errText(e)))}
-                              onCopy={() => void copyLog()}/>}
+                              onCopy={() => void copyLog()} onRetry={() => void resume(false)} onRetryAdmin={() => void retryAdmin()}/>}
             {showSettings && <SettingsDialog value={settings} onChange={setSettings} version={state?.version ?? ""}
                                              onCheck={() => void checkUpdate(true)} onClose={() => setShowSettings(false)}/>}
             {naming && <NameDialog {...naming} onClose={() => setNaming(null)}/>}
+            {codeDialog && <CodeDialog title={t("dlg.importCode")} placeholder={t("dlg.codePlaceholder")} ok={t("profiles.import")}
+                                       onOk={(c) => void importCode(c)} onClose={() => setCodeDialog(false)}/>}
             {showTour && <Tour onClose={closeTour}/>}
             {shown && <AppDetail advanced={advanced} app={shown} byId={byId} onClose={() => setDetail(null)} openURL={(u) => safe(api.OpenURL(u))}
                                  onInstall={(a) => { setDetail(null); void startProfile(selectionProfile([a.id], a.name)); }}
+                                 onUninstall={(a) => { setDetail(null); void startUninstall(a); }}
                                  onCopy={(c) => void copyText(c, t("detail.copied"))}/>}
             {toast && <div className="toast" role="status">{toast}</div>}
         </div>

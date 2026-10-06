@@ -58,7 +58,7 @@ const baseEn = {
     "profiles.include": "Include {name}",
     "profiles.none": "No profile matches.",
 
-    "catalog.search": "Search apps, publishers, winget ids…  ( / )",
+    "catalog.search": "Search apps, publishers, winget ids…  ( / · Ctrl+K )",
     "catalog.all": "All",
     "catalog.state.all": "Any state",
     "catalog.state.installed": "Installed",
@@ -218,7 +218,7 @@ const baseEs: Record<keyof typeof baseEn, string> = {
     "profiles.include": "Incluir {name}",
     "profiles.none": "Ningún perfil coincide.",
 
-    "catalog.search": "Buscar apps, editores, ids de winget…  ( / )",
+    "catalog.search": "Buscar apps, editores, ids de winget…  ( / · Ctrl+K )",
     "catalog.all": "Todas",
     "catalog.state.all": "Cualquier estado",
     "catalog.state.installed": "Instaladas",

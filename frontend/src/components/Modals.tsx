@@ -4,7 +4,7 @@ import {Icon} from "./Icon";
 import {Strip} from "./Strip";
 import {useModal} from "./useModal";
 import {Ring} from "./Visual";
-import {t} from "../lib/i18n";
+import {t, type Key} from "../lib/i18n";
 import type {App, Plan, Step, StepStatus} from "../lib/model";
 import * as prefs from "../lib/settings";
 import {formatElapsed} from "../lib/tally";
@@ -16,6 +16,12 @@ export interface RunState {
     log: string[];
     running: boolean;
     failed: string[] | null;
+    /** Why each failed step failed (step key -> reason), from Go's install.Explain. */
+    reasons: Record<string, string>;
+    /** Latest download percent of each running step. */
+    percent: Record<string, number>;
+    /** A step finished but Windows has to restart to complete it. */
+    reboot: boolean;
     startedAt: number | null;
     /** Whether the plan can be exported as a script (profile plans only). */
     canScript: boolean;
@@ -28,7 +34,7 @@ const ICON: Record<StepStatus, "check" | "x" | "play" | "chevron"> = {pending: "
 export function RunModal(p: {
     run: RunState; admin: boolean; advanced: boolean; byId: Map<string, App>;
     onConfirm: () => void; onCancel: () => void; onClose: () => void; onAdmin: () => void;
-    onScript: () => void; onCopy: () => void;
+    onScript: () => void; onCopy: () => void; onRetry: () => void; onRetryAdmin: () => void;
 }) {
     const {run} = p;
     const started = run.running || run.failed !== null;
@@ -63,7 +69,11 @@ export function RunModal(p: {
     const heading = !started ? run.title : run.running ? t("run.installing") : failedCount > 0 ? t("run.errors") : t("run.done");
     const elapsed = run.startedAt ? formatElapsed((end ?? now) - run.startedAt) : "";
     const label = (s: Step) =>
-        s.kind === "recipe" ? `${t("run.setup")}: ${s.name}` : s.kind === "upgrade" ? `${t("run.update")}: ${s.name}` : s.name;
+        s.kind === "recipe" ? `${t("run.setup")}: ${s.name}`
+            : s.kind === "upgrade" ? `${t("run.update")}: ${s.name}`
+            : s.kind === "uninstall" ? `${t("run.uninstall")}: ${s.name}` : s.name;
+    const reasonOf = (s: Step) => run.reasons[stepKey(s)];
+    const needsAdminRetry = !p.admin && run.plan.steps.some((s) => stateOf(s) === "failed" && reasonOf(s) === "admin");
     const stepIcon = (s: Step) => {
         const app = s.kind === "recipe" ? undefined : p.byId.get(s.id);
         return app ? <AppIcon id={app.id} name={app.name} category={app.category} size={26}/>
@@ -87,7 +97,7 @@ export function RunModal(p: {
                                     <span>{t("run.working", {name: current.name})}</span>
                                 </p>
                             )}
-                            {finished && <p className="muted">{failedCount > 0 ? t("run.failedHint") : t("run.reboot")}</p>}
+                            {finished && <p className="muted">{failedCount > 0 ? t("run.failedHint") : run.reboot ? t("run.rebootNote") : t("run.reboot")}</p>}
                             <Strip cells={cells} size="lg"/>
                             <span className="mono muted small">{t("run.stepOf", {done, total: cells.length})}{elapsed && ` · ${elapsed}`}</span>
                         </div>
@@ -112,6 +122,10 @@ export function RunModal(p: {
                                 {s.version && s.kind === "upgrade" && p.advanced && <span className="mono muted">→ {s.version}</span>}
                                 {s.admin && <span className="tag"><Icon name="lock" size={11}/></span>}
                                 <span className={`stat ${st}`} aria-label={st}><Icon name={ICON[st]} size={15}/></span>
+                                {st === "running" && (run.percent[stepKey(s)] ?? 0) > 0 && (
+                                    <progress className="dl" value={run.percent[stepKey(s)]} max={100} aria-label={`${run.percent[stepKey(s)]}%`}/>
+                                )}
+                                {st === "failed" && reasonOf(s) && <p className="why">{t(`run.reason.${reasonOf(s)}` as Key)}</p>}
                             </li>
                         );
                     })}
@@ -137,7 +151,9 @@ export function RunModal(p: {
                             {stopping ? t("run.stopping") : t("run.stop")}
                         </button>
                     )}
-                    {finished && <button className="primary" onClick={p.onClose}>{t("common.close")}</button>}
+                    {finished && failedCount > 0 && needsAdminRetry && <button className="primary" onClick={p.onRetryAdmin}><Icon name="lock" size={15}/> {t("run.retryAdmin")}</button>}
+                    {finished && failedCount > 0 && !needsAdminRetry && <button className="primary" onClick={p.onRetry}><Icon name="refresh" size={15}/> {t("run.retryFailed")}</button>}
+                    {finished && <button className={failedCount > 0 ? "" : "primary"} onClick={p.onClose}>{t("common.close")}</button>}
                 </div>
             </div>
         </div>
@@ -158,6 +174,28 @@ export function NameDialog(p: { title: string; initial: string; onOk: (n: string
                 <div className="actions end">
                     <button onClick={p.onClose}>{t("common.cancel")}</button>
                     <button className="primary" disabled={!v.trim()} onClick={submit}>{t("dlg.save")}</button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+/** A multi-line paste box, for share codes. Enter confirms; Shift+Enter is not needed as codes are one line. */
+export function CodeDialog(p: { title: string; placeholder: string; ok: string; onOk: (code: string) => void; onClose: () => void }) {
+    const [v, setV] = useState("");
+    const dialog = useRef<HTMLDivElement>(null);
+    useModal(dialog, p.onClose);
+    const submit = () => { if (v.trim()) { p.onOk(v.trim()); p.onClose(); } };
+    return (
+        <div className="overlay" onClick={p.onClose}>
+            <div className="modal small" ref={dialog} role="dialog" aria-modal="true" aria-label={p.title} onClick={(e) => e.stopPropagation()}>
+                <h3>{p.title}</h3>
+                <textarea data-autofocus className="codebox mono" rows={4} value={v} placeholder={p.placeholder} aria-label={p.title}
+                          spellCheck={false} onChange={(e) => setV(e.target.value)}
+                          onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); } }}/>
+                <div className="actions end">
+                    <button onClick={p.onClose}>{t("common.cancel")}</button>
+                    <button className="primary" disabled={!v.trim()} onClick={submit}>{p.ok}</button>
                 </div>
             </div>
         </div>

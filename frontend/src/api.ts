@@ -6,6 +6,8 @@ import type {HealthResult} from "./lib/health";
 import type {InstallEvent, Plan, Profile, State, UpgradeInfo} from "./lib/model";
 
 export interface UpdateInfo { current: string; latest: string; available: boolean; url: string; notes: string }
+export interface BackupSet { id: string; files: number; bytes: number }
+export interface RestoreResult { restored: number; unchanged: number; backedUp: number; extensions: number; skipped: string[] }
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
 
 export const api = Go as unknown as {
@@ -31,6 +33,18 @@ export const api = Go as unknown as {
     HealthUpdates(): Promise<HealthResult>;
     SaveTextFile(name: string, content: string): Promise<string>;
     OpenLink(url: string): Promise<void>;
+    ResumePending(): Promise<void>;
+    PlanPending(): Promise<Plan>;
+    DiscardPending(): Promise<void>;
+    PlanUninstall(ids: string[]): Promise<Plan>;
+    ApplyUninstall(ids: string[]): Promise<void>;
+    InstallWinget(): Promise<void>;
+    ShareCode(p: Profile): Promise<string>;
+    ImportCode(code: string): Promise<ImportResult>;
+    BackupSets(): Promise<BackupSet[]>;
+    BackupSettings(ids: string[]): Promise<string>;
+    PickRestore(): Promise<{ sets: BackupSet[] } | null>;
+    RestoreSettings(ids: string[]): Promise<RestoreResult>;
 };
 
 export const on = {

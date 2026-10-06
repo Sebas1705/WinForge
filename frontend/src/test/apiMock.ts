@@ -17,6 +17,9 @@ export const api = {
     ProfileFromPC: vi.fn(), ExportProfile: vi.fn(), ExportWinget: vi.fn(), ExportScript: vi.fn(), ImportProfile: vi.fn(),
     RestartAsAdmin: vi.fn(), OpenURL: vi.fn(), CheckUpdate: vi.fn(), InstallUpdate: vi.fn(), Upgrades: vi.fn(), PlanUpgrades: vi.fn(),
     ApplyUpgrades: vi.fn(), HealthScan: vi.fn(), HealthUpdates: vi.fn(), SaveTextFile: vi.fn(), OpenLink: vi.fn(),
+    ResumePending: vi.fn(), PlanPending: vi.fn(), DiscardPending: vi.fn(), PlanUninstall: vi.fn(), ApplyUninstall: vi.fn(),
+    InstallWinget: vi.fn(), ShareCode: vi.fn(), ImportCode: vi.fn(), BackupSets: vi.fn(), BackupSettings: vi.fn(),
+    PickRestore: vi.fn(), RestoreSettings: vi.fn(),
 };
 
 export function resetApi(state: State = makeState()): void {
@@ -35,6 +38,13 @@ export function resetApi(state: State = makeState()): void {
     api.Upgrades.mockResolvedValue([]);
     api.SaveTextFile.mockResolvedValue("C:\\report.md");
     api.ExportProfile.mockResolvedValue("");
+    api.ResumePending.mockResolvedValue(undefined);
+    api.DiscardPending.mockResolvedValue(undefined);
+    api.ApplyUninstall.mockResolvedValue(undefined);
+    api.InstallWinget.mockResolvedValue(undefined);
+    api.BackupSets.mockResolvedValue([]);
+    api.PlanPending.mockImplementation(async () => ({steps: [], alreadyInstalled: [], needsAdmin: false}));
+    api.PlanUninstall.mockImplementation(async (ids: string[]) => ({steps: ids.map((id) => ({kind: "uninstall", id, name: id})), alreadyInstalled: [], needsAdmin: false}));
 }
 
 /** Stands in for the ./api module. */

@@ -34,6 +34,8 @@ const PATHS = {
     alert: <path d="M12 4l9 16H3zM12 10v4M12 17h.01"/>,
     info: <><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></>,
     x: <path d="M6 6l12 12M18 6L6 18"/>,
+    trash: <path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>,
+    archive: <path d="M3 5h18v4H3zM5 9v10h14V9M10 13h4"/>,
     external: <path d="M14 4h6v6M20 4l-9 9M18 14v5H5V6h5"/>,
     help: <><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-1 .7-1.5 1.2-1.5 2.5M12 17h.01"/></>,
     search: <><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></>,

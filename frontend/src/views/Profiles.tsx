@@ -14,7 +14,7 @@ import {profileApps, profileTally} from "../lib/tally";
 export function Profiles(p: {
     state: State; focus: string | null; advanced: boolean;
     onInstall: (p: Profile) => void; onChanged: () => Promise<void>; say: (m: string) => void;
-    onImport: () => void; onFromPC: () => void; onEdit: (p: ProfileInfo) => void;
+    onImport: () => void; onImportCode: () => void; onFromPC: () => void; onEdit: (p: ProfileInfo) => void;
     onDetail: (a: App) => void; onFocusDone: () => void;
 }) {
     const [sel, setSel] = useState<string | null>(p.focus);
@@ -51,6 +51,7 @@ export function Profiles(p: {
                 </div>
                 <button onClick={p.onFromPC}><Icon name="plus" size={14}/> {t("profiles.fromPC")}</button>
                 <button className="ghost" onClick={p.onImport}>{t("profiles.import")}</button>
+                <button className="ghost" onClick={p.onImportCode}>{t("profiles.importCode")}</button>
             </header>
             {groups.every(([, , l]) => l.length === 0) && <p className="muted empty">{t("profiles.none")}</p>}
             {groups.map(([title, icon, list]) => list.length > 0 && (
@@ -108,6 +109,13 @@ function ProfileDetail(p: {
         return fn().then((r) => { if (r) p.say(t("toast.savedTo", {path: r})); else if (ok) p.say(ok); }).catch((e) => p.say(errText(e)));
     };
 
+    const shareCode = async () => {
+        try {
+            await navigator.clipboard.writeText(await api.ShareCode(current));
+            p.say(t("toast.codeCopied"));
+        } catch (e) { p.say(errText(e)); }
+    };
+
     return (
         <div className="page detail-page">
             <button className="ghost back" onClick={p.onBack}><Icon name="back" size={16}/> {t("profiles.back")}</button>
@@ -133,6 +141,7 @@ function ProfileDetail(p: {
                     {menu && (
                         <div className="menu-pop" role="menu">
                             <button role="menuitem" onClick={() => run(() => api.ExportProfile(current))}>{t("profiles.export")}</button>
+                            <button role="menuitem" title={t("profiles.shareCodeHint")} onClick={() => { setMenu(false); void shareCode(); }}>{t("profiles.shareCode")}</button>
                             {p.advanced && <button role="menuitem" title={t("profiles.exportWingetHint")} onClick={() => run(() => api.ExportWinget(current))}>{t("profiles.exportWinget")}</button>}
                             {p.advanced && <button role="menuitem" title={t("profiles.exportScriptHint")} disabled={missingAll === 0} onClick={() => run(() => api.ExportScript(current))}>{t("profiles.exportScript")}</button>}
                             {!current.builtin && <button role="menuitem" className="danger" onClick={() => { setMenu(false); setConfirmDelete(true); }}>{t("profiles.delete")}</button>}
