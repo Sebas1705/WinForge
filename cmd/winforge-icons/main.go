@@ -140,6 +140,10 @@ func main() {
 
 func fetchApp(ctx context.Context, c *http.Client, wp *wingetpkgs.Client, owners *ownerTypes, a *catalog.App) (file, via string) {
 	var cands []string
+	// Project-specific sources first: a curated icon set and the repository's
+	// own logo beat an organization avatar that every one of its repos shares.
+	cands = append(cands, curatedIcons(a)...)
+	cands = append(cands, repoLogos(a)...)
 	if owner, ok := icons.GitHubOwner(a.Homepage); ok && icons.UseAvatar(owners.typeOf(ctx, owner)) {
 		cands = append(cands, icons.AvatarURL(owner))
 	}
@@ -155,6 +159,9 @@ func fetchApp(ctx context.Context, c *http.Client, wp *wingetpkgs.Client, owners
 	}
 	if u, err := url.Parse(a.Homepage); err == nil && u.Scheme == "https" {
 		cands = append(cands, (&url.URL{Scheme: "https", Host: u.Host, Path: "/favicon.ico"}).String())
+	}
+	for _, s := range slugs(a) {
+		cands = append(cands, "https://cdn.simpleicons.org/"+s) // brand colours, last resort
 	}
 	seen := map[string]bool{}
 	for _, u := range cands {
@@ -179,6 +186,71 @@ func fetchApp(ctx context.Context, c *http.Client, wp *wingetpkgs.Client, owners
 		return name, u
 	}
 	return "", ""
+}
+
+// slugs are the names an icon collection might know the app by: its catalog id,
+// the package name from its winget id, and its repository name.
+func slugs(a *catalog.App) []string {
+	var out []string
+	add := func(s string) {
+		s = strings.ToLower(strings.TrimSpace(s))
+		if s == "" {
+			return
+		}
+		for _, o := range out {
+			if o == s {
+				return
+			}
+		}
+		out = append(out, s)
+	}
+	add(a.ID)
+	if parts := strings.Split(a.Winget, "."); len(parts) >= 2 {
+		add(parts[1])
+		add(strings.Join(parts[1:], ""))
+	}
+	if _, repo := githubRepo(a.Homepage); repo != "" {
+		add(repo)
+	}
+	return out
+}
+
+// githubRepo returns owner and repository of a github.com homepage.
+func githubRepo(homepage string) (owner, repo string) {
+	u, err := url.Parse(homepage)
+	if err != nil || (u.Host != "github.com" && u.Host != "www.github.com") {
+		return "", ""
+	}
+	p := strings.Split(strings.Trim(u.Path, "/"), "/")
+	if len(p) < 2 {
+		return "", ""
+	}
+	return p[0], strings.TrimSuffix(p[1], ".git")
+}
+
+// curatedIcons are the dashboard-icons collection's files for the app's names.
+func curatedIcons(a *catalog.App) []string {
+	var out []string
+	for _, s := range slugs(a) {
+		out = append(out,
+			"https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/"+s+".png",
+			"https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/"+s+".svg")
+	}
+	return out
+}
+
+// repoLogos are the places open-source projects usually keep their own logo.
+func repoLogos(a *catalog.App) []string {
+	owner, repo := githubRepo(a.Homepage)
+	if repo == "" {
+		return nil
+	}
+	var out []string
+	for _, p := range []string{"logo.png", "logo.svg", "icon.png", "assets/logo.png", "assets/icon.png", "assets/logo.svg",
+		"docs/logo.png", "docs/images/logo.png", "resources/icon.png", "media/logo.png", ".github/logo.png", ".github/assets/logo.png"} {
+		out = append(out, "https://raw.githubusercontent.com/"+owner+"/"+repo+"/HEAD/"+p)
+	}
+	return out
 }
 
 // ownerTypes looks up whether a GitHub account is an Organization or a User,

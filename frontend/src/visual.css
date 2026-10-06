@@ -19,13 +19,14 @@ button svg { flex: none; }
 .bubble.ok { background: var(--accent); color: var(--on-accent); }
 
 .ring { position: relative; display: inline-grid; place-items: center; flex: none; }
-.ring svg { position: absolute; inset: 0; }
+.ring > svg { position: absolute; inset: 0; }
 .ring .track { stroke: var(--cell); }
 .ring .fill { stroke: var(--accent); transition: stroke-dasharray .6s ease; }
 .ring.warn .fill { stroke: var(--warn); }
 .ring.bad .fill { stroke: var(--bad); }
 .ring.muted .fill { stroke: var(--line); }
-.ring-center { position: relative; display: grid; place-items: center; }
+.ring-center { position: relative; display: grid; place-items: center; line-height: 0; }
+.ring-center > .ringnum { line-height: 1; }
 .ringnum { font: 700 22px var(--font-display); line-height: 1; }
 .ringnum small { font-size: .55em; color: var(--muted); font-weight: 500; }
 .ringnum.big { font-size: 40px; }
