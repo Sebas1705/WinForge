@@ -13,11 +13,11 @@ export function ApplyUpgrades(arg1:Array<string>):Promise<void>;
 
 export function BackupSets():Promise<Array<settings.Found>>;
 
-export function BackupSettings(arg1:Array<string>):Promise<string>;
-
 export function Cancel():Promise<void>;
 
 export function CheckUpdate():Promise<main.UpdateInfo>;
+
+export function CreateBackup(arg1:main.BackupRequest):Promise<main.BackupResult>;
 
 export function DeleteProfile(arg1:string):Promise<void>;
 
@@ -47,7 +47,9 @@ export function OpenLink(arg1:string):Promise<void>;
 
 export function OpenURL(arg1:string):Promise<void>;
 
-export function PickRestore():Promise<main.RestorePreview>;
+export function PickBackup():Promise<main.BackupPreview>;
+
+export function PickFolder():Promise<string>;
 
 export function Plan(arg1:catalog.Profile):Promise<install.Plan>;
 
@@ -60,6 +62,8 @@ export function PlanUpgrades(arg1:Array<string>):Promise<install.Plan>;
 export function ProfileFromPC(arg1:string,arg2:string,arg3:boolean):Promise<catalog.Profile>;
 
 export function RestartAsAdmin():Promise<void>;
+
+export function RestoreFolders(arg1:Array<string>,arg2:string):Promise<settings.FolderResult>;
 
 export function RestoreSettings(arg1:Array<string>):Promise<settings.Result>;
 

@@ -706,6 +706,134 @@ export namespace main {
 		    return a;
 		}
 	}
+	export class AppPreview {
+	    id: string;
+	    name: string;
+	    installed: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new AppPreview(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.installed = source["installed"];
+	    }
+	}
+	export class SetPreview {
+	    id: string;
+	    files: number;
+	    new: number;
+	    changed: number;
+	    same: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new SetPreview(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.files = source["files"];
+	        this.new = source["new"];
+	        this.changed = source["changed"];
+	        this.same = source["same"];
+	    }
+	}
+	export class BackupPreview {
+	    host: string;
+	    app: string;
+	    createdAt: string;
+	    intact: boolean;
+	    checked: boolean;
+	    problems: string[];
+	    sets: SetPreview[];
+	    apps: AppPreview[];
+	    missing: number;
+	    unknown: string[];
+	    profile?: catalog.Profile;
+	    folders: settings.FolderInfo[];
+	
+	    static createFrom(source: any = {}) {
+	        return new BackupPreview(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.host = source["host"];
+	        this.app = source["app"];
+	        this.createdAt = source["createdAt"];
+	        this.intact = source["intact"];
+	        this.checked = source["checked"];
+	        this.problems = source["problems"];
+	        this.sets = this.convertValues(source["sets"], SetPreview);
+	        this.apps = this.convertValues(source["apps"], AppPreview);
+	        this.missing = source["missing"];
+	        this.unknown = source["unknown"];
+	        this.profile = this.convertValues(source["profile"], catalog.Profile);
+	        this.folders = this.convertValues(source["folders"], settings.FolderInfo);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class BackupRequest {
+	    sets: string[];
+	    apps: boolean;
+	    folders: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new BackupRequest(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.sets = source["sets"];
+	        this.apps = source["apps"];
+	        this.folders = source["folders"];
+	    }
+	}
+	export class BackupResult {
+	    path: string;
+	    files: number;
+	    bytes: number;
+	    apps: number;
+	    folders: number;
+	    verified: boolean;
+	    problems: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new BackupResult(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.path = source["path"];
+	        this.files = source["files"];
+	        this.bytes = source["bytes"];
+	        this.apps = source["apps"];
+	        this.folders = source["folders"];
+	        this.verified = source["verified"];
+	        this.problems = source["problems"];
+	    }
+	}
 	export class HealthFinding {
 	    key: string;
 	    group: string;
@@ -868,36 +996,7 @@ export namespace main {
 		    return a;
 		}
 	}
-	export class RestorePreview {
-	    sets: settings.Found[];
 	
-	    static createFrom(source: any = {}) {
-	        return new RestorePreview(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.sets = this.convertValues(source["sets"], settings.Found);
-	    }
-	
-		convertValues(a: any, classs: any, asMap: boolean = false): any {
-		    if (!a) {
-		        return a;
-		    }
-		    if (a.slice && a.map) {
-		        return (a as any[]).map(elem => this.convertValues(elem, classs));
-		    } else if ("object" === typeof a) {
-		        if (asMap) {
-		            for (const key of Object.keys(a)) {
-		                a[key] = new classs(a[key]);
-		            }
-		            return a;
-		        }
-		        return new classs(a);
-		    }
-		    return a;
-		}
-	}
 	export class State {
 	    version: string;
 	    admin: boolean;
@@ -985,6 +1084,46 @@ export namespace main {
 
 export namespace settings {
 	
+	export class FolderInfo {
+	    name: string;
+	    dir: string;
+	    files: number;
+	    bytes: number;
+	    skipped: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new FolderInfo(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.dir = source["dir"];
+	        this.files = source["files"];
+	        this.bytes = source["bytes"];
+	        this.skipped = source["skipped"];
+	    }
+	}
+	export class FolderResult {
+	    written: number;
+	    same: number;
+	    kept: number;
+	    skipped: string[];
+	    dest: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new FolderResult(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.written = source["written"];
+	        this.same = source["same"];
+	        this.kept = source["kept"];
+	        this.skipped = source["skipped"];
+	        this.dest = source["dest"];
+	    }
+	}
 	export class Found {
 	    id: string;
 	    files: number;

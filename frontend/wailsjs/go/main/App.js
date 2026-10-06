@@ -18,16 +18,16 @@ export function BackupSets() {
   return window['go']['main']['App']['BackupSets']();
 }
 
-export function BackupSettings(arg1) {
-  return window['go']['main']['App']['BackupSettings'](arg1);
-}
-
 export function Cancel() {
   return window['go']['main']['App']['Cancel']();
 }
 
 export function CheckUpdate() {
   return window['go']['main']['App']['CheckUpdate']();
+}
+
+export function CreateBackup(arg1) {
+  return window['go']['main']['App']['CreateBackup'](arg1);
 }
 
 export function DeleteProfile(arg1) {
@@ -86,8 +86,12 @@ export function OpenURL(arg1) {
   return window['go']['main']['App']['OpenURL'](arg1);
 }
 
-export function PickRestore() {
-  return window['go']['main']['App']['PickRestore']();
+export function PickBackup() {
+  return window['go']['main']['App']['PickBackup']();
+}
+
+export function PickFolder() {
+  return window['go']['main']['App']['PickFolder']();
 }
 
 export function Plan(arg1) {
@@ -112,6 +116,10 @@ export function ProfileFromPC(arg1, arg2, arg3) {
 
 export function RestartAsAdmin() {
   return window['go']['main']['App']['RestartAsAdmin']();
+}
+
+export function RestoreFolders(arg1, arg2) {
+  return window['go']['main']['App']['RestoreFolders'](arg1, arg2);
 }
 
 export function RestoreSettings(arg1) {

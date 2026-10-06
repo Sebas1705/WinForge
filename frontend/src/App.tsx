@@ -27,6 +27,8 @@ type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup";
 interface Runner {
     /** Called when the person confirms the plan. */
     start: () => Promise<void>;
+    /** Called once when the dialog is closed: whether it ran, and which steps failed. */
+    done?: (outcome: { ran: boolean; failed: string[] }) => void;
     profile?: Profile;
     /** Runs after the plan finishes, to refresh what the screen shows. */
     after?: () => void;
@@ -188,15 +190,16 @@ export default function App() {
         setRun({title, plan, status: {}, log: [], reasons: {}, percent: {}, reboot: false, running: false, failed: null, startedAt: null, canScript: !!rn.profile});
     };
 
-    const startProfile = async (profile: Profile) => {
+    const startProfile = async (profile: Profile, done?: Runner["done"]) => {
         if (starting.current) return; // a second click while the plan is being worked out
         starting.current = true;
         try {
             const plan = await api.Plan(profile);
             const info = state?.profiles.find((x) => x.id === profile.id);
             const name = info?.builtin && info.name === profile.name ? profileText(info, getLang()).name : profile.name;
-            openRun(t("run.install", {name}), plan, {profile, start: () => api.Apply(profile)});
-        } catch (e) { say(errText(e)); } finally { starting.current = false; }
+            if (plan.steps.length === 0) done?.({ran: false, failed: []}); // nothing to wait for
+            openRun(t("run.install", {name}), plan, {profile, start: () => api.Apply(profile), done});
+        } catch (e) { say(errText(e)); done?.({ran: false, failed: []}); } finally { starting.current = false; }
     };
 
     const startUpgrades = async (ids: string[]) => {
@@ -260,7 +263,13 @@ export default function App() {
         } finally { starting.current = false; }
     };
 
-    const closeRun = () => { setRun(null); setRunner(null); };
+    const closeRun = () => {
+        const done = runner?.done;
+        const outcome = {ran: run !== null && run.failed !== null, failed: run?.failed ?? []};
+        setRun(null);
+        setRunner(null);
+        done?.(outcome);
+    };
 
     const copyText = async (text: string, done: string) => {
         try { await navigator.clipboard.writeText(text); say(done); } catch (e) { say(errText(e)); }
@@ -436,7 +445,8 @@ export default function App() {
                                 onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))} onLink={openLink}
                                 onInstallApp={(a) => void startProfile(selectionProfile([a.id], a.name))} onDetail={setDetail}/>
                     ) : tab === "backup" ? (
-                        <Backup say={say} advanced={advanced}/>
+                        <Backup say={say} advanced={advanced} appCount={state.apps.filter((a) => a.installed).length}
+                                onInstallProfile={(p, done) => void startProfile(p, done)}/>
                     ) : (
                         <Updates upgrades={upgrades} busy={upgradesBusy} onCheck={() => void checkUpgrades()} onUpdate={(ids) => void startUpgrades(ids)} byId={byId} onDetail={setDetail}/>
                     )}

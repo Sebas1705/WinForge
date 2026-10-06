@@ -238,3 +238,19 @@ img, svg { -webkit-user-drag: none; user-drag: none; }
 .setlist .grow { display: flex; flex-direction: column; gap: 2px; }
 .setlist small { font-size: 12px; }
 .codebox { width: 100%; resize: vertical; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; color: var(--text); overflow-wrap: anywhere; }
+
+/* backup page */
+.picks { display: inline-flex; gap: 12px; margin-left: auto; font-size: 13px; }
+.setlist label.off { opacity: .55; cursor: default; }
+.folderrow { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); min-height: 56px; }
+.folderrow .grow { display: flex; flex-direction: column; gap: 2px; }
+.folderrow small { overflow-wrap: anywhere; font-size: 12px; }
+.resultline { margin: 14px 0 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow-wrap: anywhere; }
+.badge { display: flex; align-items: center; gap: 8px; margin: 6px 0 14px; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); }
+.badge.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+.badge.warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 40%, transparent); }
+.badge.bad { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, transparent); }
+.stagebadge { font: 600 12px var(--font-body); margin-left: 10px; padding: 2px 10px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); vertical-align: middle; }
+.stagebadge.ok { color: var(--ok); } .stagebadge.fail { color: var(--bad); } .stagebadge.run { color: var(--accent-ink); }
+.destrow { display: flex; align-items: center; gap: 12px; margin: 10px 0 4px; flex-wrap: wrap; }
+.notes { margin-top: 14px; display: grid; gap: 4px; }

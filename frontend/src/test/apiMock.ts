@@ -18,8 +18,8 @@ export const api = {
     RestartAsAdmin: vi.fn(), OpenURL: vi.fn(), CheckUpdate: vi.fn(), InstallUpdate: vi.fn(), Upgrades: vi.fn(), PlanUpgrades: vi.fn(),
     ApplyUpgrades: vi.fn(), HealthScan: vi.fn(), HealthUpdates: vi.fn(), SaveTextFile: vi.fn(), OpenLink: vi.fn(),
     ResumePending: vi.fn(), PlanPending: vi.fn(), DiscardPending: vi.fn(), PlanUninstall: vi.fn(), ApplyUninstall: vi.fn(),
-    InstallWinget: vi.fn(), ShareCode: vi.fn(), ImportCode: vi.fn(), BackupSets: vi.fn(), BackupSettings: vi.fn(),
-    PickRestore: vi.fn(), RestoreSettings: vi.fn(),
+    InstallWinget: vi.fn(), ShareCode: vi.fn(), ImportCode: vi.fn(), BackupSets: vi.fn(), PickFolder: vi.fn(), CreateBackup: vi.fn(),
+    PickBackup: vi.fn(), RestoreSettings: vi.fn(), RestoreFolders: vi.fn(),
 };
 
 export function resetApi(state: State = makeState()): void {

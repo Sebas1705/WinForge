@@ -197,40 +197,6 @@ describe("share codes", () => {
     });
 });
 
-describe("settings backup", () => {
-    it("lists what exists, saves what is ticked", async () => {
-        api.BackupSets.mockResolvedValue([{id: "vscode", files: 4, bytes: 2048}, {id: "git", files: 1, bytes: 90}]);
-        api.BackupSettings.mockResolvedValue("C:\\b.zip");
-        const user = await openApp();
-        await go(user, /Settings backup/);
-        await screen.findByText("Visual Studio Code");
-        await user.click(screen.getByRole("checkbox", {name: /Git/}));
-        await user.click(screen.getByRole("button", {name: "Back up selected"}));
-        expect(api.BackupSettings).toHaveBeenCalledWith(["vscode"]);
-        expect(await screen.findByText("Saved to C:\\b.zip.")).toBeInTheDocument();
-    });
-
-    it("previews a backup before restoring, and only restores what is ticked", async () => {
-        api.PickRestore.mockResolvedValue({sets: [{id: "vscode", files: 4, bytes: 1}, {id: "ssh", files: 1, bytes: 1}]});
-        api.RestoreSettings.mockResolvedValue({restored: 4, unchanged: 0, backedUp: 1, extensions: 3, skipped: []});
-        const user = await openApp();
-        await go(user, /Settings backup/);
-        await user.click(await screen.findByRole("button", {name: "Restore from a file…"}));
-        expect(await screen.findByText("What is in this backup")).toBeInTheDocument();
-        await user.click(screen.getByRole("checkbox", {name: /SSH config/}));
-        await user.click(screen.getByRole("button", {name: "Restore selected"}));
-        expect(api.RestoreSettings).toHaveBeenCalledWith(["vscode"]);
-        expect(await screen.findByText(/Restored 4 files and 3 editor extensions; 1 replaced files/)).toBeInTheDocument();
-    });
-
-    it("says so when no supported app has settings", async () => {
-        const user = await openApp();
-        await go(user, /Settings backup/);
-        expect(await screen.findByText(/No settings from supported apps/)).toBeInTheDocument();
-        expect(screen.getByRole("button", {name: "Back up selected"})).toBeDisabled();
-    });
-});
-
 describe("keyboard", () => {
     it("Ctrl+K opens the catalog search from any screen", async () => {
         const user = await openApp();

@@ -7,6 +7,16 @@ import type {InstallEvent, Plan, Profile, State, UpgradeInfo} from "./lib/model"
 
 export interface UpdateInfo { current: string; latest: string; available: boolean; url: string; notes: string }
 export interface BackupSet { id: string; files: number; bytes: number }
+export interface BackupRequest { sets: string[]; apps: boolean; folders: string[] }
+export interface BackupResult { path: string; files: number; bytes: number; apps: number; folders: number; verified: boolean; problems: number }
+export interface SetPreview { id: string; files: number; new: number; changed: number; same: number }
+export interface AppPreview { id: string; name: string; installed: boolean }
+export interface FolderInfo { name: string; dir: string; files: number; bytes: number; skipped: number }
+export interface BackupPreview {
+    host: string; app: string; createdAt: string; intact: boolean; checked: boolean; problems: string[];
+    sets: SetPreview[]; apps: AppPreview[]; missing: number; unknown: string[]; profile: Profile | null; folders: FolderInfo[];
+}
+export interface FolderResult { written: number; same: number; kept: number; skipped: string[]; dest: string }
 export interface RestoreResult { restored: number; unchanged: number; backedUp: number; extensions: number; skipped: string[] }
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
 
@@ -42,9 +52,11 @@ export const api = Go as unknown as {
     ShareCode(p: Profile): Promise<string>;
     ImportCode(code: string): Promise<ImportResult>;
     BackupSets(): Promise<BackupSet[]>;
-    BackupSettings(ids: string[]): Promise<string>;
-    PickRestore(): Promise<{ sets: BackupSet[] } | null>;
+    PickFolder(): Promise<string>;
+    CreateBackup(req: BackupRequest): Promise<BackupResult>;
+    PickBackup(): Promise<BackupPreview | null>;
     RestoreSettings(ids: string[]): Promise<RestoreResult>;
+    RestoreFolders(names: string[], dest: string): Promise<FolderResult>;
 };
 
 export const on = {

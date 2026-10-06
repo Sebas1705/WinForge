@@ -88,7 +88,11 @@ A failed step says what to do about it in plain words (needs administrator right
 
 ## Settings backup
 
-The *Settings backup* page saves the configuration of a fixed list of apps (VS Code with its extension list, Git, Windows Terminal, PowerShell profile, SSH config, Notepad++, VLC, winget) into one zip, and restores it on another PC. Only listed files are read or written; SSH keys, tokens and passwords are never on the list. A restore keeps every file it replaces as `*.winforge-bak`, and refuses archive entries that do not match the list.
+The *Settings backup* page has two halves.
+
+**Create a backup** puts into one zip any of: the list of catalog apps installed on this PC (as a WinForge profile), the configuration of ~30 apps, and folders you add yourself (documents, projects, saves; up to 2 GB). The settings come from a fixed list in `internal/settings/sets.go`: VS Code and its forks (with the extension list), JetBrains IDEs, Sublime, Vim/Neovim, Git, GitHub CLI, Windows Terminal, Alacritty, WezTerm, PowerShell, shell and Starship, SSH config, Docker Desktop, WSL, Cargo, Notepad++, PowerToys, Flow Launcher, AltSnap, AutoHotkey, ShareX, OBS scenes, VLC, mpv and winget. Only listed files are read; browser profiles, SSH keys, tokens, saved logins and stream keys are never on the list (a test enforces it). Every entry gets a SHA-256 in the manifest, and the file is read back and verified right after it is written.
+
+**Rebuild from a backup** is a three-stage wizard for a new PC: (1) install the apps the backup lists and this PC lacks, with the usual plan, progress and retry; (2) restore the settings, after the apps exist, with a preview of what is new, changed or already identical; (3) restore the folders into a place you choose. It checks the archive first and refuses entries that were altered or added after the backup was made. Existing files are never lost: a replaced setting is kept as `*.winforge-bak`, and folders never overwrite anything. Entries that do not match the fixed list, or try to leave their folder, are skipped.
 
 ## Sharing and shortcuts
 
