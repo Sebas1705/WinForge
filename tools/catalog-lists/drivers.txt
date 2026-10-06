@@ -1,0 +1,7 @@
+# Vendor update tools that the PC health page recommends for the detected hardware.
+system|Dell.CommandUpdate|dell-command-update||https://www.dell.com/support/home
+system|Lenovo.SystemUpdate|lenovo-system-update||https://support.lenovo.com/solutions/ht037099
+system|HP.SupportAssistant|hp-support-assistant||https://support.hp.com/
+system|MSI.MSICenter|msi-center||https://www.msi.com/Landing/MSI-Center
+system|GIGABYTE.RGBFusion|gigabyte-rgb-fusion||https://www.gigabyte.com/Consumer/RGBFusion
+system|Intel.ThunderboltShare|intel-thunderbolt-share||https://www.intel.com/content/www/us/en/products/docs/io/thunderbolt/thunderbolt-technology-general.html

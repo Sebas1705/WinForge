@@ -1,8 +1,9 @@
 import {useEffect, useMemo, useState} from "react";
 import {api, errText} from "../api";
+import {AppIcon} from "../components/AppIcon";
 import {Strip} from "../components/Strip";
 import {t} from "../lib/i18n";
-import type {Profile, ProfileInfo, State} from "../lib/model";
+import type {App, Profile, ProfileInfo, State} from "../lib/model";
 import {selectionProfile} from "../lib/model";
 import {profileTally} from "../lib/tally";
 
@@ -10,6 +11,7 @@ export function Profiles(p: {
     state: State; focus: string | null;
     onInstall: (p: Profile) => void; onChanged: () => Promise<void>; say: (m: string) => void;
     onImport: () => void; onFromPC: () => void; onEdit: (p: ProfileInfo) => void;
+    onDetail: (a: App) => void;
 }) {
     const [sel, setSel] = useState<string>(p.focus ?? p.state.profiles[0]?.id ?? "");
     const [skip, setSkip] = useState<Set<string>>(new Set());
@@ -96,8 +98,9 @@ export function Profiles(p: {
                                         <input type="checkbox" checked={!skip.has(id)} aria-label={t("profiles.include", {name: a.name})}
                                                onChange={() => { const n = new Set(skip); if (n.has(id)) n.delete(id); else n.add(id); setSkip(n); }}/>
                                     ) : <span className="dot ok" title={`${a.version ?? ""}`}/>}
+                                    <AppIcon id={a.id} name={a.name} category={a.category} size={28}/>
                                     <span className="grow">
-                                        <b>{a.name}</b> <span className="muted">{a.publisher}</span>
+                                        <button className="link name" onClick={() => p.onDetail(a)}>{a.name}</button> <span className="muted">{a.publisher}</span>
                                         {a.admin && <span className="tag">{t("badge.admin")}</span>}
                                         {a.installed && a.version && <span className="mono muted"> {a.version}</span>}
                                     </span>

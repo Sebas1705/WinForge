@@ -22,9 +22,15 @@ export function ExportWinget(arg1:catalog.Profile):Promise<string>;
 
 export function GetState():Promise<main.State>;
 
+export function HealthScan():Promise<main.HealthResult>;
+
+export function HealthUpdates():Promise<main.HealthResult>;
+
 export function ImportProfile():Promise<main.ImportResult>;
 
 export function InstallUpdate():Promise<void>;
+
+export function OpenLink(arg1:string):Promise<void>;
 
 export function OpenURL(arg1:string):Promise<void>;
 
@@ -37,5 +43,7 @@ export function ProfileFromPC(arg1:string,arg2:string,arg3:boolean):Promise<cata
 export function RestartAsAdmin():Promise<void>;
 
 export function SaveProfile(arg1:catalog.Profile):Promise<void>;
+
+export function SaveTextFile(arg1:string,arg2:string):Promise<string>;
 
 export function Upgrades():Promise<Array<main.UpgradeInfo>>;

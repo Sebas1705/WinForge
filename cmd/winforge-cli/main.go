@@ -22,6 +22,7 @@ const usage = `usage:
   winforge-cli plan <profile>           show what applying a profile would do
   winforge-cli apply <profile>          install what is missing, then run recipes
   winforge-cli script <profile>         print a PowerShell script for what is missing
+  winforge-cli health [updates]         check firmware, drivers, storage and security (read-only)
   winforge-cli export <id> [pin]        write this PC's catalog apps as a profile (stdout)
   winforge-cli check <file.json>        validate a profile file against the catalog`
 
@@ -53,6 +54,8 @@ func main() {
 			fmt.Printf("%-28s %-16s %v\n", id, i.Version, i.Sources)
 		}
 		fmt.Printf("\n%d of %d catalog apps installed\n", len(installed), len(cat.Apps))
+	case "health":
+		runHealth(ctx, len(os.Args) > 2 && os.Args[2] == "updates")
 	case "script":
 		if len(os.Args) < 3 {
 			fatal(fmt.Errorf(usage))

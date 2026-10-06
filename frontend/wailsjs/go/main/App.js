@@ -38,12 +38,24 @@ export function GetState() {
   return window['go']['main']['App']['GetState']();
 }
 
+export function HealthScan() {
+  return window['go']['main']['App']['HealthScan']();
+}
+
+export function HealthUpdates() {
+  return window['go']['main']['App']['HealthUpdates']();
+}
+
 export function ImportProfile() {
   return window['go']['main']['App']['ImportProfile']();
 }
 
 export function InstallUpdate() {
   return window['go']['main']['App']['InstallUpdate']();
+}
+
+export function OpenLink(arg1) {
+  return window['go']['main']['App']['OpenLink'](arg1);
 }
 
 export function OpenURL(arg1) {
@@ -68,6 +80,10 @@ export function RestartAsAdmin() {
 
 export function SaveProfile(arg1) {
   return window['go']['main']['App']['SaveProfile'](arg1);
+}
+
+export function SaveTextFile(arg1, arg2) {
+  return window['go']['main']['App']['SaveTextFile'](arg1, arg2);
 }
 
 export function Upgrades() {

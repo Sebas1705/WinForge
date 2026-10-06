@@ -2,6 +2,7 @@
 // identical, so the boundary is typed once here.
 import * as Go from "../wailsjs/go/main/App";
 import {EventsOn} from "../wailsjs/runtime/runtime";
+import type {HealthResult} from "./lib/health";
 import type {InstallEvent, Plan, Profile, State, UpgradeInfo} from "./lib/model";
 
 export interface UpdateInfo { current: string; latest: string; available: boolean; url: string; notes: string }
@@ -26,6 +27,10 @@ export const api = Go as unknown as {
     Upgrades(): Promise<UpgradeInfo[]>;
     PlanUpgrades(ids: string[]): Promise<Plan>;
     ApplyUpgrades(ids: string[]): Promise<void>;
+    HealthScan(): Promise<HealthResult>;
+    HealthUpdates(): Promise<HealthResult>;
+    SaveTextFile(name: string, content: string): Promise<string>;
+    OpenLink(url: string): Promise<void>;
 };
 
 export const on = {

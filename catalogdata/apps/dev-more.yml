@@ -320,7 +320,7 @@
   homepage: https://nvm-windows.com/
   license: "MIT"
   winget: CoreyButler.NVMforWindows
-  publisher: "Author Software Inc."
+  publisher: "Ecor Ventures LLC"
 
 - id: yarn
   name: "Yarn"

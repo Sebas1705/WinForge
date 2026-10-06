@@ -13,6 +13,7 @@ export interface App {
     admin?: boolean;
     openSource: boolean;
     requires?: string[];
+    recipes?: string[];
     installed: boolean;
     version?: string;
     sources?: string[];

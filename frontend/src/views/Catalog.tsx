@@ -1,12 +1,14 @@
 import {useEffect, useMemo, useRef, useState} from "react";
 import {categoryLabel, t} from "../lib/i18n";
 import {filterApps, type App, type Filter} from "../lib/model";
-import {avatarHue, categoryStats, initials, sortApps, topCategory, type SortKey} from "../lib/tally";
+import {AppIcon} from "../components/AppIcon";
+import {categoryStats, sortApps, topCategory, type SortKey} from "../lib/tally";
 
 export function Catalog(p: {
     apps: App[]; selection: Set<string>; setSelection: (s: Set<string>) => void;
     initialCategory: string;
     onInstall: () => void; onInstallOne: (a: App) => void; onSave: () => void; openURL: (u: string) => void;
+    onDetail: (a: App) => void;
 }) {
     const [f, setF] = useState<Filter>({query: "", category: p.initialCategory, installed: "all", openSourceOnly: false});
     const [sort, setSort] = useState<SortKey>("name");
@@ -71,9 +73,9 @@ export function Catalog(p: {
                     <li key={a.id} className={p.selection.has(a.id) ? "sel" : ""}>
                         <label>
                             <input type="checkbox" checked={p.selection.has(a.id)} onChange={() => toggle(a.id)} aria-label={a.name}/>
-                            <span className="avatar" style={{["--hue" as string]: avatarHue(a.category)}} aria-hidden>{initials(a.name)}</span>
+                            <AppIcon id={a.id} name={a.name} category={a.category}/>
                             <span className="grow">
-                                <b>{a.name}</b>
+                                <button type="button" className="link name" onClick={(e) => { e.preventDefault(); p.onDetail(a); }}>{a.name}</button>
                                 <span className="muted small"> {categoryLabel(topCategory(a))}</span>
                                 {a.admin && <span className="tag">{t("badge.admin")}</span>}
                                 {a.openSource && <span className="tag oss" title={a.license}>{t("badge.oss")}</span>}
@@ -84,7 +86,7 @@ export function Catalog(p: {
                             {a.installed
                                 ? <span className="pill ok mono">{t("catalog.installed", {v: a.version ?? ""})}</span>
                                 : <button className="mini" onClick={() => p.onInstallOne(a)}>{t("common.install")}</button>}
-                            <a href="#" className="mono" onClick={(e) => { e.preventDefault(); p.openURL(a.homepage); }}>{a.publisher}</a>
+                            <a href="#" className="mono site" title={a.homepage} onClick={(e) => { e.preventDefault(); p.openURL(a.homepage); }}>{a.publisher} ↗</a>
                         </div>
                     </li>
                 ))}

@@ -1,8 +1,10 @@
+import {healthEn, healthEs} from "./i18n.health";
+
 // Interface strings in English and Spanish. Catalog content (app names,
 // descriptions, profile names) comes from the catalog and stays as written
 // there; only the interface is translated.
 
-const en = {
+const baseEn = {
     "nav.home": "Home",
     "nav.profiles": "Profiles",
     "nav.catalog": "Catalog",
@@ -133,6 +135,15 @@ const en = {
     "toast.savedTo": "Saved to {path}",
     "toast.deleted": "Deleted.",
 
+    "detail.website": "Website",
+    "detail.homepage": "Homepage",
+    "detail.wingetId": "winget id",
+    "detail.license": "License",
+    "detail.requires": "Needs",
+    "detail.detected": "Detected by",
+    "detail.copyCommand": "Copy install command",
+    "detail.copied": "Command copied.",
+
     "cat.ai": "AI",
     "cat.browsers": "Browsers",
     "cat.communication": "Communication",
@@ -149,9 +160,11 @@ const en = {
     "cat.utilities": "Utilities",
 } as const;
 
+const en = {...baseEn, ...healthEn} as const;
+
 export type Key = keyof typeof en;
 
-const es: Record<Key, string> = {
+const baseEs: Record<keyof typeof baseEn, string> = {
     "nav.home": "Inicio",
     "nav.profiles": "Perfiles",
     "nav.catalog": "Catálogo",
@@ -282,6 +295,15 @@ const es: Record<Key, string> = {
     "toast.savedTo": "Guardado en {path}",
     "toast.deleted": "Eliminado.",
 
+    "detail.website": "Sitio web",
+    "detail.homepage": "Página principal",
+    "detail.wingetId": "id de winget",
+    "detail.license": "Licencia",
+    "detail.requires": "Necesita",
+    "detail.detected": "Detectada por",
+    "detail.copyCommand": "Copiar comando de instalación",
+    "detail.copied": "Comando copiado.",
+
     "cat.ai": "IA",
     "cat.browsers": "Navegadores",
     "cat.communication": "Comunicación",
@@ -297,6 +319,8 @@ const es: Record<Key, string> = {
     "cat.system": "Sistema",
     "cat.utilities": "Utilidades",
 };
+
+const es: Record<Key, string> = {...baseEs, ...healthEs};
 
 export type Lang = "en" | "es";
 export type LangSetting = Lang | "auto";
@@ -327,3 +351,10 @@ export function categoryLabel(top: string): string {
 
 export const KEYS = Object.keys(en) as Key[];
 export const DICTS = dicts;
+
+/** Looks a key up by string; null when it does not exist (finding variants are optional). */
+export function tOpt(key: string, vars: Record<string, string | number> = {}): string | null {
+    const s = (dicts[current] as Record<string, string>)[key] ?? (dicts.en as Record<string, string>)[key];
+    if (s === undefined) return null;
+    return s.replace(/\{(\w+)\}/g, (_, k: string) => String(vars[k] ?? ""));
+}

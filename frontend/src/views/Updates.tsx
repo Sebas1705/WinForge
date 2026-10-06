@@ -1,10 +1,12 @@
 import {useEffect, useState} from "react";
+import {AppIcon} from "../components/AppIcon";
 import {t} from "../lib/i18n";
-import type {UpgradeInfo} from "../lib/model";
+import type {App, UpgradeInfo} from "../lib/model";
 
 export function Updates(p: {
     upgrades: UpgradeInfo[] | null; busy: boolean;
     onCheck: () => void; onUpdate: (ids: string[]) => void;
+    byId: Map<string, App>; onDetail: (a: App) => void;
 }) {
     const [picked, setPicked] = useState<Set<string>>(new Set());
     // Everything is ticked by default: the usual answer is "update it all".
@@ -38,7 +40,11 @@ export function Updates(p: {
                     <li key={u.id} className={picked.has(u.id) ? "sel" : ""}>
                         <label>
                             <input type="checkbox" checked={picked.has(u.id)} onChange={() => toggle(u.id)} aria-label={u.name}/>
-                            <span className="grow"><b>{u.name}</b> <span className="muted small">{u.publisher}</span></span>
+                            <AppIcon id={u.id} name={u.name} category={p.byId.get(u.id)?.category ?? ""}/>
+                            <span className="grow">
+                                <button type="button" className="link name" onClick={(e) => { e.preventDefault(); const a = p.byId.get(u.id); if (a) p.onDetail(a); }}>{u.name}</button>
+                                <span className="muted small"> {u.publisher}</span>
+                            </span>
                         </label>
                         <span className="mono muted">{t("updates.from", {from: u.current, to: u.available})}</span>
                     </li>

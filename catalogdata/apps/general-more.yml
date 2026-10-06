@@ -3697,15 +3697,6 @@
   winget: VirtualDesktop.Streamer
   publisher: "Virtual Desktop, Inc."
 
-- id: perplexity
-  name: "Perplexity"
-  category: education
-  description: "Ask questions, get instant answers with sources."
-  homepage: https://www.perplexity.ai/
-  license: "Proprietary"
-  winget: Perplexity.Perplexity
-  publisher: "Perplexity"
-
 - id: comet
   name: "Comet"
   category: education
@@ -3831,4 +3822,58 @@
   license: "ISC license"
   winget: opentrack.opentrack
   publisher: "opentrack"
+
+- id: dell-command-update
+  name: "Dell Command | Update"
+  category: system
+  description: "Dell Command Update is a stand-alone application for systems that provides updates for system software that is released by Dell."
+  homepage: https://www.dell.com/
+  license: "Proprietary"
+  winget: Dell.CommandUpdate
+  publisher: "Dell Inc."
+
+- id: lenovo-system-update
+  name: "Lenovo System Update"
+  category: system
+  description: "Enable IT administrators to distribute updates for software, drivers, and BIOS in a managed environment from a local server."
+  homepage: https://support.lenovo.com/solutions/ht037099
+  license: "Proprietary"
+  winget: Lenovo.SystemUpdate
+  publisher: "Lenovo"
+
+- id: hp-support-assistant
+  name: "HP Support Assistant"
+  category: system
+  description: "A utility that helps HP computer users automatically detect drivers, install updates, troubleshoot issues, and access HP support resources."
+  homepage: https://support.hp.com/us-en/help/hp-support-assistant
+  license: "Freeware"
+  winget: HP.SupportAssistant
+  publisher: "HP Inc."
+
+- id: msi-center
+  name: "MSI Center (SDK + App)"
+  category: system
+  description: "Dashboard for various tools and system monitoring, mostly for MSI (Micro-Star International) hardware."
+  homepage: https://www.msi.com/Landing/MSI-Center
+  license: "Proprietary"
+  winget: MSI.MSICenter
+  publisher: "Micro-Star International"
+
+- id: gigabyte-rgb-fusion
+  name: "RGB Fusion"
+  category: system
+  description: "With an integrated intuitive user interface, the RGB Fusion 2.0 provides you a better solution for customizing the lighting effects across all supported…"
+  homepage: https://www.gigabyte.com/Consumer/RGBFusion
+  license: "Proprietary"
+  winget: GIGABYTE.RGBFusion
+  publisher: "Gigabyte"
+
+- id: intel-thunderbolt-share
+  name: "Thunderbolt™ Share"
+  category: system
+  description: "A software solution enabling PC-to-PC experiences using Thunderbolt technology and is supported on all Windows 11 Thunderbolt 4/5 enabled PCs."
+  homepage: https://www.thunderbolttechnology.net/thunderboltshare
+  license: "Proprietary (Freeware)"
+  winget: Intel.ThunderboltShare
+  publisher: "Intel Corporation"
 

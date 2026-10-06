@@ -87,6 +87,8 @@ type Package struct {
 	ShortDescription string
 	Description      string
 	Tags             []string
+	// Icons are the manifest's own icon URLs (newer manifests only).
+	Icons []string
 }
 
 type installerYAML struct {
@@ -115,6 +117,9 @@ type localeYAML struct {
 	ShortDescription string   `yaml:"ShortDescription"`
 	Description      string   `yaml:"Description"`
 	Tags             []string `yaml:"Tags"`
+	Icons            []struct {
+		URL string `yaml:"IconUrl"`
+	} `yaml:"Icons"`
 }
 
 // ManifestDir is manifests/<first letter>/<Id segments...>.
@@ -357,5 +362,10 @@ func (c *Client) fetchPackage(ctx context.Context, id string) (*Package, error) 
 	}
 	p.Publisher, p.PublisherURL, p.Name, p.PackageURL = loc.Publisher, loc.PublisherURL, loc.PackageName, loc.PackageURL
 	p.License, p.ShortDescription, p.Description, p.Tags = loc.License, loc.ShortDescription, loc.Description, loc.Tags
+	for _, i := range loc.Icons {
+		if i.URL != "" {
+			p.Icons = append(p.Icons, i.URL)
+		}
+	}
 	return p, nil
 }

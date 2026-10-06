@@ -11,6 +11,8 @@ WinForge scans the PC, shows which apps of a **curated catalog** are installed, 
 - **Install what you choose**: a whole profile, a subset of it (per-app checkboxes), or a single app from the catalog.
 - **Updates**: lists catalog apps that have a newer version (parsed from `winget upgrade`, locale-independent) and updates the ones you tick. Apps outside the catalog are never touched.
 - **Portable plans**: any plan can be exported as a readable PowerShell script (`winforge-cli script <profile>` too), so a setup can be replayed on a PC without WinForge.
+- **Icons and links**: each app shows its own icon and opens a detail panel with its website, publisher, license and install command.
+- **PC health**: firmware (BIOS age, UEFI, Secure Boot, TPM, virtualization), drivers (missing, unsigned, old, GPU freshness), storage (disk health, free space), security (antivirus, firewall, BitLocker), Windows (support status, pending restart) and Windows Update (pending drivers and firmware). Read-only, with links to the right vendor pages.
 
 ## Trust model
 
@@ -59,6 +61,20 @@ go run ./cmd/winforge-verify -lock catalog.lock.json
 - The importer waits out GitHub's API limit and remembers ids that do not exist (`tools/catalog-lists/.notfound`, git-ignored); export `GITHUB_TOKEN` for the 5000/hour budget.
 
 Apps that are not in winget (Gradle, Maven) are deliberately absent rather than served from an unofficial source; projects use their wrappers.
+
+## PC health
+
+`winforge-cli health [updates]` or the *PC health* page run one read-only PowerShell scan (CIM/WMI queries, no installs, no network) and turn it into checks. Passing checks count too, so the page can say "16 of 17 checks fine"; a check that needs administrator rights and cannot be answered is *unknown*, never a failure.
+
+- **Drivers**: Windows' own in-box drivers (version `10.0.x`, "(Standard ...)" makers, dates like 2006) are never called old. Devices with a problem code are named by hardware id and vendor (`ACPI\RTK5452` is Realtek), because Windows often gives them no name.
+- **BIOS and firmware**: WinForge shows the version, date and age, and links to the maker's support page and a search for your exact board. It does not guess "the latest version": vendors publish it in incompatible ways, and a wrong answer on firmware is worse than none. Windows Update is queried for pending driver and firmware items (it never downloads or installs).
+- **Privacy**: no serial numbers, user names or addresses are collected, so an exported Markdown report can be pasted into a forum.
+- **Wording**: findings are keys plus parameters, worded in the interface language; a test checks every key the Go analyzer can emit has text in both languages.
+- Run `go test -tags live -run Live -v ./internal/health` on a Windows PC to see the raw scan.
+
+## Icons
+
+`go run ./cmd/winforge-icons` downloads each app's icon into `frontend/public/icons` (shipped inside the app, so the interface never contacts a vendor). Sources, in order: the GitHub owner avatar for GitHub-hosted projects, the winget manifest's own icon, the icons the homepage declares, then `/favicon.ico`. Content is identified by its bytes, SVGs with scripts are refused, and an icon that is byte-identical across three or more different brands (a host's default) is dropped, leaving the initials avatar. Icons are the projects' own marks, shown only to identify the app.
 
 ## Develop
 

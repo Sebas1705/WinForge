@@ -217,3 +217,66 @@ aside .row.on { background: var(--surface); border-color: var(--line); box-shado
 .meta a:hover { color: var(--accent); }
 
 .steps li > span:nth-child(2) { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* app icons and the detail drawer */
+.appicon {
+    flex: none; display: grid; place-items: center; border-radius: 9px; background: #f3f5f8;
+    border: 1px solid color-mix(in srgb, var(--line) 70%, transparent); padding: calc(var(--size) * 0.14); overflow: hidden;
+}
+.appicon img { width: 100%; height: 100%; object-fit: contain; }
+.avatar { flex: none; }
+button.link.name { font-weight: 600; color: var(--text); }
+.meta .site { max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.drawer-overlay { position: fixed; inset: 0; background: rgba(6, 9, 12, .45); display: flex; justify-content: flex-end; }
+.drawer {
+    position: relative; width: min(420px, 100%); height: 100%; overflow: auto; background: var(--surface);
+    border-left: 1px solid var(--line); padding: 26px 26px 30px; display: flex; flex-direction: column; gap: 12px;
+    box-shadow: -20px 0 50px rgba(0, 0, 0, .35);
+}
+.drawer .close { position: absolute; top: 12px; right: 12px; }
+.drawer header { display: flex; gap: 14px; align-items: center; margin-right: 28px; }
+.drawer h2 { font-size: 24px; margin: 0 0 2px; }
+.drawer .tags { margin: 0; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.drawer .tags .tag { margin: 0; }
+.drawer p { margin: 0; }
+.drawer dl { display: grid; grid-template-columns: max-content 1fr; gap: 8px 14px; margin: 4px 0; }
+.drawer dt { color: var(--muted); }
+.drawer dd { margin: 0; overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: no-preference) {
+    .drawer { animation: slidein .2s ease-out; }
+    @keyframes slidein { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+}
+
+/* PC health */
+.strip i.info { background: color-mix(in srgb, var(--accent) 38%, var(--cell)); }
+.strip i.warn { background: var(--warn); }
+.verdict { margin-bottom: 26px; display: flex; flex-direction: column; gap: 12px; }
+.verdict > div:first-child { display: flex; align-items: baseline; gap: 10px; }
+.verdict em { font: 700 64px/1 var(--font-display); font-style: normal; color: var(--accent); }
+.verdict span { font-size: 20px; font-weight: 500; }
+.verdict p { margin: 0; display: flex; align-items: center; gap: 10px; }
+.health section { margin-bottom: 26px; }
+.machine { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 8px 22px; margin: 0; }
+.machine > div { display: flex; flex-direction: column; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.machine dt { color: var(--muted); font: 500 11px var(--font-mono); text-transform: uppercase; letter-spacing: .08em; }
+.machine dd { margin: 2px 0 0; overflow-wrap: anywhere; }
+.findings { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.finding { display: flex; gap: 14px; align-items: flex-start; background: var(--surface); border: 1px solid var(--line); border-left-width: 4px; border-radius: 9px; padding: 11px 14px; }
+.finding p { margin: 3px 0 0; }
+.finding .sev { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 600 13px var(--font-mono); background: var(--cell); }
+.finding.ok { border-left-color: var(--accent); }
+.finding.ok .sev { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--accent); }
+.finding.info { border-left-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+.finding.warn { border-left-color: var(--warn); }
+.finding.warn .sev { background: color-mix(in srgb, var(--warn) 25%, transparent); color: var(--warn); }
+.finding.bad { border-left-color: var(--bad); }
+.finding.bad .sev { background: color-mix(in srgb, var(--bad) 25%, transparent); color: var(--bad); }
+.finding.unknown { border-left-color: var(--line); opacity: .8; }
+.actions.tight { margin: 8px 0 0; }
+.toolbar.tight { padding: 0 0 8px; }
+.plain { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.tablewrap { max-height: 420px; overflow: auto; border: 1px solid var(--line); border-radius: 9px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { position: sticky; top: 0; background: var(--surface2); text-align: left; font-weight: 600; padding: 7px 12px; }
+td { padding: 6px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+tr.unsigned td { color: var(--warn); }

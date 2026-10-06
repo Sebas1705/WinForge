@@ -11,6 +11,7 @@ import (
 
 	"github.com/Sebas1705/WinForge/catalogdata"
 	"github.com/Sebas1705/WinForge/internal/catalog"
+	"github.com/Sebas1705/WinForge/internal/health"
 	"github.com/Sebas1705/WinForge/internal/install"
 	"github.com/Sebas1705/WinForge/internal/profile"
 	"github.com/Sebas1705/WinForge/internal/system"
@@ -23,11 +24,13 @@ type App struct {
 	cat   *catalog.Catalog
 	store *profile.Store
 
-	mu        sync.Mutex
-	installed map[string]system.Installed
-	upgrades  []system.Upgrade
-	running   bool
-	cancel    context.CancelFunc
+	mu            sync.Mutex
+	installed     map[string]system.Installed
+	upgrades      []system.Upgrade
+	healthReport  *health.Report
+	healthUpdates *health.UpdateScan
+	running       bool
+	cancel        context.CancelFunc
 }
 
 func NewApp() *App {

@@ -31,3 +31,4 @@ SanDisk.Dashboard                      # generic name, single vendor tool
 Zoom.ZoomOutlookPlugin
 Microsoft.Office                       # manifest is the enterprise deployment tool
 ImageMagick.Q16-HDRI                   # duplicate of ImageMagick.ImageMagick
+Perplexity.Perplexity                  # removed from winget-pkgs

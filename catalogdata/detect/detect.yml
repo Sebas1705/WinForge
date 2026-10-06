@@ -338,6 +338,9 @@
 - id: deezer
   registry:
     - "^Deezer(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: dell-command-update
+  registry:
+    - "^Dell Command \\| Update(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: dependencies
   registry:
     - "^Dependencies(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -620,6 +623,9 @@
 - id: gephi
   registry:
     - "^Gephi(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: gigabyte-rgb-fusion
+  registry:
+    - "^RGB Fusion(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: gimp
   registry:
     - "^GIMP(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -766,6 +772,9 @@
 - id: honeyview
   registry:
     - "^Honeyview(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: hp-support-assistant
+  registry:
+    - "^HP Support Assistant(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: httpie-desktop
   registry:
     - "^HTTPie(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -774,7 +783,7 @@
     - "^Hugin(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: hwinfo
   registry:
-    - "^HWiNFO(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+    - "^HWiNFO®(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: hyperfine
   registry:
     - "^hyperfine(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -802,6 +811,9 @@
 - id: intel-r-presentmon
   registry:
     - "^Intel(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: intel-thunderbolt-share
+  registry:
+    - "^Thunderbolt™ Share(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: intellij-idea-community
   registry:
     - "^IntelliJ IDEA Community Edition(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -919,6 +931,9 @@
 - id: lazygit
   registry:
     - "^lazygit(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: lenovo-system-update
+  registry:
+    - "^Lenovo System Update(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: lens
   registry:
     - "^Lens(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1210,6 +1225,9 @@
 - id: msi-afterburner
   registry:
     - "^MSI Afterburner(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: msi-center
+  registry:
+    - "^MSI Center(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: msys2
   registry:
     - "^MSYS2 Installer(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1426,9 +1444,6 @@
 - id: peazip
   registry:
     - "^PeaZip(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
-- id: perplexity
-  registry:
-    - "^Perplexity(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: pgadmin-4
   registry:
     - "^pgAdmin\\s+(version\\s+)?v?4([.+\\-\\s\\)]|$)"
