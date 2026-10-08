@@ -1,0 +1,208 @@
+# Which systems each emulator plays, and where to find games for them. WinForge
+# never downloads or hosts a game: every source is a link to the project's own
+# page, and only places that distribute free games, homebrew, or patches (which
+# hold no game data) are listed. Patches need the person's own copy of the game,
+# which `base: true` makes the app say.
+#
+# Every url was opened when the entry was written. Kinds: homebrew (new games
+# made for the system), freegames (free or open-source games), hacks (patches
+# that change an existing game), translations, randomizers, tools, community.
+
+systems:
+  - {id: nes, en: "NES / Famicom", es: "NES / Famicom"}
+  - {id: snes, en: "Super Nintendo", es: "Super Nintendo"}
+  - {id: n64, en: "Nintendo 64", es: "Nintendo 64"}
+  - {id: gb, en: "Game Boy and Game Boy Color", es: "Game Boy y Game Boy Color"}
+  - {id: gba, en: "Game Boy Advance", es: "Game Boy Advance"}
+  - {id: nds, en: "Nintendo DS", es: "Nintendo DS"}
+  - {id: 3ds, en: "Nintendo 3DS", es: "Nintendo 3DS"}
+  - {id: switch, en: "Nintendo Switch", es: "Nintendo Switch"}
+  - {id: gamecube, en: "GameCube", es: "GameCube"}
+  - {id: wii, en: "Wii", es: "Wii"}
+  - {id: wiiu, en: "Wii U", es: "Wii U"}
+  - {id: ps1, en: "PlayStation", es: "PlayStation"}
+  - {id: ps2, en: "PlayStation 2", es: "PlayStation 2"}
+  - {id: ps4, en: "PlayStation 4", es: "PlayStation 4"}
+  - {id: psp, en: "PSP", es: "PSP"}
+  - {id: vita, en: "PlayStation Vita", es: "PlayStation Vita"}
+  - {id: xbox, en: "Xbox", es: "Xbox"}
+  - {id: xbox360, en: "Xbox 360", es: "Xbox 360"}
+  - {id: genesis, en: "Sega Mega Drive / Genesis", es: "Sega Mega Drive / Genesis"}
+  - {id: saturn, en: "Sega Saturn", es: "Sega Saturn"}
+  - {id: dreamcast, en: "Sega Dreamcast", es: "Sega Dreamcast"}
+  - {id: atari2600, en: "Atari 2600", es: "Atari 2600"}
+  - {id: atari8, en: "Atari 8-bit computers", es: "Ordenadores Atari de 8 bits"}
+  - {id: arcade, en: "Arcade machines", es: "Máquinas recreativas"}
+  - {id: dos, en: "MS-DOS", es: "MS-DOS"}
+  - {id: amiga, en: "Commodore Amiga", es: "Commodore Amiga"}
+  - {id: c64, en: "Commodore 64", es: "Commodore 64"}
+  - {id: msx, en: "MSX", es: "MSX"}
+  - {id: apple2, en: "Apple II", es: "Apple II"}
+  - {id: flash, en: "Flash games", es: "Juegos Flash"}
+  - {id: scumm, en: "Classic point-and-click adventures", es: "Aventuras gráficas clásicas"}
+  - {id: doom, en: "Doom and its source ports", es: "Doom y sus motores"}
+
+# catalog app id -> systems it plays
+emulators:
+  dolphin: [gamecube, wii]
+  cemu: [wiiu]
+  azahar: [3ds]
+  eden: [switch]
+  melonds: [nds]
+  desmume: [nds]
+  mgba: [gb, gba]
+  visual-boy-advance: [gb, gba]
+  sameboy: [gb]
+  mesen-2: [nes, snes, gb]
+  mesen: [nes]
+  mesen-s: [snes]
+  fceux: [nes]
+  bsnes: [snes]
+  project64: [n64]
+  ares: [nes, snes, n64, gb, gba, genesis, saturn, ps1, msx]
+  bizhawk: [nes, snes, n64, gb, gba, nds, genesis, saturn, ps1, atari2600, c64]
+  epsxe: [ps1]
+  pcsx-redux: [ps1]
+  duckstation: [ps1]
+  pcsx2: [ps2]
+  shadps4: [ps4]
+  ppsspp: [psp]
+  vita3k: [vita]
+  xemu: [xbox]
+  xenia: [xbox360]
+  xenia-manager: [xbox360]
+  redream: [dreamcast]
+  dreampotato: [dreamcast]
+  ssf: [saturn]
+  mednafen: [nes, snes, gb, gba, genesis, saturn, ps1]
+  stella: [atari2600]
+  atari800win-plus: [atari8]
+  mame: [arcade]
+  winuae: [amiga]
+  vice-sdl2: [c64]
+  applewin: [apple2]
+  openmsx: [msx]
+  dosbox: [dos]
+  dosbox-staging: [dos]
+  dosbox-x: [dos]
+  "86box": [dos]
+  scummvm: [scumm]
+  ruffle: [flash]
+  lightspark: [flash]
+  retroarch: [nes, snes, n64, gb, gba, nds, genesis, saturn, ps1, psp, atari2600, atari8, arcade, dos, c64, msx, amiga, apple2]
+  uzdoom: [doom]
+  zandronum: [doom]
+  doomsday-engine: [doom]
+
+sources:
+  # ---- for any system
+  - id: romhacking-hacks
+    system: any
+    kind: hacks
+    name: "Romhacking.net: hacks"
+    en: "The biggest collection of ROM hack patches, filterable by game and system."
+    es: "La mayor colección de parches de ROM hacks, filtrable por juego y sistema."
+    url: https://www.romhacking.net/hacks/
+    base: true
+  - id: romhacking-translations
+    system: any
+    kind: translations
+    name: "Romhacking.net: translations"
+    en: "Fan translations as patches, including many games that never left Japan."
+    es: "Traducciones de fans en forma de parches, incluidos muchos juegos que no salieron de Japón."
+    url: https://www.romhacking.net/translations/
+    base: true
+  - id: romhacking-homebrew
+    system: any
+    kind: homebrew
+    name: "Romhacking.net: homebrew"
+    en: "New games made by fans for old consoles, free to download."
+    es: "Juegos nuevos hechos por fans para consolas antiguas, gratis."
+    url: https://www.romhacking.net/homebrew/
+  - id: archipelago
+    system: any
+    kind: randomizers
+    name: "Archipelago"
+    en: "Randomize many games together, even across friends playing different ones."
+    es: "Aleatoriza muchos juegos a la vez, incluso entre amigos que juegan a títulos distintos."
+    url: https://archipelago.gg/
+    base: true
+  - id: rompatcher
+    system: any
+    kind: tools
+    name: "RomPatcher.js"
+    en: "Apply a patch to your game in the browser. WinForge can also do it: see the patch tool above."
+    es: "Aplica un parche a tu juego en el navegador. WinForge también puede: mira la herramienta de parches de arriba."
+    url: https://www.marcrobledo.com/RomPatcher.js/
+  - id: pdroms
+    system: any
+    kind: freegames
+    name: "PDRoms"
+    en: "Public-domain and homebrew games for many systems, shared by their authors."
+    es: "Juegos de dominio público y homebrew para muchos sistemas, compartidos por sus autores."
+    url: https://pdroms.de/
+  - id: gamebrew
+    system: any
+    kind: community
+    name: "GameBrew"
+    en: "A wiki that catalogs homebrew games and apps for consoles and handhelds."
+    es: "Una wiki que cataloga juegos y apps homebrew para consolas y portátiles."
+    url: https://www.gamebrew.org/
+  - id: itch-homebrew
+    system: any
+    kind: homebrew
+    name: "itch.io: homebrew"
+    en: "Free and paid games made for retro systems by independent developers."
+    es: "Juegos gratis y de pago hechos para sistemas retro por desarrolladores independientes."
+    url: https://itch.io/games/tag-homebrew
+
+  # ---- Nintendo
+  - {id: itch-nes, system: nes, kind: homebrew, name: "itch.io: NES games", en: "New NES games by independent developers.", es: "Juegos nuevos de NES de desarrolladores independientes.", url: "https://itch.io/games/tag-nes"}
+  - {id: super-tilt-bro, system: nes, kind: freegames, name: "Super Tilt Bro.", en: "An open-source NES fighting game with online play.", es: "Un juego de lucha de NES de código abierto, con juego en línea.", url: "https://github.com/sgadrat/super-tilt-bro"}
+  - {id: nesdev, system: nes, kind: community, name: "NESdev", en: "The community that makes new NES games, with competitions and releases.", es: "La comunidad que crea juegos nuevos de NES, con concursos y lanzamientos.", url: "https://nesdev.org/"}
+  - {id: itch-snes, system: snes, kind: homebrew, name: "itch.io: SNES games", en: "New Super Nintendo games by independent developers.", es: "Juegos nuevos de Super Nintendo de desarrolladores independientes.", url: "https://itch.io/games/tag-snes"}
+  - {id: smwcentral, system: snes, kind: hacks, name: "SMW Central", en: "Thousands of Super Mario World hacks, graphics and tools, as patches.", es: "Miles de hacks de Super Mario World, gráficos y herramientas, en forma de parches.", url: "https://www.smwcentral.net/", base: true}
+  - {id: alttpr, system: snes, kind: randomizers, name: "A Link to the Past Randomizer", en: "A shuffled Zelda: A Link to the Past. You give it your own game.", es: "Un Zelda: A Link to the Past mezclado. Le das tu propio juego.", url: "https://alttpr.com/", base: true}
+  - {id: zeldix, system: snes, kind: hacks, name: "Zelda Hacking (Zeldix)", en: "Hacks and mods of the classic Zelda games.", es: "Hacks y mods de los Zelda clásicos.", url: "https://www.zeldix.net/", base: true}
+  - {id: metroid-construction, system: snes, kind: hacks, name: "Metroid Construction", en: "Super Metroid hacks and a community that makes them.", es: "Hacks de Super Metroid y la comunidad que los crea.", url: "https://metroidconstruction.com/", base: true}
+  - {id: sm64-hacks, system: n64, kind: hacks, name: "SM64 ROM Hacks", en: "Super Mario 64 hacks, from small tweaks to whole new games.", es: "Hacks de Super Mario 64, desde pequeños cambios hasta juegos nuevos.", url: "https://sm64romhacks.com/", base: true}
+  - {id: ootr, system: n64, kind: randomizers, name: "Ocarina of Time Randomizer", en: "A shuffled Ocarina of Time. You give it your own game.", es: "Un Ocarina of Time mezclado. Le das tu propio juego.", url: "https://ootrandomizer.com/", base: true}
+  - {id: itch-n64, system: n64, kind: homebrew, name: "itch.io: Nintendo 64 games", en: "New Nintendo 64 games by independent developers.", es: "Juegos nuevos de Nintendo 64 de desarrolladores independientes.", url: "https://itch.io/games/tag-n64"}
+  - {id: tobutobugirl, system: gb, kind: freegames, name: "Tobu Tobu Girl", en: "A free, fast vertical-climbing Game Boy game.", es: "Un juego gratuito y rápido de ascenso vertical para Game Boy.", url: "https://tangramgames.dk/games/tobutobugirl/"}
+  - {id: libbet, system: gb, kind: freegames, name: "Libbet and the Magic Fish", en: "An open-source Game Boy puzzle game.", es: "Un juego de puzles de Game Boy de código abierto.", url: "https://github.com/pinobatch/libbet"}
+  - {id: itch-gb, system: gb, kind: homebrew, name: "itch.io: Game Boy games", en: "New Game Boy and Game Boy Color games.", es: "Juegos nuevos de Game Boy y Game Boy Color.", url: "https://itch.io/games/tag-game-boy"}
+  - {id: gbdev, system: gb, kind: community, name: "Game Boy Development community", en: "Tools, tutorials and releases from people who make Game Boy games.", es: "Herramientas, tutoriales y lanzamientos de quienes crean juegos de Game Boy.", url: "https://gbdev.io/"}
+  - {id: itch-gba, system: gba, kind: homebrew, name: "itch.io: GBA games", en: "New Game Boy Advance games by independent developers.", es: "Juegos nuevos de Game Boy Advance de desarrolladores independientes.", url: "https://itch.io/games/tag-gba"}
+  - {id: gbadev, system: gba, kind: community, name: "GBADev", en: "The community and tools behind new Game Boy Advance games.", es: "La comunidad y las herramientas detrás de los juegos nuevos de Game Boy Advance.", url: "https://gbadev.net/"}
+  - {id: mother3, system: gba, kind: translations, name: "Mother 3 fan translation", en: "The English fan translation of Mother 3, as a patch.", es: "La traducción de fans al inglés de Mother 3, en forma de parche.", url: "https://mother3.fobby.net/", base: true}
+  - {id: pokemon-randomizer, system: gba, kind: randomizers, name: "Universal Pokémon Randomizer", en: "Shuffle Pokémon games from Game Boy to DS. You give it your own game.", es: "Mezcla los juegos de Pokémon de Game Boy a DS. Le das tu propio juego.", url: "https://github.com/Ajarmar/universal-pokemon-randomizer-zx", base: true}
+  - {id: pokemon-randomizer-nds, system: nds, kind: randomizers, name: "Universal Pokémon Randomizer", en: "Shuffle Pokémon games on DS. You give it your own game.", es: "Mezcla los juegos de Pokémon de DS. Le das tu propio juego.", url: "https://github.com/Ajarmar/universal-pokemon-randomizer-zx", base: true}
+  - {id: itch-nds, system: nds, kind: homebrew, name: "itch.io: Nintendo DS games", en: "New Nintendo DS games by independent developers.", es: "Juegos nuevos de Nintendo DS de desarrolladores independientes.", url: "https://itch.io/games/tag-nintendo-ds"}
+  - {id: wiibrew, system: wii, kind: community, name: "WiiBrew", en: "The Wii homebrew wiki: games, apps and how to run them.", es: "La wiki de homebrew de Wii: juegos, apps y cómo ejecutarlos.", url: "https://wiibrew.org/"}
+  - {id: wiibrew-gc, system: gamecube, kind: community, name: "WiiBrew", en: "Homebrew for Wii and GameCube, with guides.", es: "Homebrew para Wii y GameCube, con guías.", url: "https://wiibrew.org/"}
+
+  # ---- Sony, Microsoft
+  - {id: itch-ps1, system: ps1, kind: homebrew, name: "itch.io: PlayStation games", en: "New PlayStation 1 games by independent developers.", es: "Juegos nuevos de PlayStation 1 de desarrolladores independientes.", url: "https://itch.io/games/tag-playstation"}
+  - {id: ppsspp-games, system: psp, kind: freegames, name: "PPSSPP: homebrew and free games", en: "The PPSSPP team's own list of homebrew and freely shared PSP games.", es: "La lista del propio equipo de PPSSPP con homebrew y juegos de PSP compartidos libremente.", url: "https://www.ppsspp.org/games/"}
+  - {id: itch-psp, system: psp, kind: homebrew, name: "itch.io: PSP games", en: "New PSP games by independent developers.", es: "Juegos nuevos de PSP de desarrolladores independientes.", url: "https://itch.io/games/tag-psp"}
+
+  # ---- Sega, Atari and others
+  - {id: sonic-retro, system: genesis, kind: hacks, name: "Sonic Retro", en: "Sonic hacks, fan games and the history of the series.", es: "Hacks de Sonic, juegos de fans y la historia de la serie.", url: "https://sonicretro.org/", base: true}
+  - {id: itch-genesis, system: genesis, kind: homebrew, name: "itch.io: Mega Drive games", en: "New Sega Mega Drive / Genesis games.", es: "Juegos nuevos de Sega Mega Drive / Genesis.", url: "https://itch.io/games/tag-sega-genesis"}
+  - {id: segaretro, system: genesis, kind: community, name: "Sega Retro", en: "A wiki with every Sega game, hardware and a lot of history.", es: "Una wiki con todos los juegos y equipos de Sega y mucha historia.", url: "https://segaretro.org/"}
+  - {id: itch-saturn, system: saturn, kind: homebrew, name: "itch.io: Saturn games", en: "New Sega Saturn games by independent developers.", es: "Juegos nuevos de Sega Saturn de desarrolladores independientes.", url: "https://itch.io/games/tag-saturn"}
+  - {id: itch-dreamcast, system: dreamcast, kind: homebrew, name: "itch.io: Dreamcast games", en: "New Dreamcast games by independent developers.", es: "Juegos nuevos de Dreamcast de desarrolladores independientes.", url: "https://itch.io/games/tag-dreamcast"}
+  - {id: itch-atari2600, system: atari2600, kind: homebrew, name: "itch.io: Atari 2600 games", en: "New Atari 2600 games by independent developers.", es: "Juegos nuevos de Atari 2600 de desarrolladores independientes.", url: "https://itch.io/games/tag-atari-2600"}
+  - {id: atariage, system: atari2600, kind: community, name: "AtariAge", en: "The Atari community, with a big list of new homebrew games.", es: "La comunidad de Atari, con una gran lista de juegos homebrew nuevos.", url: "https://atariage.com/software_list.php?SystemID=2600"}
+  - {id: mame-free, system: arcade, kind: freegames, name: "MAME: free ROMs", en: "Arcade games the MAME team has permission to share, free to download.", es: "Juegos arcade que el equipo de MAME tiene permiso para compartir, gratis.", url: "https://www.mamedev.org/roms/"}
+  - {id: classicdos, system: dos, kind: freegames, name: "Classic DOS Games", en: "Freeware and shareware DOS games that can legally be shared.", es: "Juegos de DOS freeware y shareware que se pueden compartir legalmente.", url: "https://www.classicdosgames.com/"}
+  - {id: itch-dos, system: dos, kind: homebrew, name: "itch.io: DOS games", en: "New games made for DOS, many free.", es: "Juegos nuevos hechos para DOS, muchos gratis.", url: "https://itch.io/games/tag-dos"}
+  - {id: exotica, system: amiga, kind: community, name: "Exotica", en: "The Amiga archive: free games, demos and music.", es: "El archivo del Amiga: juegos gratuitos, demos y música.", url: "https://www.exotica.org.uk/"}
+  - {id: itch-amiga, system: amiga, kind: homebrew, name: "itch.io: Amiga games", en: "New Amiga games by independent developers.", es: "Juegos nuevos de Amiga de desarrolladores independientes.", url: "https://itch.io/games/tag-amiga"}
+  - {id: csdb, system: c64, kind: community, name: "CSDb", en: "The Commodore 64 scene database: free games, demos and music.", es: "La base de datos de la escena del Commodore 64: juegos gratuitos, demos y música.", url: "https://csdb.dk/"}
+  - {id: itch-c64, system: c64, kind: homebrew, name: "itch.io: Commodore 64 games", en: "New Commodore 64 games.", es: "Juegos nuevos de Commodore 64.", url: "https://itch.io/games/tag-commodore-64"}
+  - {id: itch-msx, system: msx, kind: homebrew, name: "itch.io: MSX games", en: "New MSX games by independent developers.", es: "Juegos nuevos de MSX de desarrolladores independientes.", url: "https://itch.io/games/tag-msx"}
+  - {id: scummvm-freeware, system: scumm, kind: freegames, name: "ScummVM: freeware games", en: "Classic adventures its authors released for free, with download links.", es: "Aventuras clásicas que sus autores liberaron gratis, con enlaces de descarga.", url: "https://www.scummvm.org/games/"}
+  - {id: flashpoint, system: flash, kind: freegames, name: "Flashpoint", en: "A huge archive that keeps old Flash games and animations playable.", es: "Un enorme archivo que mantiene jugables los viejos juegos y animaciones Flash.", url: "https://flashpointarchive.org/"}
+  - {id: freedoom, system: doom, kind: freegames, name: "Freedoom", en: "Free game data for Doom engines: play without owning Doom, and with mods.", es: "Datos de juego libres para motores de Doom: juega sin tener Doom y con mods.", url: "https://freedoom.github.io/"}
+  - {id: idgames, system: doom, kind: hacks, name: "Doomworld idgames", en: "The big archive of Doom levels and mods.", es: "El gran archivo de niveles y mods de Doom.", url: "https://www.doomworld.com/idgames/"}

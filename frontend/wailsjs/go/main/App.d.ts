@@ -23,6 +23,8 @@ export function DeleteProfile(arg1:string):Promise<void>;
 
 export function DiscardPending():Promise<void>;
 
+export function Emulation():Promise<catalog.Emulation>;
+
 export function ExportProfile(arg1:catalog.Profile):Promise<string>;
 
 export function ExportScript(arg1:catalog.Profile):Promise<string>;
@@ -46,6 +48,8 @@ export function InstallWinget():Promise<void>;
 export function OpenLink(arg1:string):Promise<void>;
 
 export function OpenURL(arg1:string):Promise<void>;
+
+export function PatchROM():Promise<main.PatchResult>;
 
 export function PickBackup():Promise<main.BackupPreview>;
 

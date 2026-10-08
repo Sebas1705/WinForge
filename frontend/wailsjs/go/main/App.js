@@ -38,6 +38,10 @@ export function DiscardPending() {
   return window['go']['main']['App']['DiscardPending']();
 }
 
+export function Emulation() {
+  return window['go']['main']['App']['Emulation']();
+}
+
 export function ExportProfile(arg1) {
   return window['go']['main']['App']['ExportProfile'](arg1);
 }
@@ -84,6 +88,10 @@ export function OpenLink(arg1) {
 
 export function OpenURL(arg1) {
   return window['go']['main']['App']['OpenURL'](arg1);
+}
+
+export function PatchROM() {
+  return window['go']['main']['App']['PatchROM']();
 }
 
 export function PickBackup() {

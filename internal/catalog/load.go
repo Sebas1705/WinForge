@@ -18,6 +18,8 @@ type Catalog struct {
 	Recipes  map[string]*Recipe
 	// Featured lists the popular apps in display order.
 	Featured []string
+	// Emulation says which systems each emulator plays and where free games live.
+	Emulation *Emulation
 }
 
 // Load reads apps/*.yml, profiles/*.yml and recipes/*.yml from fsys and
@@ -77,6 +79,9 @@ func Load(fsys fs.FS) (*Catalog, error) {
 		return nil, err
 	}
 	if err := c.loadTaglines(fsys); err != nil {
+		return nil, err
+	}
+	if err := c.loadEmulation(fsys); err != nil {
 		return nil, err
 	}
 	if errs := c.Validate(); len(errs) > 0 {

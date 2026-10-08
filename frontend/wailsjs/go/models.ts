@@ -1,5 +1,81 @@
 export namespace catalog {
 	
+	export class Source {
+	    id: string;
+	    system: string;
+	    kind: string;
+	    name: string;
+	    en: string;
+	    es: string;
+	    url: string;
+	    base?: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new Source(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.system = source["system"];
+	        this.kind = source["kind"];
+	        this.name = source["name"];
+	        this.en = source["en"];
+	        this.es = source["es"];
+	        this.url = source["url"];
+	        this.base = source["base"];
+	    }
+	}
+	export class System {
+	    id: string;
+	    en: string;
+	    es: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new System(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.en = source["en"];
+	        this.es = source["es"];
+	    }
+	}
+	export class Emulation {
+	    systems: System[];
+	    emulators: Record<string, Array<string>>;
+	    sources: Source[];
+	
+	    static createFrom(source: any = {}) {
+	        return new Emulation(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.systems = this.convertValues(source["systems"], System);
+	        this.emulators = source["emulators"];
+	        this.sources = this.convertValues(source["sources"], Source);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class ProfileApp {
 	    id: string;
 	    version?: string;
@@ -56,6 +132,8 @@ export namespace catalog {
 		    return a;
 		}
 	}
+	
+	
 
 }
 
@@ -947,6 +1025,24 @@ export namespace main {
 		    }
 		    return a;
 		}
+	}
+	export class PatchResult {
+	    path: string;
+	    format: string;
+	    checked: boolean;
+	    headerless: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new PatchResult(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.path = source["path"];
+	        this.format = source["format"];
+	        this.checked = source["checked"];
+	        this.headerless = source["headerless"];
+	    }
 	}
 	export class ProfileInfo {
 	    id: string;
