@@ -20,7 +20,15 @@ export interface FolderResult { written: number; same: number; kept: number; ski
 export interface RestoreResult { restored: number; unchanged: number; backedUp: number; extensions: number; skipped: string[] }
 export interface EmuSystem { id: string; en: string; es: string }
 export interface EmuSource { id: string; system: string; kind: string; name: string; en: string; es: string; url: string; base?: boolean }
-export interface Emulation { systems: EmuSystem[]; emulators: Record<string, string[]>; sources: EmuSource[] }
+export interface RunSpec { exes: string[]; hints: string[]; args?: string[]; register?: string[] }
+export interface Emulation { systems: EmuSystem[]; emulators: Record<string, string[]>; sources: EmuSource[]; run?: Record<string, RunSpec> }
+export interface InstallableGame {
+    id: string; name: string; system: string; en: string; es: string; license: string; homepage: string; url: string;
+    sha256: string; size: number; kind: "zip" | "file"; file?: string; entry?: string;
+}
+export interface GameReceipt { id: string; sha256: string; url: string; files: number; installedAt: string }
+export interface GamesView { root: string; games: InstallableGame[]; installed: Record<string, GameReceipt>; launchers: Record<string, string> }
+export interface GameInstalled { receipt: GameReceipt; registered: string[]; registerError?: string }
 export interface PatchResult { path: string; format: string; checked: boolean; headerless: boolean }
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
 
@@ -63,9 +71,16 @@ export const api = Go as unknown as {
     RestoreFolders(names: string[], dest: string): Promise<FolderResult>;
     Emulation(): Promise<Emulation>;
     PatchROM(): Promise<PatchResult>;
+    GamesState(): Promise<GamesView>;
+    SetGamesRoot(): Promise<string>;
+    InstallGame(id: string): Promise<GameInstalled>;
+    RemoveGame(id: string): Promise<void>;
+    PlayGame(id: string, emulator: string): Promise<void>;
+    OpenGameFolder(id: string): Promise<void>;
 };
 
 export const on = {
+    gameProgress: (fn: (e: { id: string; done: number; total: number }) => void): (() => void) => EventsOn("game:progress", fn),
     scan: (fn: (e: { scan: "pc" | "health"; step: string }) => void): (() => void) => EventsOn("scan:step", fn),
     install: (fn: (e: InstallEvent) => void): (() => void) => EventsOn("install", fn),
     done: (fn: (failed: string[] | null) => void): (() => void) => EventsOn("install:done", fn),

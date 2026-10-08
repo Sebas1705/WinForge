@@ -6,6 +6,7 @@ import {makeState, planFor} from "./fixtures";
 type Handler<T> = (e: T) => void;
 const handlers = {
     scan: new Set<Handler<{ scan: "pc" | "health"; step: string }>>(),
+    gameProgress: new Set<Handler<{ id: string; done: number; total: number }>>(),
     install: new Set<Handler<InstallEvent>>(),
     done: new Set<Handler<string[] | null>>(),
     progress: new Set<Handler<{ done: number; total: number }>>(),
@@ -20,6 +21,7 @@ export const api = {
     ResumePending: vi.fn(), PlanPending: vi.fn(), DiscardPending: vi.fn(), PlanUninstall: vi.fn(), ApplyUninstall: vi.fn(),
     InstallWinget: vi.fn(), ShareCode: vi.fn(), ImportCode: vi.fn(), BackupSets: vi.fn(), PickFolder: vi.fn(), CreateBackup: vi.fn(),
     PickBackup: vi.fn(), RestoreSettings: vi.fn(), RestoreFolders: vi.fn(), Emulation: vi.fn(), PatchROM: vi.fn(),
+    GamesState: vi.fn(), SetGamesRoot: vi.fn(), InstallGame: vi.fn(), RemoveGame: vi.fn(), PlayGame: vi.fn(), OpenGameFolder: vi.fn(),
 };
 
 export function resetApi(state: State = makeState()): void {
@@ -44,6 +46,10 @@ export function resetApi(state: State = makeState()): void {
     api.InstallWinget.mockResolvedValue(undefined);
     api.BackupSets.mockResolvedValue([]);
     api.Emulation.mockResolvedValue({systems: [], emulators: {}, sources: []});
+    api.GamesState.mockResolvedValue({root: "C:\WinForge Games", games: [], installed: {}, launchers: {}});
+    api.RemoveGame.mockResolvedValue(undefined);
+    api.PlayGame.mockResolvedValue(undefined);
+    api.OpenGameFolder.mockResolvedValue(undefined);
     api.PlanPending.mockImplementation(async () => ({steps: [], alreadyInstalled: [], needsAdmin: false}));
     api.PlanUninstall.mockImplementation(async (ids: string[]) => ({steps: ids.map((id) => ({kind: "uninstall", id, name: id})), alreadyInstalled: [], needsAdmin: false}));
 }
@@ -53,6 +59,7 @@ export const moduleMock = {
     api,
     errText: (e: unknown) => (e instanceof Error ? e.message : String(e)),
     on: {
+        gameProgress: (fn: Handler<{ id: string; done: number; total: number }>) => { handlers.gameProgress.add(fn); return () => handlers.gameProgress.delete(fn); },
         scan: (fn: Handler<{ scan: "pc" | "health"; step: string }>) => { handlers.scan.add(fn); return () => handlers.scan.delete(fn); },
         install: (fn: Handler<InstallEvent>) => { handlers.install.add(fn); return () => handlers.install.delete(fn); },
         done: (fn: Handler<string[] | null>) => { handlers.done.add(fn); return () => handlers.done.delete(fn); },
@@ -62,6 +69,7 @@ export const moduleMock = {
 
 /** Events the Go side would emit while a plan runs. */
 export const emit = {
+    gameProgress: (id: string, done: number, total: number) => act(() => { handlers.gameProgress.forEach((h) => h({id, done, total})); }),
     scan: (scan: "pc" | "health", step: string) => act(() => { handlers.scan.forEach((h) => h({scan, step})); }),
     install: (e: InstallEvent) => act(() => { handlers.install.forEach((h) => h(e)); }),
     done: (failed: string[] | null = []) => act(() => { handlers.done.forEach((h) => h(failed)); }),

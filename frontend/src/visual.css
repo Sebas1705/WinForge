@@ -274,3 +274,14 @@ img, svg { -webkit-user-drag: none; user-drag: none; }
 .kind { flex: none; min-width: 96px; text-align: center; font: 600 11.5px var(--font-body); padding: 3px 10px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); }
 .kind.freegames, .kind.homebrew { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
 .kind.hacks, .kind.translations, .kind.randomizers { color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+
+/* installable games */
+.folderbar { display: flex; align-items: center; gap: 12px; margin: 0 0 18px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.folderbar .mono { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.subhead { font: 600 14px var(--font-body); margin: 14px 0 6px; color: var(--muted); text-transform: none; }
+.games { list-style: none; margin: 6px 0 8px; padding: 0; display: grid; gap: 8px; }
+.game { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line)); border-radius: 12px; background: var(--surface); flex-wrap: wrap; }
+.game .grow { display: flex; flex-direction: column; gap: 3px; min-width: 220px; }
+.gameactions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.installing { display: inline-flex; align-items: center; gap: 10px; min-width: 200px; font-size: 13px; }
+.installing progress { flex: 1; accent-color: var(--accent); height: 6px; }
