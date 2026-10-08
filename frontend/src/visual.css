@@ -279,9 +279,26 @@ img, svg { -webkit-user-drag: none; user-drag: none; }
 .folderbar { display: flex; align-items: center; gap: 12px; margin: 0 0 18px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
 .folderbar .mono { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .subhead { font: 600 14px var(--font-body); margin: 14px 0 6px; color: var(--muted); text-transform: none; }
-.games { list-style: none; margin: 6px 0 8px; padding: 0; display: grid; gap: 8px; }
+.gamelist { list-style: none; margin: 6px 0 8px; padding: 0; display: grid; gap: 8px; }
 .game { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line)); border-radius: 12px; background: var(--surface); flex-wrap: wrap; }
 .game .grow { display: flex; flex-direction: column; gap: 3px; min-width: 220px; }
 .gameactions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 .installing { display: inline-flex; align-items: center; gap: 10px; min-width: 200px; font-size: 13px; }
 .installing progress { flex: 1; accent-color: var(--accent); height: 6px; }
+
+/* games page rhythm: room between blocks, never edge to edge */
+.gamespage section { margin-bottom: 30px; }
+.gamespage section > h2 { margin-bottom: 6px; }
+.gamespage .emus { margin: 10px 0 12px; }
+.gamespage .folderbar { margin: 4px 0 26px; }
+.gamespage .patchcard { margin-bottom: 30px; padding: 18px 22px; }
+.gamespage .patchcard .resultline { margin-top: 14px; }
+.gamespage .gamelist { margin: 10px 0 10px; }
+.gamespage .gamelist + p { margin: 8px 2px 18px; }
+.gamespage .sources { margin: 12px 0 8px; }
+.gamespage .notice { margin-bottom: 26px; }
+.gamespage .emptybox { margin: 8px 0 4px; }
+.gamespage .game { padding: 14px 18px; gap: 12px 18px; }
+.gamespage .source { padding: 12px 18px; gap: 16px; }
+.gamespage .game .grow { gap: 4px; }
+.gamespage .game .hint { margin-top: 4px; }

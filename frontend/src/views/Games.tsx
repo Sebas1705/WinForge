@@ -159,7 +159,7 @@ export function Games(p: {
     };
 
     return (
-        <div className="page games">
+        <div className="page gamespage">
             <header className="pagehead">
                 <div>
                     <h1>{t("games.title")}</h1>
@@ -214,7 +214,7 @@ export function Games(p: {
                         {mineGames.length > 0 && view && (
                             <>
                                 <h3 className="subhead">{t("games.install.title")}</h3>
-                                <ul className="games">
+                                <ul className="gamelist">
                                     {mineGames.map((g) => (
                                         <GameRow key={g.id} g={g} root={view.root} installed={g.id in view.installed} pct={g.id in pct ? pct[g.id] : null}
                                                  players={startable(g)} openFrom={players.map((a) => a.name)} onOpen={p.onOpen}
