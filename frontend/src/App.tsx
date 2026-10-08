@@ -18,11 +18,12 @@ import logo from "./logo.svg";
 import {Catalog} from "./views/Catalog";
 import {Health} from "./views/Health";
 import {Backup} from "./views/Backup";
+import {Games} from "./views/Games";
 import {Home} from "./views/Home";
 import {Profiles} from "./views/Profiles";
 import {Updates} from "./views/Updates";
 
-type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup";
+type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games";
 
 interface Runner {
     /** Called when the person confirms the plan. */
@@ -37,7 +38,7 @@ interface Runner {
 // Go names runs that have no profile by what they do; show that in the person's language.
 const pendingTitle = (title: string) => (title === "updates" ? t("run.updateTitle") : title === "uninstall" ? t("detail.uninstall") : title);
 
-const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive"};
+const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive", games: "gamepad"};
 
 function tourSeen(): boolean {
     try { return localStorage.getItem("winforge.tour") === "1"; } catch { return true; }
@@ -355,6 +356,7 @@ export default function App() {
         ["catalog", t("nav.catalog"), state?.apps.length ?? null],
         ["updates", t("nav.updates"), upgrades && upgrades.length > 0 ? upgrades.length : null],
         ["health", t("nav.health"), health && health.ok < health.total ? health.total - health.ok : null],
+        ["games", t("nav.games"), null],
         ["backup", t("nav.backup"), null],
     ];
 
@@ -444,6 +446,9 @@ export default function App() {
                                 onScan={() => void scanHealth()} onUpdates={() => void healthUpdates()} onExport={() => void exportHealth()}
                                 onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))} onLink={openLink}
                                 onInstallApp={(a) => void startProfile(selectionProfile([a.id], a.name))} onDetail={setDetail}/>
+                    ) : tab === "games" ? (
+                        <Games apps={state.apps} say={say} onOpen={(u) => safe(api.OpenURL(u))} onDetail={setDetail}
+                               onBrowse={() => { setCategory("gaming"); setTab("catalog"); }}/>
                     ) : tab === "backup" ? (
                         <Backup say={say} advanced={advanced} appCount={state.apps.filter((a) => a.installed).length}
                                 onInstallProfile={(p, done) => void startProfile(p, done)}/>

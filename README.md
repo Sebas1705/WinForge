@@ -96,6 +96,12 @@ The *Settings backup* page has two halves.
 
 **Rebuild from a backup** is a three-stage wizard for a new PC: (1) install the apps the backup lists and this PC lacks, with the usual plan, progress and retry; (2) restore the settings, after the apps exist, with a preview of what is new, changed or already identical; (3) restore the folders into a place you choose. It checks the archive first and refuses entries that were altered or added after the backup was made. Existing files are never lost: a replaced setting is kept as `*.winforge-bak`, and folders never overwrite anything. Entries that do not match the fixed list, or try to leave their folder, are skipped.
 
+## Games for your emulators
+
+The *Games for emulators* page lists the emulators WinForge finds installed on this PC and, for each system they play, where to look for games: free and open-source games, homebrew, ROM hacks, fan translations and randomizers (`catalogdata/emulation.yml`). Every entry is a link to the project's own page, opened in your browser. **WinForge does not download or host games**, and a test refuses links to sites that share commercial games without permission. Hacks, translations and randomizers are patches with no game data, so the page says they need your own copy of the original.
+
+The same page has a **patch tool**: choose your game and an IPS, UPS or BPS patch and WinForge writes `<game> (patched)` next to it. UPS and BPS carry the checksum of the game they were made for, so a wrong version is refused with a clear message; an old 512-byte SNES copier header is handled. The original is never changed and nothing existing is overwritten (`internal/patch`).
+
 ## Sharing and shortcuts
 
 A profile can be copied as a **share code**: one line of text (`WF1.…`) to paste in a message, imported through *Profiles > Import from code*. `Ctrl+K` (or `/`) jumps to catalog search from anywhere. Apps can be uninstalled from their detail panel, after a confirmation.

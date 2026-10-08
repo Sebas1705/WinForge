@@ -18,6 +18,10 @@ export interface BackupPreview {
 }
 export interface FolderResult { written: number; same: number; kept: number; skipped: string[]; dest: string }
 export interface RestoreResult { restored: number; unchanged: number; backedUp: number; extensions: number; skipped: string[] }
+export interface EmuSystem { id: string; en: string; es: string }
+export interface EmuSource { id: string; system: string; kind: string; name: string; en: string; es: string; url: string; base?: boolean }
+export interface Emulation { systems: EmuSystem[]; emulators: Record<string, string[]>; sources: EmuSource[] }
+export interface PatchResult { path: string; format: string; checked: boolean; headerless: boolean }
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
 
 export const api = Go as unknown as {
@@ -57,6 +61,8 @@ export const api = Go as unknown as {
     PickBackup(): Promise<BackupPreview | null>;
     RestoreSettings(ids: string[]): Promise<RestoreResult>;
     RestoreFolders(names: string[], dest: string): Promise<FolderResult>;
+    Emulation(): Promise<Emulation>;
+    PatchROM(): Promise<PatchResult>;
 };
 
 export const on = {

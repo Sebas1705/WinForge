@@ -19,7 +19,7 @@ export const api = {
     ApplyUpgrades: vi.fn(), HealthScan: vi.fn(), HealthUpdates: vi.fn(), SaveTextFile: vi.fn(), OpenLink: vi.fn(),
     ResumePending: vi.fn(), PlanPending: vi.fn(), DiscardPending: vi.fn(), PlanUninstall: vi.fn(), ApplyUninstall: vi.fn(),
     InstallWinget: vi.fn(), ShareCode: vi.fn(), ImportCode: vi.fn(), BackupSets: vi.fn(), PickFolder: vi.fn(), CreateBackup: vi.fn(),
-    PickBackup: vi.fn(), RestoreSettings: vi.fn(), RestoreFolders: vi.fn(),
+    PickBackup: vi.fn(), RestoreSettings: vi.fn(), RestoreFolders: vi.fn(), Emulation: vi.fn(), PatchROM: vi.fn(),
 };
 
 export function resetApi(state: State = makeState()): void {
@@ -43,6 +43,7 @@ export function resetApi(state: State = makeState()): void {
     api.ApplyUninstall.mockResolvedValue(undefined);
     api.InstallWinget.mockResolvedValue(undefined);
     api.BackupSets.mockResolvedValue([]);
+    api.Emulation.mockResolvedValue({systems: [], emulators: {}, sources: []});
     api.PlanPending.mockImplementation(async () => ({steps: [], alreadyInstalled: [], needsAdmin: false}));
     api.PlanUninstall.mockImplementation(async (ids: string[]) => ({steps: ids.map((id) => ({kind: "uninstall", id, name: id})), alreadyInstalled: [], needsAdmin: false}));
 }
