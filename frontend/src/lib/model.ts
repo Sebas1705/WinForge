@@ -95,16 +95,29 @@ export interface Filter {
     category: string;
     installed: "all" | "installed" | "missing";
     openSourceOnly: boolean;
+    /** Sub-category under `category` ("emulators" for "gaming/emulators"); "" for all, "-" for apps with none. */
+    sub?: string;
 }
 
 export function categories(apps: App[]): string[] {
     return [...new Set(apps.map((a) => a.category.split("/")[0]))].sort();
 }
 
+/** The part of a category after the first slash, or "-" when it has none. */
+export const subCategory = (a: App): string => a.category.split("/")[1] ?? "-";
+
+/** Sub-categories of a category with how many apps each has, biggest first. */
+export function subCategories(apps: App[], top: string): { sub: string; count: number }[] {
+    const n = new Map<string, number>();
+    for (const a of apps) if (a.category.split("/")[0] === top) n.set(subCategory(a), (n.get(subCategory(a)) ?? 0) + 1);
+    return [...n].map(([sub, count]) => ({sub, count})).sort((a, b) => b.count - a.count || a.sub.localeCompare(b.sub));
+}
+
 export function filterApps(apps: App[], f: Filter): App[] {
     const q = f.query.trim().toLowerCase();
     return apps.filter((a) => {
         if (f.category && a.category.split("/")[0] !== f.category) return false;
+        if (f.category && f.sub && subCategory(a) !== f.sub) return false;
         if (f.installed === "installed" && !a.installed) return false;
         if (f.installed === "missing" && a.installed) return false;
         if (f.openSourceOnly && !a.openSource) return false;

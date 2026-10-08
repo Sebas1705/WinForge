@@ -2,6 +2,12 @@
 - id: 7zip
   registry:
     - "^7-Zip(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: 86box
+  registry:
+    - "^86Box(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: 86box-manager
+  registry:
+    - "^86Box Manager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: ablaze-floorp
   registry:
     - "^Ablaze Floorp(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -65,6 +71,12 @@
 - id: antigravity
   registry:
     - "^Antigravity(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: antimicrox
+  registry:
+    - "^AntiMicroX(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: antstream
+  registry:
+    - "^Antstream(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: anydesk
   registry:
     - "^AnyDesk(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -80,6 +92,9 @@
 - id: appflowy
   registry:
     - "^AppFlowy(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: applewin
+  registry:
+    - "^AppleWin(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: araxis-merge
   registry:
     - "^Araxis Merge(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -89,12 +104,18 @@
 - id: arduino-ide
   registry:
     - "^Arduino IDE(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: ares
+  registry:
+    - "^ares(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: aria2
   registry:
     - "^aria2(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: armourycrate
   registry:
     - "^ArmouryCrate(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: atari800win-plus
+  registry:
+    - "^Atari800Win PLus(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: atlauncher
   registry:
     - "^ATLauncher Setup(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -116,6 +137,9 @@
 - id: axcrypt
   registry:
     - "^AxCrypt(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: azahar
+  registry:
+    - "^Azahar(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: azul-zulu-jdk-17
   registry:
     - "^Azul Zulu JDK\\s+(version\\s+)?v?17([.+\\-\\s\\)]|$)"
@@ -131,6 +155,12 @@
 - id: azure-functions-core-tools
   registry:
     - "^Azure Functions Core Tools(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: badlion-client
+  registry:
+    - "^Badlion Client(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: balatro-mod-manager
+  registry:
+    - "^Balatro Mod Manager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: balenaetcher
   registry:
     - "^balenaEtcher(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -143,6 +173,9 @@
 - id: bat
   registry:
     - "^bat(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: battle-for-wesnoth
+  registry:
+    - "^Battle for Wesnoth(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: battlenet
   registry:
     - "^Battle\\.net Setup(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -167,6 +200,9 @@
 - id: bitwarden-cli
   registry:
     - "^Bitwarden CLI(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: bizhawk
+  registry:
+    - "^BizHawk(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: bleachbit
   registry:
     - "^BleachBit(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -176,15 +212,33 @@
 - id: blitz
   registry:
     - "^Blitz(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: blockbench
+  registry:
+    - "^Blockbench(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: bluestacks
+  registry:
+    - "^BlueStacks(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: bochs
+  registry:
+    - "^Bochs(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: box
   registry:
     - "^Box(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: brave
   registry:
     - "^Brave(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: brawlcrate
+  registry:
+    - "^BrawlCrate(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: bruno
   registry:
     - "^Bruno(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: bsmanager
+  registry:
+    - "^BSManager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: bsnes
+  registry:
+    - "^bsnes(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: btop
   registry:
     - "^btop4win(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -209,12 +263,18 @@
 - id: ccache
   registry:
     - "^Ccache(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: ce-programming-cemu
+  registry:
+    - "^CEmu(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: celestia
   registry:
     - "^Celestia(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: cemu
   registry:
     - "^Cemu(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: champollion
+  registry:
+    - "^Champollion(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: chocolatey
   registry:
     - "^Chocolatey(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -263,6 +323,9 @@
 - id: codex-cli
   registry:
     - "^Codex CLI(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: colormc
+  registry:
+    - "^ColorMC(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: comet
   registry:
     - "^Comet(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -329,6 +392,9 @@
 - id: ddu
   registry:
     - "^Display Driver Uninstaller(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: deadlock-mod-manager
+  registry:
+    - "^Deadlock Mod Manager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: debian
   registry:
     - "^Debian(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -344,9 +410,15 @@
 - id: dependencies
   registry:
     - "^Dependencies(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: depotdownloader
+  registry:
+    - "^DepotDownloader(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: deskflow
   registry:
     - "^Deskflow(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: desmume
+  registry:
+    - "^DeSmuME(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: devtoys
   registry:
     - "^DevToys(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -356,6 +428,9 @@
 - id: directx-end-user-runtime-installer
   registry:
     - "^DirectX End-User Runtime Installer(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: directx-texture-converter
+  registry:
+    - "^DirectX Texture Converter(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: discord
   registry:
     - "^Discord(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -389,6 +464,18 @@
 - id: doctl
   registry:
     - "^doctl(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: dolphin
+  registry:
+    - "^Dolphin(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: doom-explorer
+  registry:
+    - "^Doom Explorer(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: doom-runner
+  registry:
+    - "^Doom Runner(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: doomsday-engine
+  registry:
+    - "^Doomsday(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: doppler-cli
   registry:
     - "^doppler(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -398,6 +485,9 @@
 - id: dosbox-staging
   registry:
     - "^DOSBox Staging(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: dosbox-x
+  registry:
+    - "^DOSBox-X(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: dotnet-sdk-10
   registry:
     - "^Microsoft \\.NET SDK\\s+(version\\s+)?v?10\\.0([.+\\-\\s\\)]|$)"
@@ -410,6 +500,9 @@
 - id: drawio
   registry:
     - "^draw\\.io(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: dreampotato
+  registry:
+    - "^DreamPotato(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: dropbox
   registry:
     - "^Dropbox(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -458,6 +551,12 @@
 - id: eclipse-temurin-jre-with-hotspot-8
   registry:
     - "^Eclipse Temurin JRE with Hotspot\\s+(version\\s+)?v?8([.+\\-\\s\\)]|$)"
+- id: eden
+  registry:
+    - "^Eden(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: eka2l1
+  registry:
+    - "^EKA2L1(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: elasticsearch
   registry:
     - "^Elasticsearch(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -479,12 +578,21 @@
 - id: elixir
   registry:
     - "^Elixir(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: emulationstation
+  registry:
+    - "^EmulationStation(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: emulationstation-desktop-edition
+  registry:
+    - "^ES-DE(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: epic-games
   registry:
     - "^Epic Games Launcher(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: epic-online-services
   registry:
     - "^Epic Online Services(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: epsxe
+  registry:
+    - "^ePSXe(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: erlang-otp
   registry:
     - "^Erlang OTP(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -530,6 +638,9 @@
 - id: faststone-image-viewer
   registry:
     - "^FastStone Image Viewer(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: fceux
+  registry:
+    - "^FCEUX(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: fedora-media-writer
   registry:
     - "^Fedora Media Writer(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -587,21 +698,33 @@
 - id: freeplane
   registry:
     - "^Freeplane(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: freesm-launcher
+  registry:
+    - "^Freesm Launcher(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: freeze
   registry:
     - "^freeze(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: ftb-electron-app
+  registry:
+    - "^FTB Electron App(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: fxsound
   registry:
     - "^FxSound(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: fzf
   registry:
     - "^fzf(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: gale
+  registry:
+    - "^Gale(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: gcompris-educational-software
   registry:
     - "^gcompris-qt(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: gdevelop
   registry:
     - "^GDevelop(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: gdlauncher
+  registry:
+    - "^GDLauncher(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: gdu
   registry:
     - "^gdu(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -679,6 +802,12 @@
 - id: godot-engine
   registry:
     - "^Godot Engine(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: godot-re-tools
+  registry:
+    - "^Godot RE Tools(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: godotdec
+  registry:
+    - "^godotdec(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: gog-galaxy
   registry:
     - "^GOG GALAXY(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -742,6 +871,9 @@
 - id: hashicorp-vault
   registry:
     - "^Hashicorp Vault(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: hedge-mod-manager
+  registry:
+    - "^Hedge Mod Manager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: hedgewars
   registry:
     - "^Hedgewars(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -751,6 +883,9 @@
 - id: helix
   registry:
     - "^Helix(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: hello-minecraft-launcher
+  registry:
+    - "^Hello Minecraft! Launcher Stable(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: helm
   registry:
     - "^Helm(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -784,6 +919,9 @@
 - id: hwinfo
   registry:
     - "^HWiNFO®(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: hxd-hex-editor
+  registry:
+    - "^HxD Hex Editor(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: hyperfine
   registry:
     - "^hyperfine(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -826,6 +964,9 @@
 - id: irfanview
   registry:
     - "^IrfanView(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: irony-mod-manager
+  registry:
+    - "^Irony Mod Manager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: itch
   registry:
     - "^itch(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -847,6 +988,15 @@
 - id: java-8
   registry:
     - "^Java\\s+(version\\s+)?v?8([.+\\-\\s\\)]|$)"
+- id: jdminecraftlauncher
+  registry:
+    - "^jdMinecraftLauncher(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: jdmrpackinstaller
+  registry:
+    - "^jdMrpackInstaller(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: jdnbtexplorer
+  registry:
+    - "^jdNBTExplorer(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: jellyfin-media-player
   registry:
     - "^Jellyfin Media Player(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -868,6 +1018,12 @@
 - id: joplin
   registry:
     - "^Joplin(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: joystick-gremlin
+  registry:
+    - "^Joystick Gremlin(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: joytokey
+  registry:
+    - "^JoyToKey(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: julia
   registry:
     - "^Julia(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -925,6 +1081,9 @@
 - id: lapce
   registry:
     - "^Lapce(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: large-address-aware
+  registry:
+    - "^Large Address Aware(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: lastpass
   registry:
     - "^LastPass Universal Windows Installer(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -952,12 +1111,18 @@
 - id: librewolf
   registry:
     - "^LibreWolf(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: lightspark
+  registry:
+    - "^Lightspark(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: liquibase
   registry:
     - "^Liquibase(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: lively-wallpaper
   registry:
     - "^Lively Wallpaper(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: livesplit
+  registry:
+    - "^LiveSplit(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: llvm
   registry:
     - "^LLVM(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -982,12 +1147,27 @@
 - id: loom
   registry:
     - "^Loom(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: loot
+  registry:
+    - "^LOOT(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: luanti
+  registry:
+    - "^Luanti(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: ludusavi
+  registry:
+    - "^ludusavi(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: lunacy
   registry:
     - "^Lunacy(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: lunar-client
+  registry:
+    - "^Uninstall Lunar Client(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: malwarebytes
   registry:
     - "^Malwarebytes(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: mame
+  registry:
+    - "^MAME(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: mariadb
   registry:
     - "^MariaDB(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1000,6 +1180,12 @@
 - id: maxthon
   registry:
     - "^Maxthon(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: mcreator
+  registry:
+    - "^MCreator(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: media-preservation-frontend
+  registry:
+    - "^Media Preservation Frontend(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: mediahuman-youtube-downloader
   registry:
     - "^MediaHuman YouTube Downloader(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1009,18 +1195,39 @@
 - id: mediainfo-cli
   registry:
     - "^MediaInfo-CLI(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: mednafen
+  registry:
+    - "^Mednafen(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: megasync
   registry:
     - "^MEGAsync(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: meld
   registry:
     - "^Meld(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: melonds
+  registry:
+    - "^melonDS(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: mem-reduct
   registry:
     - "^Mem Reduct(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: memcardrex
+  registry:
+    - "^MemcardRex(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: mercurial
   registry:
     - "^Mercurial(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: mesen
+  registry:
+    - "^Mesen(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: mesen-2
+  registry:
+    - "^Mesen\\s+(version\\s+)?v?2([.+\\-\\s\\)]|$)"
+- id: mesen-s
+  registry:
+    - "^Mesen-S(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: mgba
+  registry:
+    - "^mGBA(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: microsoft-access-database-engine-2016
   registry:
     - "^Microsoft Access database engine\\s+(version\\s+)?v?2016([.+\\-\\s\\)]|$)"
@@ -1168,9 +1375,15 @@
 - id: miller
   registry:
     - "^Miller(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: mine-imator
+  registry:
+    - "^Mine-imator(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: minecraft-launcher
   registry:
     - "^Minecraft Launcher(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: minecraft-note-block-studio
+  registry:
+    - "^Minecraft Note Block Studio(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: minio-client
   registry:
     - "^MinIO Client(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1189,6 +1402,12 @@
 - id: mobaxterm
   registry:
     - "^MobaXterm(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: mod-organizer
+  registry:
+    - "^Mod Organizer(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: modrex
+  registry:
+    - "^Modrex(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: modrinth-app
   registry:
     - "^Modrinth App(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1327,6 +1546,9 @@
 - id: nullsoft-install-system
   registry:
     - "^Nullsoft Install System(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: nusget
+  registry:
+    - "^NUSGet(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: nushell
   registry:
     - "^Nushell(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1366,18 +1588,27 @@
 - id: opam
   registry:
     - "^opam(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: open-rails
+  registry:
+    - "^Open Rails(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: open-shell
   registry:
     - "^Open-Shell(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: open-webui
   registry:
     - "^Open WebUI(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: openmsx
+  registry:
+    - "^openMSX(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: openmw
   registry:
     - "^OpenMW(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: openoffice
   registry:
     - "^OpenOffice(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: openra
+  registry:
+    - "^OpenRA(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: openrct2
   registry:
     - "^OpenRCT2(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1414,6 +1645,9 @@
 - id: origin
   registry:
     - "^Origin(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: outer-wilds-mod-manager
+  registry:
+    - "^Outer Wilds Mod Manager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: outlook-for-windows
   registry:
     - "^Outlook for Windows(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1432,6 +1666,9 @@
 - id: pastel
   registry:
     - "^pastel(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: pcsx-redux
+  registry:
+    - "^PCSX-Redux(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: pcsx2
   registry:
     - "^PCSX2(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1519,6 +1756,9 @@
 - id: progress-telerik-fiddler-classic
   registry:
     - "^Progress Telerik Fiddler Classic(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: project64
+  registry:
+    - "^Project64(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: proton-drive
   registry:
     - "^Proton Drive(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1570,6 +1810,9 @@
 - id: qbittorrent
   registry:
     - "^qBittorrent(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: qemu
+  registry:
+    - "^QEMU(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: qgis
   registry:
     - "^QGIS(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1579,18 +1822,27 @@
 - id: qq
   registry:
     - "^腾讯QQ(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: questpatcher
+  registry:
+    - "^QuestPatcher(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: qwen
   registry:
     - "^Qwen(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: r-for-windows
   registry:
     - "^R for Windows(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: r2modman
+  registry:
+    - "^r2modman(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: racket
   registry:
     - "^Racket(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: radmin-vpn
   registry:
     - "^Radmin VPN(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: rai-pal
+  registry:
+    - "^Rai Pal(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: rainmeter
   registry:
     - "^Rainmeter(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1618,18 +1870,33 @@
 - id: recuva
   registry:
     - "^Recuva(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: redream
+  registry:
+    - "^redream(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: regolith
+  registry:
+    - "^regolith(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: remote-desktop
   registry:
     - "^Remote Desktop(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: remote-desktop-manager
   registry:
     - "^Remote Desktop Manager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: reshade
+  registry:
+    - "^ReShade Setup(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: reshade-setup-full-add-on-support
+  registry:
+    - "^ReShade Setup(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: retroarch
   registry:
     - "^RetroArch(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: revo-uninstaller
   registry:
     - "^Revo Uninstaller(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: rimsort
+  registry:
+    - "^RimSort(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: ripgrep
   registry:
     - "^RipGrep MSVC(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1663,9 +1930,15 @@
 - id: ruby-3-4-with-msys2
   registry:
     - "^Ruby\\s+(version\\s+)?v?3\\.4([.+\\-\\s\\)]|$)"
+- id: ruffle
+  registry:
+    - "^Ruffle(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: rufus
   registry:
     - "^Rufus(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: runelite
+  registry:
+    - "^RuneLite(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: rust-gnu
   registry:
     - "^Rust(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1678,6 +1951,12 @@
 - id: rustup
   registry:
     - "^Rustup: the Rust toolchain installer(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: sameboy
+  registry:
+    - "^SameBoy(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: satisfactory-mod-manager
+  registry:
+    - "^Satisfactory Mod Manager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: scilab
   registry:
     - "^scilab(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1690,12 +1969,21 @@
 - id: scummvm
   registry:
     - "^ScummVM(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: sdl2-gamepad-tool
+  registry:
+    - "^SDL2 Gamepad Tool(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: seatools
   registry:
     - "^SeaTools(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: session-manager-plugin
   registry:
     - "^Session Manager Plugin(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: shaderglass
+  registry:
+    - "^ShaderGlass(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: shadps4
+  registry:
+    - "^shadPS4(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: sharex
   registry:
     - "^ShareX(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1708,6 +1996,15 @@
 - id: slack
   registry:
     - "^Slack(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: smapi
+  registry:
+    - "^SMAPI(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: smapit-manager
+  registry:
+    - "^SmapIt Manager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: sonic-adventure-mod-manager
+  registry:
+    - "^Sonic Adventure Mod Manager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: sourcetree
   registry:
     - "^Sourcetree Enterprise(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1726,6 +2023,9 @@
 - id: spotify
   registry:
     - "^Spotify(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: spriggit
+  registry:
+    - "^Spriggit(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: spyder
   registry:
     - "^Spyder(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1735,6 +2035,9 @@
 - id: sqlite-browser
   registry:
     - "^DB Browser for SQLite(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: ssf
+  registry:
+    - "^SSF(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: sshfs-win
   registry:
     - "^SSHFS-Win(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1750,15 +2053,24 @@
 - id: steam
   registry:
     - "^Steam(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: steam-rom-manager
+  registry:
+    - "^Steam ROM Manager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: steamcmd
   registry:
     - "^SteamCMD(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: steamdepotdownloadergui
+  registry:
+    - "^SteamDepotDownloaderGUI(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: steelseries-engine
   registry:
     - "^SteelSeries Engine(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: steelseries-gg
   registry:
     - "^SteelSeries GG(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: stella
+  registry:
+    - "^Stella(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: stellarium
   registry:
     - "^Stellarium(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1876,6 +2188,9 @@
 - id: teamviewer-host
   registry:
     - "^TeamViewer Host(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: tedit
+  registry:
+    - "^TEdit(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: telegram
   registry:
     - "^Telegram Desktop(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1900,6 +2215,9 @@
 - id: texstudio
   registry:
     - "^TeXstudio - TeXstudio is a fully featured LaTeX editor\\.(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: texture64
+  registry:
+    - "^Texture64(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: thorium-browser
   registry:
     - "^Thorium(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1918,6 +2236,9 @@
 - id: tiled
   registry:
     - "^Tiled(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: tinywiibackupmanager
+  registry:
+    - "^TinyWiiBackupManager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: todoist
   registry:
     - "^Todoist(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1936,6 +2257,9 @@
 - id: total-commander
   registry:
     - "^Total Commander(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: touchhle
+  registry:
+    - "^touchHLE(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: trae
   registry:
     - "^Trae(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1954,6 +2278,9 @@
 - id: tribler
   registry:
     - "^Tribler(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: tsw-mod-manager
+  registry:
+    - "^TSW Mod Manager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: tuta-mail
   registry:
     - "^Tuta(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -1987,9 +2314,18 @@
 - id: unity-hub
   registry:
     - "^Unity Hub(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: unreal-gold-oldunreal-edition
+  registry:
+    - "^Unreal Gold(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: unreal-tournament-goty-oldunreal-edition
+  registry:
+    - "^Unreal Tournament GOTY(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: upscayl
   registry:
     - "^Upscayl(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: uzdoom
+  registry:
+    - "^UZDoom(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: v2rayn
   registry:
     - "^v2rayN(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -2011,6 +2347,9 @@
 - id: vhs
   registry:
     - "^vhs(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: vice-sdl2
+  registry:
+    - "^VICE(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: vigem-bus-driver
   registry:
     - "^ViGEm Bus Driver(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -2020,6 +2359,9 @@
 - id: virtualbox
   registry:
     - "^Oracle VirtualBox(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: visual-boy-advance
+  registry:
+    - "^Visual Boy Advance - M(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: visual-studio-2022-community
   registry:
     - "^Visual Studio Community\\s+(version\\s+)?v?2022([.+\\-\\s\\)]|$)"
@@ -2032,6 +2374,9 @@
 - id: visual-studio-professional-2022
   registry:
     - "^Visual Studio Professional\\s+(version\\s+)?v?2022([.+\\-\\s\\)]|$)"
+- id: vita3k
+  registry:
+    - "^Vita3K(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: vivaldi
   registry:
     - "^Vivaldi(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -2050,6 +2395,9 @@
 - id: vortex
   registry:
     - "^Vortex(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: vpx
+  registry:
+    - "^VPX-SgarD(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: vs-build-tools-2022
   registry:
     - "^Visual Studio BuildTools\\s+(version\\s+)?v?2022([.+\\-\\s\\)]|$)"
@@ -2059,6 +2407,9 @@
 - id: vscodium
   registry:
     - "^VSCodium(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: wabbajack
+  registry:
+    - "^Wabbajack(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: wargaming-net-game-center
   registry:
     - "^Wargaming\\.net Game Center(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -2089,6 +2440,18 @@
 - id: wget2
   registry:
     - "^Wget2(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: widelands
+  registry:
+    - "^Widelands(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: wiilink-patcher-gui
+  registry:
+    - "^WiiLink Patcher(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: wiimms-iso-tools
+  registry:
+    - "^Wiimms ISO Tools(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: wiinupro-portable
+  registry:
+    - "^WiinUPro(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: winamp
   registry:
     - "^Winamp(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -2122,6 +2485,9 @@
 - id: winscp
   registry:
     - "^WinSCP(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: winuae
+  registry:
+    - "^WinUAE(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: wireguard
   registry:
     - "^WireGuard(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -2134,6 +2500,9 @@
 - id: wiztree
   registry:
     - "^WizTree(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: wowup-with-curseforge
+  registry:
+    - "^WowUp with CurseForge(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: wox
   registry:
     - "^Wox(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -2152,6 +2521,12 @@
 - id: xemu
   registry:
     - "^xemu(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: xenia
+  registry:
+    - "^Xenia(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: xenia-manager
+  registry:
+    - "^Xenia Manager(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: xivlauncher
   registry:
     - "^XIVLauncher(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -2164,6 +2539,9 @@
 - id: xonotic
   registry:
     - "^Xonotic(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: xxmi-launcher
+  registry:
+    - "^XXMI Launcher(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: yandex-browser
   registry:
     - "^Yandex Browser(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
@@ -2188,6 +2566,9 @@
 - id: yubikey-manager-cli
   registry:
     - "^YubiKey Manager CLI(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
+- id: zandronum
+  registry:
+    - "^Zandronum(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: zen-browser
   registry:
     - "^Zen Browser(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"

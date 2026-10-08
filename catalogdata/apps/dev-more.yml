@@ -1742,7 +1742,7 @@
   homepage: https://tabby.sh/
   license: "MIT"
   winget: Eugeny.Tabby
-  publisher: "Eugene Pankov"
+  publisher: "Tabby Developers"
 
 - id: warp
   name: "Warp"

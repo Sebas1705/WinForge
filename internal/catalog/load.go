@@ -76,6 +76,9 @@ func Load(fsys fs.FS) (*Catalog, error) {
 	if err := c.loadFeatured(fsys); err != nil {
 		return nil, err
 	}
+	if err := c.loadTaglines(fsys); err != nil {
+		return nil, err
+	}
 	if errs := c.Validate(); len(errs) > 0 {
 		msgs := make([]string, len(errs))
 		for i, e := range errs {
@@ -236,6 +239,39 @@ func (c *Catalog) loadFeatured(fsys fs.FS) error {
 		seen[e.ID] = true
 		a.Tagline = &Tagline{EN: e.EN, ES: e.ES}
 		c.Featured = append(c.Featured, e.ID)
+	}
+	return nil
+}
+
+// loadTaglines reads taglines.yml (optional): one-line descriptions like the
+// featured ones, for apps that should read well on a card but are not part of
+// the "popular" list. An app may have a tagline from one file only.
+func (c *Catalog) loadTaglines(fsys fs.FS) error {
+	b, err := fs.ReadFile(fsys, "taglines.yml")
+	if err != nil {
+		return nil // optional
+	}
+	var entries []FeaturedEntry
+	if err := yaml.UnmarshalWithOptions(b, &entries, yaml.Strict()); err != nil {
+		return fmt.Errorf("taglines.yml: %w", err)
+	}
+	seen := map[string]bool{}
+	for _, e := range entries {
+		a := c.Apps[e.ID]
+		switch {
+		case a == nil:
+			return fmt.Errorf("taglines.yml: unknown app %q", e.ID)
+		case seen[e.ID]:
+			return fmt.Errorf("taglines.yml: %q listed twice", e.ID)
+		case a.Tagline != nil:
+			return fmt.Errorf("taglines.yml: %q already has a tagline in featured.yml", e.ID)
+		case e.EN == "" || e.ES == "":
+			return fmt.Errorf("taglines.yml: %q needs en and es", e.ID)
+		case len([]rune(e.EN)) > 60 || len([]rune(e.ES)) > 60:
+			return fmt.Errorf("taglines.yml: %q tagline is longer than 60 characters", e.ID)
+		}
+		seen[e.ID] = true
+		a.Tagline = &Tagline{EN: e.EN, ES: e.ES}
 	}
 	return nil
 }

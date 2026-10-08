@@ -47,6 +47,8 @@ The desktop stack, CI and release pipeline follow [Templetry's desktop app](http
 
 Entries are generated from winget-pkgs manifests, so every fact (name, publisher, homepage, license, description) is the manifest's, not something typed from memory.
 
+The gaming section (`gaming/emulators`, `gaming/mods`, `gaming/engines`, `gaming/launchers`) was built from `winget search --tag emulator|emulation|retro|mod` plus keyword searches; the list is `tools/catalog-lists/gaming.txt` and only apps that exist in winget-pkgs can be in it (RPCS3, Snes9x or Cheat Engine, for example, are not published there, so they are not here). Cards get a Spanish and English line from `catalogdata/taglines.yml`, which, unlike `featured.yml`, does not add the app to the popular shelf. The catalog shows a sub-category row under big categories such as Gaming and Development.
+
 ```bash
 # 1. add "category|Winget.Id[|catalog-id[|Display name]]" lines to a file in tools/catalog-lists/
 # 2. import: skips ids already in the catalog, unknown ids, pre-release channels (Beta/Nightly/...),

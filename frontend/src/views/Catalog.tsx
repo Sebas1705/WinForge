@@ -2,8 +2,8 @@ import {useCallback, useDeferredValue, useEffect, useMemo, useRef, useState} fro
 import {AppCard} from "../components/AppCard";
 import {AppIcon} from "../components/AppIcon";
 import {Icon, categoryIcon} from "../components/Icon";
-import {categoryLabel, getLang, t} from "../lib/i18n";
-import {filterApps, type App, type Filter} from "../lib/model";
+import {categoryLabel, getLang, subLabel, t} from "../lib/i18n";
+import {filterApps, subCategories, type App, type Filter} from "../lib/model";
 import {categoryStats, featuredApps, sortApps, taglineFor, topCategory, type SortKey} from "../lib/tally";
 
 export const POPULAR = "__popular";
@@ -19,11 +19,11 @@ export function Catalog(p: {
     onInstall: () => void; onInstallOne: (a: App) => void; onSave: () => void; openURL: (u: string) => void;
     onDetail: (a: App) => void;
 }) {
-    const [f, setF] = useState<Filter>({query: "", category: p.initialCategory, installed: "all", openSourceOnly: false});
+    const [f, setF] = useState<Filter>({query: "", category: p.initialCategory, installed: "all", openSourceOnly: false, sub: ""});
     const [sort, setSort] = useState<SortKey>("name");
     const [view, setView] = useState<View>(loadView);
     const search = useRef<HTMLInputElement>(null);
-    useEffect(() => { setF((x) => ({...x, category: p.initialCategory})); }, [p.initialCategory]);
+    useEffect(() => { setF((x) => ({...x, category: p.initialCategory, sub: ""})); }, [p.initialCategory]);
     useEffect(() => { try { localStorage.setItem("winforge.catalogView", view); } catch { /* not persisted */ } }, [view]);
 
     // "/" jumps to search unless the user is already typing.
@@ -36,7 +36,7 @@ export function Catalog(p: {
         return () => window.removeEventListener("keydown", key);
     }, []);
 
-    // Typing stays instant; the 749-card list catches up a moment later.
+    // Typing stays instant; the 876-card list catches up a moment later.
     const query = useDeferredValue(f.query);
     const popular = f.category === POPULAR;
     const source = useMemo(() => (popular ? featuredApps(p.apps, p.featured) : p.apps), [popular, p.apps, p.featured]);
@@ -45,7 +45,9 @@ export function Catalog(p: {
         const filtered = filterApps(source, {...f, query, category: popular ? "" : f.category});
         // The popular shelf keeps its curated order unless the person picks a sort.
         return popular && sort === "name" ? filtered : sortApps(filtered, sort);
-    }, [source, f.category, f.installed, f.openSourceOnly, query, sort, popular]);
+    }, [source, f.category, f.sub, f.installed, f.openSourceOnly, query, sort, popular]);
+    // Big categories (Gaming, Development) split into sub-categories; small ones show none.
+    const subs = useMemo(() => (f.category && !popular ? subCategories(p.apps, f.category) : []), [p.apps, f.category, popular]);
     const byId = useMemo(() => new Map(p.apps.map((a) => [a.id, a])), [p.apps]);
     const missing = [...p.selection].filter((id) => !byId.get(id)?.installed).length;
 
@@ -60,7 +62,7 @@ export function Catalog(p: {
     }, [setSelection]);
     const selectVisible = () => p.setSelection(new Set([...p.selection, ...list.filter((a) => !a.installed).map((a) => a.id)]));
     const chip = (key: string, icon: Parameters<typeof Icon>[0]["name"], label: string, count: number) => (
-        <button key={key} role="tab" aria-selected={f.category === key} className={f.category === key ? "on" : ""} onClick={() => setF({...f, category: key})}>
+        <button key={key} role="tab" aria-selected={f.category === key} className={f.category === key ? "on" : ""} onClick={() => setF({...f, category: key, sub: ""})}>
             <Icon name={icon} size={15}/>{label} <em>{count}</em>
         </button>
     );
@@ -96,6 +98,17 @@ export function Catalog(p: {
                 {p.featured.length > 0 && chip(POPULAR, "star", t("catalog.popular"), p.featured.length)}
                 {stats.map((s) => chip(s.top, categoryIcon(s.top), categoryLabel(s.top), s.total))}
             </div>
+
+            {subs.length > 1 && (
+                <div className="chips subchips" role="tablist" aria-label={categoryLabel(f.category)}>
+                    <button role="tab" aria-selected={!f.sub} className={!f.sub ? "on" : ""} onClick={() => setF({...f, sub: ""})}>{t("catalog.all")}</button>
+                    {subs.map((s) => (
+                        <button key={s.sub} role="tab" aria-selected={f.sub === s.sub} className={f.sub === s.sub ? "on" : ""} onClick={() => setF({...f, sub: s.sub})}>
+                            {subLabel(f.category, s.sub)} <em>{s.count}</em>
+                        </button>
+                    ))}
+                </div>
+            )}
 
             {view === "grid" ? (
                 <div className="cardgrid">

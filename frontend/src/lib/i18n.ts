@@ -1,4 +1,5 @@
 import {backupEn, backupEs} from "./i18n.backup";
+import {subEn, subEs} from "./i18n.sub";
 import {healthEn, healthEs} from "./i18n.health";
 import {uiEn, uiEs} from "./i18n.ui";
 
@@ -162,7 +163,7 @@ const baseEn = {
     "cat.utilities": "Utilities",
 } as const;
 
-const en = {...baseEn, ...healthEn, ...uiEn, ...backupEn} as const;
+const en = {...baseEn, ...healthEn, ...uiEn, ...backupEn, ...subEn} as const;
 
 export type Key = keyof typeof en;
 
@@ -322,7 +323,7 @@ const baseEs: Record<keyof typeof baseEn, string> = {
     "cat.utilities": "Utilidades",
 };
 
-const es: Record<Key, string> = {...baseEs, ...healthEs, ...uiEs, ...backupEs};
+const es: Record<Key, string> = {...baseEs, ...healthEs, ...uiEs, ...backupEs, ...subEs};
 
 export type Lang = "en" | "es";
 export type LangSetting = Lang | "auto";
@@ -349,6 +350,13 @@ export function t(key: Key, vars: Record<string, string | number> = {}): string 
 export function categoryLabel(top: string): string {
     const key = `cat.${top}` as Key;
     return key in en ? t(key) : top;
+}
+
+/** Name of a sub-category: its translation, or the raw id when it has none yet. */
+export function subLabel(top: string, sub: string): string {
+    if (sub === "-") return t("sub.other");
+    const key = `sub.${top}.${sub}` as Key;
+    return key in en ? t(key) : sub.charAt(0).toUpperCase() + sub.slice(1);
 }
 
 export const KEYS = Object.keys(en) as Key[];

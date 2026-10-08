@@ -1,0 +1,60 @@
+- id: emulation-nintendo
+  name: "Nintendo emulators"
+  kind: base
+  description: "Emulators for Nintendo consoles, from the NES and Game Boy to the Switch."
+  apps: [{id: dolphin}, {id: cemu}, {id: azahar}, {id: eden}, {id: melonds}, {id: mgba}, {id: visual-boy-advance}, {id: mesen-2}, {id: bsnes}, {id: project64}, {id: fceux}]
+
+- id: emulation-playstation
+  name: "PlayStation emulators"
+  kind: base
+  description: "Emulators for PlayStation 1, 2, 4, PSP and Vita."
+  apps: [{id: duckstation}, {id: pcsx2}, {id: shadps4}, {id: ppsspp}, {id: vita3k}]
+
+- id: emulation-classics
+  name: "Classic PCs and arcade"
+  kind: base
+  description: "DOS, Amiga, Commodore, Apple II, MSX, arcade machines and old Flash games."
+  apps: [{id: dosbox-staging}, {id: dosbox-x}, {id: scummvm}, {id: mame}, {id: winuae}, {id: vice-sdl2}, {id: openmsx}, {id: applewin}, {id: 86box}, {id: ruffle}]
+
+- id: emulation-station
+  name: "Emulation station"
+  kind: base
+  description: "A console-style menu for all your emulators, with filters, controller tools and save backups."
+  apps: [{id: retroarch}, {id: emulationstation-desktop-edition}, {id: steam-rom-manager}, {id: shaderglass}, {id: antimicrox}, {id: joytokey}, {id: ludusavi}, {id: playnite}]
+
+- id: emulation-all
+  name: "Every emulator"
+  kind: base
+  description: "All the emulator sets at once, plus Xbox, Sega and Atari."
+  extends: [emulation-nintendo, emulation-playstation, emulation-classics, emulation-station]
+  apps: [{id: xemu}, {id: xenia}, {id: redream}, {id: mednafen}, {id: stella}, {id: bizhawk}, {id: ares}]
+
+- id: modding-essentials
+  name: "Game modding"
+  kind: base
+  description: "Mod managers, load-order sorting and graphics effects for Skyrim, Fallout, Cyberpunk and more."
+  apps: [{id: vortex}, {id: mod-organizer}, {id: loot}, {id: wabbajack}, {id: curseforge}, {id: modrinth-app}, {id: reshade}, {id: special-k}, {id: 7zip}]
+
+- id: modding-minecraft
+  name: "Minecraft modding"
+  kind: base
+  description: "Launchers for modpacks, a mod maker, a block modeler and world editors."
+  apps: [{id: prism-launcher}, {id: curseforge}, {id: modrinth-app}, {id: atlauncher}, {id: jdmrpackinstaller}, {id: mcreator}, {id: blockbench}, {id: jdnbtexplorer}, {id: mine-imator}]
+
+- id: modding-tools
+  name: "Make your own mods"
+  kind: dev
+  description: "Hex editor, decompilers and debugger to look inside games and write mods."
+  apps: [{id: hxd-hex-editor}, {id: dnspy}, {id: ilspy}, {id: x64dbg}, {id: large-address-aware}, {id: directx-texture-converter}, {id: depotdownloader}, {id: godot-re-tools}]
+
+- id: modding-games
+  name: "Game-specific mod managers"
+  kind: base
+  description: "Mod managers for Stardew Valley, RimWorld, Satisfactory, Balatro, Sonic, Beat Saber and more."
+  apps: [{id: r2modman}, {id: gale}, {id: smapi}, {id: rimsort}, {id: satisfactory-mod-manager}, {id: balatro-mod-manager}, {id: sonic-adventure-mod-manager}, {id: hedge-mod-manager}, {id: bsmanager}, {id: outer-wilds-mod-manager}, {id: deadlock-mod-manager}, {id: wowup-with-curseforge}, {id: irony-mod-manager}, {id: xxmi-launcher}]
+
+- id: classic-engines
+  name: "Classic game engines"
+  kind: base
+  description: "Modern engines for Doom and other classics, plus free strategy and voxel games."
+  apps: [{id: uzdoom}, {id: zandronum}, {id: doomsday-engine}, {id: doom-runner}, {id: openra}, {id: openttd}, {id: openmw}, {id: luanti}, {id: widelands}, {id: battle-for-wesnoth}]

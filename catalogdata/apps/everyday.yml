@@ -243,7 +243,7 @@
 
 - id: steam
   name: Steam
-  category: gaming
+  category: gaming/launchers
   description: Game store and launcher from Valve.
   homepage: https://store.steampowered.com/
   license: Proprietary
@@ -252,7 +252,7 @@
 
 - id: epic-games
   name: Epic Games Launcher
-  category: gaming
+  category: gaming/launchers
   description: Game store and launcher from Epic Games.
   homepage: https://store.epicgames.com/
   license: Proprietary

@@ -1,0 +1,1143 @@
+- id: dolphin
+  name: "Dolphin"
+  category: gaming/emulators
+  description: "Dolphin emulates the Nintendo GameCube and Nintendo Wii on your PC."
+  homepage: https://dolphin-emu.org
+  license: "GPL-2.0-or-later/GPL-3.0-or-later"
+  winget: DolphinEmulator.Dolphin
+  publisher: "Dolphin Team"
+
+- id: azahar
+  name: "Azahar"
+  category: gaming/emulators
+  description: "Azahar is an open-source 3DS emulator project based on Citra."
+  homepage: https://github.com/azahar-emu/azahar
+  license: "GPL-2.0"
+  winget: AzaharEmu.Azahar
+  publisher: "Azahar"
+
+- id: eden
+  name: "Eden"
+  category: gaming/emulators
+  description: "The Eden Nintendo Switch Emulator."
+  homepage: https://git.eden-emu.dev/eden-emu/eden
+  license: "GPLv3"
+  winget: Utopia.Eden.MinGW
+  publisher: "Utopia LLC"
+
+- id: melonds
+  name: "melonDS"
+  category: gaming/emulators
+  description: "DS emulator."
+  homepage: https://melonds.kuribo64.net/
+  license: "GPL-3.0"
+  winget: melonDS.melonDS
+  publisher: "melonDS"
+
+- id: mgba
+  name: "mGBA"
+  category: gaming/emulators
+  description: "An open-source Game Boy Advance emulator."
+  homepage: https://mgba.io
+  license: "Mozilla Public License 2.0"
+  winget: JeffreyPfau.mGBA
+  publisher: "Jeffrey Pfau"
+
+- id: visual-boy-advance
+  name: "VisualBoyAdvance-M"
+  category: gaming/emulators
+  description: "Community-maintained, improved version of the VisualBoyAdvance Game Boy emulator"
+  homepage: https://github.com/visualboyadvance-m/visualboyadvance-m
+  license: "GPL-3.0"
+  winget: VisualBoyAdvance-M.VisualBoyAdvance-M
+  publisher: "VisualBoyAdvance-M"
+
+- id: sameboy
+  name: "SameBoy"
+  category: gaming/emulators
+  description: "SameBoy is an open source Game Boy (DMG) and Game Boy Color (CGB) emulator, written in portable C."
+  homepage: https://github.com/LIJI32/SameBoy
+  license: "X11 License"
+  winget: LIJI32.SameBoy
+  publisher: "LIJI32"
+
+- id: mesen-2
+  name: "Mesen 2"
+  category: gaming/emulators
+  description: "Multi-system emulator (NES, SNES, GB, GBA, PCE, SMS/GG, WS) for Windows, Linux and macOS."
+  homepage: https://www.mesen.ca/
+  license: "GPL-3.0"
+  winget: SourMesen.Mesen2
+  publisher: "SourMesen"
+
+- id: mesen
+  name: "Mesen"
+  category: gaming/emulators
+  description: "Mesen is a cross-platform (Windows \u0026 Linux) NES/Famicom emulator built in C++ and C#."
+  homepage: https://www.mesen.ca/oldindex.php
+  license: "GPL-3.0"
+  winget: SourMesen.Mesen
+  publisher: "SourMesen"
+
+- id: mesen-s
+  name: "Mesen-S"
+  category: gaming/emulators
+  description: "Mesen-S is a cross-platform (Windows \u0026 Linux) SNES emulator built in C++ and C#."
+  homepage: https://www.mesen.ca/oldindex.php
+  license: "GPL-3.0"
+  winget: SourMesen.Mesen-S
+  publisher: "SourMesen"
+
+- id: fceux
+  name: "FCEUX"
+  category: gaming/emulators
+  description: "FCEUX is a Nintendo Entertainment System (NES), Famicom, Famicom Disk System (FDS), and Dendy emulator."
+  homepage: https://fceux.com/web/download.html
+  license: "GPL-2.0"
+  winget: FCEUX.FCEUX
+  publisher: "FCEUX"
+
+- id: bsnes
+  name: "bsnes"
+  category: gaming/emulators
+  description: "A Super Nintendo (SNES) emulator focused on performance, features, and ease of use."
+  homepage: https://bsnes.org
+  license: "GPLv3"
+  winget: bsnes-emu.BSNES
+  publisher: "bsnes-emu"
+
+- id: project64
+  name: "Project64"
+  category: gaming/emulators
+  description: "Nintendo 64 Emulator"
+  homepage: https://github.com/project64/project64
+  license: "GNU General Public License v2.0"
+  winget: Project64.Project64
+  publisher: "Project64 Development Team"
+
+- id: ares
+  name: "ares"
+  category: gaming/emulators
+  description: "ares is a cross-platform, open source, multi-system emulator, focusing on accuracy and preservation."
+  homepage: https://ares-emu.net/
+  license: "ISC"
+  winget: ares-emulator.ares
+  publisher: "ares team"
+
+- id: bizhawk
+  name: "BizHawk"
+  category: gaming/emulators
+  description: "A core-based, multi-system emulator written in C#."
+  homepage: https://github.com/TASEmulators/BizHawk
+  license: "Mostly MIT, as well as, quote, \"an illegal combination of several incompatible GPL licenses\"; see the License URL."
+  winget: TASEmulators.BizHawk
+  publisher: "TASEmulators"
+
+- id: epsxe
+  name: "ePSXe"
+  category: gaming/emulators
+  description: "A Sony PlayStation Emulator for the PC."
+  homepage: https://www.epsxe.com/download.php
+  license: "Freeware"
+  winget: ePSXe.ePSXe
+  publisher: "ePSXe Team"
+
+- id: shadps4
+  name: "shadPS4"
+  category: gaming/emulators
+  description: "PlayStation 4 emulator for Windows, Linux and macOS written in C++"
+  homepage: https://shadps4.net/downloads/
+  license: "GPL-2.0"
+  winget: shadps4-emu.shadPS4
+  publisher: "shadps4-emu"
+
+- id: vita3k
+  name: "Vita3K"
+  category: gaming/emulators
+  description: "Experimental PlayStation Vita emulator."
+  homepage: https://github.com/Vita3K/Vita3K
+  license: "GPL-2.0"
+  winget: Vita3K.Vita3K
+  publisher: "Vita3K"
+
+- id: xenia
+  name: "Xenia"
+  category: gaming/emulators
+  description: "xenia is a BSD licensed open source research project for emulating Xbox 360 games on modern PCs."
+  homepage: https://github.com/xenia-project
+  license: "BSD-3-Clause"
+  winget: Xenia.Xenia
+  publisher: "Xenia"
+
+- id: xenia-manager
+  name: "Xenia Manager"
+  category: gaming/emulators
+  description: "Xenia Manager is a tool that tries to make using Xenia Emulator easier."
+  homepage: https://github.com/xenia-manager/xenia-manager
+  license: "BSD-3-Clause"
+  winget: XeniaManager.XeniaManager
+  publisher: "Xenia Manager"
+
+- id: redream
+  name: "redream"
+  category: gaming/emulators
+  description: "Sega Dreamcast emulator that can render games in HD and 4K."
+  homepage: https://redream.io
+  license: "Proprietary"
+  winget: redream.redream
+  publisher: "redream"
+
+- id: dreampotato
+  name: "DreamPotato"
+  category: gaming/emulators
+  description: "A Dreamcast VMU emulator currently in beta."
+  homepage: https://github.com/RikkiGibson/DreamPotato
+  license: "MIT"
+  winget: RikkiGibson.DreamPotato
+  publisher: "Rikki Gibson"
+
+- id: ssf
+  name: "SSF"
+  category: gaming/emulators
+  description: "An emulator of the Sega Saturn video game console."
+  homepage: https://github.com/shimazzz/SEGASaturnEmulator-SSF
+  license: "Proprietary"
+  winget: shimazzz.SSF
+  publisher: "shimazzz"
+
+- id: mednafen
+  name: "Mednafen"
+  category: gaming/emulators
+  description: "A portable, OpenGL- and SDL-utilizing, multi-system emulator."
+  homepage: https://mednafen.github.io/releases/
+  license: "GPLv2"
+  winget: MednafenTeam.Mednafen
+  publisher: "Mednafen Team"
+
+- id: stella
+  name: "Stella"
+  category: gaming/emulators
+  description: "A multi-platform Atari 2600 Emulator."
+  homepage: https://github.com/stella-emu/stella
+  license: "GPL-2.0"
+  winget: TheStellaTeam.Stella
+  publisher: "The Stella Team"
+
+- id: atari800win-plus
+  name: "Atari800Win PLus"
+  category: gaming/emulators
+  description: "The Atari 8-bit Emulator."
+  homepage: https://atari.org.pl/PLus/downloads_us.htm
+  license: "Proprietary"
+  winget: Atari800Win.PLus
+  publisher: "atari.org.pl"
+
+- id: mame
+  name: "MAME"
+  category: gaming/emulators
+  description: "A multi-purpose emulation framework."
+  homepage: https://www.mamedev.org/index.php
+  license: "Mostly GPLv2, with some subcomponents licensed differently."
+  winget: MAMEdev.MAME
+  publisher: "MAMEdev"
+
+- id: winuae
+  name: "WinUAE"
+  category: gaming/emulators
+  description: "WinUAE is an Amiga Emulator for the Windows platform."
+  homepage: https://www.winuae.net/
+  license: "GPL"
+  winget: WinUAE.WinUAE
+  publisher: "Arabuusimiehet"
+
+- id: vice-sdl2
+  name: "VICE (SDL2)"
+  category: gaming/emulators
+  description: "The Versatile Commodore Emulator; alternate build."
+  homepage: https://github.com/VICE-Team/svn-mirror
+  license: "GPLv2"
+  winget: VICE-Team.VICE.SDL2
+  publisher: "VICE Team"
+
+- id: applewin
+  name: "AppleWin"
+  category: gaming/emulators
+  description: "Apple II emulator for Windows"
+  homepage: https://github.com/AppleWin/AppleWin
+  license: "GPL-2.0"
+  winget: AppleWin.AppleWin
+  publisher: "AppleWin"
+
+- id: openmsx
+  name: "openMSX"
+  category: gaming/emulators
+  description: "The MSX emulator that aims for perfection."
+  homepage: https://github.com/openMSX/openMSX
+  license: "None known (Freeware, source code available)"
+  winget: openMSX.openMSX
+  publisher: "openMSX"
+
+- id: dosbox-x
+  name: "DOSBox-X"
+  category: gaming/emulators
+  description: "DOSBox-X is an open-source DOS emulator for running DOS games and applications."
+  homepage: https://github.com/joncampbell123/dosbox-x
+  license: "GPL-2.0"
+  winget: joncampbell123.DOSBox-X
+  publisher: "joncampbell123 [DOSBox-X Team]"
+
+- id: 86box
+  name: "86Box"
+  category: gaming/emulators
+  description: "Emulator of x86-based machines"
+  homepage: https://github.com/86Box/86Box
+  license: "GPL-2.0"
+  winget: 86Box.86Box
+  publisher: "86Box"
+
+- id: 86box-manager
+  name: "86Box Manager"
+  category: gaming/emulators
+  description: "A configuration manager for the 86Box emulator"
+  homepage: https://86box.net
+  license: "MIT License"
+  winget: 86Box.86BoxManager
+  publisher: "86Box Project"
+
+- id: bochs
+  name: "Bochs"
+  category: gaming/emulators
+  description: "Cross Platform x86 Emulator Project"
+  homepage: https://bochs.sourceforge.io/getcurrent.html
+  license: "LGPL-2.1"
+  winget: Bochs.Bochs
+  publisher: "The Bochs Project"
+
+- id: qemu
+  name: "QEMU"
+  category: gaming/emulators
+  description: "A generic and open source machine emulator and virtualizer."
+  homepage: https://qemu.weilnetz.de/
+  license: "GPL-2.0"
+  winget: SoftwareFreedomConservancy.QEMU
+  publisher: "QEMU Community"
+
+- id: ruffle
+  name: "Ruffle"
+  category: gaming/emulators
+  description: "A Flash Player emulator written in Rust"
+  homepage: https://github.com/ruffle-rs/ruffle
+  license: "Apache-2.0 + MIT"
+  winget: Ruffle.Ruffle
+  publisher: "Ruffle"
+
+- id: lightspark
+  name: "Lightspark"
+  category: gaming/emulators
+  description: "Lightspark is an open source Flash player implementation for playing files in the SWF format."
+  homepage: https://lightspark.github.io/
+  license: "LGPL-3.0 License"
+  winget: lightspark.lightspark
+  publisher: "The Lightspark Developers"
+
+- id: eka2l1
+  name: "EKA2L1"
+  category: gaming/emulators
+  description: "Symbian OS/N-Gage emulator, written in C++ 17."
+  homepage: https://eka2l1.github.io
+  license: "GPL-3.0"
+  winget: EKA2L1.EKA2L1
+  publisher: "EKA2L1"
+
+- id: touchhle
+  name: "touchHLE"
+  category: gaming/emulators
+  description: "High-level emulator for iOS 3 and earlier's iPhone apps."
+  homepage: https://github.com/hikari-no-yume/touchHLE
+  license: "MPL-2.0"
+  winget: hikari-no-yume.touchHLE
+  publisher: "hikari-no-yume"
+
+- id: bluestacks
+  name: "BlueStacks"
+  category: gaming/emulators
+  description: "Play Android games on PC or try instantly from our cloud."
+  homepage: https://www.bluestacks.com/download.html
+  license: "Proprietary"
+  winget: BlueStack.BlueStacks
+  publisher: "now.gg, Inc."
+
+- id: ce-programming-cemu
+  name: "CEmu"
+  category: gaming/emulators
+  description: "Third-party TI-84 Plus CE / TI-83 Premium CE emulator, focused on developer features"
+  homepage: https://github.com/CE-Programming/CEmu
+  license: "GPLv3"
+  winget: CE-Programming.CEmu
+  publisher: "CE Programming"
+
+- id: emulationstation
+  name: "EmulationStation"
+  category: gaming/emulators
+  description: "A graphical and themeable emulator front-end that allows you to access all your favorite games in one place, even without a keyboard!"
+  homepage: https://emulationstation.org/index.html#download
+  license: "MIT License"
+  winget: Emulationstation.Emulationstation
+  publisher: "EmulationStation"
+
+- id: emulationstation-desktop-edition
+  name: "EmulationStation Desktop Edition"
+  category: gaming/emulators
+  description: "EmulationStation Desktop Edition is a frontend for browsing and launching games from your multi-platform game collection."
+  homepage: https://www.es-de.org/
+  license: "MIT"
+  winget: ES-DE.EmulationStation-DE
+  publisher: "Leon Styhre"
+
+- id: steam-rom-manager
+  name: "Steam ROM Manager"
+  category: gaming/emulators
+  description: "Steam ROM Manager is a super flexible tool for adding non-Steam games to steam in bulk and managing their artwork assets"
+  homepage: https://github.com/SteamGridDB/steam-rom-manager
+  license: "GPL-3.0"
+  winget: SteamGridDB.RomManager
+  publisher: "FrogTheFrog"
+
+- id: shaderglass
+  name: "ShaderGlass"
+  category: gaming/emulators
+  description: "Overlay for running GPU shaders on top of Windows desktop and Wine"
+  homepage: https://github.com/mausimus/ShaderGlass
+  license: "GPL-3.0"
+  winget: mausimus.ShaderGlass
+  publisher: "mausimus"
+
+- id: vpx
+  name: "VPX"
+  category: gaming/emulators
+  description: "Desktop music player for about 70 audio and tracker formats, with a colour-changing oscilloscope per channel."
+  homepage: https://vpx-landing.vercel.app/
+  license: "Proprietary"
+  winget: SgarD.VPX
+  publisher: "SgarD"
+
+- id: media-preservation-frontend
+  name: "Media Preservation Frontend"
+  category: gaming/emulators
+  description: "Redumper/Aaru/DiscImageCreator GUI in C#"
+  homepage: https://github.com/SabreTools/MPF
+  license: "MIT"
+  winget: SabreTools.MPF
+  publisher: "SabreTools"
+
+- id: nusget
+  name: "NUSGet"
+  category: gaming/emulators
+  description: "Allows downloading any content from the Nintendo Update Servers."
+  homepage: https://github.com/NinjaCheetah/NUSGet
+  license: "MIT"
+  winget: NinjaCheetah.NUSGet
+  publisher: "NinjaCheetah"
+
+- id: wiimms-iso-tools
+  name: "Wiimms ISO Tools"
+  category: gaming/emulators
+  description: "A set of command line tools to manipulate Wii and GameCube ISO images and WBFS containers."
+  homepage: https://wit.wiimm.de
+  license: "Proprietary (Freeware)"
+  winget: Wiimm.ISO
+  publisher: "Wiimm"
+
+- id: tinywiibackupmanager
+  name: "TinyWiiBackupManager"
+  category: gaming/emulators
+  description: "A tiny game backup and homebrew app manager for the Wii"
+  homepage: https://github.com/mq1/TinyWiiBackupManager
+  license: "GPL-3.0"
+  winget: mq1.TinyWiiBackupManager
+  publisher: "mq1"
+
+- id: wiilink-patcher-gui
+  name: "WiiLink Patcher (GUI)"
+  category: gaming/emulators
+  description: "WiiLink Patcher GUI is a Python program built around the excellent libWiiPy to make WiiLink patching a simple process, with a streamlined graphical user…"
+  homepage: https://github.com/WiiLink24/WiiLink-Patcher-GUI
+  license: "MPL-2.0"
+  winget: WiiLink24.PatcherGUI
+  publisher: "WiiLink24"
+
+- id: memcardrex
+  name: "MemcardRex"
+  category: gaming/emulators
+  description: "Advanced PlayStation 1 Memory Card editor."
+  homepage: https://github.com/ShendoXT/memcardrex
+  license: "GPL-3.0"
+  winget: ShendoXT.MemcardRex
+  publisher: "ShendoXT"
+
+- id: ludusavi
+  name: "ludusavi"
+  category: gaming/emulators
+  description: "Backup tool for PC game saves"
+  homepage: https://github.com/mtkennerly/ludusavi
+  license: "MIT"
+  winget: mtkennerly.ludusavi
+  publisher: "mtkennerly"
+
+- id: antimicrox
+  name: "AntiMicroX"
+  category: gaming/emulators
+  description: "Graphical program used to map keyboard buttons and mouse controls to a gamepad."
+  homepage: https://github.com/AntiMicroX/antimicrox
+  license: "GPL-3.0"
+  winget: AntiMicroX.antimicrox
+  publisher: "Humanity"
+
+- id: joytokey
+  name: "JoyToKey"
+  category: gaming/emulators
+  description: "Enables PC game controllers to emulate the keyboard and mouse input."
+  homepage: https://joytokey.net/en/download
+  license: "Proprietary"
+  winget: JTKsoftware.JoyToKey
+  publisher: "JTK software"
+
+- id: joystick-gremlin
+  name: "Joystick Gremlin"
+  category: gaming/emulators
+  description: "A tool for configuring and managing joystick devices."
+  homepage: https://whitemagic.github.io/JoystickGremlin/download
+  license: "GPL-3.0"
+  winget: H2IK.JoystickGremlin
+  publisher: "H2IK"
+
+- id: wiinupro-portable
+  name: "WiinUPro (Portable)"
+  category: gaming/emulators
+  description: "For using the Wii/U family of Nintendo Bluetooth controllers with Windows."
+  homepage: https://github.com/KeyPuncher/WiinUPro
+  license: "Microsoft Public License (MS-PL)"
+  winget: JustinKeys.WiinUPro
+  publisher: "Justin Keys"
+
+- id: mod-organizer
+  name: "Mod Organizer"
+  category: gaming/mods
+  description: "An open source mod manager for various PC games."
+  homepage: https://github.com/ModOrganizer2/modorganizer
+  license: "GPL-3.0"
+  winget: ModOrganizer2.modorganizer
+  publisher: "ModOrganizer2"
+
+- id: loot
+  name: "LOOT"
+  category: gaming/mods
+  description: "The Load Order Optimisation Tool"
+  homepage: https://loot.github.io/
+  license: "GPL-3.0"
+  winget: LOOT.LOOT
+  publisher: "LOOT Team"
+
+- id: wabbajack
+  name: "Wabbajack"
+  category: gaming/mods
+  description: "An automated Modlist installer for various games"
+  homepage: https://www.wabbajack.org/
+  license: "GPL-3.0"
+  winget: WabbajackTools.Wabbajack
+  publisher: "Wabbajack Tools"
+
+- id: r2modman
+  name: "r2modman"
+  category: gaming/mods
+  description: "A simple and easy to use mod manager for several games using Thunderstore."
+  homepage: https://github.com/ebkr/r2modmanPlus
+  license: "MIT"
+  winget: ebkr.r2modman
+  publisher: "ebkr"
+
+- id: gale
+  name: "Gale"
+  category: gaming/mods
+  description: "A modern mod manager for Thunderstore"
+  homepage: https://github.com/Kesomannen/gale
+  license: "GPL-3.0"
+  winget: Kesomannen.Gale
+  publisher: "Kesomannen"
+
+- id: wowup-with-curseforge
+  name: "WowUp with CurseForge"
+  category: gaming/mods
+  description: "World of Warcraft addon updater with Curseforge Support"
+  homepage: https://github.com/WowUp/WowUp.CF
+  license: "GNU General Public License v3.0"
+  winget: WowUp.CF
+  publisher: "WowUp LLC"
+
+- id: rai-pal
+  name: "Rai Pal"
+  category: gaming/mods
+  description: "Mod manager for universal game mods"
+  homepage: https://raicuparta.com/rai-pal
+  license: "GPL-3.0"
+  winget: Raicuparta.RaiPal
+  publisher: "Raicuparta"
+
+- id: xxmi-launcher
+  name: "XXMI Launcher"
+  category: gaming/mods
+  description: "Modding platform for GI, HSR, WW and ZZZ"
+  homepage: https://github.com/SpectrumQT/XXMI-Launcher
+  license: "GPL-3.0"
+  winget: SpectrumQT.XXMILauncher
+  publisher: "SpectrumQT"
+
+- id: modrex
+  name: "Modrex"
+  category: gaming/mods
+  description: "A desktop mod manager for games supported by ModWorkshop."
+  homepage: https://modrex.net/
+  license: "MIT"
+  winget: Modrexio.Modrex
+  publisher: "modrex"
+
+- id: smapi
+  name: "SMAPI"
+  category: gaming/mods
+  description: "The modding API for Stardew Valley."
+  homepage: https://github.com/Pathoschild/SMAPI
+  license: "LGPL-3.0"
+  winget: Pathoschild.SMAPI
+  publisher: "Pathoschild"
+
+- id: smapit-manager
+  name: "SmapIt Manager"
+  category: gaming/mods
+  description: "An open-source bootstrapper for SMAPI."
+  homepage: https://github.com/studzt/SmapIt
+  license: "MIT"
+  winget: SmapItProject.SmapIt
+  publisher: "SmapIt Project"
+
+- id: rimsort
+  name: "RimSort"
+  category: gaming/mods
+  description: "RimSort is an open source mod manager for the video game RimWorld."
+  homepage: https://github.com/RimSort/RimSort
+  license: "GPL-3.0"
+  winget: RimSort.RimSort
+  publisher: "RimSort"
+
+- id: spriggit
+  name: "Spriggit"
+  category: gaming/mods
+  description: "A tool to facilitate converting Bethesda plugin files to a text based format that can be stored in Git."
+  homepage: https://mutagen-modding.github.io/Spriggit/
+  license: "GPL-3.0"
+  winget: MutagenModding.Spriggit
+  publisher: "Mutagen Modding"
+
+- id: deadlock-mod-manager
+  name: "Deadlock Mod Manager"
+  category: gaming/mods
+  description: "A mod manager for the Valve game Deadlock."
+  homepage: https://github.com/Stormix/deadlock-modmanager
+  license: "GPL-3.0"
+  winget: Stormix.DeadlockModManager
+  publisher: "Stormix"
+
+- id: satisfactory-mod-manager
+  name: "Satisfactory Mod Manager"
+  category: gaming/mods
+  description: "Handles Satisfactory mods and mod loader."
+  homepage: https://github.com/satisfactorymodding/SatisfactoryModManager
+  license: "GNU General Public License v3.0"
+  winget: SatisfactoryModding.SatisfactoryModManager
+  publisher: "mircearoata"
+
+- id: outer-wilds-mod-manager
+  name: "Outer Wilds Mod Manager"
+  category: gaming/mods
+  description: "The mod manager for the Outer Wilds Mod Loader"
+  homepage: https://github.com/ow-mods/ow-mod-man
+  license: "GPL-3.0"
+  winget: OuterWildsMods.OuterWildsModManager
+  publisher: "Outer Wilds Mods"
+
+- id: balatro-mod-manager
+  name: "Balatro Mod Manager"
+  category: gaming/mods
+  description: "Balatro Mod Manager by Skyline"
+  homepage: https://github.com/skyline69/balatro-mod-manager
+  license: "GPL-3.0"
+  winget: Skyline.BalatroModManager
+  publisher: "Skyline"
+
+- id: tsw-mod-manager
+  name: "TSW Mod Manager"
+  category: gaming/mods
+  description: "Activate, deactivate, update and install your Train Sim World mods"
+  homepage: https://tsw-mod-manager.de
+  license: "Freeware"
+  winget: TaskPlays.TSWModManager
+  publisher: "Bendix Tonn"
+
+- id: sonic-adventure-mod-manager
+  name: "Sonic Adventure Mod Manager"
+  category: gaming/mods
+  description: "A new mod manager for the Sonic Adventure games."
+  homepage: https://github.com/X-Hax/SA-Mod-Manager
+  license: "MIT"
+  winget: X-Hax.SAModManager
+  publisher: "X-Hax"
+
+- id: hedge-mod-manager
+  name: "Hedge Mod Manager"
+  category: gaming/mods
+  description: "A mod manager for Sonic Generations, Sonic Lost World, Sonic Forces, Sonic Colours Ultimate and other PC Hedgehog Engine games."
+  homepage: https://github.com/thesupersonic16/HedgeModManager
+  license: "MIT"
+  winget: thesupersonic16.HedgeModManager
+  publisher: "SuperSonic16"
+
+- id: irony-mod-manager
+  name: "Irony Mod Manager"
+  category: gaming/mods
+  description: "Mod Manager for Paradox Games."
+  homepage: https://github.com/bcssov/IronyModManager
+  license: "MIT"
+  winget: bcssov.IronyModManager
+  publisher: "bcssov"
+
+- id: bsmanager
+  name: "BSManager"
+  category: gaming/mods
+  description: "An all-in-one tool that lets you easly manage BeatSaber versions, maps, mods, and even more."
+  homepage: https://github.com/Zagrios/bs-manager
+  license: "GPL-3.0"
+  winget: Zagrios.BSManager
+  publisher: "Zagrios"
+
+- id: questpatcher
+  name: "QuestPatcher"
+  category: gaming/mods
+  description: "QuestPatcher is a GUI based mod installer for any il2cpp unity app on the Oculus Quest that runs on Windows or Linux."
+  homepage: https://github.com/Lauriethefish/QuestPatcher
+  license: "Zlib"
+  winget: Lauriethefish.QuestPatcher
+  publisher: "Lauriethefish#6700"
+
+- id: reshade
+  name: "ReShade"
+  category: gaming/mods
+  description: "Post-processing injector for games and video software"
+  homepage: https://reshade.me/
+  license: "BSD-3-Clause"
+  winget: Reshade.Setup
+  publisher: "ReShade"
+
+- id: reshade-setup-full-add-on-support
+  name: "ReShade Setup (Full Add-on Support)"
+  category: gaming/mods
+  description: "Post-processing injector for games and video software (with full add-ons support)"
+  homepage: https://reshade.me/
+  license: "BSD-3-Clause"
+  winget: Reshade.Setup.AddonsSupport
+  publisher: "ReShade"
+
+- id: livesplit
+  name: "LiveSplit"
+  category: gaming/mods
+  description: "A sleek, highly customizable timer for speedrunners."
+  homepage: https://livesplit.org/
+  license: "MIT"
+  winget: LiveSplit.LiveSplit
+  publisher: "LiveSplit"
+
+- id: ftb-electron-app
+  name: "FTB Electron App"
+  category: gaming/mods
+  description: "Official launcher for FTB Minecraft modpacks; also supports Curseforge"
+  homepage: https://www.feed-the-beast.com/ftb-app
+  license: "Proprietary"
+  winget: FTB.App
+  publisher: "Feed The Beast"
+
+- id: gdlauncher
+  name: "GDLauncher"
+  category: gaming/mods
+  description: "GDLauncher is simple, yet powerful Minecraft custom launcher with a strong focus on the user experience"
+  homepage: https://gdevs.io
+  license: "GNU General Public License v3.0 (GPLv3)"
+  winget: GorillaDevs.GDLauncher
+  publisher: "GorillaDevs"
+
+- id: freesm-launcher
+  name: "Freesm Launcher"
+  category: gaming/mods
+  description: "A Prism Launcher fork aimed to provide a free way to play Minecraft"
+  homepage: https://github.com/FreesmTeam/FreesmLauncher
+  license: "GPL-3.0"
+  winget: FreesmTeam.FreesmLauncher
+  publisher: "Freesm Team"
+
+- id: hello-minecraft-launcher
+  name: "Hello Minecraft! Launcher"
+  category: gaming/mods
+  description: "A Minecraft Launcher which is multi-functional, cross-platform and popular"
+  homepage: https://github.com/HMCL-dev/HMCL
+  license: "GPL-3.0"
+  winget: HMCL.HMCL.Stable
+  publisher: "huanghongxun"
+
+- id: colormc
+  name: "ColorMC"
+  category: gaming/mods
+  description: "A Minecraft Launcher"
+  homepage: https://colormc.coloryr.com/
+  license: "Apache-2.0"
+  winget: Coloryr.ColorMC
+  publisher: "Coloryr"
+
+- id: jdminecraftlauncher
+  name: "jdMinecraftLauncher"
+  category: gaming/mods
+  description: "Unofficial classic styled Minecraft Launcher"
+  homepage: https://jakobdev.codeberg.page/work/app/jdMinecraftLauncher
+  license: "GNU GPLv3"
+  winget: JakobDev.jdMinecraftLauncher
+  publisher: "JakobDev"
+
+- id: jdmrpackinstaller
+  name: "jdMrpackInstaller"
+  category: gaming/mods
+  description: "Install Modrinth modpacks"
+  homepage: https://codeberg.org/JakobDev/jdMrpackInstaller
+  license: "GNU GPLv3"
+  winget: JakobDev.jdMrpackInstaller
+  publisher: "JakobDev"
+
+- id: jdnbtexplorer
+  name: "jdNBTExplorer"
+  category: gaming/mods
+  description: "An Editor for Minecraft NBT files"
+  homepage: https://jakobdev.codeberg.page/work/app/jdNBTExplorer
+  license: "GNU GPLv3"
+  winget: JakobDev.jdNBTExplorer
+  publisher: "JakobDev"
+
+- id: lunar-client
+  name: "Lunar Client"
+  category: gaming/mods
+  description: "A modpack for all modern versions of Minecraft!"
+  homepage: https://www.lunarclient.com/
+  license: "Freeware"
+  winget: Moonsworth.LunarClient
+  publisher: "Moonsworth, LLC"
+
+- id: mcreator
+  name: "MCreator"
+  category: gaming/mods
+  description: "MCreator is a software used to make Minecraft Java Edition mods, Minecraft Bedrock Edition Add-Ons, and data packs using an intuitive easy-to-learn interface…"
+  homepage: https://mcreator.net/
+  license: "GPL-3.0 License"
+  winget: MCreator.MCreator
+  publisher: "Pylo"
+
+- id: blockbench
+  name: "Blockbench"
+  category: gaming/mods
+  description: "Blockbench - A boxy 3D model editor."
+  homepage: https://www.blockbench.net/
+  license: "GPL-3.0"
+  winget: JannisX11.Blockbench
+  publisher: "JannisX11"
+
+- id: regolith
+  name: "regolith"
+  category: gaming/mods
+  description: "Addon compiler for the Bedrock Edition of Minecraft."
+  homepage: https://github.com/Bedrock-OSS/regolith
+  license: "MIT"
+  winget: Bedrock-OSS.regolith
+  publisher: "Bedrock-OSS"
+
+- id: mine-imator
+  name: "Mine-imator"
+  category: gaming/mods
+  description: "Create animated videos using blocks, items and the lovable characters from Minecraft."
+  homepage: https://www.mineimator.com/
+  license: "Proprietary"
+  winget: DavidNorgren.Mine-imator
+  publisher: "David Norgren"
+
+- id: minecraft-note-block-studio
+  name: "Minecraft Note Block Studio"
+  category: gaming/mods
+  description: "Installer for Minecraft Note Block Studio"
+  homepage: https://github.com/HielkeMinecraft/OpenNoteBlockStudio
+  license: "MIT License"
+  winget: OpenNoteBlockStudio.MinecraftNoteBlockStudio
+  publisher: "OpenNoteBlockStudio"
+
+- id: tedit
+  name: "TEdit"
+  category: gaming/mods
+  description: "TEdit - Terraria Map Editor is a stand alone, open source map editor for Terraria."
+  homepage: https://github.com/TEdit/Terraria-Map-Editor
+  license: "Microsoft Public License"
+  winget: TEdit.TEdit
+  publisher: "TEdit"
+
+- id: hxd-hex-editor
+  name: "HxD Hex Editor"
+  category: gaming/mods
+  description: "Hex and Disk Editor"
+  homepage: https://mh-nexus.de/en/hxd/
+  license: "Freeware"
+  winget: MHNexus.HxD
+  publisher: "Maël Hörz"
+
+- id: champollion
+  name: "Champollion"
+  category: gaming/mods
+  description: "A decompiler for the Papyrus script language used in Skyrim, Fallout 4, Fallout 76, and Starfield."
+  homepage: https://github.com/Orvid/Champollion
+  license: "LGPLv3"
+  winget: Orvid.Champollion
+  publisher: "Orvid"
+
+- id: godot-re-tools
+  name: "Godot RE Tools"
+  category: gaming/mods
+  description: "Godot reverse engineering tools."
+  homepage: https://github.com/GDRETools/gdsdecomp
+  license: "MIT"
+  winget: GDRETools.gdsdecomp
+  publisher: "GDRETools"
+
+- id: godotdec
+  name: "godotdec"
+  category: gaming/mods
+  description: "An unpacker for Godot Engine package files (.pck)."
+  homepage: https://github.com/Bioruebe/godotdec
+  license: "BSD-3"
+  winget: Bioruebe.godotdec
+  publisher: "Bioruebe"
+
+- id: depotdownloader
+  name: "DepotDownloader"
+  category: gaming/mods
+  description: "Steam depot downloader utilizing the SteamKit2 library."
+  homepage: https://github.com/SteamRE/DepotDownloader
+  license: "GPL-2.0"
+  winget: SteamRE.DepotDownloader
+  publisher: "SteamRE"
+
+- id: steamdepotdownloadergui
+  name: "SteamDepotDownloaderGUI"
+  category: gaming/mods
+  description: "Downgrade Steam games to older versions with ease using DepotDownloader"
+  homepage: https://github.com/mmvanheusden/SteamDepotDownloaderGUI
+  license: "GPL-3.0"
+  winget: mmvanheusden.SteamDepotDownloaderGUI
+  publisher: "mmvanheusden"
+
+- id: large-address-aware
+  name: "Large Address Aware"
+  category: gaming/mods
+  description: "An application that assists in making 32-bit programs Large Address Aware and can then access up to 4 GiB on x64 OS versions, and all memory that isn't used…"
+  homepage: https://www.techpowerup.com/forums/threads/large-address-aware.112556/
+  license: "Unclear (Source code is publicly available but does not state a license)"
+  winget: LargeAddressAware.laa
+  publisher: "FordGT90Concept on TechPowerUp"
+
+- id: directx-texture-converter
+  name: "DirectX Texture Converter"
+  category: gaming/mods
+  description: "This DirectXTex sample is an implementation of the texconv command-line texture utility from the legacy DirectX SDK utilizing DirectXTex rather than D3DX."
+  homepage: https://github.com/Microsoft/DirectXTex/wiki/Texconv
+  license: "MIT"
+  winget: Microsoft.DirectXTex.Texconv
+  publisher: "Microsoft Corporation"
+
+- id: brawlcrate
+  name: "BrawlCrate"
+  category: gaming/mods
+  description: "BrawlCrate is a BrawlBox fork with a variety of features aiming to improve ease of modding for Super Smash Bros."
+  homepage: https://github.com/soopercool101/BrawlCrate
+  license: "LGPL-3.0"
+  winget: soopercool101.BrawlCrate
+  publisher: "soopercool101"
+
+- id: texture64
+  name: "Texture64"
+  category: gaming/mods
+  description: "Nintendo 64 texture ripper and editor."
+  homepage: https://github.com/queueRAM/Texture64
+  license: "MIT"
+  winget: queueRAM.Texture64
+  publisher: "queueRAM"
+
+- id: uzdoom
+  name: "UZDoom"
+  category: gaming/engines
+  description: "UZDoom is a feature centric port for all Doom engine games, based on GZDoom, adding an advanced renderer and powerful scripting capabilities"
+  homepage: https://github.com/UZDoom/UZDoom
+  license: "GPL-3.0"
+  winget: UZDoom.UZDoom
+  publisher: "UZDoom"
+
+- id: zandronum
+  name: "Zandronum"
+  category: gaming/engines
+  description: "Zandronum is a Doom source port focused on offering a modernized multiplayer experience, offering new game modes such as capture the flag, invasion or…"
+  homepage: https://zandronum.com/
+  license: "Modified Sleepycat License"
+  winget: Zandronum.Zandronum
+  publisher: "Zandronum"
+
+- id: doomsday-engine
+  name: "Doomsday Engine"
+  category: gaming/engines
+  description: "FIRE UP THE CHAINSAW"
+  homepage: https://dengine.net/windows
+  license: "GPL-3.0"
+  winget: DEngine.DoomsdayEngine.Stable
+  publisher: "Jaakko Keränen"
+
+- id: doom-runner
+  name: "Doom Runner"
+  category: gaming/engines
+  description: "Preset-oriented graphical launcher of various ported Doom engines."
+  homepage: https://github.com/Youda008/DoomRunner
+  license: "GPL-3.0"
+  winget: Youda008.DoomRunner
+  publisher: "Youda008"
+
+- id: doom-explorer
+  name: "Doom Explorer"
+  category: gaming/engines
+  description: "Doom Explorer is a launcher for most popular Doom source ports, with user-friendly interface and a number of useful features."
+  homepage: https://doomutils.ucoz.com/index/doom_explorer/0-9
+  license: "Proprietary"
+  winget: DoomExplorer.DoomExplorer
+  publisher: "Doom Explorer"
+
+- id: openra
+  name: "OpenRA"
+  category: gaming/engines
+  description: "OpenRA modernizes the classic Command \u0026 Conquer real time strategy games."
+  homepage: https://www.openra.net/
+  license: "GPL-3.0"
+  winget: OpenRA.OpenRA.Release
+  publisher: "OpenRA developers"
+
+- id: open-rails
+  name: "Open Rails"
+  category: gaming/engines
+  description: "Open Rails: free train simulator that supports the world's largest range of digital content."
+  homepage: https://github.com/openrails/openrails
+  license: "GPL-3.0"
+  winget: OpenRails.OpenRails
+  publisher: "Open Rails Project"
+
+- id: battle-for-wesnoth
+  name: "Battle for Wesnoth"
+  category: gaming/engines
+  description: "The Battle for Wesnoth is an open source, turn-based strategy game with a high fantasy theme."
+  homepage: https://www.wesnoth.org/
+  license: "GPLv2"
+  winget: Wesnoth.BattleForWesnoth
+  publisher: "The Battle for Wesnoth Project"
+
+- id: luanti
+  name: "Luanti"
+  category: gaming/engines
+  description: "A free open-source voxel game engine with easy modding and game creation."
+  homepage: https://www.luanti.org/
+  license: "Various open-source licenses (Core files: LGPL-2.1)"
+  winget: LuantiTeam.Luanti
+  publisher: "The Luanti Team"
+
+- id: widelands
+  name: "Widelands"
+  category: gaming/engines
+  description: "A free and open-source, slow-paced real-time strategy video game under the GNU General Public License."
+  homepage: https://www.widelands.org/
+  license: "GPL-2.0"
+  winget: WidelandsDevelopmentTeam.Widelands
+  publisher: "Widelands Development Team"
+
+- id: unreal-gold-oldunreal-edition
+  name: "Unreal Gold (OldUnreal Edition)"
+  category: gaming/engines
+  description: "Unreal Gold distributed with the unofficial OldUnreal patch."
+  homepage: https://www.oldunreal.com/downloads/unreal/full-game-installers/
+  license: "Freeware"
+  winget: OldUnreal.UnrealGold
+  publisher: "OldUnreal"
+
+- id: unreal-tournament-goty-oldunreal-edition
+  name: "Unreal Tournament GOTY (OldUnreal Edition)"
+  category: gaming/engines
+  description: "Unreal Tournament GOTY distributed with the OldUnreal patch."
+  homepage: https://www.oldunreal.com/downloads/unrealtournament/full-game-installers/
+  license: "Freeware"
+  winget: OldUnreal.UnrealTournamentGOTY
+  publisher: "OldUnreal"
+
+- id: runelite
+  name: "RuneLite"
+  category: gaming/engines
+  description: "RuneLite is a free, open source OldSchool RuneScape client."
+  homepage: https://github.com/runelite/launcher
+  license: "BSD-2-CLAUSE"
+  winget: RuneLite.RuneLite
+  publisher: "RuneLite"
+
+- id: desmume
+  name: "DeSmuME"
+  category: gaming/emulators
+  description: "DeSmuME is a Nintendo DS emulator."
+  homepage: https://desmume.org/
+  license: "GPL-2.0 license"
+  winget: DeSmuMETeam.DeSmuME
+  publisher: "DeSmuMETeam"
+
+- id: pcsx-redux
+  name: "PCSX-Redux"
+  category: gaming/emulators
+  description: "Work-in-progress emulator for the PSone console."
+  homepage: https://pcsx-redux.consoledev.net/
+  license: "GPL-2.0"
+  winget: GrumpyCoders.PCSX-Redux
+  publisher: "GrumpyCoders"
+
+- id: antstream
+  name: "Antstream"
+  category: gaming/emulators
+  description: "Officially licensed retro game streaming platform with 1000+ titles to play, challenges \u0026 global tournaments."
+  homepage: https://www.antstream.com/
+  license: "Proprietary"
+  winget: AntstreamLtd.Antstream
+  publisher: "Antstream Ltd"
+
+- id: sdl2-gamepad-tool
+  name: "SDL2 Gamepad Tool"
+  category: gaming/emulators
+  description: "A simple GUI tool to create/modify gamepad mappings for games that use the SDL2 Game Controller API."
+  homepage: https://generalarcade.com/gamepadtool/
+  license: "Unknown (Freeware)"
+  winget: GeneralArcade.SDL2GamepadTool
+  publisher: "General Arcade"
+
+- id: badlion-client
+  name: "Badlion Client"
+  category: gaming/mods
+  description: "Badlion Client Minecraft Launcher"
+  homepage: https://client.badlion.net/
+  license: "Proprietary"
+  winget: Badlion.BadlionClient
+  publisher: "Badlion"
+

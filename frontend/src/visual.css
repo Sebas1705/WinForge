@@ -254,3 +254,7 @@ img, svg { -webkit-user-drag: none; user-drag: none; }
 .stagebadge.ok { color: var(--ok); } .stagebadge.fail { color: var(--bad); } .stagebadge.run { color: var(--accent-ink); }
 .destrow { display: flex; align-items: center; gap: 12px; margin: 10px 0 4px; flex-wrap: wrap; }
 .notes { margin-top: 14px; display: grid; gap: 4px; }
+
+/* sub-categories under the category chips */
+.subchips { padding-top: 0; border-top: 0; }
+.subchips button { font-size: 12.5px; padding: 3px 11px; }

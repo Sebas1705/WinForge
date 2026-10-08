@@ -2547,7 +2547,7 @@
 
 - id: battlenet
   name: "Battle.net"
-  category: gaming
+  category: gaming/launchers
   description: "Launcher client for Blizzard games."
   homepage: https://download.battle.net/en-us/desktop
   license: "Proprietary"
@@ -2556,7 +2556,7 @@
 
 - id: ubisoft-connect
   name: "Ubisoft Connect"
-  category: gaming
+  category: gaming/launchers
   description: "The ecosystem of players services for Ubisoft games across all platforms."
   homepage: https://ubisoftconnect.com/
   license: "Proprietary"
@@ -2565,7 +2565,7 @@
 
 - id: rockstar-launcher
   name: "Rockstar Games Launcher"
-  category: gaming
+  category: gaming/launchers
   description: "Launcher hub for certain Rockstar Games PC games, including the Grand Theft Auto and Red Dead Redemption franchises."
   homepage: https://socialclub.rockstargames.com/rockstar-games-launcher
   license: "Proprietary (Freeware)"
@@ -2574,7 +2574,7 @@
 
 - id: ea-app
   name: "EA app"
-  category: gaming
+  category: gaming/launchers
   description: "Play great PC games and connect with your friends, all in one place."
   homepage: https://www.ea.com/ea-app
   license: "Proprietary"
@@ -2583,7 +2583,7 @@
 
 - id: origin
   name: "Origin"
-  category: gaming
+  category: gaming/launchers
   description: "Play great PC games and connect with your friends, all in one place."
   homepage: https://www.origin.com/nld/en-us/store/about
   license: "Proprietary"
@@ -2592,7 +2592,7 @@
 
 - id: gog-galaxy
   name: "GOG GALAXY"
-  category: gaming
+  category: gaming/launchers
   description: "All your games and friends in one place."
   homepage: https://www.gog.com/galaxy
   license: "Proprietary"
@@ -2601,7 +2601,7 @@
 
 - id: amazon-games
   name: "Amazon Games"
-  category: gaming
+  category: gaming/launchers
   description: "Amazon Games app is a Windows PC game launcher that allows you to claim, download, and play new and classic Windows PC games every month from Prime Gaming."
   homepage: https://gaming.amazon.com/home
   license: "Proprietary"
@@ -2610,7 +2610,7 @@
 
 - id: itch
   name: "itch"
-  category: gaming
+  category: gaming/launchers
   description: "Install, update and play indie games"
   homepage: https://itch.io/app
   license: "MIT"
@@ -2619,7 +2619,7 @@
 
 - id: heroic
   name: "Heroic"
-  category: gaming
+  category: gaming/launchers
   description: "Heroic is an Open Source Game Launcher for Linux, Windows and MacOS."
   homepage: https://github.com/Heroic-Games-Launcher/HeroicGamesLauncher
   license: "GPL-3.0"
@@ -2628,7 +2628,7 @@
 
 - id: playnite
   name: "Playnite"
-  category: gaming
+  category: gaming/launchers
   description: "Playnite is an open source video game library manager with one simple goal: To provide a unified interface for all of your games."
   homepage: https://playnite.link/
   license: "MIT"
@@ -2637,7 +2637,7 @@
 
 - id: prism-launcher
   name: "Prism Launcher"
-  category: gaming
+  category: gaming/mods
   description: "A custom launcher for Minecraft that allows you to easily manage multiple installations of Minecraft at once"
   homepage: https://github.com/PrismLauncher/PrismLauncher
   license: "GPL-3.0"
@@ -2646,7 +2646,7 @@
 
 - id: multimc
   name: "MultiMC"
-  category: gaming
+  category: gaming/mods
   description: "A custom launcher for Minecraft that allows you to easily manage multiple installations of Minecraft at once"
   homepage: https://multimc.org/
   license: "Dual License (Apache-2.0 and MS-PL)"
@@ -2655,7 +2655,7 @@
 
 - id: curseforge
   name: "CurseForge"
-  category: gaming
+  category: gaming/mods
   description: "Download and manage your addons and mods with the CurseForge app!"
   homepage: https://curseforge.overwolf.com/
   license: "Proprietary"
@@ -2664,7 +2664,7 @@
 
 - id: modrinth-app
   name: "Modrinth App"
-  category: gaming
+  category: gaming/mods
   description: "The Modrinth App is a unique, open source Minecraft launcher that allows you to play your favorite mods, and keep them up to date, all in one neat little…"
   homepage: https://modrinth.com/app
   license: "GPL-3.0"
@@ -2673,7 +2673,7 @@
 
 - id: atlauncher
   name: "ATLauncher"
-  category: gaming
+  category: gaming/mods
   description: "ATLauncher is a simple and easy to use Minecraft Launcher which contains hundreds of modpacks for you to choose from."
   homepage: https://atlauncher.com/about
   license: "GNU GENERAL PUBLIC LICENSE"
@@ -2682,7 +2682,7 @@
 
 - id: vortex
   name: "Vortex"
-  category: gaming
+  category: gaming/mods
   description: "Vortex is the new, modern mod manager from Nexus Mods."
   homepage: https://github.com/Nexus-Mods/Vortex
   license: "GPL-3.0"
@@ -2691,7 +2691,7 @@
 
 - id: wemod
   name: "WeMod"
-  category: gaming
+  category: gaming/mods
   description: "Free cheats and trainers for your favorite PC games in one easy app."
   homepage: https://www.wemod.com
   license: "Proprietary"
@@ -2700,7 +2700,7 @@
 
 - id: paradox-launcher
   name: "Paradox Launcher"
-  category: gaming
+  category: gaming/launchers
   description: "Game launcher for selected Paradox games."
   homepage: https://play.paradoxplaza.com/
   license: "Copyright (c) 2016 Paradox Interactive AB"
@@ -2709,7 +2709,7 @@
 
 - id: wargaming-net-game-center
   name: "Wargaming.net Game Center"
-  category: gaming
+  category: gaming/launchers
   description: "WGC is a game launcher app that lets you keep all your Wargaming games in one place."
   homepage: https://wargaming.net/wgc
   license: "Proprietary"
@@ -2718,7 +2718,7 @@
 
 - id: xivlauncher
   name: "XIVLauncher"
-  category: gaming
+  category: gaming/launchers
   description: "XIVLauncher (abbreviated as XL) is a faster launcher for Final Fantasy XIV, with various available addons and enhancements to the game!"
   homepage: https://github.com/goatcorp/FFXIVQuickLauncher
   license: "GPL-3.0"
@@ -2727,7 +2727,7 @@
 
 - id: discord-ptb
   name: "Discord PTB"
-  category: gaming
+  category: gaming/launchers
   description: "Your Place to Talk and Hang Out"
   homepage: https://discord.com/download
   license: "Proprietary"
@@ -2736,7 +2736,7 @@
 
 - id: blitz
   name: "Blitz"
-  category: gaming
+  category: gaming/launchers
   description: "Blitz App - Your personal gaming coach"
   homepage: https://blitz.gg/
   license: "Custom use license"
@@ -2745,7 +2745,7 @@
 
 - id: steamcmd
   name: "SteamCMD"
-  category: gaming
+  category: gaming/launchers
   description: "A command-line version of the Steam Client."
   homepage: https://developer.valvesoftware.com/wiki/SteamCMD
   license: "Proprietary"
@@ -2754,7 +2754,7 @@
 
 - id: special-k
   name: "Special K"
-  category: gaming
+  category: gaming/mods
   description: "The Swiss Army Knife of PC Gaming"
   homepage: https://special-k.info/
   license: "GPL-3.0"
@@ -2763,7 +2763,7 @@
 
 - id: retroarch
   name: "RetroArch"
-  category: gaming
+  category: gaming/emulators
   description: "RetroArch is a frontend for emulators, game engines and media players."
   homepage: https://www.retroarch.com/?page=platforms
   license: "GPL-3.0-only"
@@ -2772,7 +2772,7 @@
 
 - id: cemu
   name: "Cemu"
-  category: gaming
+  category: gaming/emulators
   description: "Nintendo Wii U Emulator"
   homepage: https://github.com/cemu-project/Cemu
   license: "MPL-2.0"
@@ -2781,7 +2781,7 @@
 
 - id: duckstation
   name: "DuckStation"
-  category: gaming
+  category: gaming/emulators
   description: "Fast PlayStation 1 emulator for x86-64/AArch64."
   homepage: https://github.com/stenzek/duckstation
   license: "CC BY-NC-ND 4.0"
@@ -2790,7 +2790,7 @@
 
 - id: xemu
   name: "xemu"
-  category: gaming
+  category: gaming/emulators
   description: "Original Xbox Emulator"
   homepage: https://github.com/xemu-project/xemu
   license: "GPL-2.0"
@@ -2799,7 +2799,7 @@
 
 - id: dosbox
   name: "DOSBox"
-  category: gaming
+  category: gaming/emulators
   description: "DOSBox is an emulator program which emulates an IBM PC compatible computer running a DOS operating system."
   homepage: https://sourceforge.net/projects/dosbox/
   license: "GNU General Public License v2.0 (GPL-2.0)"
@@ -2808,7 +2808,7 @@
 
 - id: dosbox-staging
   name: "DOSBox Staging"
-  category: gaming
+  category: gaming/emulators
   description: "DOSBox Staging is a modern continuation of DOSBox — your existing configurations will continue to work, and you will have access to many advanced features."
   homepage: https://www.dosbox-staging.org/
   license: "GPL-2.0-or-later"
@@ -2817,7 +2817,7 @@
 
 - id: scummvm
   name: "ScummVM"
-  category: gaming
+  category: gaming/emulators
   description: "ScummVM is a program which allows you to run certain classic graphical adventure and role-playing games, provided you already have their data files."
   homepage: https://www.scummvm.org/
   license: "GPL-2.0"
@@ -2826,7 +2826,7 @@
 
 - id: openttd
   name: "OpenTTD"
-  category: gaming
+  category: gaming/engines
   description: "OpenTTD is a transport simulation game based upon the popular game Transport Tycoon Deluxe, written by Chris Sawyer."
   homepage: https://www.openttd.org/
   license: "GPL-2.0"
@@ -2835,7 +2835,7 @@
 
 - id: supertuxkart
   name: "SuperTuxKart"
-  category: gaming
+  category: gaming/engines
   description: "Arcade 3D racer with a variety of characters, tracks and modes"
   homepage: https://supertuxkart.net/
   license: "GPL 3.0 or later"
@@ -2844,7 +2844,7 @@
 
 - id: 0-a-d
   name: "0 A.D."
-  category: gaming
+  category: gaming/engines
   description: "0 A.D. is a real-time strategy video game under development by Wildfire Games."
   homepage: https://play0ad.com/
   license: "GPLv2"
@@ -2853,7 +2853,7 @@
 
 - id: xonotic
   name: "Xonotic"
-  category: gaming
+  category: gaming/engines
   description: "The Free and Fast Arena Shooter"
   homepage: https://xonotic.org/download/
   license: "GPL-3.0"
@@ -2862,7 +2862,7 @@
 
 - id: openrct2
   name: "OpenRCT2"
-  category: gaming
+  category: gaming/engines
   description: "Open source re-implementation of RollerCoaster Tycoon 2"
   homepage: https://openrct2.io/download
   license: "GPL-3.0"
@@ -2871,7 +2871,7 @@
 
 - id: freeciv
   name: "Freeciv"
-  category: gaming
+  category: gaming/engines
   description: "Freeciv is a Free and Open Source empire-building strategy game inspired by the history of human civilization."
   homepage: https://www.freeciv.org/
   license: "GPL"
@@ -2880,7 +2880,7 @@
 
 - id: celestia
   name: "Celestia"
-  category: gaming
+  category: gaming/engines
   description: "Real-time 3D visualization of space."
   homepage: https://github.com/CelestiaProject/Celestia
   license: "GPL-2.0"
@@ -2889,7 +2889,7 @@
 
 - id: stellarium
   name: "Stellarium"
-  category: gaming
+  category: gaming/engines
   description: "A free open source planetarium for your computer."
   homepage: https://stellarium.org/
   license: "GPL-2.0"
@@ -2898,7 +2898,7 @@
 
 - id: hedgewars
   name: "Hedgewars"
-  category: gaming
+  category: gaming/engines
   description: "Hedgewars is a turn-based strategy, artillery, action and comedy game, featuring the antics of pink hedgehogs with attitude as they battle from the depths of…"
   homepage: https://hedgewars.org
   license: "GPLv2"
@@ -2907,7 +2907,7 @@
 
 - id: supertux
   name: "SuperTux"
-  category: gaming
+  category: gaming/engines
   description: "SuperTux is a open-source classic 2D jump'n run sidescroller game in a style similar to the original Super Mario games."
   homepage: https://www.supertux.org/
   license: "GPL-3.0"
@@ -2916,7 +2916,7 @@
 
 - id: gcompris-educational-software
   name: "GCompris Educational Software"
-  category: gaming
+  category: gaming/engines
   description: "Educational Game for Children"
   homepage: https://gcompris.net/
   license: "AGPL-3.0"
@@ -2925,7 +2925,7 @@
 
 - id: microsoft-gameinput
   name: "Microsoft GameInput"
-  category: gaming
+  category: gaming/launchers
   description: "A next-generation input API that exposes input devices of all kinds through a single consistent interface."
   homepage: https://www.nuget.org/packages/Microsoft.GameInput
   license: "Proprietary (Freeware)"
@@ -2934,7 +2934,7 @@
 
 - id: epic-online-services
   name: "Epic Online Services"
-  category: gaming
+  category: gaming/launchers
   description: "The online service backend used by certain videogames."
   homepage: https://onlineservices.epicgames.com/sdk
   license: "Proprietary (Freeware)"
@@ -2943,7 +2943,7 @@
 
 - id: sidequest
   name: "SideQuest"
-  category: gaming
+  category: gaming/launchers
   description: "SideQuest is a place to get more apps for your Oculus Quest, it is a completely safe way to enjoy some cutting edge content in VR and expand the capability…"
   homepage: https://sidequestvr.com
   license: "MIT License"
@@ -2952,7 +2952,7 @@
 
 - id: voiceattack
   name: "VoiceAttack"
-  category: gaming
+  category: gaming/launchers
   description: "VoiceAttack is the premier voice control and macro creation system for your Windows games and applications."
   homepage: https://voiceattack.com/
   license: "Proprietary (ToS)"
@@ -2961,7 +2961,7 @@
 
 - id: hidhide
   name: "HidHide"
-  category: gaming
+  category: gaming/launchers
   description: "Gaming input peripherals device firewall for Windows."
   homepage: https://github.com/nefarius/HidHide
   license: "MIT"
@@ -2970,7 +2970,7 @@
 
 - id: vigem-bus-driver
   name: "ViGEm Bus Driver"
-  category: gaming
+  category: gaming/launchers
   description: "Windows kernel-mode driver emulating well-known USB game controllers."
   homepage: https://vigem.org/projects/ViGEm
   license: "BSD-3-Clause"
@@ -3564,7 +3564,7 @@
 
 - id: pcsx2
   name: "PCSX2"
-  category: gaming
+  category: gaming/emulators
   description: "A free and open-source PlayStation 2 (PS2) emulator."
   homepage: https://github.com/PCSX2/pcsx2
   license: "GPL-3.0"
@@ -3573,7 +3573,7 @@
 
 - id: ppsspp
   name: "PPSSPP"
-  category: gaming
+  category: gaming/emulators
   description: "PPSSPP can run your PSP games on your PC in full HD resolution; it can even upscale textures that would otherwise be too blurry as they were made for the…"
   homepage: https://www.ppsspp.org/
   license: "GPL-2.0"
@@ -3672,7 +3672,7 @@
 
 - id: minecraft-launcher
   name: "Minecraft Launcher"
-  category: gaming
+  category: gaming/launchers
   description: "Official launcher for Minecraft, a sandbox voxel game"
   homepage: https://www.minecraft.net/
   license: "Proprietary"
@@ -3681,7 +3681,7 @@
 
 - id: openmw
   name: "OpenMW"
-  category: gaming
+  category: gaming/engines
   description: "Open-source engine reimplementation for the role-playing game Morrowind."
   homepage: https://openmw.org/
   license: "GPL-3.0"
@@ -3690,7 +3690,7 @@
 
 - id: virtual-desktop-streamer
   name: "Virtual Desktop Streamer"
-  category: gaming
+  category: gaming/launchers
   description: "Watch movies, browse the web or play games on a giant virtual screen."
   homepage: https://www.vrdesktop.net/
   license: "Proprietary"
@@ -3807,7 +3807,7 @@
 
 - id: flightgear
   name: "FlightGear"
-  category: gaming
+  category: gaming/engines
   description: "FlightGear is an open-source flight simulator."
   homepage: https://www.flightgear.org/
   license: "GNU GPLv2 or later"
@@ -3816,7 +3816,7 @@
 
 - id: opentrack
   name: "opentrack"
-  category: gaming
+  category: gaming/engines
   description: "Head tracking software for MS Windows, Linux, and Apple OSX"
   homepage: https://github.com/opentrack/opentrack
   license: "ISC license"

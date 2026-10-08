@@ -1,0 +1,168 @@
+# One-line descriptions (English and Spanish, 60 characters at most) for apps that
+# should read well on a card but are not in the "popular" list of featured.yml.
+# An app may be listed here or in featured.yml, not both.
+
+# --- Nintendo
+- {id: dolphin, en: "GameCube and Wii emulator", es: "Emulador de GameCube y Wii"}
+- {id: azahar, en: "Nintendo 3DS emulator", es: "Emulador de Nintendo 3DS"}
+- {id: eden, en: "Nintendo Switch emulator", es: "Emulador de Nintendo Switch"}
+- {id: melonds, en: "Nintendo DS emulator", es: "Emulador de Nintendo DS"}
+- {id: desmume, en: "Nintendo DS emulator", es: "Emulador de Nintendo DS"}
+- {id: mgba, en: "Game Boy Advance emulator", es: "Emulador de Game Boy Advance"}
+- {id: visual-boy-advance, en: "Game Boy and Game Boy Advance emulator", es: "Emulador de Game Boy y Game Boy Advance"}
+- {id: sameboy, en: "Accurate Game Boy and Game Boy Color emulator", es: "Emulador preciso de Game Boy y Game Boy Color"}
+- {id: mesen-2, en: "NES, SNES, Game Boy and more in one emulator", es: "NES, SNES, Game Boy y más en un emulador"}
+- {id: fceux, en: "NES emulator with debugging tools", es: "Emulador de NES con herramientas de depuración"}
+- {id: bsnes, en: "Very accurate Super Nintendo emulator", es: "Emulador de Super Nintendo muy preciso"}
+- {id: project64, en: "Nintendo 64 emulator", es: "Emulador de Nintendo 64"}
+- {id: ares, en: "Multi-system emulator focused on accuracy", es: "Emulador multisistema centrado en la precisión"}
+- {id: bizhawk, en: "Multi-system emulator for speedruns and TAS", es: "Emulador multisistema para speedruns y TAS"}
+# --- Sony, Microsoft
+- {id: epsxe, en: "Classic PlayStation 1 emulator", es: "Emulador clásico de PlayStation 1"}
+- {id: pcsx-redux, en: "PlayStation 1 emulator for developers", es: "Emulador de PlayStation 1 para desarrolladores"}
+- {id: shadps4, en: "PlayStation 4 emulator", es: "Emulador de PlayStation 4"}
+- {id: vita3k, en: "PlayStation Vita emulator", es: "Emulador de PlayStation Vita"}
+- {id: xenia, en: "Xbox 360 emulator", es: "Emulador de Xbox 360"}
+- {id: xenia-manager, en: "Easy setup and updates for Xenia", es: "Configura y actualiza Xenia fácilmente"}
+# --- Sega, Atari and others
+- {id: redream, en: "Sega Dreamcast emulator", es: "Emulador de Sega Dreamcast"}
+- {id: dreampotato, en: "Dreamcast VMU emulator", es: "Emulador de VMU de Dreamcast"}
+- {id: ssf, en: "Sega Saturn emulator", es: "Emulador de Sega Saturn"}
+- {id: mednafen, en: "Many classic consoles in one emulator", es: "Muchas consolas clásicas en un emulador"}
+- {id: stella, en: "Atari 2600 emulator", es: "Emulador de Atari 2600"}
+- {id: atari800win-plus, en: "Atari 8-bit computer emulator", es: "Emulador de ordenadores Atari de 8 bits"}
+- {id: mame, en: "Thousands of arcade machines on your PC", es: "Miles de máquinas recreativas en tu PC"}
+- {id: winuae, en: "Commodore Amiga emulator", es: "Emulador de Commodore Amiga"}
+- {id: vice-sdl2, en: "Commodore 64 and other 8-bit Commodores", es: "Commodore 64 y otros Commodore de 8 bits"}
+- {id: applewin, en: "Apple II emulator", es: "Emulador de Apple II"}
+- {id: openmsx, en: "MSX computer emulator", es: "Emulador de ordenadores MSX"}
+- {id: dosbox-x, en: "DOS emulator with extra features", es: "Emulador de DOS con funciones extra"}
+- {id: 86box, en: "Emulates old PCs down to their hardware", es: "Emula PCs antiguos hasta su hardware"}
+- {id: 86box-manager, en: "Create and manage 86Box virtual machines", es: "Crea y gestiona máquinas virtuales de 86Box"}
+- {id: bochs, en: "x86 PC emulator", es: "Emulador de PC x86"}
+- {id: qemu, en: "Run other operating systems and hardware", es: "Ejecuta otros sistemas operativos y hardware"}
+- {id: ruffle, en: "Play old Flash games and animations", es: "Juega a antiguos juegos y animaciones Flash"}
+- {id: lightspark, en: "Open-source Flash player", es: "Reproductor de Flash de código abierto"}
+- {id: eka2l1, en: "Symbian phone emulator", es: "Emulador de móviles Symbian"}
+- {id: touchhle, en: "Run old iPhone apps and games", es: "Ejecuta antiguas apps y juegos de iPhone"}
+- {id: bluestacks, en: "Run Android apps and games on your PC", es: "Ejecuta apps y juegos de Android en tu PC"}
+- {id: ce-programming-cemu, en: "TI-84 Plus CE calculator emulator", es: "Emulador de la calculadora TI-84 Plus CE"}
+# --- front ends and helpers
+- {id: emulationstation, en: "Console-style front end for your emulators", es: "Menú tipo consola para tus emuladores"}
+- {id: emulationstation-desktop-edition, en: "Console-style front end for your emulators", es: "Menú tipo consola para tus emuladores"}
+- {id: steam-rom-manager, en: "Add your ROMs to Steam as games", es: "Añade tus ROMs a Steam como juegos"}
+- {id: shaderglass, en: "CRT and retro filters over any window", es: "Filtros CRT y retro sobre cualquier ventana"}
+- {id: vpx, en: "Visual Pinball: pinball tables on your PC", es: "Visual Pinball: mesas de pinball en tu PC"}
+- {id: media-preservation-frontend, en: "Back up your game discs", es: "Haz copias de seguridad de tus discos de juegos"}
+- {id: nusget, en: "Download Wii and Wii U system files", es: "Descarga archivos del sistema de Wii y Wii U"}
+- {id: wiimms-iso-tools, en: "Manage Wii and GameCube disc images", es: "Gestiona imágenes de disco de Wii y GameCube"}
+- {id: tinywiibackupmanager, en: "Manage your Wii games on a USB drive", es: "Gestiona tus juegos de Wii en un USB"}
+- {id: wiilink-patcher-gui, en: "Bring Wii online services back", es: "Recupera los servicios en línea de Wii"}
+- {id: memcardrex, en: "Edit PlayStation memory card saves", es: "Edita partidas de tarjetas de memoria de PlayStation"}
+- {id: ludusavi, en: "Back up your game saves", es: "Copia de seguridad de tus partidas guardadas"}
+- {id: antimicrox, en: "Use a gamepad as keyboard and mouse", es: "Usa un mando como teclado y ratón"}
+- {id: joytokey, en: "Map gamepad buttons to keys", es: "Asigna botones del mando a teclas"}
+- {id: joystick-gremlin, en: "Configure joysticks and flight sticks", es: "Configura joysticks y palancas de vuelo"}
+- {id: sdl2-gamepad-tool, en: "Fix and map gamepads for emulators", es: "Arregla y asigna mandos para emuladores"}
+- {id: wiinupro-portable, en: "Use Wii and Wii U controllers on PC", es: "Usa mandos de Wii y Wii U en el PC"}
+# --- mods
+- {id: mod-organizer, en: "Mod manager for Skyrim, Fallout and more", es: "Gestor de mods para Skyrim, Fallout y más"}
+- {id: loot, en: "Sorts your mods so they work together", es: "Ordena tus mods para que funcionen juntos"}
+- {id: wabbajack, en: "Install whole modlists with one click", es: "Instala listas de mods completas con un clic"}
+- {id: r2modman, en: "Mod manager for Thunderstore games", es: "Gestor de mods para juegos de Thunderstore"}
+- {id: gale, en: "Modern mod manager for Thunderstore games", es: "Gestor de mods moderno para juegos de Thunderstore"}
+- {id: wowup-with-curseforge, en: "Manage your World of Warcraft addons", es: "Gestiona tus addons de World of Warcraft"}
+- {id: rai-pal, en: "Find and mod your Unity and Unreal games", es: "Encuentra y modifica tus juegos Unity y Unreal"}
+- {id: xxmi-launcher, en: "Mod launcher for Genshin, Honkai and Zenless", es: "Lanzador de mods para Genshin, Honkai y Zenless"}
+- {id: modrex, en: "Browse and install game mods", es: "Busca e instala mods de juegos"}
+- {id: smapi, en: "Mod loader for Stardew Valley", es: "Cargador de mods para Stardew Valley"}
+- {id: smapit-manager, en: "Mod manager for Stardew Valley", es: "Gestor de mods para Stardew Valley"}
+- {id: rimsort, en: "Mod manager and sorter for RimWorld", es: "Gestor y ordenador de mods para RimWorld"}
+- {id: deadlock-mod-manager, en: "Mod manager for Deadlock", es: "Gestor de mods para Deadlock"}
+- {id: satisfactory-mod-manager, en: "Mod manager for Satisfactory", es: "Gestor de mods para Satisfactory"}
+- {id: outer-wilds-mod-manager, en: "Mod manager for Outer Wilds", es: "Gestor de mods para Outer Wilds"}
+- {id: balatro-mod-manager, en: "Mod manager for Balatro", es: "Gestor de mods para Balatro"}
+- {id: tsw-mod-manager, en: "Mod manager for Train Sim World", es: "Gestor de mods para Train Sim World"}
+- {id: sonic-adventure-mod-manager, en: "Mod manager for the Sonic Adventure games", es: "Gestor de mods para los Sonic Adventure"}
+- {id: hedge-mod-manager, en: "Mod manager for modern Sonic games", es: "Gestor de mods para los Sonic modernos"}
+- {id: irony-mod-manager, en: "Mod manager for Paradox strategy games", es: "Gestor de mods para estrategia de Paradox"}
+- {id: bsmanager, en: "Mod manager for Beat Saber", es: "Gestor de mods para Beat Saber"}
+- {id: questpatcher, en: "Mod Quest games on your headset", es: "Modifica juegos de Quest en tus gafas"}
+- {id: reshade, en: "Graphics effects and filters for any game", es: "Efectos gráficos y filtros para cualquier juego"}
+- {id: reshade-setup-full-add-on-support, en: "ReShade with add-on support", es: "ReShade con soporte de complementos"}
+- {id: livesplit, en: "Timer for speedruns", es: "Cronómetro para speedruns"}
+# --- Minecraft
+- {id: ftb-electron-app, en: "Minecraft modpack launcher from FTB", es: "Lanzador de modpacks de Minecraft de FTB"}
+- {id: gdlauncher, en: "Minecraft launcher with modpacks", es: "Lanzador de Minecraft con modpacks"}
+- {id: freesm-launcher, en: "Minecraft launcher for mods and instances", es: "Lanzador de Minecraft para mods e instancias"}
+- {id: hello-minecraft-launcher, en: "Minecraft launcher with mod support", es: "Lanzador de Minecraft con soporte de mods"}
+- {id: colormc, en: "Minecraft launcher with many options", es: "Lanzador de Minecraft con muchas opciones"}
+- {id: jdminecraftlauncher, en: "Simple open-source Minecraft launcher", es: "Lanzador de Minecraft sencillo y abierto"}
+- {id: jdmrpackinstaller, en: "Install Modrinth modpacks", es: "Instala modpacks de Modrinth"}
+- {id: jdnbtexplorer, en: "Edit Minecraft worlds and player data", es: "Edita mundos y datos de jugador de Minecraft"}
+- {id: lunar-client, en: "Minecraft client with mods built in", es: "Cliente de Minecraft con mods integrados"}
+- {id: mcreator, en: "Make Minecraft mods without coding", es: "Crea mods de Minecraft sin programar"}
+- {id: blockbench, en: "Model and animate blocky 3D", es: "Modela y anima en 3D de bloques"}
+- {id: regolith, en: "Build tool for Minecraft Bedrock add-ons", es: "Herramienta de creación de add-ons de Bedrock"}
+- {id: mine-imator, en: "Make Minecraft animations", es: "Crea animaciones de Minecraft"}
+- {id: minecraft-note-block-studio, en: "Compose music with Minecraft note blocks", es: "Compón música con bloques de notas de Minecraft"}
+- {id: tedit, en: "Terraria map and character editor", es: "Editor de mapas y personajes de Terraria"}
+# --- modding tools
+- {id: hxd-hex-editor, en: "Hex editor for game files", es: "Editor hexadecimal para archivos de juegos"}
+- {id: champollion, en: "Decompile Skyrim and Fallout scripts", es: "Descompila scripts de Skyrim y Fallout"}
+- {id: godot-re-tools, en: "Open and unpack Godot games", es: "Abre y desempaqueta juegos de Godot"}
+- {id: godotdec, en: "Unpack Godot game files", es: "Desempaqueta archivos de juegos de Godot"}
+- {id: depotdownloader, en: "Download older Steam game versions", es: "Descarga versiones antiguas de juegos de Steam"}
+- {id: steamdepotdownloadergui, en: "Download older Steam game versions", es: "Descarga versiones antiguas de juegos de Steam"}
+- {id: large-address-aware, en: "Let 32-bit games use up to 4 GB of memory", es: "Deja que juegos de 32 bits usen hasta 4 GB de memoria"}
+- {id: directx-texture-converter, en: "Convert game textures to DDS", es: "Convierte texturas de juegos a DDS"}
+- {id: brawlcrate, en: "Super Smash Bros. Brawl modding tool", es: "Herramienta para modificar Super Smash Bros. Brawl"}
+- {id: texture64, en: "View textures of Nintendo 64 games", es: "Ve las texturas de juegos de Nintendo 64"}
+# --- engines and community ports
+- {id: uzdoom, en: "Modern Doom engine with mod support", es: "Motor de Doom moderno con soporte de mods"}
+- {id: zandronum, en: "Doom engine for online multiplayer", es: "Motor de Doom para multijugador en línea"}
+- {id: doomsday-engine, en: "Doom, Heretic and Hexen engine", es: "Motor de Doom, Heretic y Hexen"}
+- {id: doom-runner, en: "Launch Doom with your mods and maps", es: "Lanza Doom con tus mods y mapas"}
+- {id: doom-explorer, en: "Browse and run Doom mods", es: "Explora y ejecuta mods de Doom"}
+- {id: openra, en: "Modern Command & Conquer and Red Alert", es: "Command & Conquer y Red Alert modernos"}
+- {id: open-rails, en: "Train simulator", es: "Simulador de trenes"}
+- {id: battle-for-wesnoth, en: "Turn-based fantasy strategy game", es: "Juego de estrategia fantástica por turnos"}
+- {id: luanti, en: "Open-source voxel game engine (Minetest)", es: "Motor de juegos voxel abierto (Minetest)"}
+- {id: widelands, en: "Real-time strategy inspired by Settlers", es: "Estrategia en tiempo real al estilo Settlers"}
+- {id: unreal-gold-oldunreal-edition, en: "Unreal, kept running on modern Windows", es: "Unreal, funcionando en Windows moderno"}
+- {id: unreal-tournament-goty-oldunreal-edition, en: "Unreal Tournament, kept running on Windows", es: "Unreal Tournament, funcionando en Windows moderno"}
+- {id: runelite, en: "Old School RuneScape client with plugins", es: "Cliente de Old School RuneScape con plugins"}
+
+# --- classics, added when gaming was split into sub-categories
+- {id: ppsspp, en: "PSP emulator", es: "Emulador de PSP"}
+- {id: cemu, en: "Wii U emulator", es: "Emulador de Wii U"}
+- {id: duckstation, en: "PlayStation 1 emulator", es: "Emulador de PlayStation 1"}
+- {id: xemu, en: "Original Xbox emulator", es: "Emulador de la Xbox original"}
+- {id: mesen, en: "NES and Famicom emulator", es: "Emulador de NES y Famicom"}
+- {id: mesen-s, en: "Super Nintendo emulator", es: "Emulador de Super Nintendo"}
+- {id: dosbox, en: "Run old DOS games", es: "Ejecuta antiguos juegos de DOS"}
+- {id: dosbox-staging, en: "Modern DOS emulator for classic games", es: "Emulador de DOS moderno para clásicos"}
+- {id: scummvm, en: "Play classic adventure games", es: "Juega a aventuras gráficas clásicas"}
+- {id: antstream, en: "Stream retro arcade games", es: "Juegos recreativos retro en streaming"}
+- {id: vortex, en: "Mod manager from Nexus Mods", es: "Gestor de mods de Nexus Mods"}
+- {id: modrinth-app, en: "Minecraft mods and modpacks from Modrinth", es: "Mods y modpacks de Minecraft de Modrinth"}
+- {id: multimc, en: "Minecraft launcher with separate instances", es: "Lanzador de Minecraft con instancias separadas"}
+- {id: atlauncher, en: "Minecraft launcher with modpacks", es: "Lanzador de Minecraft con modpacks"}
+- {id: badlion-client, en: "Minecraft client with mods built in", es: "Cliente de Minecraft con mods integrados"}
+- {id: wemod, en: "Trainers and cheats for single-player games", es: "Trucos para juegos de un jugador"}
+- {id: special-k, en: "Fix and tune the graphics of many games", es: "Arregla y ajusta los gráficos de muchos juegos"}
+- {id: spriggit, en: "Edit Bethesda game plugins as text", es: "Edita plugins de juegos de Bethesda como texto"}
+- {id: openttd, en: "Build a transport empire", es: "Construye un imperio de transportes"}
+- {id: openrct2, en: "RollerCoaster Tycoon 2, modernized", es: "RollerCoaster Tycoon 2, modernizado"}
+- {id: openmw, en: "Play Morrowind with a modern open engine", es: "Juega a Morrowind con un motor abierto moderno"}
+- {id: supertuxkart, en: "Free 3D kart racing", es: "Carreras de karts 3D gratuitas"}
+- {id: supertux, en: "Free 2D platformer in the style of Mario", es: "Plataformas 2D gratuito al estilo Mario"}
+- {id: 0-a-d, en: "Free ancient-warfare strategy game", es: "Estrategia gratuita de guerras antiguas"}
+- {id: xonotic, en: "Fast free first-person shooter", es: "Shooter en primera persona rápido y gratuito"}
+- {id: hedgewars, en: "Turn-based artillery game, Worms-style", es: "Juego de artillería por turnos tipo Worms"}
+- {id: freeciv, en: "Free turn-based empire builder", es: "Constructor de imperios por turnos gratuito"}
+- {id: flightgear, en: "Free flight simulator", es: "Simulador de vuelo gratuito"}
+- {id: opentrack, en: "Head tracking for flight and racing games", es: "Seguimiento de cabeza para juegos de vuelo y carreras"}
+- {id: celestia, en: "Explore the universe in 3D", es: "Explora el universo en 3D"}
+- {id: stellarium, en: "A planetarium for your PC", es: "Un planetario en tu PC"}
+- {id: gcompris-educational-software, en: "Educational games for young children", es: "Juegos educativos para niños pequeños"}

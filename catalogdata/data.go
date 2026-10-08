@@ -5,5 +5,5 @@ package catalogdata
 
 import "embed"
 
-//go:embed apps/*.yml profiles/*.yml recipes/*.yml detect/*.yml featured.yml
+//go:embed apps/*.yml profiles/*.yml recipes/*.yml detect/*.yml featured.yml taglines.yml
 var FS embed.FS

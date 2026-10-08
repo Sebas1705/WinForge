@@ -1,0 +1,167 @@
+# category|Winget.Id[|catalog-id]
+# Emulators, emulator front ends, game mods and modding tools. Every id was found
+# with `winget search` (tags emulator, emulation, retro, mod...); the importer
+# still checks each one against winget-pkgs and skips what has no https
+# homepage or installer. Pre-release channels (.Nightly, .Dev) are skipped by it.
+
+# --- Nintendo
+gaming/emulators|DolphinEmulator.Dolphin
+gaming/emulators|Cemu.Cemu
+gaming/emulators|AzaharEmu.Azahar
+gaming/emulators|Utopia.Eden.MinGW
+gaming/emulators|melonDS.melonDS
+gaming/emulators|DeSmuMETeam.DeSmuME|||https://desmume.org/
+gaming/emulators|JeffreyPfau.mGBA
+gaming/emulators|VisualBoyAdvance-M.VisualBoyAdvance-M
+gaming/emulators|LIJI32.SameBoy
+gaming/emulators|SourMesen.Mesen2
+gaming/emulators|SourMesen.Mesen
+gaming/emulators|SourMesen.Mesen-S
+gaming/emulators|FCEUX.FCEUX
+gaming/emulators|bsnes-emu.BSNES
+gaming/emulators|Project64.Project64
+gaming/emulators|ares-emulator.ares
+gaming/emulators|TASEmulators.BizHawk
+# --- Sony
+gaming/emulators|PCSX2Team.PCSX2
+gaming/emulators|PPSSPPTeam.PPSSPP
+gaming/emulators|Stenzek.DuckStation
+gaming/emulators|ePSXe.ePSXe
+gaming/emulators|GrumpyCoders.PCSX-Redux|||https://pcsx-redux.consoledev.net/
+gaming/emulators|shadps4-emu.shadPS4
+gaming/emulators|Vita3K.Vita3K
+# --- Microsoft
+gaming/emulators|Xenia.Xenia
+gaming/emulators|XeniaManager.XeniaManager
+gaming/emulators|xemu-project.xemu
+# --- Sega, Atari and other consoles
+gaming/emulators|redream.redream
+gaming/emulators|RikkiGibson.DreamPotato
+gaming/emulators|shimazzz.SSF
+gaming/emulators|MednafenTeam.Mednafen
+gaming/emulators|TheStellaTeam.Stella
+gaming/emulators|Atari800Win.PLus
+# --- Computers, arcade, handhelds, PCs
+gaming/emulators|MAMEdev.MAME
+gaming/emulators|WinUAE.WinUAE
+gaming/emulators|VICE-Team.VICE.SDL2
+gaming/emulators|AppleWin.AppleWin
+gaming/emulators|openMSX.openMSX
+gaming/emulators|DOSBox.DOSBox
+gaming/emulators|joncampbell123.DOSBox-X
+gaming/emulators|DOSBoxStaging.DOSBoxStaging
+gaming/emulators|86Box.86Box
+gaming/emulators|86Box.86BoxManager
+gaming/emulators|Bochs.Bochs
+gaming/emulators|SoftwareFreedomConservancy.QEMU
+gaming/emulators|Oracle.VirtualBox
+gaming/emulators|ScummVM.ScummVM
+gaming/emulators|Ruffle.Ruffle
+gaming/emulators|lightspark.lightspark
+gaming/emulators|EKA2L1.EKA2L1
+gaming/emulators|hikari-no-yume.touchHLE
+gaming/emulators|BlueStack.BlueStacks
+gaming/emulators|CE-Programming.CEmu
+# --- front ends, shaders and helpers for emulators
+gaming/emulators|Libretro.RetroArch
+gaming/emulators|Emulationstation.Emulationstation
+gaming/emulators|ES-DE.EmulationStation-DE
+gaming/emulators|SteamGridDB.RomManager
+gaming/emulators|Playnite.Playnite
+gaming/emulators|mausimus.ShaderGlass
+gaming/emulators|SgarD.VPX
+gaming/emulators|AntstreamLtd.Antstream|||https://www.antstream.com/
+gaming/emulators|SabreTools.MPF
+gaming/emulators|NinjaCheetah.NUSGet
+gaming/emulators|Wiimm.ISO
+gaming/emulators|mq1.TinyWiiBackupManager
+gaming/emulators|WiiLink24.PatcherGUI
+gaming/emulators|ShendoXT.MemcardRex
+gaming/emulators|mtkennerly.ludusavi
+gaming/emulators|AntiMicroX.antimicrox
+gaming/emulators|JTKsoftware.JoyToKey
+gaming/emulators|H2IK.JoystickGremlin
+gaming/emulators|GeneralArcade.SDL2GamepadTool|||https://generalarcade.com/gamepadtool/
+gaming/emulators|JustinKeys.WiinUPro
+
+# --- mod managers and loaders
+gaming/mods|NexusMods.Vortex
+gaming/mods|ModOrganizer2.modorganizer
+gaming/mods|LOOT.LOOT
+gaming/mods|WabbajackTools.Wabbajack
+gaming/mods|ebkr.r2modman
+gaming/mods|Kesomannen.Gale
+gaming/mods|Modrinth.ModrinthApp
+gaming/mods|Overwolf.CurseForge
+gaming/mods|WowUp.CF
+gaming/mods|Raicuparta.RaiPal
+gaming/mods|SpectrumQT.XXMILauncher
+gaming/mods|Modrexio.Modrex
+gaming/mods|Pathoschild.SMAPI
+gaming/mods|SmapItProject.SmapIt
+gaming/mods|RimSort.RimSort
+gaming/mods|MutagenModding.Spriggit
+gaming/mods|Stormix.DeadlockModManager
+gaming/mods|SatisfactoryModding.SatisfactoryModManager
+gaming/mods|OuterWildsMods.OuterWildsModManager
+gaming/mods|Skyline.BalatroModManager
+gaming/mods|TaskPlays.TSWModManager
+gaming/mods|X-Hax.SAModManager
+gaming/mods|thesupersonic16.HedgeModManager
+gaming/mods|bcssov.IronyModManager
+gaming/mods|Zagrios.BSManager
+gaming/mods|Lauriethefish.QuestPatcher
+gaming/mods|SpecialK.SpecialK
+gaming/mods|Reshade.Setup
+gaming/mods|Reshade.Setup.AddonsSupport
+gaming/mods|WeMod.WeMod
+gaming/mods|LiveSplit.LiveSplit
+# --- Minecraft launchers and tools
+gaming/mods|PrismLauncher.PrismLauncher
+gaming/mods|MultiMC.MultiMC
+gaming/mods|ATLauncher.ATLauncher
+gaming/mods|FTB.App
+gaming/mods|GorillaDevs.GDLauncher
+gaming/mods|FreesmTeam.FreesmLauncher
+gaming/mods|HMCL.HMCL.Stable
+gaming/mods|Coloryr.ColorMC
+gaming/mods|JakobDev.jdMinecraftLauncher
+gaming/mods|JakobDev.jdMrpackInstaller
+gaming/mods|JakobDev.jdNBTExplorer
+gaming/mods|Moonsworth.LunarClient
+gaming/mods|Badlion.BadlionClient|||https://client.badlion.net/
+gaming/mods|MCreator.MCreator
+gaming/mods|JannisX11.Blockbench
+gaming/mods|Bedrock-OSS.regolith
+gaming/mods|DavidNorgren.Mine-imator
+gaming/mods|OpenNoteBlockStudio.MinecraftNoteBlockStudio
+gaming/mods|TEdit.TEdit
+# --- reverse engineering and asset tools used for modding
+gaming/mods|dnSpyEx.dnSpy
+gaming/mods|icsharpcode.ILSpy
+gaming/mods|x64dbg.x64dbg
+gaming/mods|MHNexus.HxD
+gaming/mods|Orvid.Champollion
+gaming/mods|GDRETools.gdsdecomp
+gaming/mods|Bioruebe.godotdec
+gaming/mods|SteamRE.DepotDownloader
+gaming/mods|mmvanheusden.SteamDepotDownloaderGUI
+gaming/mods|LargeAddressAware.laa
+gaming/mods|Microsoft.DirectXTex.Texconv
+gaming/mods|soopercool101.BrawlCrate
+gaming/mods|queueRAM.Texture64
+
+# --- engine ports and community engines (they run classic games and their mods)
+gaming/engines|UZDoom.UZDoom
+gaming/engines|Zandronum.Zandronum
+gaming/engines|DEngine.DoomsdayEngine.Stable
+gaming/engines|Youda008.DoomRunner
+gaming/engines|DoomExplorer.DoomExplorer
+gaming/engines|OpenRA.OpenRA.Release
+gaming/engines|OpenRails.OpenRails
+gaming/engines|Wesnoth.BattleForWesnoth
+gaming/engines|LuantiTeam.Luanti
+gaming/engines|WidelandsDevelopmentTeam.Widelands
+gaming/engines|OldUnreal.UnrealGold
+gaming/engines|OldUnreal.UnrealTournamentGOTY
+gaming/engines|RuneLite.RuneLite
