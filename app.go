@@ -31,6 +31,7 @@ type App struct {
 	healthUpdates *health.UpdateScan
 	pending       *install.PendingStore
 	restorePath   string
+	installing    map[string]bool
 	running       bool
 	cancel        context.CancelFunc
 }

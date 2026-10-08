@@ -31,6 +31,8 @@ export function ExportScript(arg1:catalog.Profile):Promise<string>;
 
 export function ExportWinget(arg1:catalog.Profile):Promise<string>;
 
+export function GamesState():Promise<main.GamesView>;
+
 export function GetState():Promise<main.State>;
 
 export function HealthScan():Promise<main.HealthResult>;
@@ -41,9 +43,13 @@ export function ImportCode(arg1:string):Promise<main.ImportResult>;
 
 export function ImportProfile():Promise<main.ImportResult>;
 
+export function InstallGame(arg1:string):Promise<main.GameInstalled>;
+
 export function InstallUpdate():Promise<void>;
 
 export function InstallWinget():Promise<void>;
+
+export function OpenGameFolder(arg1:string):Promise<void>;
 
 export function OpenLink(arg1:string):Promise<void>;
 
@@ -63,7 +69,11 @@ export function PlanUninstall(arg1:Array<string>):Promise<install.Plan>;
 
 export function PlanUpgrades(arg1:Array<string>):Promise<install.Plan>;
 
+export function PlayGame(arg1:string,arg2:string):Promise<void>;
+
 export function ProfileFromPC(arg1:string,arg2:string,arg3:boolean):Promise<catalog.Profile>;
+
+export function RemoveGame(arg1:string):Promise<void>;
 
 export function RestartAsAdmin():Promise<void>;
 
@@ -76,6 +86,8 @@ export function ResumePending():Promise<void>;
 export function SaveProfile(arg1:catalog.Profile):Promise<void>;
 
 export function SaveTextFile(arg1:string,arg2:string):Promise<string>;
+
+export function SetGamesRoot():Promise<string>;
 
 export function ShareCode(arg1:catalog.Profile):Promise<string>;
 

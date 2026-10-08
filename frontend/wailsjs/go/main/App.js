@@ -54,6 +54,10 @@ export function ExportWinget(arg1) {
   return window['go']['main']['App']['ExportWinget'](arg1);
 }
 
+export function GamesState() {
+  return window['go']['main']['App']['GamesState']();
+}
+
 export function GetState() {
   return window['go']['main']['App']['GetState']();
 }
@@ -74,12 +78,20 @@ export function ImportProfile() {
   return window['go']['main']['App']['ImportProfile']();
 }
 
+export function InstallGame(arg1) {
+  return window['go']['main']['App']['InstallGame'](arg1);
+}
+
 export function InstallUpdate() {
   return window['go']['main']['App']['InstallUpdate']();
 }
 
 export function InstallWinget() {
   return window['go']['main']['App']['InstallWinget']();
+}
+
+export function OpenGameFolder(arg1) {
+  return window['go']['main']['App']['OpenGameFolder'](arg1);
 }
 
 export function OpenLink(arg1) {
@@ -118,8 +130,16 @@ export function PlanUpgrades(arg1) {
   return window['go']['main']['App']['PlanUpgrades'](arg1);
 }
 
+export function PlayGame(arg1, arg2) {
+  return window['go']['main']['App']['PlayGame'](arg1, arg2);
+}
+
 export function ProfileFromPC(arg1, arg2, arg3) {
   return window['go']['main']['App']['ProfileFromPC'](arg1, arg2, arg3);
+}
+
+export function RemoveGame(arg1) {
+  return window['go']['main']['App']['RemoveGame'](arg1);
 }
 
 export function RestartAsAdmin() {
@@ -144,6 +164,10 @@ export function SaveProfile(arg1) {
 
 export function SaveTextFile(arg1, arg2) {
   return window['go']['main']['App']['SaveTextFile'](arg1, arg2);
+}
+
+export function SetGamesRoot() {
+  return window['go']['main']['App']['SetGamesRoot']();
 }
 
 export function ShareCode(arg1) {

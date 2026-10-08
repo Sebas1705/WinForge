@@ -1,5 +1,23 @@
 export namespace catalog {
 	
+	export class RunSpec {
+	    exes: string[];
+	    hints: string[];
+	    args?: string[];
+	    register?: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new RunSpec(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.exes = source["exes"];
+	        this.hints = source["hints"];
+	        this.args = source["args"];
+	        this.register = source["register"];
+	    }
+	}
 	export class Source {
 	    id: string;
 	    system: string;
@@ -46,6 +64,7 @@ export namespace catalog {
 	    systems: System[];
 	    emulators: Record<string, Array<string>>;
 	    sources: Source[];
+	    run: Record<string, RunSpec>;
 	
 	    static createFrom(source: any = {}) {
 	        return new Emulation(source);
@@ -56,6 +75,7 @@ export namespace catalog {
 	        this.systems = this.convertValues(source["systems"], System);
 	        this.emulators = source["emulators"];
 	        this.sources = this.convertValues(source["sources"], Source);
+	        this.run = this.convertValues(source["run"], RunSpec, true);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -75,6 +95,42 @@ export namespace catalog {
 		    }
 		    return a;
 		}
+	}
+	export class Game {
+	    id: string;
+	    name: string;
+	    system: string;
+	    en: string;
+	    es: string;
+	    license: string;
+	    homepage: string;
+	    url: string;
+	    sha256: string;
+	    size: number;
+	    kind: string;
+	    file?: string;
+	    entry?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Game(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.system = source["system"];
+	        this.en = source["en"];
+	        this.es = source["es"];
+	        this.license = source["license"];
+	        this.homepage = source["homepage"];
+	        this.url = source["url"];
+	        this.sha256 = source["sha256"];
+	        this.size = source["size"];
+	        this.kind = source["kind"];
+	        this.file = source["file"];
+	        this.entry = source["entry"];
+	    }
 	}
 	export class ProfileApp {
 	    id: string;
@@ -134,6 +190,51 @@ export namespace catalog {
 	}
 	
 	
+	
+
+}
+
+export namespace games {
+	
+	export class Receipt {
+	    id: string;
+	    sha256: string;
+	    url: string;
+	    files: number;
+	    // Go type: time
+	    installedAt: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new Receipt(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.sha256 = source["sha256"];
+	        this.url = source["url"];
+	        this.files = source["files"];
+	        this.installedAt = this.convertValues(source["installedAt"], null);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 
 }
 
@@ -911,6 +1012,76 @@ export namespace main {
 	        this.verified = source["verified"];
 	        this.problems = source["problems"];
 	    }
+	}
+	export class GameInstalled {
+	    receipt: games.Receipt;
+	    registered: string[];
+	    registerError?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new GameInstalled(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.receipt = this.convertValues(source["receipt"], games.Receipt);
+	        this.registered = source["registered"];
+	        this.registerError = source["registerError"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class GamesView {
+	    root: string;
+	    games: catalog.Game[];
+	    installed: Record<string, games.Receipt>;
+	    launchers: Record<string, string>;
+	
+	    static createFrom(source: any = {}) {
+	        return new GamesView(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.root = source["root"];
+	        this.games = this.convertValues(source["games"], catalog.Game);
+	        this.installed = this.convertValues(source["installed"], games.Receipt, true);
+	        this.launchers = source["launchers"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
 	}
 	export class HealthFinding {
 	    key: string;
