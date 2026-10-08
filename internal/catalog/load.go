@@ -20,6 +20,8 @@ type Catalog struct {
 	Featured []string
 	// Emulation says which systems each emulator plays and where free games live.
 	Emulation *Emulation
+	// Games are the games that can be installed from WinForge.
+	Games []Game
 }
 
 // Load reads apps/*.yml, profiles/*.yml and recipes/*.yml from fsys and
@@ -82,6 +84,9 @@ func Load(fsys fs.FS) (*Catalog, error) {
 		return nil, err
 	}
 	if err := c.loadEmulation(fsys); err != nil {
+		return nil, err
+	}
+	if err := c.loadGames(fsys); err != nil {
 		return nil, err
 	}
 	if errs := c.Validate(); len(errs) > 0 {

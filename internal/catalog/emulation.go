@@ -38,6 +38,32 @@ type Emulation struct {
 	// Emulators maps a catalog app id to the systems it plays.
 	Emulators map[string][]string `yaml:"emulators" json:"emulators"`
 	Sources   []Source            `yaml:"sources" json:"sources"`
+	// Run says how to start an emulator on a game file, for the ones whose
+	// command line is known. Emulators without an entry are not launched.
+	Run map[string]RunSpec `yaml:"run,omitempty" json:"run"`
+}
+
+// RunSpec is how to find and start an emulator.
+type RunSpec struct {
+	// Exes are the program's file names, in order of preference.
+	Exes []string `yaml:"exes" json:"exes"`
+	// Hints are lowercase words a folder name has when the emulator lives in it
+	// ("mgba" for C:\Tools\mGBA).
+	Hints []string `yaml:"hints" json:"hints"`
+	// Args start a game: "{file}" is replaced by the game's path.
+	Args []string `yaml:"args,omitempty" json:"args,omitempty"`
+	// Register, when set, is run once after a game is installed so the emulator
+	// knows about it ("{dir}" is the game's folder). ScummVM finds games this way.
+	Register []string `yaml:"register,omitempty" json:"register,omitempty"`
+}
+
+func sortedRunIDs(m map[string]RunSpec) []string {
+	ids := make([]string, 0, len(m))
+	for id := range m {
+		ids = append(ids, id)
+	}
+	sort.Strings(ids)
+	return ids
 }
 
 // SourceKinds are the kinds a source may have.
@@ -96,6 +122,27 @@ func (e *Emulation) validate(c *Catalog) error {
 			if !systems[s] {
 				return fmt.Errorf("emulator %q: unknown system %q", id, s)
 			}
+		}
+	}
+	for _, id := range sortedRunIDs(e.Run) {
+		r := e.Run[id]
+		if _, ok := e.Emulators[id]; !ok {
+			return fmt.Errorf("run: %q is not an emulator listed above", id)
+		}
+		if len(r.Exes) == 0 || len(r.Hints) == 0 {
+			return fmt.Errorf("run: %q needs exes and hints", id)
+		}
+		for _, x := range r.Exes {
+			if x == "" || strings.ContainsAny(x, `/\:`) || !strings.HasSuffix(strings.ToLower(x), ".exe") {
+				return fmt.Errorf("run: %q: %q must be a plain .exe name", id, x)
+			}
+		}
+		hasFile := false
+		for _, a := range r.Args {
+			hasFile = hasFile || strings.Contains(a, "{file}")
+		}
+		if !hasFile && len(r.Register) == 0 {
+			return fmt.Errorf("run: %q has neither args with {file} nor register", id)
 		}
 	}
 	kinds := map[string]bool{}

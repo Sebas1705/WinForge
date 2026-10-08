@@ -206,3 +206,24 @@ sources:
   - {id: flashpoint, system: flash, kind: freegames, name: "Flashpoint", en: "A huge archive that keeps old Flash games and animations playable.", es: "Un enorme archivo que mantiene jugables los viejos juegos y animaciones Flash.", url: "https://flashpointarchive.org/"}
   - {id: freedoom, system: doom, kind: freegames, name: "Freedoom", en: "Free game data for Doom engines: play without owning Doom, and with mods.", es: "Datos de juego libres para motores de Doom: juega sin tener Doom y con mods.", url: "https://freedoom.github.io/"}
   - {id: idgames, system: doom, kind: hacks, name: "Doomworld idgames", en: "The big archive of Doom levels and mods.", es: "El gran archivo de niveles y mods de Doom.", url: "https://www.doomworld.com/idgames/"}
+
+# How to find each emulator on disk and start a game with it. Only emulators
+# whose command line is known are listed; the others are never launched by
+# WinForge (the game is still installed, and the page tells where it is).
+run:
+  mgba: {exes: [mGBA.exe], hints: [mgba], args: ["{file}"]}
+  visual-boy-advance: {exes: [visualboyadvance-m.exe, vbam.exe], hints: [visualboyadvance, vba], args: ["{file}"]}
+  sameboy: {exes: [SameBoy.exe, sameboy.exe], hints: [sameboy], args: ["{file}"]}
+  mesen-2: {exes: [Mesen.exe], hints: [mesen], args: ["{file}"]}
+  mesen: {exes: [Mesen.exe], hints: [mesen], args: ["{file}"]}
+  fceux: {exes: [fceux64.exe, fceux.exe], hints: [fceux], args: ["{file}"]}
+  project64: {exes: [Project64.exe], hints: [project64], args: ["{file}"]}
+  melonds: {exes: [melonDS.exe], hints: [melonds], args: ["{file}"]}
+  dolphin: {exes: [Dolphin.exe], hints: [dolphin], args: ["-b", "-e", "{file}"]}
+  pcsx2: {exes: [pcsx2-qt.exe], hints: [pcsx2], args: ["-batch", "--", "{file}"]}
+  ppsspp: {exes: [PPSSPPWindows64.exe, PPSSPPWindows.exe], hints: [ppsspp], args: ["{file}"]}
+  cemu: {exes: [Cemu.exe], hints: [cemu], args: ["-g", "{file}"]}
+  uzdoom: {exes: [uzdoom.exe], hints: [uzdoom], args: ["-iwad", "{file}"]}
+  zandronum: {exes: [zandronum.exe], hints: [zandronum], args: ["-iwad", "{file}"]}
+  applewin: {exes: [Applewin.exe], hints: [applewin], args: ["-d1", "{file}"]}
+  scummvm: {exes: [scummvm.exe], hints: [scummvm], register: ["--add", "--recursive", "--path={dir}"]}
