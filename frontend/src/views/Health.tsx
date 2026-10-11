@@ -26,6 +26,8 @@ export function Health(p: {
     result: HealthResult | null; busy: boolean; step: string | null; updatesBusy: boolean; admin: boolean; advanced: boolean; byId: Map<string, App>;
     onScan: () => void; onUpdates: () => void; onExport: () => void; onAdmin: () => void;
     onLink: (l: HealthLink) => void; onInstallApp: (a: App) => void; onDetail: (a: App) => void;
+    /** Runs repair recipes (by id) and then rescans. */
+    onRepair: (ids: string[]) => void; onRestart: () => void;
 }) {
     const [query, setQuery] = useState("");
     const [vendorOnly, setVendorOnly] = useState(true);
@@ -41,6 +43,8 @@ export function Health(p: {
 
     const attention = r ? r.findings.filter((f) => f.severity === "bad" || f.severity === "warn").sort((a, b) => RANK[a.severity] - RANK[b.severity]) : [];
     const unknown = r ? r.findings.filter((f) => f.severity === "unknown").length : 0;
+    // Every repair that would fix something that needs attention, once each.
+    const fixable = [...new Set(attention.flatMap((f) => f.fixes ?? []))];
     const overall = r ? tone(r.findings) : "muted";
     const headline = overall === "bad" ? t("health.score.bad") : attention.length > 0 ? t("health.score.attention", {n: attention.length}) : t("health.score.good");
 
@@ -96,6 +100,12 @@ export function Health(p: {
                     {attention.length > 0 && (
                         <section ref={(el) => { sections.current.attention = el; }}>
                             <h2><Icon name="alert" size={18}/> {t("health.fix")}</h2>
+                            {fixable.length > 0 && (
+                                <div className="fixall">
+                                    <button className="primary" onClick={() => p.onRepair(fixable)}><Icon name="wrench" size={15}/> {t("health.fixAll", {n: fixable.length})}</button>
+                                    <span className="muted small">{t("health.fixAllHint")}</span>
+                                </div>
+                            )}
                             <ul className="findings">
                                 {attention.map((f, i) => <FindingCard key={f.key + i} f={f} {...p} open/>)}
                             </ul>
@@ -119,6 +129,12 @@ export function Health(p: {
                             </section>
                         );
                     })}
+
+                    <section className="patchcard">
+                        <h2><Icon name="wrench" size={18}/> {t("health.maintenance.title")}</h2>
+                        <p className="muted">{t("health.maintenance.filesBody")}</p>
+                        <button onClick={() => p.onRepair(["repair-windows-files"])}>{t("health.maintenance.files")}</button>
+                    </section>
 
                     <section>
                         <h2><Icon name="download" size={18}/> {t("health.updates")}</h2>
@@ -183,6 +199,7 @@ export function Health(p: {
 function FindingCard(p: {
     f: Finding; open?: boolean; advanced: boolean; byId: Map<string, App>;
     onLink: (l: HealthLink) => void; onInstallApp: (a: App) => void; onDetail: (a: App) => void;
+    onRepair: (ids: string[]) => void; onRestart: () => void;
 }) {
     const {f} = p;
     const [open, setOpen] = useState(!!p.open);
@@ -197,6 +214,14 @@ function FindingCard(p: {
                     <Icon name="chevron" size={14} className={open ? "turn" : ""}/>
                 </button>
                 {open && <p className="muted">{findingText(f, "detail")}</p>}
+                {f.severity !== "ok" && ((f.fixes?.length ?? 0) > 0 || f.key === "pending-reboot") && (
+                    <div className="actions tight">
+                        {(f.fixes?.length ?? 0) > 0 && (
+                            <button className="sm primary" onClick={() => p.onRepair(f.fixes ?? [])}><Icon name="wrench" size={13}/> {t("health.fixNow")}</button>
+                        )}
+                        {f.key === "pending-reboot" && <button className="sm primary" onClick={p.onRestart}><Icon name="refresh" size={13}/> {t("health.restartNow")}</button>}
+                    </div>
+                )}
                 {open && hasMore && (
                     <div className="actions tight">
                         {f.links?.map((l) => (

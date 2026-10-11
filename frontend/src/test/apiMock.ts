@@ -21,6 +21,7 @@ export const api = {
     ResumePending: vi.fn(), PlanPending: vi.fn(), DiscardPending: vi.fn(), PlanUninstall: vi.fn(), ApplyUninstall: vi.fn(),
     InstallWinget: vi.fn(), ShareCode: vi.fn(), ImportCode: vi.fn(), BackupSets: vi.fn(), PickFolder: vi.fn(), CreateBackup: vi.fn(),
     PickBackup: vi.fn(), RestoreSettings: vi.fn(), RestoreFolders: vi.fn(), Emulation: vi.fn(), PatchROM: vi.fn(),
+    PlanRepairs: vi.fn(), ApplyRepairs: vi.fn(), RestartPC: vi.fn(), CancelRestart: vi.fn(),
     GamesState: vi.fn(), SetGamesRoot: vi.fn(), InstallGame: vi.fn(), RemoveGame: vi.fn(), PlayGame: vi.fn(), OpenGameFolder: vi.fn(),
 };
 
@@ -48,6 +49,10 @@ export function resetApi(state: State = makeState()): void {
     api.Emulation.mockResolvedValue({systems: [], emulators: {}, sources: []});
     api.GamesState.mockResolvedValue({root: "C:\WinForge Games", games: [], installed: {}, launchers: {}});
     api.RemoveGame.mockResolvedValue(undefined);
+    api.ApplyRepairs.mockResolvedValue(undefined);
+    api.RestartPC.mockResolvedValue(undefined);
+    api.CancelRestart.mockResolvedValue(undefined);
+    api.PlanRepairs.mockImplementation(async (ids: string[]) => ({steps: ids.map((id) => ({kind: "recipe", id, name: id, admin: true})), alreadyInstalled: [], needsAdmin: true}));
     api.PlayGame.mockResolvedValue(undefined);
     api.OpenGameFolder.mockResolvedValue(undefined);
     api.PlanPending.mockImplementation(async () => ({steps: [], alreadyInstalled: [], needsAdmin: false}));

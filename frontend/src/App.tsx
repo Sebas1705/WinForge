@@ -3,7 +3,7 @@ import {api, errText, on, type ImportResult, type UpdateInfo} from "./api";
 import {AppDetail} from "./components/AppDetail";
 import {Icon, type IconName} from "./components/Icon";
 import {ScanProgress, type ScanKind} from "./components/ScanProgress";
-import {CodeDialog, NameDialog, RunModal, Segmented, SettingsDialog, Tour, stepKey, type RunState} from "./components/Modals";
+import {CodeDialog, ConfirmDialog, NameDialog, RunModal, Segmented, SettingsDialog, Tour, stepKey, type RunState} from "./components/Modals";
 import {POPULAR} from "./views/Catalog";
 import {IconsContext, loadIcons, type IconIndex} from "./lib/icons";
 import {reportMarkdown, type HealthLink, type HealthResult} from "./lib/health";
@@ -70,6 +70,8 @@ export default function App() {
     const [icons, setIcons] = useState<IconIndex>({});
     const [detail, setDetail] = useState<CatalogApp | null>(null);
     const [codeDialog, setCodeDialog] = useState(false);
+    const [restartAsk, setRestartAsk] = useState(false);
+    const [restarting, setRestarting] = useState(false);
     const [showTour, setShowTour] = useState(() => !tourSeen());
     const advanced = settings.detail === "advanced";
     const closeTour = () => {
@@ -242,6 +244,26 @@ export default function App() {
         } catch (e) { say(errText(e)); } finally { starting.current = false; }
     };
 
+    // Repairs run like an install; when they finish the health page is read again.
+    const startRepair = async (ids: string[]) => {
+        if (starting.current) return;
+        starting.current = true;
+        try {
+            const plan = await api.PlanRepairs(ids);
+            openRun(t("run.repairTitle"), plan, {start: () => api.ApplyRepairs(ids), after: () => void scanHealth()});
+        } catch (e) { say(errText(e)); } finally { starting.current = false; }
+    };
+
+    const restartPC = async () => {
+        setRestartAsk(false);
+        try {
+            await api.RestartPC();
+            setRestarting(true);
+            window.setTimeout(() => setRestarting(false), 30000);
+        } catch (e) { say(errText(e)); }
+    };
+    const cancelRestart = () => { setRestarting(false); api.CancelRestart().catch((e) => say(errText(e))); };
+
     const retryAdmin = async () => {
         try { await api.RestartAsAdmin(); } catch (e) { say(errText(e)); }
     };
@@ -408,6 +430,12 @@ export default function App() {
                         )}
                     </div>
                 )}
+                {restarting && (
+                    <div className="banner warn" role="status">
+                        <span className="grow">{t("health.restartedSoon")}</span>
+                        <button className="sm" onClick={cancelRestart}>{t("health.restartCancel")}</button>
+                    </div>
+                )}
                 {state && busy && <div className="banner info"><ScanProgress kind="pc" compact current={scanStep.pc ?? null}/></div>}
                 {state?.wingetError && (
                     <div className="banner warn">
@@ -445,7 +473,8 @@ export default function App() {
                         <Health advanced={advanced} result={health} busy={healthBusy} step={scanStep.health ?? null} updatesBusy={healthUpdBusy} admin={state.admin} byId={byId}
                                 onScan={() => void scanHealth()} onUpdates={() => void healthUpdates()} onExport={() => void exportHealth()}
                                 onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))} onLink={openLink}
-                                onInstallApp={(a) => void startProfile(selectionProfile([a.id], a.name))} onDetail={setDetail}/>
+                                onInstallApp={(a) => void startProfile(selectionProfile([a.id], a.name))} onDetail={setDetail}
+                                onRepair={(ids) => void startRepair(ids)} onRestart={() => setRestartAsk(true)}/>
                     ) : tab === "games" ? (
                         <Games apps={state.apps} say={say} onOpen={(u) => safe(api.OpenURL(u))} onDetail={setDetail}
                                onBrowse={() => { setCategory("gaming"); setTab("catalog"); }}/>
@@ -464,6 +493,8 @@ export default function App() {
                               onCopy={() => void copyLog()} onRetry={() => void resume(false)} onRetryAdmin={() => void retryAdmin()}/>}
             {showSettings && <SettingsDialog value={settings} onChange={setSettings} version={state?.version ?? ""}
                                              onCheck={() => void checkUpdate(true)} onClose={() => setShowSettings(false)}/>}
+            {restartAsk && <ConfirmDialog title={t("health.restartTitle")} body={t("health.restartBody")} confirm={t("health.restartNow")} danger
+                                          onConfirm={() => void restartPC()} onClose={() => setRestartAsk(false)}/>}
             {naming && <NameDialog {...naming} onClose={() => setNaming(null)}/>}
             {codeDialog && <CodeDialog title={t("dlg.importCode")} placeholder={t("dlg.codePlaceholder")} ok={t("profiles.import")}
                                        onOk={(c) => void importCode(c)} onClose={() => setCodeDialog(false)}/>}

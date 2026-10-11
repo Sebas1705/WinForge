@@ -4,7 +4,7 @@ import {Icon} from "./Icon";
 import {Strip} from "./Strip";
 import {useModal} from "./useModal";
 import {Ring} from "./Visual";
-import {t, type Key} from "../lib/i18n";
+import {t, tOpt, type Key} from "../lib/i18n";
 import type {App, Plan, Step, StepStatus} from "../lib/model";
 import * as prefs from "../lib/settings";
 import {formatElapsed} from "../lib/tally";
@@ -69,7 +69,8 @@ export function RunModal(p: {
     const heading = !started ? run.title : run.running ? t("run.installing") : failedCount > 0 ? t("run.errors") : t("run.done");
     const elapsed = run.startedAt ? formatElapsed((end ?? now) - run.startedAt) : "";
     const label = (s: Step) =>
-        s.kind === "recipe" ? `${t("run.setup")}: ${s.name}`
+        s.kind === "recipe" && s.id.startsWith("repair-") ? (tOpt(`repair.${s.id}`) ?? s.name)
+            : s.kind === "recipe" ? `${t("run.setup")}: ${s.name}`
             : s.kind === "upgrade" ? `${t("run.update")}: ${s.name}`
             : s.kind === "uninstall" ? `${t("run.uninstall")}: ${s.name}` : s.name;
     const reasonOf = (s: Step) => run.reasons[stepKey(s)];

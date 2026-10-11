@@ -71,6 +71,10 @@ export const api = Go as unknown as {
     RestoreFolders(names: string[], dest: string): Promise<FolderResult>;
     Emulation(): Promise<Emulation>;
     PatchROM(): Promise<PatchResult>;
+    PlanRepairs(ids: string[]): Promise<Plan>;
+    ApplyRepairs(ids: string[]): Promise<void>;
+    RestartPC(): Promise<void>;
+    CancelRestart(): Promise<void>;
     GamesState(): Promise<GamesView>;
     SetGamesRoot(): Promise<string>;
     InstallGame(id: string): Promise<GameInstalled>;

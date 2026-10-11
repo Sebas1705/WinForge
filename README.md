@@ -75,6 +75,7 @@ Apps that are not in winget (Gradle, Maven) are deliberately absent rather than 
 - **Privacy**: no serial numbers, user names or addresses are collected, so an exported Markdown report can be pasted into a forum.
 - **Wording**: findings are keys plus parameters, worded in the interface language; a test checks every key the Go analyzer can emit has text in both languages.
 - Run `go test -tags live -run Live -v ./internal/health` on a Windows PC to see the raw scan.
+- **Repairs**: a finding that can be fixed by itself has a **Fix it for me** button, and the attention list has **Fix everything I can**. Repairs are recipes (`catalogdata/recipes/repairs.yml`) run through the same plan, progress, retry and "restart as administrator" as installs, then the PC is scanned again. They cover missing drivers (device rescan plus Windows Update drivers), pending driver and Windows updates (feature upgrades are left for you), Defender definitions and real-time protection (left alone when another antivirus is in charge), the firewall, and a DISM + SFC repair of Windows files under *Maintenance*. A System Restore point is made first when drivers or system files change. Never automatic: BIOS and firmware, anything Windows Update does not offer (those keep their vendor links), and restarts, which ask first and can be cancelled for 30 seconds. A test parses every repair script with PowerShell itself.
 
 ## Plain-language text
 

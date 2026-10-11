@@ -32,6 +32,8 @@ export interface Finding {
     links?: HealthLink[];
     winget?: string;
     catalogId?: string;
+    /** Repair recipes that fix this finding by themselves. */
+    fixes?: string[];
 }
 
 export interface HDriver { device: string; class: string; manufacturer: string; version: string; date: string; signed: boolean; inf: string }

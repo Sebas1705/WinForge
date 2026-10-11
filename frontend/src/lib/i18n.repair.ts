@@ -1,0 +1,48 @@
+// Text of the PC repair buttons and the names of each repair. Spanish must have
+// exactly the English keys. "repair.<recipe id>" names a step in the run dialog.
+
+export const repairEn = {
+    "health.fixNow": "Fix it for me",
+    "health.fixAll": "Fix everything I can ({n})",
+    "health.fixAllHint": "Repairs need administrator rights. A restore point is made first when drivers or system files change.",
+    "health.restartNow": "Restart now",
+    "health.restartTitle": "Restart the PC?",
+    "health.restartBody": "Windows restarts in 30 seconds. Save your work first. You can cancel the restart from the message that appears.",
+    "health.restartedSoon": "Restarting in 30 seconds.",
+    "health.restartCancel": "Cancel the restart",
+    "health.maintenance.title": "Maintenance",
+    "health.maintenance.files": "Check and repair Windows files",
+    "health.maintenance.filesBody": "Runs DISM and SFC to find and replace damaged system files. It can take 15 to 30 minutes and does not need the PC to be restarted.",
+    "run.repairTitle": "Repair this PC",
+    "repair.repair-restore-point": "Create a restore point",
+    "repair.repair-driver-updates": "Install driver updates from Windows Update",
+    "repair.repair-missing-drivers": "Find drivers for devices that have none",
+    "repair.repair-windows-updates": "Install pending Windows updates",
+    "repair.repair-defender-signatures": "Update Microsoft Defender's definitions",
+    "repair.repair-defender-realtime": "Turn on Defender real-time protection",
+    "repair.repair-firewall": "Turn the Windows firewall on",
+    "repair.repair-windows-files": "Check and repair Windows system files",
+} as const;
+
+export const repairEs: Record<keyof typeof repairEn, string> = {
+    "health.fixNow": "Arréglalo por mí",
+    "health.fixAll": "Arreglar todo lo posible ({n})",
+    "health.fixAllHint": "Las reparaciones necesitan permisos de administrador. Antes se crea un punto de restauración cuando cambian drivers o archivos del sistema.",
+    "health.restartNow": "Reiniciar ahora",
+    "health.restartTitle": "¿Reiniciar el PC?",
+    "health.restartBody": "Windows se reinicia en 30 segundos. Guarda antes tu trabajo. Puedes cancelar el reinicio desde el mensaje que aparece.",
+    "health.restartedSoon": "Reiniciando en 30 segundos.",
+    "health.restartCancel": "Cancelar el reinicio",
+    "health.maintenance.title": "Mantenimiento",
+    "health.maintenance.files": "Comprobar y reparar archivos de Windows",
+    "health.maintenance.filesBody": "Ejecuta DISM y SFC para encontrar y reemplazar archivos del sistema dañados. Puede tardar de 15 a 30 minutos y no necesita reiniciar.",
+    "run.repairTitle": "Reparar este PC",
+    "repair.repair-restore-point": "Crear un punto de restauración",
+    "repair.repair-driver-updates": "Instalar actualizaciones de drivers de Windows Update",
+    "repair.repair-missing-drivers": "Buscar drivers para dispositivos que no tienen",
+    "repair.repair-windows-updates": "Instalar las actualizaciones pendientes de Windows",
+    "repair.repair-defender-signatures": "Actualizar las definiciones de Microsoft Defender",
+    "repair.repair-defender-realtime": "Activar la protección en tiempo real de Defender",
+    "repair.repair-firewall": "Activar el firewall de Windows",
+    "repair.repair-windows-files": "Comprobar y reparar archivos del sistema de Windows",
+};
