@@ -1091,6 +1091,7 @@ export namespace main {
 	    links?: health.Link[];
 	    winget?: string;
 	    catalogId?: string;
+	    fixes?: string[];
 	
 	    static createFrom(source: any = {}) {
 	        return new HealthFinding(source);
@@ -1105,6 +1106,7 @@ export namespace main {
 	        this.links = this.convertValues(source["links"], health.Link);
 	        this.winget = source["winget"];
 	        this.catalogId = source["catalogId"];
+	        this.fixes = source["fixes"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

@@ -1,0 +1,136 @@
+# Fixes for what the PC health page finds. They are recipes like any other, run
+# through the same plan, progress and retry as installs, and all need
+# administrator rights. Each one changes only what its description says, and a
+# restore point is made first for the ones that touch drivers or system files.
+# The finding -> repair mapping is in internal/health/fixes.go.
+
+- id: repair-restore-point
+  description: Create a System Restore point, so the PC can be put back if a repair does not go well.
+  admin: true
+  powershell: |
+    try {
+        Enable-ComputerRestore -Drive "$env:SystemDrive\" -ErrorAction SilentlyContinue
+        Checkpoint-Computer -Description 'WinForge: before repair' -RestorePointType MODIFY_SETTINGS -ErrorAction Stop
+        'Restore point created.'
+    } catch {
+        'No restore point was made: ' + $_.Exception.Message + ' (Windows allows one every 24 hours; the repair goes on.)'
+    }
+    exit 0
+
+- id: repair-driver-updates
+  description: Install the driver updates Windows Update offers for this PC.
+  admin: true
+  powershell: |
+    $session = New-Object -ComObject Microsoft.Update.Session
+    $found = $session.CreateUpdateSearcher().Search("IsInstalled=0 and IsHidden=0 and Type='Driver'")
+    if ($found.Updates.Count -eq 0) { 'Windows Update has no driver updates for this PC.'; exit 0 }
+    $list = New-Object -ComObject Microsoft.Update.UpdateColl
+    foreach ($u in $found.Updates) {
+        if (-not $u.EulaAccepted) { $u.AcceptEula() }
+        [void]$list.Add($u)
+        'Found: ' + $u.Title
+    }
+    'Downloading ' + $list.Count + ' driver update(s)...'
+    $downloader = $session.CreateUpdateDownloader(); $downloader.Updates = $list; [void]$downloader.Download()
+    'Installing...'
+    $installer = $session.CreateUpdateInstaller(); $installer.Updates = $list; $result = $installer.Install()
+    'Windows Update result code: ' + $result.ResultCode
+    if ($result.RebootRequired) { 'A restart is needed to finish.'; exit 3010 }
+    if ($result.ResultCode -ne 2 -and $result.ResultCode -ne 3) { exit 1 }
+
+- id: repair-missing-drivers
+  description: Ask Windows to find drivers for devices that have none, then install the driver updates Windows Update offers.
+  admin: true
+  powershell: |
+    'Scanning for hardware changes...'
+    pnputil.exe /scan-devices | Out-Null
+    $session = New-Object -ComObject Microsoft.Update.Session
+    $found = $session.CreateUpdateSearcher().Search("IsInstalled=0 and IsHidden=0 and Type='Driver'")
+    if ($found.Updates.Count -eq 0) {
+        'Windows Update has no drivers for this PC. Use the vendor link on the finding for the rest.'
+        exit 0
+    }
+    $list = New-Object -ComObject Microsoft.Update.UpdateColl
+    foreach ($u in $found.Updates) {
+        if (-not $u.EulaAccepted) { $u.AcceptEula() }
+        [void]$list.Add($u)
+        'Found: ' + $u.Title
+    }
+    'Downloading ' + $list.Count + ' driver update(s)...'
+    $downloader = $session.CreateUpdateDownloader(); $downloader.Updates = $list; [void]$downloader.Download()
+    'Installing...'
+    $installer = $session.CreateUpdateInstaller(); $installer.Updates = $list; $result = $installer.Install()
+    'Windows Update result code: ' + $result.ResultCode
+    if ($result.RebootRequired) { 'A restart is needed to finish.'; exit 3010 }
+    if ($result.ResultCode -ne 2 -and $result.ResultCode -ne 3) { exit 1 }
+
+- id: repair-windows-updates
+  description: Install the pending Windows updates (security and quality; big feature upgrades are left for you to choose).
+  admin: true
+  powershell: |
+    $session = New-Object -ComObject Microsoft.Update.Session
+    $found = $session.CreateUpdateSearcher().Search("IsInstalled=0 and IsHidden=0 and Type='Software'")
+    $list = New-Object -ComObject Microsoft.Update.UpdateColl
+    foreach ($u in $found.Updates) {
+        if ($u.Title -match 'Feature update' -or $u.InstallationBehavior.CanRequestUserInput) { 'Left for you: ' + $u.Title; continue }
+        if (-not $u.EulaAccepted) { $u.AcceptEula() }
+        [void]$list.Add($u)
+        'Found: ' + $u.Title
+    }
+    if ($list.Count -eq 0) { 'There are no pending updates to install.'; exit 0 }
+    'Downloading ' + $list.Count + ' update(s)...'
+    $downloader = $session.CreateUpdateDownloader(); $downloader.Updates = $list; [void]$downloader.Download()
+    'Installing...'
+    $installer = $session.CreateUpdateInstaller(); $installer.Updates = $list; $result = $installer.Install()
+    'Windows Update result code: ' + $result.ResultCode
+    if ($result.RebootRequired) { 'A restart is needed to finish.'; exit 3010 }
+    if ($result.ResultCode -ne 2 -and $result.ResultCode -ne 3) { exit 1 }
+
+- id: repair-defender-signatures
+  description: Update Microsoft Defender's virus definitions.
+  admin: true
+  powershell: |
+    if (-not (Get-Command Update-MpSignature -ErrorAction SilentlyContinue)) { 'Microsoft Defender is not available on this PC.'; exit 0 }
+    Update-MpSignature
+    'Virus definitions are up to date.'
+
+- id: repair-defender-realtime
+  description: Turn on Microsoft Defender real-time protection.
+  admin: true
+  check: |
+    $s = Get-MpComputerStatus -ErrorAction SilentlyContinue
+    if ($s -and $s.RealTimeProtectionEnabled) { exit 0 } else { exit 1 }
+  powershell: |
+    $s = Get-MpComputerStatus
+    if ($s.AMRunningMode -and $s.AMRunningMode -ne 'Normal') {
+        'Another antivirus is in charge, so Defender was left alone.'
+        exit 0
+    }
+    try {
+        Set-MpPreference -DisableRealtimeMonitoring $false
+        'Real-time protection is on.'
+    } catch {
+        'Windows blocked the change (Tamper Protection or a policy): ' + $_.Exception.Message
+        exit 1
+    }
+
+- id: repair-firewall
+  description: Turn the Windows firewall back on for all network profiles.
+  admin: true
+  check: |
+    $off = Get-NetFirewallProfile | Where-Object { -not $_.Enabled }
+    if ($off) { exit 1 } else { exit 0 }
+  powershell: |
+    Set-NetFirewallProfile -Profile Domain,Private,Public -Enabled True
+    'The firewall is on for all network profiles.'
+
+- id: repair-windows-files
+  description: Check Windows system files and repair them (DISM and SFC; this can take 15 to 30 minutes).
+  admin: true
+  powershell: |
+    'Repairing the Windows component store (DISM)...'
+    DISM.exe /Online /Cleanup-Image /RestoreHealth
+    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    'Checking system files (SFC)...'
+    sfc.exe /scannow
+    exit $LASTEXITCODE

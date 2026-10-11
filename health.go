@@ -23,6 +23,8 @@ type HealthFinding struct {
 	Links     []health.Link     `json:"links,omitempty"`
 	Winget    string            `json:"winget,omitempty"`
 	CatalogID string            `json:"catalogId,omitempty"`
+	// Fixes are repair recipes that fix this finding on their own.
+	Fixes []string `json:"fixes,omitempty"`
 }
 
 // HealthResult is everything the PC health page shows.
@@ -79,6 +81,9 @@ func (a *App) healthResult() HealthResult {
 	out := make([]HealthFinding, 0, len(fs))
 	for _, f := range fs {
 		hf := HealthFinding{Key: f.Key, Group: string(f.Group), Severity: string(f.Severity), Params: f.Params, Links: f.Links, Winget: f.Winget}
+		if f.Severity != health.OK {
+			hf.Fixes = health.FixesFor(f.Key)
+		}
 		if f.Winget != "" {
 			hf.CatalogID = byWinget[strings.ToLower(f.Winget)]
 		}

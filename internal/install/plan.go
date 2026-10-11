@@ -2,8 +2,10 @@
 package install
 
 import (
+	"fmt"
 	"github.com/Sebas1705/WinForge/internal/catalog"
 	"github.com/Sebas1705/WinForge/internal/system"
+	"strings"
 )
 
 // StepKind distinguishes installing an app from running a recipe.
@@ -85,4 +87,43 @@ func UninstallPlan(cat *catalog.Catalog, ids []string) Plan {
 		p.NeedsAdmin = p.NeedsAdmin || app.Admin
 	}
 	return p
+}
+
+// riskyRepairs change drivers or system files, so a restore point is made first.
+var riskyRepairs = map[string]bool{
+	"repair-missing-drivers": true,
+	"repair-driver-updates":  true,
+	"repair-windows-updates": true,
+	"repair-windows-files":   true,
+}
+
+// RepairPlan turns repair recipe ids into steps. Only recipes whose id starts
+// with "repair-" are accepted, so this can never run a profile's recipes or
+// anything else from the catalog. A restore point goes first when any repair
+// touches drivers or system files; duplicates are dropped.
+func RepairPlan(cat *catalog.Catalog, ids []string) (Plan, error) {
+	p := Plan{Steps: []Step{}, AlreadyInstalled: []string{}}
+	seen := map[string]bool{}
+	var wanted []string
+	risky := false
+	for _, id := range ids {
+		if !strings.HasPrefix(id, "repair-") || cat.Recipes[id] == nil {
+			return Plan{}, fmt.Errorf("%q is not a repair", id)
+		}
+		if id == "repair-restore-point" || seen[id] {
+			continue
+		}
+		seen[id] = true
+		wanted = append(wanted, id)
+		risky = risky || riskyRepairs[id]
+	}
+	if risky {
+		wanted = append([]string{"repair-restore-point"}, wanted...)
+	}
+	for _, id := range wanted {
+		r := cat.Recipes[id]
+		p.Steps = append(p.Steps, Step{Kind: StepRecipe, ID: id, Name: r.Description, Admin: r.Admin})
+		p.NeedsAdmin = p.NeedsAdmin || r.Admin
+	}
+	return p, nil
 }

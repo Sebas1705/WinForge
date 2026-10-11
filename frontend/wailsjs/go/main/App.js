@@ -6,6 +6,10 @@ export function Apply(arg1) {
   return window['go']['main']['App']['Apply'](arg1);
 }
 
+export function ApplyRepairs(arg1) {
+  return window['go']['main']['App']['ApplyRepairs'](arg1);
+}
+
 export function ApplyUninstall(arg1) {
   return window['go']['main']['App']['ApplyUninstall'](arg1);
 }
@@ -20,6 +24,10 @@ export function BackupSets() {
 
 export function Cancel() {
   return window['go']['main']['App']['Cancel']();
+}
+
+export function CancelRestart() {
+  return window['go']['main']['App']['CancelRestart']();
 }
 
 export function CheckUpdate() {
@@ -122,6 +130,10 @@ export function PlanPending() {
   return window['go']['main']['App']['PlanPending']();
 }
 
+export function PlanRepairs(arg1) {
+  return window['go']['main']['App']['PlanRepairs'](arg1);
+}
+
 export function PlanUninstall(arg1) {
   return window['go']['main']['App']['PlanUninstall'](arg1);
 }
@@ -144,6 +156,10 @@ export function RemoveGame(arg1) {
 
 export function RestartAsAdmin() {
   return window['go']['main']['App']['RestartAsAdmin']();
+}
+
+export function RestartPC() {
+  return window['go']['main']['App']['RestartPC']();
 }
 
 export function RestoreFolders(arg1, arg2) {
