@@ -1,5 +1,9 @@
 # WinForge
 
+[![CI](https://github.com/Sebas1705/winforge/actions/workflows/ci.yml/badge.svg)](https://github.com/Sebas1705/winforge/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/Sebas1705/winforge?include_prereleases)](https://github.com/Sebas1705/winforge/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Fast, profile-based installation of Windows apps and developer toolchains.
 
 WinForge scans the PC, shows which apps of a **curated catalog** are installed, and lets you save, export, import and apply **profiles** - from "Essentials" to "Rust", "Android" or "Containers" - installing only what is missing.
