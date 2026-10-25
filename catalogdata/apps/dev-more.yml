@@ -923,7 +923,7 @@
   homepage: https://github.com/himeshsameera/Dependencies
   license: "MIT"
   winget: lucasg.Dependencies
-  publisher: "lucasg"
+  publisher: "lucasg / himeshsameera"
 
 - id: podman
   name: "Podman"
