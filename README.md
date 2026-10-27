@@ -6,6 +6,12 @@
 
 Fast, profile-based installation of Windows apps and developer toolchains.
 
+<p align="center">
+  <img src="docs/screenshots/1.png" width="290" alt="Catalog: store-style grid of apps with open-source badges and install buttons" />
+  <img src="docs/screenshots/2.png" width="290" alt="Rust profile: installed apps and the ones still missing" />
+  <img src="docs/screenshots/3.png" width="290" alt="Install plan preview for the Rust profile before anything runs" />
+</p>
+
 WinForge scans the PC, shows which apps of a **curated catalog** are installed, and lets you save, export, import and apply **profiles** - from "Essentials" to "Rust", "Android" or "Containers" - installing only what is missing.
 
 - **Catalog**: 744 apps (a large share open source, filterable), each pinned to a [winget](https://github.com/microsoft/winget-pkgs) package. winget manifests carry the vendor's own installer URL and a SHA-256, and are moderated - that is the reliability this project builds on instead of re-hosting or scraping installers.
