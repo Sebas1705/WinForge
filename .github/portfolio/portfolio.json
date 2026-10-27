@@ -1,0 +1,11 @@
+{
+  "accent": "#6272FF",
+  "icon_alt": {
+    "en": "WinForge app icon: a white W with a yellow dot on a blue-to-violet gradient rounded square",
+    "es": "Icono de la app WinForge: una W blanca con un punto amarillo sobre un cuadrado redondeado degradado de azul a violeta"
+  },
+  "banner_alt": {
+    "en": "WinForge banner: the app icon, the tagline \"Windows app and dev-toolchain installer on winget\" and the stack (Go, Wails, React, TypeScript), next to a screenshot of the app",
+    "es": "Banner de WinForge: el icono de la app, el lema \"Instalador de apps y toolchains para Windows con winget\" y el stack (Go, Wails, React, TypeScript), junto a una captura de la app"
+  }
+}
