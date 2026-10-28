@@ -65,6 +65,7 @@ func main() {
 	}
 	wp := wingetpkgs.New()
 	wp.CacheDir = ".winget-cache"
+	wp.MaxWait = 70 * time.Minute // bulk runs wait out an exhausted hourly API budget
 	owners := &ownerTypes{client: client, token: wp.Token, seen: map[string]string{}}
 
 	var ids []string
