@@ -57,6 +57,9 @@ jobs:
 
   catalog:
     runs-on: ubuntu-latest
+    # Reads winget-pkgs from one shallow sparse clone, so a run takes minutes;
+    # this only stops a stuck run from holding the queue for hours.
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5

@@ -6,8 +6,10 @@ package wingetpkgs
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
+	"math/rand/v2"
 	"net/http"
 	"net/url"
 	"os"
@@ -32,18 +34,35 @@ type Client struct {
 	// CacheDir, when set, stores fetched packages as JSON for CacheTTL so
 	// repeated bulk runs do not spend the GitHub API budget again.
 	CacheDir string
+	// Mirror, when set, answers every lookup from a local clone of
+	// winget-pkgs instead of HTTP (see OpenMirror).
+	Mirror *Mirror
+	// BaseDelay is the first retry backoff and MaxWait the total time one
+	// request may spend waiting on rate limits (zero means the defaults).
+	BaseDelay time.Duration
+	MaxWait   time.Duration
 }
 
 // CacheTTL is how long a cached package is trusted.
 const CacheTTL = 12 * time.Hour
 
+// Retry defaults: the first backoff, the most one request may spend waiting
+// in total before it gives up, and the most attempts it makes.
+const (
+	DefaultBaseDelay = time.Second
+	DefaultMaxWait   = 2 * time.Minute
+	maxAttempts      = 8
+)
+
 // New returns a client using GITHUB_TOKEN, GH_TOKEN or `gh auth token`.
 func New() *Client {
 	return &Client{
-		HTTP:   &http.Client{Timeout: 30 * time.Second},
-		Token:  token(),
-		APIURL: "https://api.github.com",
-		RawURL: "https://raw.githubusercontent.com",
+		HTTP:      &http.Client{Timeout: 30 * time.Second},
+		Token:     token(),
+		APIURL:    "https://api.github.com",
+		RawURL:    "https://raw.githubusercontent.com",
+		BaseDelay: DefaultBaseDelay,
+		MaxWait:   DefaultMaxWait,
 	}
 }
 
@@ -127,10 +146,77 @@ func ManifestDir(id string) string {
 	return "manifests/" + strings.ToLower(id[:1]) + "/" + strings.ReplaceAll(id, ".", "/")
 }
 
-// get retries rate limits (429) and server errors with exponential backoff,
-// honouring Retry-After, so bulk runs survive GitHub's throttling.
+// ErrRateLimited marks a request GitHub kept throttling after every retry.
+// It says nothing about the package itself, so callers can report the lookup
+// as unverified instead of as a failure.
+var ErrRateLimited = errors.New("rate limited by GitHub")
+
+// RateLimitError is what get returns, wrapping ErrRateLimited, when a rate
+// limit outlasts the retries.
+type RateLimitError struct {
+	URL    string
+	Status int
+	Body   string
+}
+
+func (e *RateLimitError) Error() string {
+	msg := fmt.Sprintf("%s: HTTP %d, still rate limited after retries", e.URL, e.Status)
+	if e.Body != "" {
+		msg += ": " + e.Body
+	}
+	return msg
+}
+
+func (e *RateLimitError) Unwrap() error { return ErrRateLimited }
+
+// rateLimited reports whether a response is GitHub throttling (primary or
+// secondary rate limit) rather than a real answer about the resource.
+func rateLimited(code int, h http.Header, body []byte) bool {
+	if code == http.StatusTooManyRequests {
+		return true
+	}
+	if code != http.StatusForbidden {
+		return false
+	}
+	if h.Get("X-RateLimit-Remaining") == "0" || h.Get("Retry-After") != "" {
+		return true
+	}
+	b := strings.ToLower(string(body))
+	return strings.Contains(b, "rate limit") || strings.Contains(b, "abuse")
+}
+
+// serverWait is how long the server asked us to wait, if it said so.
+func serverWait(h http.Header, now time.Time) (time.Duration, bool) {
+	if v := strings.TrimSpace(h.Get("Retry-After")); v != "" {
+		if n, err := strconv.Atoi(v); err == nil && n >= 0 {
+			return time.Duration(n) * time.Second, true
+		}
+		if t, err := http.ParseTime(v); err == nil {
+			return max(t.Sub(now), 0), true
+		}
+	}
+	if h.Get("X-RateLimit-Remaining") == "0" {
+		if reset, err := strconv.ParseInt(h.Get("X-RateLimit-Reset"), 10, 64); err == nil {
+			return max(time.Unix(reset, 0).Sub(now)+time.Second, 0), true
+		}
+	}
+	return 0, false
+}
+
+// get retries rate limits (429, 403 rate-limit answers) and server errors
+// with exponential backoff and full jitter, honouring Retry-After and
+// X-RateLimit-Reset. One request never waits more than MaxWait in total: a
+// rate limit that outlasts it is returned as a *RateLimitError, a server
+// error as its last response.
 func (c *Client) get(ctx context.Context, u, accept string) ([]byte, int, error) {
-	delay := time.Second
+	base, budget := c.BaseDelay, c.MaxWait
+	if base <= 0 {
+		base = DefaultBaseDelay
+	}
+	if budget <= 0 {
+		budget = DefaultMaxWait
+	}
+	var waited time.Duration
 	for attempt := 0; ; attempt++ {
 		req, err := http.NewRequestWithContext(ctx, "GET", u, nil)
 		if err != nil {
@@ -139,7 +225,9 @@ func (c *Client) get(ctx context.Context, u, accept string) ([]byte, int, error)
 		if accept != "" {
 			req.Header.Set("Accept", accept)
 		}
-		if c.Token != "" && strings.HasPrefix(u, c.APIURL) {
+		// raw.githubusercontent.com accepts the token too; authenticated
+		// requests are throttled per token instead of per (shared CI) IP.
+		if c.Token != "" && (strings.HasPrefix(u, c.APIURL) || strings.HasPrefix(u, c.RawURL)) {
 			req.Header.Set("Authorization", "Bearer "+c.Token)
 		}
 		resp, err := c.HTTP.Do(req)
@@ -148,59 +236,76 @@ func (c *Client) get(ctx context.Context, u, accept string) ([]byte, int, error)
 		}
 		b, rerr := io.ReadAll(io.LimitReader(resp.Body, 8<<20))
 		resp.Body.Close()
-		// GitHub's primary rate limit answers 403 with Remaining: 0; wait for the
-		// reset (bounded) instead of failing hundreds of lookups in a bulk run.
-		limited := resp.StatusCode == http.StatusForbidden && resp.Header.Get("X-RateLimit-Remaining") == "0"
-		retry := limited || resp.StatusCode == http.StatusTooManyRequests || resp.StatusCode >= 500
-		if !retry || attempt >= 5 {
+		limited := rateLimited(resp.StatusCode, resp.Header, b)
+		if !limited && resp.StatusCode < 500 {
 			return b, resp.StatusCode, rerr
 		}
-		wait := delay
-		if n, err := strconv.Atoi(resp.Header.Get("Retry-After")); err == nil && n > 0 && n < 120 {
-			wait = time.Duration(n) * time.Second
+
+		wait := time.Duration(rand.Int64N(int64(base<<min(attempt, 10)) + 1))
+		if d, ok := serverWait(resp.Header, time.Now()); ok {
+			wait = d + time.Duration(rand.Int64N(int64(base)/4+1))
 		}
-		if limited {
-			if reset, err := strconv.ParseInt(resp.Header.Get("X-RateLimit-Reset"), 10, 64); err == nil {
-				if d := time.Until(time.Unix(reset, 0)) + 2*time.Second; d > 0 && d < 70*time.Minute {
-					fmt.Fprintf(os.Stderr, "GitHub rate limit reached; waiting %s\n", d.Round(time.Second))
-					wait = d
-					attempt-- // waiting out the limit is not a failed attempt
-				}
+		if attempt+1 >= maxAttempts || waited+wait > budget {
+			if limited {
+				return nil, resp.StatusCode, &RateLimitError{URL: u, Status: resp.StatusCode, Body: firstLine(b)}
 			}
+			return b, resp.StatusCode, rerr
 		}
 		select {
 		case <-time.After(wait):
 		case <-ctx.Done():
 			return nil, 0, ctx.Err()
 		}
-		delay *= 2
+		waited += wait
 	}
+}
+
+func firstLine(b []byte) string {
+	s, _, _ := strings.Cut(strings.TrimSpace(string(b)), "\n")
+	if len(s) > 200 {
+		s = s[:200]
+	}
+	return s
 }
 
 // Versions lists the package's candidate version folders, newest first. Some
 // entries are really nested packages (Canonical.Ubuntu has a folder 2404), so
 // callers try candidates in order until one holds this package's manifests.
 func (c *Client) Versions(ctx context.Context, id string) ([]string, error) {
-	b, code, err := c.get(ctx, c.APIURL+"/repos/microsoft/winget-pkgs/contents/"+ManifestDir(id), "application/vnd.github+json")
-	if err != nil {
-		return nil, err
-	}
-	if code == http.StatusNotFound {
-		return nil, fmt.Errorf("package %s not found in winget-pkgs", id)
-	}
-	if code != http.StatusOK {
-		return nil, fmt.Errorf("GitHub API %d for %s: %s", code, id, strings.TrimSpace(string(b)))
-	}
-	var entries []struct{ Name, Type string }
-	if err := json.Unmarshal(b, &entries); err != nil {
-		return nil, err
+	var names []string
+	if c.Mirror != nil {
+		dirs, ok := c.Mirror.subdirs(ManifestDir(id))
+		if !ok {
+			return nil, fmt.Errorf("package %s not found in winget-pkgs", id)
+		}
+		names = dirs
+	} else {
+		b, code, err := c.get(ctx, c.APIURL+"/repos/microsoft/winget-pkgs/contents/"+ManifestDir(id), "application/vnd.github+json")
+		if err != nil {
+			return nil, err
+		}
+		if code == http.StatusNotFound {
+			return nil, fmt.Errorf("package %s not found in winget-pkgs", id)
+		}
+		if code != http.StatusOK {
+			return nil, fmt.Errorf("GitHub API %d for %s: %s", code, id, strings.TrimSpace(string(b)))
+		}
+		var entries []struct{ Name, Type string }
+		if err := json.Unmarshal(b, &entries); err != nil {
+			return nil, err
+		}
+		for _, e := range entries {
+			if e.Type == "dir" {
+				names = append(names, e.Name)
+			}
+		}
 	}
 	var versions []string
-	for _, e := range entries {
+	for _, n := range names {
 		// Sub-folders that do not start like a version (Beta, zh-TW, ...) are
 		// other packages nested under this identifier.
-		if e.Type == "dir" && looksLikeVersion(e.Name) {
-			versions = append(versions, e.Name)
+		if looksLikeVersion(n) {
+			versions = append(versions, n)
 		}
 	}
 	if len(versions) == 0 {
@@ -249,6 +354,13 @@ func split(v string) []string {
 }
 
 func (c *Client) fetchYAML(ctx context.Context, id, version, suffix string, out any) (bool, error) {
+	if c.Mirror != nil {
+		b, ok, err := c.Mirror.read(ctx, ManifestDir(id)+"/"+version+"/"+id+suffix)
+		if err != nil || !ok {
+			return false, err
+		}
+		return true, yaml.Unmarshal(b, out)
+	}
 	u := c.RawURL + "/microsoft/winget-pkgs/master/" + ManifestDir(id) + "/" + url.PathEscape(version) + "/" + id + suffix
 	b, code, err := c.get(ctx, u, "")
 	if err != nil {
