@@ -24,6 +24,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/Sebas1705/WinForge/catalogdata"
 	"github.com/Sebas1705/WinForge/internal/catalog"
@@ -45,6 +46,7 @@ func main() {
 	}
 	c := wingetpkgs.New()
 	c.CacheDir = ".winget-cache" // git-ignored; manifests are re-read after 12h
+	c.MaxWait = 70 * time.Minute // bulk imports wait out an exhausted hourly API budget
 	switch {
 	case *detect:
 		fatalIf(genDetect(c, cat, "catalogdata/detect/detect.yml"))
