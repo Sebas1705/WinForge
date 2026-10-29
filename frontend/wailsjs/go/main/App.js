@@ -182,6 +182,10 @@ export function SaveTextFile(arg1, arg2) {
   return window['go']['main']['App']['SaveTextFile'](arg1, arg2);
 }
 
+export function StartupError() {
+  return window['go']['main']['App']['StartupError']();
+}
+
 export function SetGamesRoot() {
   return window['go']['main']['App']['SetGamesRoot']();
 }

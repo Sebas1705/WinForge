@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"errors"
+	"log"
 	"os"
 	"sort"
+	"strings"
 	"sync"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -34,6 +36,7 @@ type App struct {
 	installing    map[string]bool
 	running       bool
 	cancel        context.CancelFunc
+	startupErr    error
 }
 
 func NewApp() *App {
@@ -43,15 +46,64 @@ func NewApp() *App {
 		// broken build, not a user error.
 		panic(err)
 	}
-	store, err := profile.DefaultStore()
-	if err != nil {
-		panic(err)
+	return newApp(cat, profile.DefaultStore, install.DefaultPendingStore)
+}
+
+// errStorageUnavailable is what profile operations return when the user's
+// config folder could not be opened at startup.
+var errStorageUnavailable = errors.New("WinForge could not open its settings folder, so profiles cannot be saved")
+
+// newApp builds the App with the given store constructors. A store that cannot
+// be opened is a problem with the user's environment (no %AppData%, for
+// instance), not a broken build: the app starts without it, logs the problem
+// and reports it to the UI through StartupError and State.StartupError.
+func newApp(cat *catalog.Catalog, openStore func() (*profile.Store, error), openPending func() (*install.PendingStore, error)) *App {
+	a := &App{cat: cat}
+	var problems []string
+	if store, err := openStore(); err != nil {
+		problems = append(problems, "profiles: "+err.Error())
+	} else {
+		a.store = store
 	}
-	pending, err := install.DefaultPendingStore()
-	if err != nil {
-		panic(err)
+	if pending, err := openPending(); err != nil {
+		problems = append(problems, "unfinished runs: "+err.Error())
+	} else {
+		a.pending = pending
 	}
-	return &App{cat: cat, store: store, pending: pending}
+	if len(problems) > 0 {
+		a.startupErr = errors.New("Could not open WinForge's settings folder (" + strings.Join(problems, "; ") + "). The app works, but profiles and unfinished runs will not be saved.")
+		log.Printf("winforge: startup: %v", a.startupErr)
+	}
+	return a
+}
+
+// StartupError is the problem found while starting, or "" when all is well.
+func (a *App) StartupError() string {
+	if a.startupErr == nil {
+		return ""
+	}
+	return a.startupErr.Error()
+}
+
+// loadPending, savePending and clearPending tolerate a missing pending store.
+func (a *App) loadPending() *install.Pending {
+	if a.pending == nil {
+		return nil
+	}
+	return a.pending.Load()
+}
+
+func (a *App) savePending(p install.Pending) {
+	if a.pending != nil {
+		_ = a.pending.Save(p)
+	}
+}
+
+func (a *App) clearPending() error {
+	if a.pending == nil {
+		return nil
+	}
+	return a.pending.Clear()
 }
 
 func (a *App) startup(ctx context.Context) { a.ctx = ctx }
@@ -85,6 +137,8 @@ type State struct {
 	// Pending is a run that stopped before finishing (failed steps, a restart,
 	// a crash) and can be continued.
 	Pending *install.Pending `json:"pending,omitempty"`
+	// StartupError is set when the settings folder could not be opened.
+	StartupError string `json:"startupError,omitempty"`
 }
 
 // ProfileInfo is a profile plus its flattened contents.
@@ -126,6 +180,10 @@ func (a *App) GetState() (State, error) {
 		st.Profiles = append(st.Profiles, a.profileInfo(*profiles[id], true))
 	}
 	st.Pending = a.livePending(installed)
+	st.StartupError = a.StartupError()
+	if a.store == nil {
+		return st, nil
+	}
 	user, err := a.store.List(a.cat)
 	if err != nil {
 		return st, err
@@ -193,14 +251,14 @@ func (a *App) start(plan install.Plan, title string) error {
 
 	// The whole plan is stored first and shrinks as steps finish, so whatever
 	// is left when the run ends - or when the PC restarts mid-run - can be resumed.
-	_ = a.pending.Save(install.Pending{Title: title, Steps: plan.Steps})
+	a.savePending(install.Pending{Title: title, Steps: plan.Steps})
 	done := map[string]bool{}
 
 	go func() {
 		failed := install.Run(ctx, a.cat, plan, install.OSExecutor{}, func(e install.Event) {
 			if e.Status == install.StatusOK {
 				done[install.StepKey(e.Step)] = true
-				_ = a.pending.Save(install.Pending{Title: title, Steps: install.Without(plan.Steps, done)})
+				a.savePending(install.Pending{Title: title, Steps: install.Without(plan.Steps, done)})
 			}
 			runtime.EventsEmit(a.ctx, "install", e)
 		})
@@ -231,11 +289,19 @@ func (a *App) SaveProfile(p catalog.Profile) error {
 		return err
 	}
 	p.Kind = "custom"
+	if a.store == nil {
+		return errStorageUnavailable
+	}
 	return a.store.Save(p)
 }
 
 // DeleteProfile removes a user profile.
-func (a *App) DeleteProfile(id string) error { return a.store.Delete(id) }
+func (a *App) DeleteProfile(id string) error {
+	if a.store == nil {
+		return errStorageUnavailable
+	}
+	return a.store.Delete(id)
+}
 
 // ProfileFromPC builds a profile out of the catalog apps installed right now.
 func (a *App) ProfileFromPC(id, name string, pinVersions bool) catalog.Profile {

@@ -1274,6 +1274,7 @@ export namespace main {
 	    featured: string[];
 	    wingetError?: string;
 	    pending?: install.Pending;
+	    startupError?: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new State(source);
@@ -1288,6 +1289,7 @@ export namespace main {
 	        this.featured = source["featured"];
 	        this.wingetError = source["wingetError"];
 	        this.pending = this.convertValues(source["pending"], install.Pending);
+	        this.startupError = source["startupError"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

@@ -216,3 +216,10 @@ describe("keyboard", () => {
         expect(screen.getByRole("dialog")).toBeInTheDocument();
     });
 });
+
+describe("startup error", () => {
+    it("tells the user when the settings folder could not be opened", async () => {
+        await openApp(makeState({startupError: "Could not open WinForge's settings folder"}));
+        expect(await screen.findByRole("alert")).toHaveTextContent("Could not open WinForge's settings folder");
+    });
+});
