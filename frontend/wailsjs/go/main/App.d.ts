@@ -95,6 +95,8 @@ export function SaveProfile(arg1:catalog.Profile):Promise<void>;
 
 export function SaveTextFile(arg1:string,arg2:string):Promise<string>;
 
+export function StartupError():Promise<string>;
+
 export function SetGamesRoot():Promise<string>;
 
 export function ShareCode(arg1:catalog.Profile):Promise<string>;

@@ -18,7 +18,7 @@ import (
 // install whose app is now there, or an uninstall whose app is gone. When
 // nothing is left the stored run is forgotten.
 func (a *App) livePending(installed map[string]system.Installed) *install.Pending {
-	p := a.pending.Load()
+	p := a.loadPending()
 	if p == nil {
 		return nil
 	}
@@ -35,7 +35,7 @@ func (a *App) livePending(installed map[string]system.Installed) *install.Pendin
 		}
 	}
 	if len(keep) == 0 {
-		_ = a.pending.Clear()
+		_ = a.clearPending()
 		return nil
 	}
 	p.Steps = keep
@@ -74,7 +74,7 @@ func (a *App) PlanPending() install.Plan {
 }
 
 // DiscardPending forgets the unfinished run.
-func (a *App) DiscardPending() error { return a.pending.Clear() }
+func (a *App) DiscardPending() error { return a.clearPending() }
 
 // PlanUninstall previews removing catalog apps.
 func (a *App) PlanUninstall(ids []string) install.Plan { return install.UninstallPlan(a.cat, ids) }
