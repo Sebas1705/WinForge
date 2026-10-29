@@ -443,6 +443,7 @@ export default function App() {
                         <button className="sm primary" onClick={() => void setupWinget()}>{t("winget.setup")}</button>
                     </div>
                 )}
+                {state?.startupError && <div className="banner warn" role="alert"><span className="grow">{state.startupError}</span></div>}
                 {state?.pending && !run && (
                     <div className="banner info" role="region" aria-label={t("pending.title")}>
                         <Icon name="refresh" size={16}/>

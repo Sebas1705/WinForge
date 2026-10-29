@@ -50,6 +50,8 @@ export interface State {
     wingetError?: string;
     /** A run that stopped before finishing and can be continued. */
     pending?: { title: string; steps: Step[] };
+    /** Set when WinForge could not open its settings folder at startup. */
+    startupError?: string;
 }
 
 export interface Step {
