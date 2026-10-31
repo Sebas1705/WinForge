@@ -69,7 +69,6 @@ gaming/emulators|ES-DE.EmulationStation-DE
 gaming/emulators|SteamGridDB.RomManager
 gaming/emulators|Playnite.Playnite
 gaming/emulators|mausimus.ShaderGlass
-gaming/emulators|SgarD.VPX
 gaming/emulators|AntstreamLtd.Antstream|||https://www.antstream.com/
 gaming/emulators|SabreTools.MPF
 gaming/emulators|NinjaCheetah.NUSGet
