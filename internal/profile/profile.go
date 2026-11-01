@@ -12,6 +12,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"unicode"
 
 	"github.com/Sebas1705/WinForge/internal/catalog"
 )
@@ -46,6 +47,27 @@ type Imported struct {
 
 var profileID = regexp.MustCompile(`^[a-z0-9][a-z0-9-]{0,62}$`)
 
+// appVersion is the shape of a pinned winget version: no whitespace, quotes or
+// shell metacharacters, so it can never alter an exported script.
+var appVersion = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9._+~:-]{0,63}$`)
+
+// maxText bounds free-text fields (name, description).
+const maxText = 200
+
+// checkText rejects control characters (newlines, NUL, ESC, ...) and Unicode
+// line/paragraph separators, which PowerShell treats as line breaks.
+func checkText(field, s string) error {
+	if len([]rune(s)) > maxText {
+		return fmt.Errorf("profile %s is too long", field)
+	}
+	for _, r := range s {
+		if unicode.IsControl(r) || r == ' ' || r == ' ' {
+			return fmt.Errorf("profile %s contains a control character", field)
+		}
+	}
+	return nil
+}
+
 // Import parses a profile file and checks it against the catalog. Unknown
 // apps and recipes are dropped and reported, never executed or installed.
 // Anything that could smuggle behavior in (extends of unknown profiles, bad
@@ -69,6 +91,17 @@ func Import(b []byte, cat *catalog.Catalog) (*Imported, error) {
 	}
 	if strings.TrimSpace(p.Name) == "" {
 		return nil, errors.New("profile has no name")
+	}
+	if err := checkText("name", p.Name); err != nil {
+		return nil, err
+	}
+	if err := checkText("description", p.Description); err != nil {
+		return nil, err
+	}
+	for _, a := range p.Apps {
+		if a.Version != "" && !appVersion.MatchString(a.Version) {
+			return nil, fmt.Errorf("invalid version %q for app %q", a.Version, a.ID)
+		}
 	}
 	for _, e := range p.Extends {
 		if cat.Profiles[e] == nil {

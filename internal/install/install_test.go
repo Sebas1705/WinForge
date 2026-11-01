@@ -189,3 +189,60 @@ func TestScriptIsReadableAndSafelyQuoted(t *testing.T) {
 		t.Fatalf("quoting: %s", vs)
 	}
 }
+
+// Hostile text from a foreign profile must never become its own line or end a
+// quoted string in the exported script.
+func TestScriptNeutralisesHostileNamesTitlesAndVersions(t *testing.T) {
+	cat, _ := plan(t, "dev-base", nil)
+	hostile := []string{
+		"x\nRemove-Item -Recurse C:/ #",
+		"x\r\nInvoke-Evil",
+		"x\u2028Invoke-Evil",
+		"x\u0085Invoke-Evil",
+		"x' ; Invoke-Evil ; '",
+		"x\u2019 ; Invoke-Evil ; \u2018",
+		"x`nInvoke-Evil",
+		"$(Invoke-Evil)",
+		"x\"; Invoke-Evil; \"",
+	}
+	for _, h := range hostile {
+		p := install.Plan{Steps: []install.Step{
+			{Kind: install.StepApp, ID: "git", Name: h, Version: h},
+			{Kind: install.StepUpgrade, ID: "git", Name: h},
+			{Kind: install.StepUninstall, ID: "git", Name: h},
+		}}
+		s := install.Script(cat, p, h)
+		for i, line := range strings.Split(s, "\n") {
+			line = strings.TrimRight(line, "\r")
+			if strings.HasPrefix(line, "Invoke-Evil") || strings.HasPrefix(line, "Remove-Item") {
+				t.Errorf("%q: line %d is injected: %q", h, i, line)
+			}
+			if i < 2 && !strings.HasPrefix(line, "#") {
+				t.Errorf("%q: header line %d escaped its comment: %q", h, i, line)
+			}
+		}
+		if strings.ContainsAny(s[strings.Index(s, "function"):], "\u2028\u2029\u0085") {
+			t.Errorf("%q: unicode line break survived", h)
+		}
+		// Every Write-Host / winget line must hold the payload inside quotes.
+		for _, line := range strings.Split(s, "\n") {
+			if strings.HasPrefix(line, "winget install") && strings.Contains(line, "Invoke-Evil") {
+				v := line[strings.Index(line, "--version"):]
+				if !strings.HasPrefix(v, "--version '") {
+					t.Errorf("%q: version not quoted: %q", h, line)
+				}
+			}
+			if strings.HasPrefix(line, "Write-Host '== ") && !strings.HasSuffix(line, "'") {
+				t.Errorf("%q: Write-Host line not closed: %q", h, line)
+			}
+		}
+	}
+}
+
+func TestScriptQuotesTypographicQuotes(t *testing.T) {
+	cat, _ := plan(t, "dev-base", nil)
+	s := install.Script(cat, install.Plan{Steps: []install.Step{{Kind: install.StepApp, ID: "git", Name: "a\u2019b"}}}, "t")
+	if !strings.Contains(s, "Write-Host '== a\u2019\u2019b'") {
+		t.Fatalf("typographic quote not doubled: %s", s)
+	}
+}
