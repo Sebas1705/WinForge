@@ -577,7 +577,7 @@
   },
   "balenaetcher": {
     "version": "2.1.9",
-    "publisher": "Balena Ltd. \u003chello@balena.io\u003e",
+    "publisher": "Balena Ltd. <hello@balena.io>",
     "installerHosts": [
       "github.com"
     ],
@@ -2258,7 +2258,7 @@
   },
   "fastcopy": {
     "version": "5.12.0",
-    "publisher": "H.Shirouzu \u0026 FastCopy Lab, LLC.",
+    "publisher": "H.Shirouzu & FastCopy Lab, LLC.",
     "installerHosts": [
       "fastcopy.jp"
     ],
@@ -7847,7 +7847,7 @@
   },
   "system-informer": {
     "version": "4.0.26241.138",
-    "publisher": "Winsider Seminars \u0026 Solutions, Inc.",
+    "publisher": "Winsider Seminars & Solutions, Inc.",
     "installerHosts": [
       "github.com"
     ],
@@ -8689,16 +8689,6 @@
     ],
     "installerSha256": [
       "eff11541c40c7143b9a35f789b86a22c49d9a2bc2ef75d8031664f2781f5b714"
-    ]
-  },
-  "vpx": {
-    "version": "2.0.54",
-    "publisher": "SgarD",
-    "installerHosts": [
-      "github.com"
-    ],
-    "installerSha256": [
-      "a9afaea44726432fa6fed95afe6b6c130934ea28e6826f4255323fec062e1f22"
     ]
   },
   "vs-build-tools-2022": {

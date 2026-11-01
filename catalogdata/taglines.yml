@@ -52,7 +52,6 @@
 - {id: emulationstation-desktop-edition, en: "Console-style front end for your emulators", es: "Menú tipo consola para tus emuladores"}
 - {id: steam-rom-manager, en: "Add your ROMs to Steam as games", es: "Añade tus ROMs a Steam como juegos"}
 - {id: shaderglass, en: "CRT and retro filters over any window", es: "Filtros CRT y retro sobre cualquier ventana"}
-- {id: vpx, en: "Visual Pinball: pinball tables on your PC", es: "Visual Pinball: mesas de pinball en tu PC"}
 - {id: media-preservation-frontend, en: "Back up your game discs", es: "Haz copias de seguridad de tus discos de juegos"}
 - {id: nusget, en: "Download Wii and Wii U system files", es: "Descarga archivos del sistema de Wii y Wii U"}
 - {id: wiimms-iso-tools, en: "Manage Wii and GameCube disc images", es: "Gestiona imágenes de disco de Wii y GameCube"}

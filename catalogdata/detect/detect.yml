@@ -2395,9 +2395,6 @@
 - id: vortex
   registry:
     - "^Vortex(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
-- id: vpx
-  registry:
-    - "^VPX-SgarD(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: vs-build-tools-2022
   registry:
     - "^Visual Studio BuildTools\\s+(version\\s+)?v?2022([.+\\-\\s\\)]|$)"

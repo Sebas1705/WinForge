@@ -42,10 +42,12 @@ type Executor interface {
 	Run(ctx context.Context, name string, args []string, onLine func(string)) (exitCode int, err error)
 }
 
-// winget exit codes that mean "nothing to do".
+// winget exit codes that mean "nothing to do". They are HRESULTs: Windows
+// reports them unsigned (2316632161) while an int32 view gives the negative
+// form, so they are always compared through uint32(code).
 const (
-	wingetAlreadyInstalled = -1978335135 // 0x8A150061
-	wingetNoUpgrade        = -1978335189 // 0x8A15002B: no newer version applies
+	wingetAlreadyInstalled uint32 = 0x8A150061
+	wingetNoUpgrade        uint32 = 0x8A15002B // no newer version applies
 )
 
 // WingetArgs builds the install command line for an app.
@@ -161,7 +163,7 @@ func runWinget(ctx context.Context, args []string, s Step, ex Executor, emit fun
 	if err != nil {
 		return code, fmt.Errorf("could not run winget: %w", err)
 	}
-	if code != 0 && code != wingetAlreadyInstalled && code != wingetNoUpgrade && code != exitRebootRequired {
+	if c := uint32(code); c != 0 && c != wingetAlreadyInstalled && c != wingetNoUpgrade && c != exitRebootRequired {
 		return code, fmt.Errorf("winget exited with code %#x", uint32(code))
 	}
 	return code, nil

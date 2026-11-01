@@ -412,15 +412,6 @@
   winget: mausimus.ShaderGlass
   publisher: "mausimus"
 
-- id: vpx
-  name: "VPX"
-  category: gaming/emulators
-  description: "Desktop music player for about 70 audio and tracker formats, with a colour-changing oscilloscope per channel."
-  homepage: https://vpx-landing.vercel.app/
-  license: "Proprietary"
-  winget: SgarD.VPX
-  publisher: "SgarD"
-
 - id: media-preservation-frontend
   name: "Media Preservation Frontend"
   category: gaming/emulators

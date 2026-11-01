@@ -94,9 +94,43 @@ func TestRunContinuesPastFailuresButSkipsDependents(t *testing.T) {
 	}
 }
 
+// Windows reports winget's HRESULT exit codes unsigned (ExitCode() gives
+// 2316632161 on a 64-bit int), not as the negative int32 form.
+func TestNothingToDoExitCodesAreSuccessInEitherSignedness(t *testing.T) {
+	for name, code := range map[string]int{
+		"already installed, unsigned": 0x8A150061,
+		"already installed, signed":   -1978335135,
+		"no upgrade, unsigned":        0x8A15002B,
+		"no upgrade, signed":          -1978335189,
+	} {
+		t.Run(name, func(t *testing.T) {
+			cat, p := plan(t, "essentials", nil)
+			ex := &fakeExec{exit: map[string]int{"7zip.7zip": code}}
+			var events []install.Event
+			failed := install.Run(context.Background(), cat, p, ex, func(e install.Event) { events = append(events, e) })
+			if len(failed) != 0 {
+				t.Fatalf("failed: %v", failed)
+			}
+			for _, e := range events {
+				if e.Status == install.StatusFailed || e.Status == install.StatusSkipped {
+					t.Fatalf("unexpected %s on %s: %s", e.Status, e.Step.ID, e.Err)
+				}
+			}
+		})
+	}
+}
+
+func TestUnsignedFailureCodeStillFails(t *testing.T) {
+	cat, p := plan(t, "essentials", nil)
+	ex := &fakeExec{exit: map[string]int{"7zip.7zip": 0x8A150049}} // winget: install failed
+	if failed := install.Run(context.Background(), cat, p, ex, func(install.Event) {}); len(failed) != 1 {
+		t.Fatalf("an unsigned failure code must still fail: %v", failed)
+	}
+}
+
 func TestAlreadyInstalledExitCodeIsSuccess(t *testing.T) {
 	cat, p := plan(t, "essentials", nil)
-	ex := &fakeExec{exit: map[string]int{"7zip.7zip": -1978335135}}
+	ex := &fakeExec{exit: map[string]int{"7zip.7zip": 0x8A150061}}
 	if failed := install.Run(context.Background(), cat, p, ex, func(install.Event) {}); len(failed) != 0 {
 		t.Fatalf("failed: %v", failed)
 	}
@@ -133,7 +167,7 @@ func TestUpgradePlanOnlyTouchesCatalogApps(t *testing.T) {
 	if only := install.UpgradePlan(cat, ups, []string{"vscode"}); len(only.Steps) != 1 || only.Steps[0].ID != "vscode" {
 		t.Fatalf("%+v", only.Steps)
 	}
-	ex := &fakeExec{exit: map[string]int{"Git.Git": -1978335189}}
+	ex := &fakeExec{exit: map[string]int{"Git.Git": 0x8A15002B}}
 	if failed := install.Run(context.Background(), cat, p, ex, func(install.Event) {}); len(failed) != 0 {
 		t.Fatalf("\"no newer version\" is not a failure: %v", failed)
 	}
