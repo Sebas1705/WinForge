@@ -1,13 +1,14 @@
 package install
 
 import (
-	"bufio"
 	"bytes"
 	"context"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"os/exec"
 	"strings"
+	"time"
 	"unicode/utf16"
 
 	"github.com/Sebas1705/WinForge/internal/catalog"
@@ -208,28 +209,35 @@ func PowerShellArgs(script string) []string {
 // OSExecutor runs real processes.
 type OSExecutor struct{}
 
+// killGrace bounds how long Run waits for output after the process is gone.
+// A grandchild (an installer's helper, sfc, DISM) can keep the output pipe
+// open long after Cancel killed the process we started; without a bound,
+// Wait would block until it exits.
+const killGrace = 2 * time.Second
+
 // Run implements Executor. winget draws progress with carriage returns, so
 // output is split on both \r and \n.
+//
+// Output goes through cmd.Stdout (not StdoutPipe) so that cmd.Wait owns the
+// copy and cmd.WaitDelay can stop waiting for it. On cancel the whole process
+// tree is killed where the platform allows it (see killTree).
 func (OSExecutor) Run(ctx context.Context, name string, args []string, onLine func(string)) (int, error) {
 	cmd := exec.CommandContext(ctx, name, args...)
 	hide(cmd)
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return -1, err
-	}
-	cmd.Stderr = cmd.Stdout
+	killTree(cmd)
+	cmd.WaitDelay = killGrace
+	lw := &lineWriter{onLine: onLine}
+	cmd.Stdout = lw
+	cmd.Stderr = lw // same writer: os/exec copies both through one pipe
 	if err := cmd.Start(); err != nil {
 		return -1, err
 	}
-	sc := bufio.NewScanner(stdout)
-	sc.Buffer(make([]byte, 64*1024), 1024*1024)
-	sc.Split(splitCRLF)
-	for sc.Scan() {
-		if l := strings.TrimSpace(sc.Text()); l != "" {
-			onLine(l)
-		}
+	err := cmd.Wait()
+	lw.flush()
+	if errors.Is(err, exec.ErrWaitDelay) {
+		// The process itself finished; only a stray descendant held the pipe.
+		return cmd.ProcessState.ExitCode(), nil
 	}
-	err = cmd.Wait()
 	if ee, ok := err.(*exec.ExitError); ok {
 		return ee.ExitCode(), nil
 	}
@@ -239,15 +247,43 @@ func (OSExecutor) Run(ctx context.Context, name string, args []string, onLine fu
 	return 0, nil
 }
 
-func splitCRLF(data []byte, atEOF bool) (int, []byte, error) {
-	if atEOF && len(data) == 0 {
-		return 0, nil, nil
+// maxLine caps a single unterminated line, as the old bufio.Scanner did.
+const maxLine = 1024 * 1024
+
+// lineWriter turns a byte stream into trimmed, non-empty lines split on \r or
+// \n. os/exec calls Write from a single goroutine at a time.
+type lineWriter struct {
+	onLine func(string)
+	buf    []byte
+}
+
+func (w *lineWriter) Write(p []byte) (int, error) {
+	w.buf = append(w.buf, p...)
+	for {
+		i := bytes.IndexAny(w.buf, "\r\n")
+		if i < 0 {
+			break
+		}
+		w.emit(w.buf[:i])
+		w.buf = w.buf[i+1:]
 	}
-	if i := bytes.IndexAny(data, "\r\n"); i >= 0 {
-		return i + 1, data[:i], nil
+	if len(w.buf) > maxLine {
+		w.emit(w.buf)
+		w.buf = nil
 	}
-	if atEOF {
-		return len(data), data, nil
+	return len(p), nil
+}
+
+// flush emits a trailing line that had no terminator.
+func (w *lineWriter) flush() {
+	if len(w.buf) > 0 {
+		w.emit(w.buf)
+		w.buf = nil
 	}
-	return 0, nil, nil
+}
+
+func (w *lineWriter) emit(b []byte) {
+	if l := strings.TrimSpace(string(b)); l != "" {
+		w.onLine(l)
+	}
 }
