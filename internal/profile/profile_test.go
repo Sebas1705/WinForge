@@ -100,3 +100,37 @@ func TestWingetImportFormat(t *testing.T) {
 		t.Fatalf("%s", b)
 	}
 }
+
+func TestImportRejectsLineBreaksAndOddVersions(t *testing.T) {
+	cat := load(t)
+	mk := func(name, version string) []byte {
+		b, _ := json.Marshal(map[string]any{"winforge": 1, "profile": map[string]any{
+			"id": "x", "name": name, "apps": []map[string]string{{"id": "git", "version": version}}}})
+		return b
+	}
+	bad := map[string][2]string{
+		"newline in name":   {"A\nInvoke-Evil", ""},
+		"CR in name":        {"A\rB", ""},
+		"U+2028 in name":    {"A\u2028B", ""},
+		"NUL in name":       {"A\x00B", ""},
+		"huge name":         {strings.Repeat("a", 500), ""},
+		"newline version":   {"ok", "1.0\nInvoke-Evil"},
+		"quote version":     {"ok", "1.0'; Invoke-Evil; '"},
+		"backtick version":  {"ok", "1.0`n"},
+		"subexpr version":   {"ok", "$(Invoke-Evil)"},
+		"space version":     {"ok", "1.0 --override x"},
+		"double quote":      {"ok", `1.0"`},
+		"leading dash":      {"ok", "-1.0"},
+		"semicolon version": {"ok", "1;2"},
+	}
+	for label, c := range bad {
+		if _, err := profile.Import(mk(c[0], c[1]), cat); err == nil {
+			t.Errorf("%s: expected an error", label)
+		}
+	}
+	for _, v := range []string{"", "2.50.0", "1.99.0-beta.1", "2024.1+build5", "1:2.3"} {
+		if _, err := profile.Import(mk("Fine, name (v2) 'quoted'", v), cat); err != nil {
+			t.Errorf("version %q rejected: %v", v, err)
+		}
+	}
+}
