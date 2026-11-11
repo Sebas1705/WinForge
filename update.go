@@ -5,7 +5,6 @@ import (
 	"errors"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"time"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -54,7 +53,13 @@ func (a *App) InstallUpdate() error {
 	if !updater.Newer(version, rel.Tag) {
 		return errors.New("WinForge is already up to date")
 	}
-	dir := filepath.Join(os.TempDir(), "WinForge-update")
+	// A fresh private directory per run: a fixed, predictable path under %TEMP%
+	// could be pre-created or swapped by another local process. MkdirTemp makes
+	// it owner-only (0700).
+	dir, err := os.MkdirTemp("", "WinForge-update-")
+	if err != nil {
+		return err
+	}
 	last := time.Now()
 	path, err := u.Download(ctx, rel, dir, func(done, total int64) {
 		if time.Since(last) > 100*time.Millisecond || done == total {
@@ -63,12 +68,14 @@ func (a *App) InstallUpdate() error {
 		}
 	})
 	if err != nil {
+		os.RemoveAll(dir)
 		return err
 	}
 	// The installer installs machine-wide and carries an elevation manifest,
 	// so CreateProcess would fail; `start` goes through ShellExecute, which
 	// shows the UAC prompt.
 	if err := exec.Command("cmd", "/C", "start", "", path).Start(); err != nil {
+		os.RemoveAll(dir)
 		return err
 	}
 	go func() {
