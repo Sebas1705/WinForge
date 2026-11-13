@@ -33,12 +33,32 @@ func (g DupGroup) Waste() int64 { return g.SizeBytes * int64(len(g.Files)-1) }
 // dupSkip are folders full of files that are meant to repeat: dependencies,
 // version-control objects, system folders. Listing them as duplicates would
 // only invite breaking a project.
+//
+// Build output belongs here too: the same native library is copied into every
+// project's build folder, and removing one "copy" would only make that build
+// fail. A real folder that happens to be called "build" or "dist" is skipped
+// as well, which is the safe side of that trade.
 var dupSkip = map[string]bool{
 	"node_modules":              true,
 	".git":                      true,
 	"$recycle.bin":              true,
 	"system volume information": true,
 	"winsxs":                    true,
+	"build":                     true,
+	"intermediates":             true,
+	"dist":                      true,
+	"target":                    true,
+	".gradle":                   true,
+	".idea":                     true,
+	".next":                     true,
+	".nuxt":                     true,
+	".venv":                     true,
+	"venv":                      true,
+	"__pycache__":               true,
+	".tox":                      true,
+	".m2":                       true,
+	"pods":                      true,
+	"deriveddata":               true,
 }
 
 const (

@@ -141,24 +141,25 @@ func FolderSizes(ctx context.Context, root string, progress ProgressFunc) ([]Fol
 		return nil, err
 	}
 	th := newThrottle("folders", progress)
-	var out []FolderSize
+	var dirs []FolderSize
 	for _, e := range entries {
-		if !e.IsDir() || !plain(e) || skipDirs[strings.ToLower(e.Name())] {
-			continue
+		if e.IsDir() && plain(e) && !skipDirs[strings.ToLower(e.Name())] {
+			dirs = append(dirs, FolderSize{Path: filepath.Join(root, e.Name()), Name: e.Name()})
 		}
-		fsz := FolderSize{Path: filepath.Join(root, e.Name()), Name: e.Name()}
-		werr := walkAll(ctx, fsz.Path, nil, func(p string, info fs.FileInfo) {
-			fsz.Files++
-			fsz.SizeBytes += info.Size()
+	}
+	// Each folder is measured by its own worker; they write only their own slot.
+	err = parallel(len(dirs), func(i int) error {
+		return walkAll(ctx, dirs[i].Path, nil, func(p string, info fs.FileInfo) {
+			dirs[i].Files++
+			dirs[i].SizeBytes += info.Size()
 			th.add(1, info.Size(), p)
 		})
-		if werr != nil {
-			th.done()
-			return out, werr
-		}
-		out = append(out, fsz)
-	}
+	})
 	th.done()
+	if err != nil {
+		return nil, err
+	}
+	out := dirs
 	sort.Slice(out, func(i, j int) bool {
 		if out[i].SizeBytes != out[j].SizeBytes {
 			return out[i].SizeBytes > out[j].SizeBytes

@@ -15,6 +15,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -220,7 +221,9 @@ type Runner interface {
 }
 
 // throttle wraps a ProgressFunc so it fires at most every 150 ms, plus once at the end.
+// It is safe for several goroutines to report at once.
 type throttle struct {
+	mu   sync.Mutex
 	fn   ProgressFunc
 	last time.Time
 	p    Progress
@@ -231,6 +234,8 @@ func newThrottle(task string, fn ProgressFunc) *throttle {
 }
 
 func (t *throttle) add(files int, bytes int64, current string) {
+	t.mu.Lock()
+	defer t.mu.Unlock()
 	t.p.Files += files
 	t.p.Bytes += bytes
 	if current != "" {
@@ -243,9 +248,40 @@ func (t *throttle) add(files int, bytes int64, current string) {
 }
 
 func (t *throttle) done() {
+	t.mu.Lock()
+	defer t.mu.Unlock()
 	if t.fn != nil {
 		t.fn(t.p)
 	}
+}
+
+// workers is how many folders are measured at once. Walking many small files is
+// latency-bound, so a few in parallel is much faster on an SSD, while more would
+// only fight over the disk.
+const workers = 4
+
+// parallel runs fn for every index in 0..n-1 with at most `workers` at once and
+// returns the first error. Results are written by index, so order is kept.
+func parallel(n int, fn func(i int) error) error {
+	var wg sync.WaitGroup
+	sem := make(chan struct{}, workers)
+	errs := make([]error, n)
+	for i := 0; i < n; i++ {
+		wg.Add(1)
+		sem <- struct{}{}
+		go func() {
+			defer wg.Done()
+			defer func() { <-sem }()
+			errs[i] = fn(i)
+		}()
+	}
+	wg.Wait()
+	for _, err := range errs {
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // within reports whether path is strictly inside dir.
