@@ -49,18 +49,19 @@ func (o Options) windowsOld() string {
 // Clean would remove: it applies the same folders, name patterns and age limit.
 func Scan(ctx context.Context, o Options) ([]Category, error) {
 	th := newThrottle("scan", o.Progress)
-	out := make([]Category, 0, len(Specs))
-	for _, s := range Specs {
+	out := make([]Category, len(Specs))
+	err := parallel(len(Specs), func(i int) error {
+		s := Specs[i]
+		out[i] = Category{ID: s.ID, Risk: s.Risk, NeedsAdmin: s.NeedsAdmin}
 		if err := ctx.Err(); err != nil {
-			return out, err
+			return err
 		}
-		c := Category{ID: s.ID, Risk: s.Risk, NeedsAdmin: s.NeedsAdmin}
-		if err := measure(ctx, o, s, &c, th); err != nil {
-			return out, err
-		}
-		out = append(out, c)
-	}
+		return measure(ctx, o, s, &out[i], th)
+	})
 	th.done()
+	if err != nil {
+		return nil, err
+	}
 	return out, nil
 }
 
