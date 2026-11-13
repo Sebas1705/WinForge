@@ -97,17 +97,24 @@ var riskyRepairs = map[string]bool{
 	"repair-windows-files":   true,
 }
 
-// RepairPlan turns repair recipe ids into steps. Only recipes whose id starts
-// with "repair-" are accepted, so this can never run a profile's recipes or
-// anything else from the catalog. A restore point goes first when any repair
-// touches drivers or system files; duplicates are dropped.
+// isMaintenance says whether a recipe id names a repair or a disk optimization,
+// the only recipes RepairPlan will run.
+func isMaintenance(id string) bool {
+	return strings.HasPrefix(id, "repair-") || strings.HasPrefix(id, "optimize-")
+}
+
+// RepairPlan turns repair and optimization recipe ids into steps. Only recipes
+// whose id starts with "repair-" or "optimize-" are accepted, so this can never
+// run a profile's recipes or anything else from the catalog. A restore point
+// goes first when any repair touches drivers or system files; duplicates are
+// dropped.
 func RepairPlan(cat *catalog.Catalog, ids []string) (Plan, error) {
 	p := Plan{Steps: []Step{}, AlreadyInstalled: []string{}}
 	seen := map[string]bool{}
 	var wanted []string
 	risky := false
 	for _, id := range ids {
-		if !strings.HasPrefix(id, "repair-") || cat.Recipes[id] == nil {
+		if !isMaintenance(id) || cat.Recipes[id] == nil {
 			return Plan{}, fmt.Errorf("%q is not a repair", id)
 		}
 		if id == "repair-restore-point" || seen[id] {

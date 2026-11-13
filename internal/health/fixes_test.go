@@ -31,7 +31,7 @@ func TestEveryFixPointsToARealRepairRecipe(t *testing.T) {
 			continue
 		}
 		if !strings.HasPrefix(id, "repair-") {
-			t.Errorf("%s: repairs must be named repair-*", id)
+			t.Errorf("%s: a finding's fix must be named repair-*", id)
 		}
 		if !r.Admin {
 			t.Errorf("%s: a repair changes the system and must ask for administrator rights", id)
@@ -72,7 +72,7 @@ func TestRepairScriptsAreValidPowerShell(t *testing.T) {
 	}
 	dir := t.TempDir()
 	for id, r := range cat.Recipes {
-		if !strings.HasPrefix(id, "repair-") {
+		if !strings.HasPrefix(id, "repair-") && !strings.HasPrefix(id, "optimize-") {
 			continue
 		}
 		for part, body := range map[string]string{"powershell": r.PowerShell, "check": r.Check} {

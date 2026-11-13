@@ -1,0 +1,52 @@
+# Disk optimizations offered on the Storage page. Like the repairs, they are
+# recipes run through the same plan, progress and retry as installs, and all of
+# them need administrator rights. None of them deletes the person's files.
+
+- id: optimize-trim
+  description: Tell solid-state drives which space is free (TRIM), so they stay fast.
+  admin: true
+  powershell: |
+    $done = 0
+    foreach ($v in Get-Volume | Where-Object { $_.DriveType -eq 'Fixed' -and $_.DriveLetter }) {
+        $letter = $v.DriveLetter
+        $type = $null
+        try { $type = (Get-Partition -DriveLetter $letter | Get-Disk | Get-PhysicalDisk).MediaType } catch { }
+        if ($type -ne 'SSD') { "Skipping ${letter}: (not a solid-state drive)"; continue }
+        "Trimming ${letter}: ..."
+        Optimize-Volume -DriveLetter $letter -ReTrim
+        $done++
+    }
+    if ($done -eq 0) { 'No solid-state drive was found, so there is nothing to trim.' } else { "Trimmed $done drive(s)." }
+
+- id: optimize-defrag
+  description: Defragment hard drives so files are read faster. Solid-state drives are left alone.
+  admin: true
+  powershell: |
+    $done = 0
+    foreach ($v in Get-Volume | Where-Object { $_.DriveType -eq 'Fixed' -and $_.DriveLetter }) {
+        $letter = $v.DriveLetter
+        $type = $null
+        try { $type = (Get-Partition -DriveLetter $letter | Get-Disk | Get-PhysicalDisk).MediaType } catch { }
+        if ($type -ne 'HDD') { "Skipping ${letter}: (not a hard drive)"; continue }
+        "Defragmenting ${letter}: (this can take a long time) ..."
+        Optimize-Volume -DriveLetter $letter -Defrag
+        $done++
+    }
+    if ($done -eq 0) { 'No hard drive was found, so there is nothing to defragment.' } else { "Defragmented $done drive(s)." }
+
+- id: optimize-component-cleanup
+  description: Remove old Windows update files that are no longer needed (DISM component cleanup; this can take several minutes).
+  admin: true
+  powershell: |
+    DISM.exe /Online /Cleanup-Image /StartComponentCleanup
+    exit $LASTEXITCODE
+
+- id: optimize-hibernate-off
+  description: Turn off hibernation, which frees about as much space as the PC has memory. Fast Startup turns off too.
+  admin: true
+  check: |
+    $key = 'HKLM:\SYSTEM\CurrentControlSet\Control\Power'
+    if ((Get-ItemProperty $key -Name HibernateEnabled -ErrorAction SilentlyContinue).HibernateEnabled -eq 0) { exit 0 } else { exit 1 }
+  powershell: |
+    powercfg.exe /hibernate off
+    exit $LASTEXITCODE
