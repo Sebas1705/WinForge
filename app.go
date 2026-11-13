@@ -16,6 +16,7 @@ import (
 	"github.com/Sebas1705/WinForge/internal/health"
 	"github.com/Sebas1705/WinForge/internal/install"
 	"github.com/Sebas1705/WinForge/internal/profile"
+	"github.com/Sebas1705/WinForge/internal/storage"
 	"github.com/Sebas1705/WinForge/internal/system"
 )
 
@@ -34,9 +35,15 @@ type App struct {
 	pending       *install.PendingStore
 	restorePath   string
 	installing    map[string]bool
-	running       bool
-	cancel        context.CancelFunc
-	startupErr    error
+
+	// storage remembers what the storage scans listed; emitter and runner are
+	// replaced by tests (nil means the real Wails events and real commands).
+	storage    storageSession
+	emitter    func(event string, data any)
+	runner     storage.Runner
+	running    bool
+	cancel     context.CancelFunc
+	startupErr error
 }
 
 func NewApp() *App {
