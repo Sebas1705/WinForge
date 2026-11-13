@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState, type ReactNode} from "react";
 import {AppIcon} from "./AppIcon";
 import {Icon} from "./Icon";
 import {Strip} from "./Strip";
@@ -69,7 +69,7 @@ export function RunModal(p: {
     const heading = !started ? run.title : run.running ? t("run.installing") : failedCount > 0 ? t("run.errors") : t("run.done");
     const elapsed = run.startedAt ? formatElapsed((end ?? now) - run.startedAt) : "";
     const label = (s: Step) =>
-        s.kind === "recipe" && s.id.startsWith("repair-") ? (tOpt(`repair.${s.id}`) ?? s.name)
+        s.kind === "recipe" && (s.id.startsWith("repair-") || s.id.startsWith("optimize-")) ? (tOpt(`repair.${s.id}`) ?? s.name)
             : s.kind === "recipe" ? `${t("run.setup")}: ${s.name}`
             : s.kind === "upgrade" ? `${t("run.update")}: ${s.name}`
             : s.kind === "uninstall" ? `${t("run.uninstall")}: ${s.name}` : s.name;
@@ -204,7 +204,7 @@ export function CodeDialog(p: { title: string; placeholder: string; ok: string; 
 }
 
 /** Asks before something that cannot be undone. The safe answer is the focused one. */
-export function ConfirmDialog(p: { title: string; body: string; confirm: string; danger?: boolean; onConfirm: () => void; onClose: () => void }) {
+export function ConfirmDialog(p: { title: string; body: string; confirm: string; danger?: boolean; children?: ReactNode; onConfirm: () => void; onClose: () => void }) {
     const dialog = useRef<HTMLDivElement>(null);
     useModal(dialog, p.onClose);
     return (
@@ -212,6 +212,7 @@ export function ConfirmDialog(p: { title: string; body: string; confirm: string;
             <div className="modal small" ref={dialog} role="alertdialog" aria-modal="true" aria-label={p.title} onClick={(e) => e.stopPropagation()}>
                 <h3>{p.title}</h3>
                 <p className="muted">{p.body}</p>
+                {p.children}
                 <div className="actions end">
                     <button data-autofocus onClick={p.onClose}>{t("common.cancel")}</button>
                     <button className={p.danger ? "danger" : "primary"} onClick={() => { p.onConfirm(); p.onClose(); }}>{p.confirm}</button>

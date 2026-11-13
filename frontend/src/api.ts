@@ -30,6 +30,17 @@ export interface GameReceipt { id: string; sha256: string; url: string; files: n
 export interface GamesView { root: string; games: InstallableGame[]; installed: Record<string, GameReceipt>; launchers: Record<string, string> }
 export interface GameInstalled { receipt: GameReceipt; registered: string[]; registerError?: string }
 export interface PatchResult { path: string; format: string; checked: boolean; headerless: boolean }
+export interface StorageVolume { letter: string; label: string; totalBytes: number; freeBytes: number }
+export interface CleanCategory { id: string; risk: "safe" | "review"; needsAdmin: boolean; available: boolean; bytes: number; files: number; skipped: number }
+export interface CleanOutcome { id: string; freedBytes: number; files: number; failed: number; error?: string }
+export interface CleanResult { freedBytes: number; files: number; failed: number; outcomes: CleanOutcome[] }
+export interface BigFile { path: string; name: string; sizeBytes: number; modified: string }
+export interface FolderSize { path: string; name: string; sizeBytes: number; files: number }
+export interface DupFile { path: string; modified: string }
+export interface DupGroup { id: string; sizeBytes: number; files: DupFile[] }
+export interface RecycleResult { moved: number; freedBytes: number; failed: string[] }
+export interface StorageDefaults { home: string; downloads: string; documents: string; pictures: string; videos: string }
+export interface StorageProgress { task: "scan" | "clean" | "big" | "folders" | "dups"; files: number; bytes: number; current?: string }
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
 
 export const api = Go as unknown as {
@@ -81,6 +92,16 @@ export const api = Go as unknown as {
     RemoveGame(id: string): Promise<void>;
     PlayGame(id: string, emulator: string): Promise<void>;
     OpenGameFolder(id: string): Promise<void>;
+    StorageVolumes(): Promise<StorageVolume[]>;
+    StorageDefaults(): Promise<StorageDefaults>;
+    StorageScan(): Promise<CleanCategory[]>;
+    StorageClean(ids: string[]): Promise<CleanResult>;
+    StorageBigFiles(root: string, limit: number): Promise<BigFile[]>;
+    StorageFolders(root: string): Promise<FolderSize[]>;
+    StorageDuplicates(roots: string[], minMB: number): Promise<DupGroup[]>;
+    StorageRecycle(paths: string[]): Promise<RecycleResult>;
+    StorageReveal(path: string): Promise<void>;
+    StorageCancel(): Promise<void>;
 };
 
 export const on = {
@@ -88,6 +109,7 @@ export const on = {
     scan: (fn: (e: { scan: "pc" | "health"; step: string }) => void): (() => void) => EventsOn("scan:step", fn),
     install: (fn: (e: InstallEvent) => void): (() => void) => EventsOn("install", fn),
     done: (fn: (failed: string[] | null) => void): (() => void) => EventsOn("install:done", fn),
+    storageProgress: (fn: (p: StorageProgress) => void): (() => void) => EventsOn("storage:progress", fn),
     progress: (fn: (p: { done: number; total: number }) => void): (() => void) => EventsOn("update:progress", fn),
 };
 

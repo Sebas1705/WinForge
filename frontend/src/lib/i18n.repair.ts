@@ -22,6 +22,10 @@ export const repairEn = {
     "repair.repair-defender-realtime": "Turn on Defender real-time protection",
     "repair.repair-firewall": "Turn the Windows firewall on",
     "repair.repair-windows-files": "Check and repair Windows system files",
+    "repair.optimize-trim": "Re-trim solid-state drives",
+    "repair.optimize-defrag": "Defragment hard drives",
+    "repair.optimize-component-cleanup": "Clean old Windows update files",
+    "repair.optimize-hibernate-off": "Turn off hibernation",
 } as const;
 
 export const repairEs: Record<keyof typeof repairEn, string> = {
@@ -45,4 +49,8 @@ export const repairEs: Record<keyof typeof repairEn, string> = {
     "repair.repair-defender-realtime": "Activar la protección en tiempo real de Defender",
     "repair.repair-firewall": "Activar el firewall de Windows",
     "repair.repair-windows-files": "Comprobar y reparar archivos del sistema de Windows",
+    "repair.optimize-trim": "Optimizar (TRIM) las unidades de estado sólido",
+    "repair.optimize-defrag": "Desfragmentar los discos duros",
+    "repair.optimize-component-cleanup": "Limpiar archivos antiguos de Windows Update",
+    "repair.optimize-hibernate-off": "Desactivar la hibernación",
 };
