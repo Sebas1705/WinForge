@@ -305,3 +305,79 @@ img, svg { -webkit-user-drag: none; user-drag: none; }
 
 /* repairs */
 .fixall { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 14px; }
+
+/* storage page */
+.storagepage section { margin-bottom: 34px; }
+.storagepage section > h2 { margin-bottom: 6px; }
+.storagepage section > p.small { margin: 0 0 14px; }
+.storagepage .sectionhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.storagepage .sectionhead h2 { margin: 0; }
+.storagepage .toolrow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 14px; }
+.storagepage .folderbar { margin: 0 0 12px; }
+.storagepage .resultline { margin: 0 0 14px; }
+.storagepage .resultline p { margin: 0; }
+.storagepage .resultline p + p { margin-top: 6px; }
+.storagepage .subhead { margin: 6px 0 8px; }
+.volumes { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.volume { padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.volume.low { border-color: color-mix(in srgb, var(--warn) 55%, var(--line)); }
+.volhead { display: flex; align-items: baseline; gap: 4px 14px; flex-wrap: wrap; margin-bottom: 8px; }
+.volpct { text-align: right; color: var(--muted); }
+.volbar { height: 10px; border-radius: 99px; background: var(--cell); overflow: hidden; }
+.volbar i { display: block; height: 100%; border-radius: 99px; background: var(--accent); }
+.volume.low .volbar i { background: var(--warn); }
+.volwarn { display: flex; align-items: center; gap: 6px; margin: 8px 0 0; color: var(--warn); }
+.taskstatus { display: flex; align-items: center; gap: 16px; margin: 0 0 14px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.taskstatus .grow { display: flex; flex-direction: column; gap: 6px; }
+.taskstatus progress { width: 100%; height: 6px; accent-color: var(--accent); }
+.taskstatus .current { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cleanlist, .dupgroups, .optcards, .folderlist { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 8px; }
+.cleanlist label { display: flex; align-items: center; gap: 14px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); cursor: pointer; min-height: 56px; }
+.cleanlist label:hover { border-color: var(--accent); }
+.cleanlist label.on { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.cleanlist .grow { display: flex; flex-direction: column; gap: 3px; }
+.catname { display: flex; align-items: center; gap: 4px 8px; flex-wrap: wrap; }
+.chip.review { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
+.cleansize { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex: none; }
+.cleanbar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface2); }
+.adminhint { margin: 0 0 12px; flex-wrap: wrap; }
+.adminhint span { flex: 1; min-width: 200px; }
+.adminhint .mini { margin-left: 0; }
+.confirmlist { margin: 0 0 14px; padding: 8px 12px 8px 28px; max-height: 180px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface2); }
+.confirmlist li { margin: 2px 0; overflow-wrap: anywhere; }
+.crumbs { margin: 0 0 12px; }
+.crumbs ol { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.crumbs li { display: inline-flex; align-items: center; gap: 4px; min-width: 0; }
+.crumbs .linkbtn, .crumbs [aria-current] { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crumbs [aria-current] { font-weight: 600; }
+.bigfiles { max-height: 460px; }
+.bigfiles table { table-layout: fixed; }
+.bigfiles th:nth-child(1) { width: 30%; }
+.bigfiles th:nth-child(2) { width: 82px; }
+.bigfiles th:nth-child(3) { width: 112px; }
+.bigfiles th:nth-child(5) { width: 108px; }
+.bigfiles td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: middle; }
+.bigfiles .num, .bigfiles th:last-child { text-align: right; }
+.bigfiles td.factions { overflow: visible; text-align: right; }
+.bigfiles td.factions button + button { margin-left: 6px; }
+.iconbtn { padding: 4px 7px; line-height: 0; }
+.folderitem { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 4px 16px; align-items: center; width: 100%; padding: 10px 16px; border-radius: 12px; background: var(--surface); text-align: left; }
+.folderitem .fname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.folderitem .fcount { min-width: 70px; text-align: right; }
+.folderitem .bar { grid-column: 1 / -1; display: block; }
+.rootchips { list-style: none; margin: 0 0 12px; padding: 0; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.rootchip { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; padding: 2px 4px 2px 12px; border: 1px solid var(--line); border-radius: 99px; background: var(--surface); }
+.rootchip .mono { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 340px; }
+.dupgroup { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; }
+.dupgroup header { display: flex; align-items: baseline; gap: 4px 14px; flex-wrap: wrap; padding: 10px 16px; background: var(--surface2); }
+.dupgroup ul { list-style: none; margin: 0; padding: 0; }
+.dupgroup ul li + li { border-top: 1px solid var(--line); }
+.dupgroup label { display: flex; align-items: center; gap: 12px; padding: 8px 16px; cursor: pointer; }
+.dupgroup label:hover { background: var(--surface2); }
+.dupgroup label:has(input:disabled) { cursor: default; }
+.dupgroup .dupname { display: flex; flex-direction: column; gap: 1px; }
+.dupgroup .dupname small, .dupgroup .dupname b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nowrap { white-space: nowrap; }
+.optcard { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.optcard .grow { display: flex; flex-direction: column; gap: 3px; }
+.optwarn { display: inline-flex; align-items: center; gap: 5px; color: var(--warn); }

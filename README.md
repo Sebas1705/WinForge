@@ -46,6 +46,7 @@ internal/
   install/       plan (diff against the PC) and runner (winget + recipes)
   profile/       store, export/import, `winget import` export
   updater/       release lookup, semver compare, SHA-256-verified installer download
+  storage/       cleanup categories, biggest files and folders, duplicates, Recycle Bin
 cmd/winforge-cli headless: scan | profiles | plan | apply | export | check
 cmd/winforge-verify  catalog verifier
 app.go, main.go, frontend/   Wails desktop app (Go + React/TypeScript)
@@ -86,6 +87,17 @@ Apps that are not in winget (Gradle, Maven) are deliberately absent rather than 
 - **Wording**: findings are keys plus parameters, worded in the interface language; a test checks every key the Go analyzer can emit has text in both languages.
 - Run `go test -tags live -run Live -v ./internal/health` on a Windows PC to see the raw scan.
 - **Repairs**: a finding that can be fixed by itself has a **Fix it for me** button, and the attention list has **Fix everything I can**. Repairs are recipes (`catalogdata/recipes/repairs.yml`) run through the same plan, progress, retry and "restart as administrator" as installs, then the PC is scanned again. They cover missing drivers (device rescan plus Windows Update drivers), pending driver and Windows updates (feature upgrades are left for you), Defender definitions and real-time protection (left alone when another antivirus is in charge), the firewall, and a DISM + SFC repair of Windows files under *Maintenance*. A System Restore point is made first when drivers or system files change. Never automatic: BIOS and firmware, anything Windows Update does not offer (those keep their vendor links), and restarts, which ask first and can be cancelled for 30 seconds. A test parses every repair script with PowerShell itself.
+
+## Storage
+
+The *Storage* page shows each drive's free space and has four tools. Nothing is removed without a confirmation that lists what will go.
+
+- **Free up space** scans 18 fixed categories and cleans the ones you tick: your temporary files, Windows temporary files, the Recycle Bin, thumbnail caches, crash dumps, Windows Update and Delivery Optimization caches, the old `Windows.old`, the caches (never passwords, cookies or history) of Chrome, Edge, Firefox and Brave, graphics shader caches, and the package caches of npm, pip, NuGet, Go and Gradle. Safe categories start ticked; *review* ones (shader caches, Gradle, `Windows.old`) do not, and say what they cost. The list lives in `internal/storage/storage.go`; nothing is discovered by scanning the disk.
+- **Biggest things** lists the largest files and folders under a place you pick; you can show one in Explorer or move it to the Recycle Bin.
+- **Duplicate files** finds identical files (by size, then a hash of the first 64 KB, then the whole file) in the folders you choose. The oldest copy is kept by default and the interface cannot select every copy. Build output and dependency folders (`node_modules`, `build`, `.git`...) are skipped, and hard links are not duplicates.
+- **Optimize** runs, as recipes with the usual progress and retry: TRIM for SSDs, defragmentation for hard drives only, the DISM component cleanup, and turning hibernation off (which also turns Fast Startup off).
+
+How it stays safe: a category empties only the folders in its fixed list, resolved from the user's environment and refused if one resolves to a drive root, the profile, Documents, Downloads or Windows itself (a `TEMP` pointing at your documents deletes nothing). Links and junctions are never followed, files modified in the last 24 hours in temp folders are kept, categories that need administrator rights are not attempted without them, and what a clean frees is what was really removed. Moving to the Recycle Bin is only possible for files a scan listed to you in this session, and never for every copy of a duplicated file, even if the interface asked. Large scans run in parallel across folders, show live counters and can be cancelled.
 
 ## Plain-language text
 

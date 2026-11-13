@@ -1,5 +1,6 @@
 import {act} from "@testing-library/react";
 import {vi} from "vitest";
+import type {StorageProgress} from "../api";
 import type {InstallEvent, Profile, State} from "../lib/model";
 import {makeState, planFor} from "./fixtures";
 
@@ -10,6 +11,7 @@ const handlers = {
     install: new Set<Handler<InstallEvent>>(),
     done: new Set<Handler<string[] | null>>(),
     progress: new Set<Handler<{ done: number; total: number }>>(),
+    storageProgress: new Set<Handler<StorageProgress>>(),
 };
 
 /** Every call the app can make into Go, as a spy. Defaults describe a quiet, healthy PC. */
@@ -23,6 +25,8 @@ export const api = {
     PickBackup: vi.fn(), RestoreSettings: vi.fn(), RestoreFolders: vi.fn(), Emulation: vi.fn(), PatchROM: vi.fn(),
     PlanRepairs: vi.fn(), ApplyRepairs: vi.fn(), RestartPC: vi.fn(), CancelRestart: vi.fn(),
     GamesState: vi.fn(), SetGamesRoot: vi.fn(), InstallGame: vi.fn(), RemoveGame: vi.fn(), PlayGame: vi.fn(), OpenGameFolder: vi.fn(),
+    StorageVolumes: vi.fn(), StorageDefaults: vi.fn(), StorageScan: vi.fn(), StorageClean: vi.fn(), StorageBigFiles: vi.fn(),
+    StorageFolders: vi.fn(), StorageDuplicates: vi.fn(), StorageRecycle: vi.fn(), StorageReveal: vi.fn(), StorageCancel: vi.fn(),
 };
 
 export function resetApi(state: State = makeState()): void {
@@ -53,6 +57,19 @@ export function resetApi(state: State = makeState()): void {
     api.RestartPC.mockResolvedValue(undefined);
     api.CancelRestart.mockResolvedValue(undefined);
     api.PlanRepairs.mockImplementation(async (ids: string[]) => ({steps: ids.map((id) => ({kind: "recipe", id, name: id, admin: true})), alreadyInstalled: [], needsAdmin: true}));
+    api.StorageVolumes.mockResolvedValue([]);
+    api.StorageDefaults.mockResolvedValue({
+        home: "C:\\Users\\me", downloads: "C:\\Users\\me\\Downloads", documents: "C:\\Users\\me\\Documents",
+        pictures: "C:\\Users\\me\\Pictures", videos: "C:\\Users\\me\\Videos",
+    });
+    api.StorageScan.mockResolvedValue([]);
+    api.StorageClean.mockResolvedValue({freedBytes: 0, files: 0, failed: 0, outcomes: []});
+    api.StorageBigFiles.mockResolvedValue([]);
+    api.StorageFolders.mockResolvedValue([]);
+    api.StorageDuplicates.mockResolvedValue([]);
+    api.StorageRecycle.mockResolvedValue({moved: 0, freedBytes: 0, failed: []});
+    api.StorageReveal.mockResolvedValue(undefined);
+    api.StorageCancel.mockResolvedValue(undefined);
     api.PlayGame.mockResolvedValue(undefined);
     api.OpenGameFolder.mockResolvedValue(undefined);
     api.PlanPending.mockImplementation(async () => ({steps: [], alreadyInstalled: [], needsAdmin: false}));
@@ -69,6 +86,7 @@ export const moduleMock = {
         install: (fn: Handler<InstallEvent>) => { handlers.install.add(fn); return () => handlers.install.delete(fn); },
         done: (fn: Handler<string[] | null>) => { handlers.done.add(fn); return () => handlers.done.delete(fn); },
         progress: (fn: Handler<{ done: number; total: number }>) => { handlers.progress.add(fn); return () => handlers.progress.delete(fn); },
+        storageProgress: (fn: Handler<StorageProgress>) => { handlers.storageProgress.add(fn); return () => handlers.storageProgress.delete(fn); },
     },
 };
 
@@ -77,5 +95,6 @@ export const emit = {
     gameProgress: (id: string, done: number, total: number) => act(() => { handlers.gameProgress.forEach((h) => h({id, done, total})); }),
     scan: (scan: "pc" | "health", step: string) => act(() => { handlers.scan.forEach((h) => h({scan, step})); }),
     install: (e: InstallEvent) => act(() => { handlers.install.forEach((h) => h(e)); }),
+    storageProgress: (e: StorageProgress) => act(() => { handlers.storageProgress.forEach((h) => h(e)); }),
     done: (failed: string[] | null = []) => act(() => { handlers.done.forEach((h) => h(failed)); }),
 };

@@ -4,6 +4,7 @@ import {catalog} from '../models';
 import {settings} from '../models';
 import {main} from '../models';
 import {install} from '../models';
+import {storage} from '../models';
 
 export function Apply(arg1:catalog.Profile):Promise<void>;
 
@@ -95,10 +96,30 @@ export function SaveProfile(arg1:catalog.Profile):Promise<void>;
 
 export function SaveTextFile(arg1:string,arg2:string):Promise<string>;
 
-export function StartupError():Promise<string>;
-
 export function SetGamesRoot():Promise<string>;
 
 export function ShareCode(arg1:catalog.Profile):Promise<string>;
+
+export function StartupError():Promise<string>;
+
+export function StorageBigFiles(arg1:string,arg2:number):Promise<Array<storage.BigFile>>;
+
+export function StorageCancel():Promise<void>;
+
+export function StorageClean(arg1:Array<string>):Promise<storage.Result>;
+
+export function StorageDefaults():Promise<storage.Defaults>;
+
+export function StorageDuplicates(arg1:Array<string>,arg2:number):Promise<Array<storage.DupGroup>>;
+
+export function StorageFolders(arg1:string):Promise<Array<storage.FolderSize>>;
+
+export function StorageRecycle(arg1:Array<string>):Promise<storage.RecycleResult>;
+
+export function StorageReveal(arg1:string):Promise<void>;
+
+export function StorageScan():Promise<Array<storage.Category>>;
+
+export function StorageVolumes():Promise<Array<storage.Volume>>;
 
 export function Upgrades():Promise<Array<main.UpgradeInfo>>;

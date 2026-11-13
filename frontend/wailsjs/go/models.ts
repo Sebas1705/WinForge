@@ -1434,3 +1434,264 @@ export namespace settings {
 
 }
 
+export namespace storage {
+	
+	export class BigFile {
+	    path: string;
+	    name: string;
+	    sizeBytes: number;
+	    // Go type: time
+	    modified: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new BigFile(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.path = source["path"];
+	        this.name = source["name"];
+	        this.sizeBytes = source["sizeBytes"];
+	        this.modified = this.convertValues(source["modified"], null);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class Category {
+	    id: string;
+	    risk: string;
+	    needsAdmin: boolean;
+	    available: boolean;
+	    bytes: number;
+	    files: number;
+	    skipped: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new Category(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.risk = source["risk"];
+	        this.needsAdmin = source["needsAdmin"];
+	        this.available = source["available"];
+	        this.bytes = source["bytes"];
+	        this.files = source["files"];
+	        this.skipped = source["skipped"];
+	    }
+	}
+	export class Defaults {
+	    home: string;
+	    downloads: string;
+	    documents: string;
+	    pictures: string;
+	    videos: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Defaults(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.home = source["home"];
+	        this.downloads = source["downloads"];
+	        this.documents = source["documents"];
+	        this.pictures = source["pictures"];
+	        this.videos = source["videos"];
+	    }
+	}
+	export class DupFile {
+	    path: string;
+	    // Go type: time
+	    modified: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new DupFile(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.path = source["path"];
+	        this.modified = this.convertValues(source["modified"], null);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class DupGroup {
+	    id: string;
+	    sizeBytes: number;
+	    files: DupFile[];
+	
+	    static createFrom(source: any = {}) {
+	        return new DupGroup(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.sizeBytes = source["sizeBytes"];
+	        this.files = this.convertValues(source["files"], DupFile);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class FolderSize {
+	    path: string;
+	    name: string;
+	    sizeBytes: number;
+	    files: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new FolderSize(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.path = source["path"];
+	        this.name = source["name"];
+	        this.sizeBytes = source["sizeBytes"];
+	        this.files = source["files"];
+	    }
+	}
+	export class Outcome {
+	    id: string;
+	    freedBytes: number;
+	    files: number;
+	    failed: number;
+	    error?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Outcome(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.freedBytes = source["freedBytes"];
+	        this.files = source["files"];
+	        this.failed = source["failed"];
+	        this.error = source["error"];
+	    }
+	}
+	export class RecycleResult {
+	    moved: number;
+	    freedBytes: number;
+	    failed: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new RecycleResult(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.moved = source["moved"];
+	        this.freedBytes = source["freedBytes"];
+	        this.failed = source["failed"];
+	    }
+	}
+	export class Result {
+	    freedBytes: number;
+	    files: number;
+	    failed: number;
+	    outcomes: Outcome[];
+	
+	    static createFrom(source: any = {}) {
+	        return new Result(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.freedBytes = source["freedBytes"];
+	        this.files = source["files"];
+	        this.failed = source["failed"];
+	        this.outcomes = this.convertValues(source["outcomes"], Outcome);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class Volume {
+	    letter: string;
+	    label: string;
+	    totalBytes: number;
+	    freeBytes: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new Volume(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.letter = source["letter"];
+	        this.label = source["label"];
+	        this.totalBytes = source["totalBytes"];
+	        this.freeBytes = source["freeBytes"];
+	    }
+	}
+
+}
+

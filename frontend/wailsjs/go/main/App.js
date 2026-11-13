@@ -182,16 +182,56 @@ export function SaveTextFile(arg1, arg2) {
   return window['go']['main']['App']['SaveTextFile'](arg1, arg2);
 }
 
-export function StartupError() {
-  return window['go']['main']['App']['StartupError']();
-}
-
 export function SetGamesRoot() {
   return window['go']['main']['App']['SetGamesRoot']();
 }
 
 export function ShareCode(arg1) {
   return window['go']['main']['App']['ShareCode'](arg1);
+}
+
+export function StartupError() {
+  return window['go']['main']['App']['StartupError']();
+}
+
+export function StorageBigFiles(arg1, arg2) {
+  return window['go']['main']['App']['StorageBigFiles'](arg1, arg2);
+}
+
+export function StorageCancel() {
+  return window['go']['main']['App']['StorageCancel']();
+}
+
+export function StorageClean(arg1) {
+  return window['go']['main']['App']['StorageClean'](arg1);
+}
+
+export function StorageDefaults() {
+  return window['go']['main']['App']['StorageDefaults']();
+}
+
+export function StorageDuplicates(arg1, arg2) {
+  return window['go']['main']['App']['StorageDuplicates'](arg1, arg2);
+}
+
+export function StorageFolders(arg1) {
+  return window['go']['main']['App']['StorageFolders'](arg1);
+}
+
+export function StorageRecycle(arg1) {
+  return window['go']['main']['App']['StorageRecycle'](arg1);
+}
+
+export function StorageReveal(arg1) {
+  return window['go']['main']['App']['StorageReveal'](arg1);
+}
+
+export function StorageScan() {
+  return window['go']['main']['App']['StorageScan']();
+}
+
+export function StorageVolumes() {
+  return window['go']['main']['App']['StorageVolumes']();
 }
 
 export function Upgrades() {

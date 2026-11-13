@@ -19,11 +19,12 @@ import {Catalog} from "./views/Catalog";
 import {Health} from "./views/Health";
 import {Backup} from "./views/Backup";
 import {Games} from "./views/Games";
+import {Storage} from "./views/Storage";
 import {Home} from "./views/Home";
 import {Profiles} from "./views/Profiles";
 import {Updates} from "./views/Updates";
 
-type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games";
+type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games" | "storage";
 
 interface Runner {
     /** Called when the person confirms the plan. */
@@ -38,7 +39,7 @@ interface Runner {
 // Go names runs that have no profile by what they do; show that in the person's language.
 const pendingTitle = (title: string) => (title === "updates" ? t("run.updateTitle") : title === "uninstall" ? t("detail.uninstall") : title);
 
-const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive", games: "gamepad"};
+const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive", games: "gamepad", storage: "disk"};
 
 function tourSeen(): boolean {
     try { return localStorage.getItem("winforge.tour") === "1"; } catch { return true; }
@@ -71,6 +72,7 @@ export default function App() {
     const [detail, setDetail] = useState<CatalogApp | null>(null);
     const [codeDialog, setCodeDialog] = useState(false);
     const [restartAsk, setRestartAsk] = useState(false);
+    const [storageTick, setStorageTick] = useState(0);
     const [restarting, setRestarting] = useState(false);
     const [showTour, setShowTour] = useState(() => !tourSeen());
     const advanced = settings.detail === "advanced";
@@ -245,12 +247,20 @@ export default function App() {
     };
 
     // Repairs run like an install; when they finish the health page is read again.
+    // Storage maintenance ("optimize-*") goes through the same runner; the drives are measured again after.
     const startRepair = async (ids: string[]) => {
         if (starting.current) return;
         starting.current = true;
         try {
             const plan = await api.PlanRepairs(ids);
-            openRun(t("run.repairTitle"), plan, {start: () => api.ApplyRepairs(ids), after: () => void scanHealth()});
+            const optimizing = ids.length > 0 && ids.every((id) => id.startsWith("optimize-"));
+            openRun(t(optimizing ? "run.optimizeTitle" : "run.repairTitle"), plan, {
+                start: () => api.ApplyRepairs(ids),
+                after: () => {
+                    if (ids.some((id) => !id.startsWith("optimize-"))) void scanHealth();
+                    if (ids.some((id) => id.startsWith("optimize-"))) setStorageTick((n) => n + 1);
+                },
+            });
         } catch (e) { say(errText(e)); } finally { starting.current = false; }
     };
 
@@ -378,6 +388,7 @@ export default function App() {
         ["catalog", t("nav.catalog"), state?.apps.length ?? null],
         ["updates", t("nav.updates"), upgrades && upgrades.length > 0 ? upgrades.length : null],
         ["health", t("nav.health"), health && health.ok < health.total ? health.total - health.ok : null],
+        ["storage", t("nav.storage"), null],
         ["games", t("nav.games"), null],
         ["backup", t("nav.backup"), null],
     ];
@@ -476,6 +487,9 @@ export default function App() {
                                 onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))} onLink={openLink}
                                 onInstallApp={(a) => void startProfile(selectionProfile([a.id], a.name))} onDetail={setDetail}
                                 onRepair={(ids) => void startRepair(ids)} onRestart={() => setRestartAsk(true)}/>
+                    ) : tab === "storage" ? (
+                        <Storage admin={state.admin} say={say} refreshKey={storageTick} onOptimize={(ids) => void startRepair(ids)}
+                                 onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>
                     ) : tab === "games" ? (
                         <Games apps={state.apps} say={say} onOpen={(u) => safe(api.OpenURL(u))} onDetail={setDetail}
                                onBrowse={() => { setCategory("gaming"); setTab("catalog"); }}/>
