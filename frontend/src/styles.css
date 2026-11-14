@@ -223,6 +223,7 @@
 :root[data-style=brutalist] .list li { border-radius: 6px; }
 :root[data-style=brutalist] .list li:hover { background: var(--surface2); }
 :root[data-style=brutalist] .list li.sel { background: var(--accent); border: 2px solid var(--ink); color: var(--on-accent); }
+:root[data-style=brutalist] .list li.sel :is(.muted, button.link) { color: var(--on-accent); }
 :root[data-style=brutalist] .strip i, :root[data-style=brutalist] .bar, :root[data-style=brutalist] .bar i { border-radius: 0; }
 :root[data-style=brutalist] .strip i.on, :root[data-style=brutalist] .ruler i.on, :root[data-style=brutalist] .dot.ok { box-shadow: none; }
 :root[data-style=brutalist] .bar { border: 2px solid var(--ink); height: 10px; }

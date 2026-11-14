@@ -16,15 +16,14 @@ Catalog and detection, profiles, recipes, updates (apply what is ticked), PC hea
 storage cleanup, settings backup, emulation and games, six design styles, keyboard and screen-reader
 support. See the [README](../README.md).
 
-Not present: a way to say "never update this app", anything that runs on a schedule, a startup
-manager, cleanup of developer caches (Docker/WSL disks, `cargo`, `pnpm`, stale `node_modules`),
-`winget configure` export, and sync of profiles between PCs.
+Not present: anything that runs on a schedule, a startup manager, cleanup of developer caches
+(Docker/WSL disks, `cargo`, `pnpm`, stale `node_modules`) and `winget configure` export.
 
 ## Candidates
 
 | # | Idea | Why | Effort | Risk |
 |---|---|---|---|---|
-| 1 | Ignore, skip a version or pause updates per app | Updates apply what is ticked, with no memory. The most asked-for control in UniGetUI. | Low | Low |
+| 1 | Ignore, skip a version or pause updates per app (done) | Updates apply what is ticked, with no memory. The most asked-for control in UniGetUI. | Low | Low |
 | 2 | Scheduled automatic updates (a scheduled task running `winforge-cli`, with a notification) | It is what Ninite Pro charges for. Today WinForge only acts while open. | Medium | Medium |
 | 3 | Developer cache cleanup | Where developers lose tens of GB; fits the Storage tab. Regenerable, but slow to download again. | Medium | Medium |
 | 4 | Export a profile as a `winget configure` file | Replays a setup on a PC without WinForge and fits in a repository. Script and `winget import` export already exist. | Low to medium | Low |
@@ -32,8 +31,8 @@ manager, cleanup of developer caches (Docker/WSL disks, `cargo`, `pnpm`, stale `
 | 6 | Privacy and Windows cleanup as reversible recipes | Most asked-for in WinUtil and O&O. Each tweak needs a preview, an undo and a restore point. | Medium to high | High unless each one is reviewed |
 | 7 | End-of-life and known-vulnerability report for installed software | Read-only, built on the catalog's verified publishers. | Medium | Low |
 | 8 | Profile drift ("what changed on this PC since you applied it") | Turns profiles into something maintained, not installed once. | Medium | Low |
-| 9 | Profiles folder that can live in OneDrive or Dropbox | Sync between PCs with no server and almost no code. | Low | Low |
-| 10 | Action palette (Ctrl+K also runs actions) | Daily use by keyboard. Search already opens with Ctrl+K. | Low | Low |
+| 9 | Profiles folder that can live in OneDrive or Dropbox (done) | Sync between PCs with no server and almost no code. | Low | Low |
+| 10 | Action palette (done: Ctrl+K opens it) | Daily use by keyboard. | Low | Low |
 
 ## Not worth doing
 
@@ -44,7 +43,8 @@ manager, cleanup of developer caches (Docker/WSL disks, `cargo`, `pnpm`, stale `
 
 ## Suggested order
 
-1. **A:** 1, 9, 10. Small and visible.
+1. **A (done):** 1, 9, 10. Ignoring updates, a profiles folder that can live in OneDrive or Dropbox, and the
+   command palette.
 2. **B:** 4, 8. Makes profiles portable configuration.
 3. **C:** 3, 5. Most of the value for developers.
 4. **D:** 2. Needs care because it acts while nobody is watching.

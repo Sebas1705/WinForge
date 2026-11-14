@@ -396,3 +396,5 @@ img, svg { -webkit-user-drag: none; user-drag: none; }
 .palette li[aria-selected="true"] { background: var(--surface2); box-shadow: inset 3px 0 0 var(--accent-ink); }
 .palette .kind { flex: none; font-size: 12px; color: var(--muted); }
 .palette-empty, .palette-hint { margin: 0; padding: 4px 6px; }
+.menu-pop.end { left: auto; right: 0; } /* a menu at the end of a row opens inwards, not off the window */
+.menu-pop { color: var(--text); } /* a popup is its own surface: it must not inherit the colour of the row it opens from */

@@ -43,7 +43,7 @@ function IgnoreMenu(p: { u: UpgradeInfo; onChoose: (c: Choice) => void }) {
                 {t("updates.ignore")} ▾
             </button>
             {open && (
-                <div className="menu-pop" role="menu" onKeyDown={onKeys}>
+                <div className="menu-pop end" role="menu" onKeyDown={onKeys}>
                     <button role="menuitem" type="button" onClick={() => pick({mode: "version"})}>{t("updates.ignoreSkip", {v: p.u.available})}</button>
                     {PAUSE_DAYS.map((d) => (
                         <button key={d} role="menuitem" type="button" onClick={() => pick({mode: "until", days: d})}>{t("updates.ignorePause", {n: d})}</button>
