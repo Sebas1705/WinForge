@@ -39,7 +39,7 @@ export function Updates(p: {
                 {list.map((u) => (
                     <li key={u.id} className={picked.has(u.id) ? "sel" : ""}>
                         <label>
-                            <input type="checkbox" checked={picked.has(u.id)} onChange={() => toggle(u.id)} aria-label={u.name}/>
+                            <input type="checkbox" checked={picked.has(u.id)} onChange={() => toggle(u.id)} aria-label={t("updates.pick", {name: u.name})}/>
                             <AppIcon id={u.id} name={u.name} category={p.byId.get(u.id)?.category ?? ""}/>
                             <span className="grow">
                                 <button type="button" className="link name" onClick={(e) => { e.preventDefault(); const a = p.byId.get(u.id); if (a) p.onDetail(a); }}>{u.name}</button>

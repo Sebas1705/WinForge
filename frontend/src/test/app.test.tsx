@@ -308,7 +308,7 @@ describe("updates", () => {
         api.PlanUpgrades.mockResolvedValue({steps: [{kind: "upgrade", id: "git", name: "Git"}], alreadyInstalled: [], needsAdmin: false});
         const user = await openApp();
         await go(user, /Updates/);
-        expect(await screen.findByRole("checkbox", {name: "Git"})).toBeChecked();
+        expect(await screen.findByRole("checkbox", {name: "Include Git in the update"})).toBeChecked();
         await user.click(screen.getByRole("button", {name: "Update all"}));
         expect(api.PlanUpgrades).toHaveBeenCalledWith([]);
     });
@@ -318,7 +318,7 @@ describe("updates", () => {
         api.PlanUpgrades.mockResolvedValue({steps: [{kind: "upgrade", id: "firefox", name: "Firefox"}], alreadyInstalled: [], needsAdmin: false});
         const user = await openApp();
         await go(user, /Updates/);
-        await user.click(await screen.findByRole("checkbox", {name: "Git"}));
+        await user.click(await screen.findByRole("checkbox", {name: "Include Git in the update"}));
         await user.click(screen.getByRole("button", {name: "Update 1…"}));
         expect(api.PlanUpgrades).toHaveBeenCalledWith(["firefox"]);
     });

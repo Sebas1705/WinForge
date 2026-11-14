@@ -93,6 +93,7 @@ const baseEn = {
 
     "updates.title": "Updates",
     "updates.hint": "Only apps from the catalog are listed; nothing else on this PC is touched.",
+    "updates.pick": "Include {name} in the update",
     "updates.check": "Check for updates",
     "updates.checking": "Asking winget…",
     "updates.none": "Everything from the catalog is up to date.",
@@ -281,6 +282,7 @@ const baseEs: Record<keyof typeof baseEn, string> = {
 
     "updates.title": "Actualizaciones",
     "updates.hint": "Solo aparecen apps del catálogo; no se toca nada más de este PC.",
+    "updates.pick": "Incluir {name} en la actualización",
     "updates.check": "Buscar actualizaciones",
     "updates.checking": "Consultando a winget…",
     "updates.none": "Todo lo del catálogo está al día.",
