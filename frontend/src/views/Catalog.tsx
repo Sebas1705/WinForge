@@ -96,7 +96,7 @@ export function Catalog(p: {
                     <input ref={search} className="search" aria-label={t("catalog.searchLabel")} aria-keyshortcuts={slash ? "/ Control+K" : "Control+K"} placeholder={t(slash ? "catalog.search" : "catalog.searchNoSlash")} value={f.query}
                            onChange={(e) => setF({...f, query: e.target.value})}/>
                 </div>
-                <select aria-label={t("catalog.state.all")} value={f.installed}
+                <select aria-label={t("catalog.stateLabel")} value={f.installed}
                         onChange={(e) => setF({...f, installed: e.target.value as Filter["installed"]})}>
                     <option value="all">{t("catalog.state.all")}</option>
                     <option value="installed">{t("catalog.state.installed")}</option>
@@ -144,7 +144,7 @@ export function Catalog(p: {
                     {list.map((a) => (
                         <li key={a.id} className={p.selection.has(a.id) ? "sel" : ""}>
                             <label>
-                                <input type="checkbox" checked={p.selection.has(a.id)} onChange={() => toggle(a.id)} aria-label={a.name}/>
+                                <input type="checkbox" checked={p.selection.has(a.id)} onChange={() => toggle(a.id)} aria-label={t("catalog.select", {name: a.name})}/>
                                 <AppIcon id={a.id} name={a.name} category={a.category}/>
                                 <span className="grow">
                                     <button type="button" className="link name" onClick={(e) => { e.preventDefault(); p.onDetail(a); }}>{a.name}</button>

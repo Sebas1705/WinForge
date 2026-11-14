@@ -159,7 +159,7 @@ export function RunModal(p: {
                     {started && showLog && <button className="ghost" onClick={p.onCopy}>{t("run.copyLog")}</button>}
                     <span className="grow"/>
                     {!started && <button onClick={p.onClose}>{t("common.cancel")}</button>}
-                    {!started && <button className="primary big" onClick={p.onConfirm}><Icon name="download" size={16}/> {t("run.steps", {n: run.plan.steps.length})}</button>}
+                    {!started && <button className="primary big" onClick={p.onConfirm}><Icon name="download" size={16}/> {run.plan.steps.length === 1 ? t("run.step1") : t("run.steps", {n: run.plan.steps.length})}</button>}
                     {run.running && (
                         <button className="danger" disabled={stopping} onClick={() => { setStopping(true); p.onCancel(); }}>
                             {stopping ? t("run.stopping") : t("run.stop")}

@@ -81,7 +81,7 @@ export function Tip({text}: { text: string }) {
     const show = () => { setPos(null); setOpen(true); };
     const hide = () => setOpen(false);
     return (
-        <span ref={anchor} className="tip" tabIndex={0} role="note" aria-label={text}
+        <span ref={anchor} className="tip" tabIndex={0} role="img" aria-label={text}
               onMouseEnter={show} onMouseLeave={hide} onFocus={show} onBlur={hide}>
             <Icon name="help" size={14}/>
             {open && createPortal(

@@ -121,7 +121,7 @@ describe("rebuilding from a backup", () => {
         await user.click(screen.getByRole("button", {name: "Choose a folder…"}));
         await user.click(screen.getByRole("button", {name: "Rebuild now"}));
 
-        await user.click(await screen.findByRole("button", {name: "Run 1 steps"}));
+        await user.click(await screen.findByRole("button", {name: "Run 1 step"}));
         expect(api.Apply).toHaveBeenCalledWith(expect.objectContaining({id: "backup"}));
         expect(api.RestoreSettings).not.toHaveBeenCalled();
         await emit.install({step: step("firefox", "Firefox"), status: "start"});

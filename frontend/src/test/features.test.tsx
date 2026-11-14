@@ -32,7 +32,7 @@ async function failFirefox(user: ReturnType<typeof userEvent.setup>, reason: str
     await go(user, /Catalog/);
     const card = screen.getByRole("button", {name: "Firefox"}).closest("article") as HTMLElement;
     await user.click(within(card).getByRole("button", {name: "Install Firefox"}));
-    await user.click(await screen.findByRole("button", {name: "Run 1 steps"}));
+    await user.click(await screen.findByRole("button", {name: "Run 1 step"}));
     await emit.install({step: step("firefox", "Firefox"), status: "start"});
     await emit.install({step: step("firefox", "Firefox"), status: "failed", error: "winget exited with code 0x8a150049", reason});
     await emit.done(["firefox"]);
@@ -72,7 +72,7 @@ describe("when a step fails", () => {
         await go(user, /Catalog/);
         const card = screen.getByRole("button", {name: "Firefox"}).closest("article") as HTMLElement;
         await user.click(within(card).getByRole("button", {name: "Install Firefox"}));
-        await user.click(await screen.findByRole("button", {name: "Run 1 steps"}));
+        await user.click(await screen.findByRole("button", {name: "Run 1 step"}));
         await emit.install({step: step("firefox", "Firefox"), status: "start"});
         await emit.install({step: step("firefox", "Firefox"), status: "output", line: "  42%", percent: 42});
         expect(await screen.findByRole("progressbar", {name: "Firefox: 42%"})).toBeInTheDocument();
@@ -85,7 +85,7 @@ describe("when a step fails", () => {
         await go(user, /Catalog/);
         const card = screen.getByRole("button", {name: "Firefox"}).closest("article") as HTMLElement;
         await user.click(within(card).getByRole("button", {name: "Install Firefox"}));
-        await user.click(await screen.findByRole("button", {name: "Run 1 steps"}));
+        await user.click(await screen.findByRole("button", {name: "Run 1 step"}));
         await emit.install({step: step("firefox", "Firefox"), status: "ok", reason: "reboot"});
         await emit.done([]);
         expect(await screen.findByText(/Restart your PC, then open WinForge/)).toBeInTheDocument();
@@ -131,7 +131,7 @@ describe("uninstalling", () => {
         expect(api.ApplyUninstall).not.toHaveBeenCalled();
         await user.click(within(sure).getByRole("button", {name: "Uninstall"}));
         await waitFor(() => expect(api.PlanUninstall).toHaveBeenCalledWith(["vlc"]));
-        await user.click(await screen.findByRole("button", {name: "Run 1 steps"}));
+        await user.click(await screen.findByRole("button", {name: "Run 1 step"}));
         expect(api.ApplyUninstall).toHaveBeenCalledWith(["vlc"]);
     });
 

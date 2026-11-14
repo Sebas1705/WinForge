@@ -24,7 +24,7 @@ export const storageEn = {
     "storage.volumes.none": "No drives were found.",
     "storage.volume.line": "{used} used of {total} · {free} free",
     "storage.volume.freePct": "{pct}% free",
-    "storage.volume.usedLabel": "{drive}: {pct}% used",
+    "storage.volume.usedLabel": "{drive}, {pct}% used",
     "storage.volume.low": "Low space: only {free} free. Free up some below.",
     "storage.volume.unknown": "Size not available",
 
@@ -178,7 +178,7 @@ export const storageEs: Record<keyof typeof storageEn, string> = {
     "storage.volumes.none": "No se encontró ningún disco.",
     "storage.volume.line": "{used} usados de {total} · {free} libres",
     "storage.volume.freePct": "{pct}% libre",
-    "storage.volume.usedLabel": "{drive}: {pct}% usado",
+    "storage.volume.usedLabel": "{drive}, {pct}% usado",
     "storage.volume.low": "Poco espacio: solo quedan {free} libres. Libera algo más abajo.",
     "storage.volume.unknown": "Tamaño no disponible",
 
