@@ -271,6 +271,25 @@ describe("storage: free up space", () => {
         expect(screen.getByRole("checkbox", {name: "Select for cleaning: Picture preview cache"})).toBeChecked();
     });
 
+    it("keeps keyboard focus in the section after cleaning, instead of dropping it to the page", async () => {
+        api.StorageClean.mockResolvedValue({freedBytes: 1.5 * GB, files: 120, failed: 0, outcomes: []});
+        const user = await open();
+        await scanJunk(user);
+        await user.click(screen.getByRole("button", {name: /Clean selected/}));
+        await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Clean"}));
+        const status = (await screen.findByText("Freed 1.5 GB (120 files).")).closest("[role=status]") as HTMLElement;
+        await waitFor(() => expect(document.activeElement).toBe(status));
+    });
+
+    it("moves focus to the section heading when cleaning fails and there is no result", async () => {
+        api.StorageClean.mockRejectedValue(new Error("boom"));
+        const user = await open();
+        await scanJunk(user);
+        await user.click(screen.getByRole("button", {name: /Clean selected/}));
+        await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Clean"}));
+        await waitFor(() => expect(document.activeElement).toBe(screen.getByRole("heading", {name: "Free up space"})));
+    });
+
     it("explains failures: files in use are skipped, and each category error is named", async () => {
         api.StorageClean.mockResolvedValue({
             freedBytes: 10 * MB, files: 3, failed: 7,
