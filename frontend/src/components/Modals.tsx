@@ -232,6 +232,11 @@ export function Segmented<T extends string>(p: { value: T; options: [T, string][
     );
 }
 
+const STYLE_LABEL = {
+    classic: "style.classic", minimal: "style.minimal", material: "style.material",
+    liquid: "style.liquid", neumorphic: "style.neumorphic", brutalist: "style.brutalist",
+} as const satisfies Record<prefs.DesignStyle, string>;
+
 export function SettingsDialog(p: {
     version: string; value: prefs.Settings; onChange: (s: prefs.Settings) => void; onCheck: () => void; onClose: () => void;
 }) {
@@ -254,6 +259,16 @@ export function SettingsDialog(p: {
                 <div className="field"><span>{t("settings.theme")}</span>
                     <Segmented value={p.value.theme} onChange={(theme) => set({theme})}
                                options={[["system", t("settings.system")], ["dark", t("settings.dark")], ["light", t("settings.light")]]}/>
+                </div>
+                <div className="field stacked"><span>{t("settings.style")}</span>
+                    <div className="stylegrid" role="group" aria-label={t("settings.style")}>
+                        {prefs.STYLES.map((s) => (
+                            <button key={s} className={p.value.style === s ? "on" : ""} aria-pressed={p.value.style === s} onClick={() => set({style: s})}>
+                                <span className={"sample s-" + s} aria-hidden="true"/>
+                                {t(STYLE_LABEL[s])}
+                            </button>
+                        ))}
+                    </div>
                 </div>
                 <div className="field"><span>{t("settings.accent")}</span>
                     <div className="swatches">

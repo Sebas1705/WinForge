@@ -1,0 +1,251 @@
+/* Design styles. The default look ("classic") lives in style.css and visual.css and
+   is left alone: every rule here is scoped to :root[data-style=...], so a person who
+   never opens the picker sees exactly what they saw before.
+
+   A style changes shape, depth and surface treatment, never layout, so every page
+   keeps working in every style. Colors still come from the theme (dark/light) and the
+   accent. Each style is a block of tokens plus a short list of overrides. */
+
+/* ---- shared groups --------------------------------------------------------------
+   :is() lists below are the surfaces and the controls each style restyles. */
+
+/* ================================ MINIMAL ================================
+   Flat, quiet, hairlines only. No shadows, small radii, nothing competes with the content. */
+:root[data-style=minimal] {
+    --bg: #14171b; --rail: #14171b; --surface: transparent; --surface2: transparent; --line: #262c34; --cell: #262c34;
+    --font-display: var(--font-body);
+}
+:root[data-style=minimal][data-theme=light] { --bg: #fafafa; --rail: #fafafa; --line: #e4e6ea; --cell: #e4e6ea; }
+:root[data-style=minimal] :is(.card, .appcard, .profilecard, .tile, .quicktile, .statuscard, .nextcard, .scorecard, .finding, .apps li, .tablewrap) {
+    border-radius: 4px; box-shadow: none; background: transparent;
+}
+:root[data-style=minimal] :is(.modal, .drawer, .menu-pop, .toast) { border-radius: 6px; box-shadow: 0 1px 2px rgba(0, 0, 0, .25); background: var(--bg); }
+:root[data-style=minimal] :is(button, input:not([type]), input[type=text], select, .searchbox, .chip, .pill) { border-radius: 4px; box-shadow: none; }
+:root[data-style=minimal] button { background: transparent; }
+:root[data-style=minimal] button.primary { background: var(--accent); }
+:root[data-style=minimal] .navitem.on, :root[data-style=minimal] aside .row.on { background: transparent; box-shadow: none; border-color: transparent; color: var(--accent-ink); font-weight: 600; }
+:root[data-style=minimal] .rail { border-right-color: var(--line); }
+:root[data-style=minimal] :is(.appcard, .profilecard, .tile, .quicktile):hover { border-color: var(--text); }
+:root[data-style=minimal] .strip i, :root[data-style=minimal] .bar, :root[data-style=minimal] .bar i { border-radius: 0; }
+:root[data-style=minimal] .strip i.on, :root[data-style=minimal] .ruler i.on, :root[data-style=minimal] .dot.ok { box-shadow: none; }
+:root[data-style=minimal] .bubble { background: transparent; box-shadow: none; border: 1px solid var(--line); }
+
+/* ================================ MATERIAL ================================
+   Material 3 flavour: tonal surfaces, soft elevation, rounded shapes, pill buttons. */
+:root[data-style=material] {
+    --bg: #111317; --rail: #181b20; --surface: #242830; --surface2: #30353e; --line: transparent; --cell: #434956;
+    --elev1: 0 1px 2px rgba(0, 0, 0, .35), 0 1px 3px 1px rgba(0, 0, 0, .2);
+    --elev2: 0 2px 6px 2px rgba(0, 0, 0, .25), 0 1px 2px rgba(0, 0, 0, .35);
+    --elev3: 0 8px 20px 4px rgba(0, 0, 0, .3), 0 2px 6px rgba(0, 0, 0, .4);
+}
+:root[data-style=material][data-theme=light] {
+    --bg: #f6f2f8; --rail: #efeaf3; --surface: #ffffff; --surface2: #ece6f0; --line: transparent; --cell: #d9d3de;
+    --elev1: 0 1px 2px rgba(60, 40, 90, .22), 0 1px 3px 1px rgba(60, 40, 90, .12);
+    --elev2: 0 2px 6px 2px rgba(60, 40, 90, .15), 0 1px 2px rgba(60, 40, 90, .25);
+    --elev3: 0 8px 20px 4px rgba(60, 40, 90, .18), 0 2px 6px rgba(60, 40, 90, .25);
+}
+:root[data-style=material] :is(.card, .appcard, .profilecard, .tile, .quicktile, .statuscard, .nextcard, .scorecard, .finding, .apps li, .tablewrap) {
+    border-radius: 16px; border-color: transparent; box-shadow: var(--elev1);
+}
+:root[data-style=material] :is(.appcard, .profilecard, .tile, .quicktile):hover { box-shadow: var(--elev2); border-color: transparent; }
+:root[data-style=material] .finding { border-left-width: 0; }
+:root[data-style=material] :is(.modal, .drawer) { border-radius: 28px; border-color: transparent; box-shadow: var(--elev3); }
+:root[data-style=material] .drawer { border-radius: 28px 0 0 28px; }
+:root[data-style=material] .menu-pop, :root[data-style=material] .toast { border-radius: 12px; border-color: transparent; box-shadow: var(--elev2); }
+:root[data-style=material] :is(button, .chip, .pill) { border-radius: 99px; border-color: transparent; background: var(--surface2); padding-inline: 18px; }
+:root[data-style=material] :is(button.icon, button.link, button.ghost, button.swatch, button.mini) { padding-inline: revert; }
+:root[data-style=material] button.icon, :root[data-style=material] button.link { background: transparent; }
+:root[data-style=material] button:hover:not(:disabled) { border-color: transparent; background: color-mix(in srgb, var(--accent) 14%, var(--surface2)); }
+:root[data-style=material] button.primary { background: var(--accent); box-shadow: var(--elev1); }
+:root[data-style=material] button.primary:hover:not(:disabled) { background: var(--accent); box-shadow: var(--elev2); }
+:root[data-style=material] :is(input:not([type]), input[type=text], select) { border-radius: 12px; border-color: var(--cell); }
+:root[data-style=material] .searchbox { border-radius: 99px; background: var(--surface2); border-color: transparent; }
+:root[data-style=material] .navitem { border-radius: 99px; }
+:root[data-style=material] .navitem.on, :root[data-style=material] aside .row.on {
+    background: color-mix(in srgb, var(--accent) 24%, var(--surface2)); border-color: transparent; box-shadow: none; border-radius: 99px;
+}
+:root[data-style=material] .seg button:first-child { border-radius: 99px 0 0 99px; }
+:root[data-style=material] .seg button:last-child { border-radius: 0 99px 99px 0; }
+:root[data-style=material] .seg button { margin-left: 2px; }
+:root[data-style=material] .seg button:first-child { margin-left: 0; }
+:root[data-style=material] .seg button.on { background: color-mix(in srgb, var(--accent) 35%, var(--surface2)); color: var(--text); }
+:root[data-style=material] .chips button.on { background: color-mix(in srgb, var(--accent) 35%, var(--surface2)); color: var(--text); }
+:root[data-style=material] .list li { border-radius: 14px; }
+:root[data-style=material] .strip i, :root[data-style=material] .bar, :root[data-style=material] .bar i { border-radius: 99px; }
+
+/* ================================ LIQUID ================================
+   Frosted glass over a soft gradient: translucent panels, blur, bright edges. */
+:root[data-style=liquid] {
+    --bg: #0d1117; --rail: rgba(255, 255, 255, .05); --surface: rgba(255, 255, 255, .07); --surface2: rgba(255, 255, 255, .11);
+    --line: rgba(255, 255, 255, .16); --cell: rgba(255, 255, 255, .14);
+    --glass-edge: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 -1px 0 rgba(255, 255, 255, .04);
+    --glass-blur: blur(22px) saturate(160%);
+    --glass-shadow: 0 10px 30px rgba(0, 0, 0, .28);
+}
+:root[data-style=liquid][data-theme=light] {
+    --bg: #e9eef8; --rail: rgba(255, 255, 255, .45); --surface: rgba(255, 255, 255, .55); --surface2: rgba(255, 255, 255, .75);
+    --line: rgba(255, 255, 255, .85); --cell: rgba(40, 60, 100, .14);
+    --glass-edge: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 -1px 0 rgba(255, 255, 255, .3);
+    --glass-shadow: 0 10px 30px rgba(40, 60, 110, .16);
+}
+:root[data-style=liquid] body {
+    background:
+        radial-gradient(60vmax 60vmax at 8% 8%, color-mix(in srgb, var(--accent) 38%, transparent), transparent 60%),
+        radial-gradient(55vmax 55vmax at 95% 20%, rgba(80, 130, 255, .32), transparent 60%),
+        radial-gradient(60vmax 60vmax at 60% 100%, rgba(190, 90, 255, .26), transparent 60%),
+        var(--bg);
+    background-attachment: fixed;
+}
+:root[data-style=liquid] #root { background: transparent; }
+:root[data-style=liquid] :is(.rail, .banner, .catalog footer, aside) { backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); }
+:root[data-style=liquid] .banner, :root[data-style=liquid] .catalog footer { background: var(--surface); }
+:root[data-style=liquid] :is(.card, .appcard, .profilecard, .tile, .quicktile, .statuscard, .nextcard, .scorecard, .finding, .apps li, .tablewrap, .menu-pop, .toast) {
+    border-radius: 20px; background: var(--surface); box-shadow: var(--glass-edge), var(--glass-shadow);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+}
+:root[data-style=liquid] .finding { border-left-width: 1px; }
+:root[data-style=liquid] :is(.modal, .drawer) {
+    border-radius: 28px; background: color-mix(in srgb, var(--surface2) 80%, transparent);
+    backdrop-filter: blur(34px) saturate(170%); -webkit-backdrop-filter: blur(34px) saturate(170%); box-shadow: var(--glass-edge), 0 24px 60px rgba(0, 0, 0, .4);
+}
+:root[data-style=liquid] .drawer { border-radius: 28px 0 0 28px; }
+:root[data-style=liquid] :is(button, .chip, .pill) {
+    border-radius: 99px; background: var(--surface2); box-shadow: var(--glass-edge);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+:root[data-style=liquid] :is(button.icon, button.link, button.swatch) { background: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+:root[data-style=liquid] button.primary { background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 80%, #fff), var(--accent)); box-shadow: var(--glass-edge), 0 6px 16px color-mix(in srgb, var(--accent) 35%, transparent); }
+:root[data-style=liquid] :is(input:not([type]), input[type=text], select) { border-radius: 14px; background: var(--surface); box-shadow: var(--glass-edge); }
+:root[data-style=liquid] .searchbox { border-radius: 99px; background: var(--surface); box-shadow: var(--glass-edge); }
+:root[data-style=liquid] .navitem { border-radius: 14px; }
+:root[data-style=liquid] .navitem.on, :root[data-style=liquid] aside .row.on {
+    background: var(--surface2); box-shadow: var(--glass-edge); border-radius: 14px; border-color: var(--line);
+}
+:root[data-style=liquid] .seg button:first-child { border-radius: 99px 0 0 99px; }
+:root[data-style=liquid] .seg button:last-child { border-radius: 0 99px 99px 0; }
+:root[data-style=liquid] .list li { border-radius: 16px; }
+:root[data-style=liquid] .strip i, :root[data-style=liquid] .bar, :root[data-style=liquid] .bar i { border-radius: 99px; }
+:root[data-style=liquid] .overlay, :root[data-style=liquid] .drawer-overlay { background: rgba(8, 12, 22, .35); }
+
+/* ================================ NEUMORPHIC ================================
+   Soft extruded shapes: one surface color, light and dark shadows, pressed = inset. */
+:root[data-style=neumorphic] {
+    --bg: #23272e; --rail: #23272e; --surface: #23272e; --surface2: #23272e; --line: transparent; --cell: #1b1e24;
+    --n-hi: rgba(255, 255, 255, .06); --n-lo: rgba(0, 0, 0, .55);
+    --raise: 6px 6px 14px var(--n-lo), -6px -6px 14px var(--n-hi);
+    --raise-sm: 3px 3px 7px var(--n-lo), -3px -3px 7px var(--n-hi);
+    --sink: inset 3px 3px 7px var(--n-lo), inset -3px -3px 7px var(--n-hi);
+}
+:root[data-style=neumorphic][data-theme=light] {
+    --bg: #e3e8ef; --rail: #e3e8ef; --surface: #e3e8ef; --surface2: #e3e8ef; --line: transparent; --cell: #cdd3dc;
+    --n-hi: rgba(255, 255, 255, .95); --n-lo: rgba(120, 135, 160, .45);
+}
+:root[data-style=neumorphic] :is(.card, .appcard, .profilecard, .tile, .quicktile, .statuscard, .nextcard, .scorecard, .finding, .apps li) {
+    border-radius: 20px; border-color: transparent; box-shadow: var(--raise);
+}
+:root[data-style=neumorphic] .finding { border-left-width: 0; }
+:root[data-style=neumorphic] .tablewrap { border-radius: 16px; border-color: transparent; box-shadow: var(--sink); }
+:root[data-style=neumorphic] :is(.appcard, .profilecard, .tile, .quicktile):hover { border-color: transparent; }
+:root[data-style=neumorphic] :is(.appcard.sel, .tile.done) { box-shadow: var(--sink); }
+:root[data-style=neumorphic] :is(.modal, .drawer) { border-radius: 26px; border-color: transparent; box-shadow: var(--raise), 0 30px 70px rgba(0, 0, 0, .35); }
+:root[data-style=neumorphic] .drawer { border-radius: 26px 0 0 26px; }
+:root[data-style=neumorphic] .menu-pop, :root[data-style=neumorphic] .toast { border-radius: 14px; border-color: transparent; box-shadow: var(--raise-sm); }
+:root[data-style=neumorphic] :is(button, .chip, .pill) { border-radius: 14px; border-color: transparent; box-shadow: var(--raise-sm); }
+:root[data-style=neumorphic] :is(button.icon, button.link, button.swatch) { box-shadow: none; background: transparent; }
+:root[data-style=neumorphic] button:hover:not(:disabled) { border-color: transparent; color: var(--accent-ink); }
+:root[data-style=neumorphic] button:active:not(:disabled), :root[data-style=neumorphic] .seg button.on, :root[data-style=neumorphic] .chips button.on { box-shadow: var(--sink); }
+:root[data-style=neumorphic] button.primary { box-shadow: var(--raise-sm); }
+:root[data-style=neumorphic] button.primary:active:not(:disabled) { box-shadow: var(--sink); }
+:root[data-style=neumorphic] .seg button.on, :root[data-style=neumorphic] .chips button.on { background: var(--surface); color: var(--accent-ink); }
+:root[data-style=neumorphic] .swatch.on { box-shadow: var(--sink); border-color: transparent; outline: 2px solid var(--accent); outline-offset: 1px; }
+:root[data-style=neumorphic] :is(input:not([type]), input[type=text], select) { border-radius: 14px; border-color: transparent; box-shadow: var(--sink); }
+:root[data-style=neumorphic] .searchbox { border-radius: 99px; border-color: transparent; box-shadow: var(--sink); }
+:root[data-style=neumorphic] .rail { border-right-color: transparent; box-shadow: 6px 0 14px var(--n-lo); }
+:root[data-style=neumorphic] .navitem { border-radius: 14px; }
+:root[data-style=neumorphic] .navitem.on, :root[data-style=neumorphic] aside .row.on { background: var(--surface); box-shadow: var(--sink); border-color: transparent; border-radius: 14px; }
+:root[data-style=neumorphic] .list li { border-radius: 16px; }
+:root[data-style=neumorphic] .list li:hover { background: transparent; box-shadow: var(--raise-sm); }
+:root[data-style=neumorphic] .list li.sel { background: transparent; box-shadow: var(--sink); border-color: transparent; }
+:root[data-style=neumorphic] .strip i, :root[data-style=neumorphic] .bar { border-radius: 99px; box-shadow: var(--sink); }
+:root[data-style=neumorphic] .bar i { border-radius: 99px; }
+:root[data-style=neumorphic] .banner, :root[data-style=neumorphic] .catalog footer { border-color: transparent; box-shadow: 0 4px 10px var(--n-lo); }
+
+/* ================================ BRUTALIST ================================
+   Neo-brutalism: thick black outlines, hard offset shadows, flat saturated color. */
+:root[data-style=brutalist] {
+    --bg: #fff6e0; --rail: #ffe9a8; --surface: #ffffff; --surface2: #fff0c2; --line: #111111; --cell: #e5dcc3;
+    --text: #111111; --muted: #4a4636; --on-accent: #111111; --ok: #0a7a3d; --warn: #8a5200; --bad: #c4162a;
+    --accent-ink: #111111;
+    --ink: #111111; --hard: 4px 4px 0 var(--ink); --hard-sm: 2px 2px 0 var(--ink);
+    color-scheme: light;
+}
+:root[data-style=brutalist][data-theme=dark] {
+    --bg: #1a1a1f; --rail: #26262d; --surface: #2c2c35; --surface2: #3a3a46; --line: #f4f1e8; --cell: #55556a;
+    --text: #f4f1e8; --muted: #b9b5a6; --on-accent: #111111; --ok: #5fe39b; --warn: #ffc857; --bad: #ff6b7a;
+    --accent-ink: var(--accent);
+    --ink: #f4f1e8; color-scheme: dark;
+}
+:root[data-style=brutalist] { --font-display: "Bricolage Grotesque", "Arial Black", "Segoe UI", system-ui, sans-serif; }
+:root[data-style=brutalist] h1, :root[data-style=brutalist] h2, :root[data-style=brutalist] h3 { font-weight: 800; letter-spacing: -.02em; }
+:root[data-style=brutalist] :is(.card, .appcard, .profilecard, .tile, .quicktile, .statuscard, .nextcard, .scorecard, .finding, .apps li, .tablewrap) {
+    border: 3px solid var(--ink); border-radius: 6px; box-shadow: var(--hard);
+}
+:root[data-style=brutalist] .finding { border-left-width: 3px; }
+:root[data-style=brutalist] :is(.appcard, .profilecard, .tile, .quicktile) { transition: transform .08s, box-shadow .08s; }
+:root[data-style=brutalist] :is(.appcard, .profilecard, .tile, .quicktile):hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); border-color: var(--ink); }
+:root[data-style=brutalist] :is(.modal, .drawer, .menu-pop, .toast) { border: 3px solid var(--ink); border-radius: 6px; box-shadow: 8px 8px 0 var(--ink); }
+:root[data-style=brutalist] .drawer { border-radius: 0; box-shadow: -8px 0 0 var(--ink); }
+:root[data-style=brutalist] :is(button, .chip, .pill) { border: 2px solid var(--ink); border-radius: 6px; box-shadow: var(--hard-sm); font-weight: 600; }
+:root[data-style=brutalist] :is(button.icon, button.link, button.swatch) { box-shadow: none; }
+:root[data-style=brutalist] button.icon { border-color: transparent; }
+:root[data-style=brutalist] button:hover:not(:disabled) { border-color: var(--ink); background: var(--accent); color: var(--on-accent); }
+:root[data-style=brutalist] button:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: none; }
+:root[data-style=brutalist] button.primary { background: var(--accent); border-color: var(--ink); }
+:root[data-style=brutalist] button.primary:hover:not(:disabled) { filter: none; background: var(--ink); color: var(--bg); }
+:root[data-style=brutalist] .swatch { box-shadow: none; border: 3px solid var(--ink); }
+:root[data-style=brutalist] .swatch.on { outline: 3px solid var(--accent); outline-offset: 2px; }
+:root[data-style=brutalist] :is(input:not([type]), input[type=text], select) { border: 2px solid var(--ink); border-radius: 6px; background: var(--surface); }
+:root[data-style=brutalist] .searchbox { border: 2px solid var(--ink); border-radius: 6px; box-shadow: var(--hard-sm); }
+:root[data-style=brutalist] .rail { border-right: 3px solid var(--ink); }
+:root[data-style=brutalist] .navitem { border-radius: 6px; }
+:root[data-style=brutalist] .navitem.on, :root[data-style=brutalist] aside .row.on { background: var(--accent); color: var(--on-accent); border: 2px solid var(--ink); box-shadow: var(--hard-sm); }
+:root[data-style=brutalist] .navitem.on em { color: var(--on-accent); }
+:root[data-style=brutalist] .banner, :root[data-style=brutalist] .catalog footer { border-width: 0 0 3px; border-color: var(--ink); }
+:root[data-style=brutalist] .catalog footer { border-width: 3px 0 0; }
+:root[data-style=brutalist] .list li { border-radius: 6px; }
+:root[data-style=brutalist] .list li:hover { background: var(--surface2); }
+:root[data-style=brutalist] .list li.sel { background: var(--accent); border: 2px solid var(--ink); color: var(--on-accent); }
+:root[data-style=brutalist] .strip i, :root[data-style=brutalist] .bar, :root[data-style=brutalist] .bar i { border-radius: 0; }
+:root[data-style=brutalist] .strip i.on, :root[data-style=brutalist] .ruler i.on, :root[data-style=brutalist] .dot.ok { box-shadow: none; }
+:root[data-style=brutalist] .bar { border: 2px solid var(--ink); height: 10px; }
+:root[data-style=brutalist] th { background: var(--accent); color: var(--on-accent); }
+:root[data-style=brutalist] .overlay, :root[data-style=brutalist] .drawer-overlay { background: rgba(17, 17, 17, .5); }
+:root[data-style=brutalist] a { text-decoration: underline; }
+
+/* ---- shared: honour reduced motion and reduced transparency ---- */
+@media (prefers-reduced-transparency: reduce) {
+    :root[data-style=liquid] * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+    :root[data-style=liquid] { --surface: #1d232c; --surface2: #29313c; --rail: #151a21; }
+    :root[data-style=liquid][data-theme=light] { --surface: #ffffff; --surface2: #f2f4f7; --rail: #e1e5eb; }
+}
+@media (prefers-reduced-motion: reduce) {
+    :root[data-style=brutalist] * { transition: none !important; transform: none !important; }
+}
+
+/* ---- the style picker in the settings dialog ---- */
+.stylegrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stylegrid button {
+    display: flex; flex-direction: column; align-items: stretch; gap: 6px; padding: 8px; text-align: left; font-size: 12px;
+    background: var(--surface); border-radius: 10px; box-shadow: none;
+}
+.stylegrid button.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.stylegrid .sample { height: 34px; border-radius: 6px; display: block; border: 1px solid #8884; }
+.sample.s-classic { background: #222a34; border-color: #2c3541; }
+.sample.s-minimal { background: #14171b; border: 1px solid #555; border-radius: 3px; }
+.sample.s-material { background: #2b2f36; border-radius: 14px; box-shadow: 0 2px 5px rgba(0, 0, 0, .5); border: 0; }
+.sample.s-liquid { background: linear-gradient(135deg, #ff9f2e88, #4f9dff88, #be5aff88); border: 1px solid #fff6; border-radius: 12px; }
+.sample.s-neumorphic { background: #23272e; border: 0; border-radius: 12px; box-shadow: 3px 3px 6px #0009, -3px -3px 6px #fff2; }
+.sample.s-brutalist { background: #ffd23f; border: 2px solid #111; border-radius: 4px; box-shadow: 3px 3px 0 #111; }
+
+.field.stacked { flex-direction: column; align-items: stretch; }
+.modal.small { overflow: auto; }

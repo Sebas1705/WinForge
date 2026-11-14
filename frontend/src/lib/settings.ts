@@ -3,11 +3,14 @@
 
 export type Theme = "system" | "dark" | "light";
 export type Density = "comfortable" | "compact";
+export type DesignStyle = "classic" | "minimal" | "material" | "liquid" | "neumorphic" | "brutalist";
+export const STYLES: DesignStyle[] = ["classic", "minimal", "material", "liquid", "neumorphic", "brutalist"];
 export type LangSetting = "auto" | "en" | "es";
 export type DetailLevel = "simple" | "advanced";
 
 export interface Settings {
     theme: Theme;
+    style: DesignStyle;
     accent: string;
     density: Density;
     checkUpdates: boolean;
@@ -23,7 +26,7 @@ export const ACCENTS: { name: string; value: string }[] = [
     {name: "Pink", value: "#ff6b9d"},
 ];
 
-export const DEFAULTS: Settings = {theme: "system", accent: ACCENTS[0].value, density: "comfortable", checkUpdates: true, language: "auto", detail: "simple"};
+export const DEFAULTS: Settings = {theme: "system", style: "classic", accent: ACCENTS[0].value, density: "comfortable", checkUpdates: true, language: "auto", detail: "simple"};
 
 const KEY = "winforge.settings";
 
@@ -32,6 +35,7 @@ export function normalize(raw: unknown): Settings {
     const r = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
     return {
         theme: r.theme === "dark" || r.theme === "light" || r.theme === "system" ? r.theme : DEFAULTS.theme,
+        style: STYLES.includes(r.style as DesignStyle) ? (r.style as DesignStyle) : DEFAULTS.style,
         accent: typeof r.accent === "string" && /^#[0-9a-f]{6}$/i.test(r.accent) ? r.accent : DEFAULTS.accent,
         density: r.density === "compact" || r.density === "comfortable" ? r.density : DEFAULTS.density,
         checkUpdates: typeof r.checkUpdates === "boolean" ? r.checkUpdates : DEFAULTS.checkUpdates,
@@ -61,6 +65,7 @@ export function resolveTheme(t: Theme, prefersDark: boolean): "dark" | "light" {
 /** Writes the settings to the document root, where the CSS reads them. */
 export function apply(s: Settings, root: HTMLElement, prefersDark: boolean): void {
     root.dataset.theme = resolveTheme(s.theme, prefersDark);
+    root.dataset.style = s.style;
     root.dataset.density = s.density;
     root.style.setProperty("--accent", s.accent);
 }
