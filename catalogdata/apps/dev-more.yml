@@ -1609,15 +1609,6 @@
   winget: SurrealDB.SurrealDB
   publisher: "SurrealDB"
 
-- id: minio-client
-  name: "MinIO Client"
-  category: dev/database
-  description: "Simple | Fast tool to manage MinIO clusters ☁️"
-  homepage: https://min.io/
-  license: "AGPL-3.0"
-  winget: MinIO.Client
-  publisher: "MinIO"
-
 - id: insomnia
   name: "Insomnia"
   category: dev/api
