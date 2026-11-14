@@ -25,4 +25,18 @@ describe("language", () => {
         expect(await screen.findByText("Navegador rápido y privado")).toBeInTheDocument();
         expect(screen.queryByText("Fast, private web browser")).not.toBeInTheDocument();
     });
+
+    it("names the accent colours and design styles in the chosen language", async () => {
+        const user = userEvent.setup();
+        render(<App/>);
+        await screen.findByText(/catalog apps found/);
+        await user.click(screen.getByRole("button", {name: "Appearance and language"}));
+        const dialog = within(screen.getByRole("dialog"));
+        expect(dialog.getByRole("button", {name: "Ember"})).toBeInTheDocument();
+        expect(dialog.getByRole("button", {name: /Liquid glass/})).toBeInTheDocument();
+        await user.click(dialog.getByRole("button", {name: "Español"}));
+        expect(dialog.getByRole("button", {name: "Ámbar"})).toBeInTheDocument();
+        expect(dialog.queryByRole("button", {name: "Ember"})).not.toBeInTheDocument();
+        expect(dialog.getByRole("button", {name: /Cristal líquido/})).toBeInTheDocument();
+    });
 });
