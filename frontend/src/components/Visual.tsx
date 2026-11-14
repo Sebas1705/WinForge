@@ -6,14 +6,15 @@ import {IconsContext, iconUrl} from "../lib/icons";
 import type {App} from "../lib/model";
 
 /** A circular progress gauge with something readable in the middle. */
-export function Ring({value, size = 64, stroke = 7, tone = "accent", children}: {
-    value: number; size?: number; stroke?: number; tone?: "accent" | "ok" | "warn" | "bad" | "muted"; children?: ReactNode;
+/** `label` says what the gauge measures; null hides it from assistive technology when the text beside it already says so. */
+export function Ring({value, size = 64, stroke = 7, tone = "accent", children, label}: {
+    value: number; size?: number; stroke?: number; tone?: "accent" | "ok" | "warn" | "bad" | "muted"; children?: ReactNode; label?: string | null;
 }) {
     const v = Math.max(0, Math.min(1, value));
     const r = (size - stroke) / 2;
     const c = 2 * Math.PI * r;
     return (
-        <div className={`ring ${tone}`} style={{width: size, height: size}} role="img" aria-label={`${Math.round(v * 100)}%`}>
+        <div className={`ring ${tone}`} style={{width: size, height: size}} {...(label === null ? {"aria-hidden": true} : {role: "img", "aria-label": label ?? `${Math.round(v * 100)}%`})}>
             <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} aria-hidden>
                 <circle className="track" cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke}/>
                 <circle className="fill" cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} strokeLinecap="round"

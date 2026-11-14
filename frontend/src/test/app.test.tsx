@@ -60,7 +60,7 @@ describe("first run", () => {
 describe("installing", () => {
     async function openFirefoxPlan(user: ReturnType<typeof userEvent.setup>) {
         await go(user, /Catalog/);
-        await user.click(within(cardOf("Firefox")).getByRole("button", {name: "Install"}));
+        await user.click(within(cardOf("Firefox")).getByRole("button", {name: "Install Firefox"}));
         return screen.findByRole("dialog", {name: /Install/});
     }
 
@@ -212,7 +212,7 @@ describe("installing", () => {
         api.Plan.mockResolvedValueOnce({steps: [], alreadyInstalled: ["firefox"], needsAdmin: false});
         const user = await openApp();
         await go(user, /Catalog/);
-        await user.click(within(cardOf("Firefox")).getByRole("button", {name: "Install"}));
+        await user.click(within(cardOf("Firefox")).getByRole("button", {name: "Install Firefox"}));
         expect(await screen.findByRole("status")).toHaveTextContent("Nothing to install");
         expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });

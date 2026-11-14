@@ -68,13 +68,13 @@ export function Health(p: {
             {r && (
                 <>
                     <section className="scorecard">
-                        <Ring size={132} stroke={13} value={r.total ? r.ok / r.total : 0} tone={overall}>
+                        <Ring size={132} stroke={13} value={r.total ? r.ok / r.total : 0} tone={overall} label={t("health.ringLabel", {ok: r.ok, total: r.total})}>
                             <span className="ringnum big">{r.ok}<small>/{r.total}</small></span>
                         </Ring>
                         <div className="grow">
                             <h2>{headline}</h2>
                             <p className="muted">{r.ok} {t("health.summaryOf", {total: r.total})}</p>
-                            <Strip size="lg" label={`${r.ok}/${r.total}`}
+                            <Strip size="lg" label={null}
                                    cells={r.findings.map((f) => ({on: f.severity === "ok", state: SEV_CELL[f.severity], name: findingText(f, "title")}))}/>
                             {unknown > 0 && !p.admin && (
                                 <p className="muted small hint"><Icon name="lock" size={14}/> {t("health.unknownNote", {n: unknown})}
@@ -159,7 +159,7 @@ export function Health(p: {
                             <>
                                 <div className="toolbar tight">
                                     <div className="searchbox"><Icon name="search" size={16}/>
-                                        <input className="search" placeholder={t("health.searchDrivers")} value={query} onChange={(e) => setQuery(e.target.value)}/></div>
+                                        <input className="search" aria-label={t("health.searchDrivers")} placeholder={t("health.searchDrivers")} value={query} onChange={(e) => setQuery(e.target.value)}/></div>
                                     <label className="check"><input type="checkbox" checked={vendorOnly} onChange={(e) => setVendorOnly(e.target.checked)}/> {t("health.thirdPartyOnly")}</label>
                                     <label className="check"><input type="checkbox" checked={old} onChange={(e) => setOld(e.target.checked)}/> {t("health.oldOnly")}</label>
                                 </div>

@@ -36,7 +36,7 @@ export const AppCard = memo(function AppCard(p: {
                 </span>
                 {a.installed
                     ? <span className="chip done"><Icon name="check" size={13}/>{t("catalog.installedBadge")}</span>
-                    : <button className="primary sm" onClick={() => p.onInstall(a)}>{t("common.install")}</button>}
+                    : <button className="primary sm" aria-label={t("common.installNamed", {name: a.name})} onClick={() => p.onInstall(a)}>{t("common.install")}</button>}
             </footer>
         </article>
     );
