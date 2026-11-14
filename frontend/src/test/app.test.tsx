@@ -86,6 +86,18 @@ describe("installing", () => {
         expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
 
+    it("gives each step a readable status, not a raw code", async () => {
+        const user = await openApp();
+        const dialog = await openFirefoxPlan(user);
+        expect(within(dialog).getByRole("img", {name: "Waiting"})).toBeInTheDocument();
+        await user.click(within(dialog).getByRole("button", {name: "Run 1 steps"}));
+        await emit.install({step: step("firefox", "Firefox"), status: "start"});
+        expect(await within(dialog).findByRole("img", {name: "In progress"})).toBeInTheDocument();
+        await emit.install({step: step("firefox", "Firefox"), status: "ok"});
+        expect(await within(dialog).findByRole("img", {name: "Done"})).toBeInTheDocument();
+        expect(within(dialog).queryByLabelText("ok")).not.toBeInTheDocument();
+    });
+
     it("starts the run once even if the confirm button is double-clicked", async () => {
         const user = await openApp();
         const dialog = await openFirefoxPlan(user);
