@@ -1336,6 +1336,9 @@ export namespace main {
 	    publisher: string;
 	    current: string;
 	    available: string;
+	    ignore?: string;
+	    ignoreVersion?: string;
+	    ignoreUntil?: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new UpgradeInfo(source);
@@ -1348,6 +1351,9 @@ export namespace main {
 	        this.publisher = source["publisher"];
 	        this.current = source["current"];
 	        this.available = source["available"];
+	        this.ignore = source["ignore"];
+	        this.ignoreVersion = source["ignoreVersion"];
+	        this.ignoreUntil = source["ignoreUntil"];
 	    }
 	}
 

@@ -44,6 +44,8 @@ export function HealthScan():Promise<main.HealthResult>;
 
 export function HealthUpdates():Promise<main.HealthResult>;
 
+export function IgnoreUpdate(arg1:string,arg2:string,arg3:number):Promise<Array<main.UpgradeInfo>>;
+
 export function ImportCode(arg1:string):Promise<main.ImportResult>;
 
 export function ImportProfile():Promise<main.ImportResult>;
@@ -101,6 +103,8 @@ export function SetGamesRoot():Promise<string>;
 export function ShareCode(arg1:catalog.Profile):Promise<string>;
 
 export function StartupError():Promise<string>;
+
+export function StopIgnoringUpdate(arg1:string):Promise<Array<main.UpgradeInfo>>;
 
 export function StorageBigFiles(arg1:string,arg2:number):Promise<Array<storage.BigFile>>;
 

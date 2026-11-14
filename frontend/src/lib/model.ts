@@ -68,6 +68,10 @@ export interface UpgradeInfo {
     publisher: string;
     current: string;
     available: string;
+    /** Set while the person chose not to install this update: how, and until when or which version. */
+    ignore?: "always" | "version" | "until";
+    ignoreVersion?: string;
+    ignoreUntil?: string;
 }
 
 export interface Plan {

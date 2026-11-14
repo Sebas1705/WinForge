@@ -78,6 +78,10 @@ export function HealthUpdates() {
   return window['go']['main']['App']['HealthUpdates']();
 }
 
+export function IgnoreUpdate(arg1, arg2, arg3) {
+  return window['go']['main']['App']['IgnoreUpdate'](arg1, arg2, arg3);
+}
+
 export function ImportCode(arg1) {
   return window['go']['main']['App']['ImportCode'](arg1);
 }
@@ -192,6 +196,10 @@ export function ShareCode(arg1) {
 
 export function StartupError() {
   return window['go']['main']['App']['StartupError']();
+}
+
+export function StopIgnoringUpdate(arg1) {
+  return window['go']['main']['App']['StopIgnoringUpdate'](arg1);
 }
 
 export function StorageBigFiles(arg1, arg2) {

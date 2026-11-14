@@ -62,6 +62,8 @@ export const api = Go as unknown as {
     Upgrades(): Promise<UpgradeInfo[]>;
     PlanUpgrades(ids: string[]): Promise<Plan>;
     ApplyUpgrades(ids: string[]): Promise<void>;
+    IgnoreUpdate(id: string, mode: string, days: number): Promise<UpgradeInfo[]>;
+    StopIgnoringUpdate(id: string): Promise<UpgradeInfo[]>;
     HealthScan(): Promise<HealthResult>;
     HealthUpdates(): Promise<HealthResult>;
     SaveTextFile(name: string, content: string): Promise<string>;

@@ -53,6 +53,11 @@ func (a *App) Upgrades() ([]UpgradeInfo, error) {
 	a.mu.Lock()
 	a.upgrades = ups
 	a.mu.Unlock()
+	return a.upgradeInfos(ups, rules), nil
+}
+
+// upgradeInfos is the list the Updates page shows, with the person's choices applied.
+func (a *App) upgradeInfos(ups []system.Upgrade, rules map[string]updates.Rule) []UpgradeInfo {
 	now := a.clock()
 	out := []UpgradeInfo{}
 	for _, s := range install.UpgradePlan(a.cat, ups, nil).Steps {
@@ -72,7 +77,19 @@ func (a *App) Upgrades() ([]UpgradeInfo, error) {
 		}
 		out = append(out, info)
 	}
-	return out, nil
+	return out
+}
+
+// currentUpgrades is the list from the last check, with today's choices, without asking winget.
+func (a *App) currentUpgrades() ([]UpgradeInfo, error) {
+	rules, err := a.ignoreRules()
+	if err != nil {
+		return nil, err
+	}
+	a.mu.Lock()
+	ups := a.upgrades
+	a.mu.Unlock()
+	return a.upgradeInfos(ups, rules), nil
 }
 
 // PlanUpgrades previews updating the given catalog apps (all when empty). Updates the person
@@ -102,15 +119,15 @@ func (a *App) PlanUpgrades(ids []string) (install.Plan, error) {
 
 var errNoIgnoreStore = errors.New("WinForge could not open its settings folder, so ignored updates cannot be saved")
 
-// IgnoreUpdate hides an app's update. mode is "always", "version" (the version the last check
-// found) or "until" (for days days, 1 to 365).
-func (a *App) IgnoreUpdate(id, mode string, days int) error {
+// IgnoreUpdate hides an app's update and returns the list as it now stands. mode is "always",
+// "version" (the version the last check found) or "until" (for days days, 1 to 365).
+func (a *App) IgnoreUpdate(id, mode string, days int) ([]UpgradeInfo, error) {
 	if a.ignored == nil {
-		return errNoIgnoreStore
+		return nil, errNoIgnoreStore
 	}
 	app, ok := a.cat.Apps[id]
 	if !ok {
-		return fmt.Errorf("%q is not a catalog app", id)
+		return nil, fmt.Errorf("%q is not a catalog app", id)
 	}
 	var rule updates.Rule
 	switch updates.Mode(mode) {
@@ -126,24 +143,30 @@ func (a *App) IgnoreUpdate(id, mode string, days int) error {
 		}
 		a.mu.Unlock()
 		if found == "" {
-			return fmt.Errorf("no update of %s was found; check for updates first", app.Name)
+			return nil, fmt.Errorf("no update of %s was found; check for updates first", app.Name)
 		}
 		rule = updates.Rule{Mode: updates.Version, Version: found}
 	case updates.Until:
 		if days < 1 || days > updates.MaxPauseDays {
-			return fmt.Errorf("a pause lasts between 1 and %d days", updates.MaxPauseDays)
+			return nil, fmt.Errorf("a pause lasts between 1 and %d days", updates.MaxPauseDays)
 		}
 		rule = updates.Rule{Mode: updates.Until, Until: a.clock().AddDate(0, 0, days)}
 	default:
-		return fmt.Errorf("unknown way to ignore an update: %q", mode)
+		return nil, fmt.Errorf("unknown way to ignore an update: %q", mode)
 	}
-	return a.ignored.Set(id, rule)
+	if err := a.ignored.Set(id, rule); err != nil {
+		return nil, err
+	}
+	return a.currentUpgrades()
 }
 
-// StopIgnoringUpdate makes an app's update count again.
-func (a *App) StopIgnoringUpdate(id string) error {
+// StopIgnoringUpdate makes an app's update count again and returns the list as it now stands.
+func (a *App) StopIgnoringUpdate(id string) ([]UpgradeInfo, error) {
 	if a.ignored == nil {
-		return errNoIgnoreStore
+		return nil, errNoIgnoreStore
 	}
-	return a.ignored.Remove(id)
+	if err := a.ignored.Remove(id); err != nil {
+		return nil, err
+	}
+	return a.currentUpgrades()
 }

@@ -14,6 +14,7 @@ import {
     type App as CatalogApp, type Profile, type ProfileInfo, type State, type UpgradeInfo,
 } from "./lib/model";
 import * as prefs from "./lib/settings";
+import {pendingUpgrades} from "./lib/updates";
 import logo from "./logo.svg";
 import {Catalog} from "./views/Catalog";
 import {Health} from "./views/Health";
@@ -65,6 +66,8 @@ export default function App() {
     const [updating, setUpdating] = useState<{ done: number; total: number } | null>(null);
     const [upgrades, setUpgrades] = useState<UpgradeInfo[] | null>(null);
     const [upgradesBusy, setUpgradesBusy] = useState(false);
+    // What counts as waiting: updates the person chose to hide are listed apart and not counted.
+    const pending = pendingUpgrades(upgrades);
     const [health, setHealth] = useState<HealthResult | null>(null);
     const [healthBusy, setHealthBusy] = useState(false);
     const [healthUpdBusy, setHealthUpdBusy] = useState(false);
@@ -120,6 +123,20 @@ export default function App() {
         setUpgradesBusy(true);
         try { setUpgrades(await api.Upgrades()); } catch (e) { say(errText(e)); } finally { setUpgradesBusy(false); }
     }, [say]);
+
+    // Hiding an update, or bringing it back, never asks winget again: the backend answers from the last check.
+    const ignoreUpdate = async (id: string, c: { mode: "always" | "version" | "until"; days?: number }) => {
+        try {
+            setUpgrades(await api.IgnoreUpdate(id, c.mode, c.days ?? 0));
+            say(t("updates.hiddenToast", {name: byId.get(id)?.name ?? id}));
+        } catch (e) { say(errText(e)); }
+    };
+    const stopIgnoring = async (id: string) => {
+        try {
+            setUpgrades(await api.StopIgnoringUpdate(id));
+            say(t("updates.shownToast", {name: byId.get(id)?.name ?? id}));
+        } catch (e) { say(errText(e)); }
+    };
 
     const scanHealth = useCallback(async () => {
         setHealthBusy(true);
@@ -392,7 +409,7 @@ export default function App() {
         ["home", t("nav.home"), null],
         ["profiles", t("nav.profiles"), state?.profiles.length ?? null],
         ["catalog", t("nav.catalog"), state?.apps.length ?? null],
-        ["updates", t("nav.updates"), upgrades && upgrades.length > 0 ? upgrades.length : null],
+        ["updates", t("nav.updates"), pending && pending.length > 0 ? pending.length : null],
         ["health", t("nav.health"), health && health.ok < health.total ? health.total - health.ok : null],
         ["storage", t("nav.storage"), null],
         ["games", t("nav.games"), null],
@@ -472,7 +489,7 @@ export default function App() {
 
                 <main>
                     {!state ? <div className="pad"><h2>{t("rail.scanning")}</h2><ScanProgress kind="pc" current={scanStep.pc ?? null}/></div> : tab === "home" ? (
-                        <Home apps={state.apps} profiles={state.profiles} featured={state.featured ?? []} upgrades={upgrades} upgradesBusy={upgradesBusy}
+                        <Home apps={state.apps} profiles={state.profiles} featured={state.featured ?? []} upgrades={pending} upgradesBusy={upgradesBusy}
                               health={health} onOpenHealth={() => go("health")} onOpenPopular={() => { setCategory(POPULAR); setTab("catalog"); }}
                               onInstallApp={(a) => void startProfile(selectionProfile([a.id], a.name))} onDetail={setDetail}
                               onInstall={(p) => void startProfile(p)}
@@ -503,7 +520,8 @@ export default function App() {
                         <Backup say={say} advanced={advanced} appCount={state.apps.filter((a) => a.installed).length}
                                 onInstallProfile={(p, done) => void startProfile(p, done)}/>
                     ) : (
-                        <Updates upgrades={upgrades} busy={upgradesBusy} onCheck={() => void checkUpgrades()} onUpdate={(ids) => void startUpgrades(ids)} byId={byId} onDetail={setDetail}/>
+                        <Updates upgrades={upgrades} busy={upgradesBusy} onCheck={() => void checkUpgrades()} onUpdate={(ids) => void startUpgrades(ids)}
+                                 onIgnore={(id, c) => void ignoreUpdate(id, c)} onStopIgnoring={(id) => void stopIgnoring(id)} byId={byId} onDetail={setDetail}/>
                     )}
                 </main>
             </div>

@@ -27,6 +27,9 @@ func updatesApp(t *testing.T) (*App, *time.Time) {
 	return a, &clock
 }
 
+func ignoreErr(_ []UpgradeInfo, err error) error { return err }
+func stopErr(_ []UpgradeInfo, err error) error   { return err }
+
 func stepIDs(t *testing.T, a *App, ids ...string) []string {
 	t.Helper()
 	plan, err := a.PlanUpgrades(ids)
@@ -61,7 +64,7 @@ func TestAnIgnoredAppIsLeftOutOfUpdateAll(t *testing.T) {
 	if got := stepIDs(t, a); !sameSet(got, []string{"git", "7zip"}) {
 		t.Fatalf("nothing ignored yet: %v", got)
 	}
-	if err := a.IgnoreUpdate("git", "always", 0); err != nil {
+	if _, err := a.IgnoreUpdate("git", "always", 0); err != nil {
 		t.Fatal(err)
 	}
 	if got := stepIDs(t, a); !sameSet(got, []string{"7zip"}) {
@@ -71,7 +74,7 @@ func TestAnIgnoredAppIsLeftOutOfUpdateAll(t *testing.T) {
 	if got := stepIDs(t, a, "git"); len(got) != 0 {
 		t.Fatalf("an explicit request must not override the choice: %v", got)
 	}
-	if err := a.StopIgnoringUpdate("git"); err != nil {
+	if _, err := a.StopIgnoringUpdate("git"); err != nil {
 		t.Fatal(err)
 	}
 	if got := stepIDs(t, a); !sameSet(got, []string{"git", "7zip"}) {
@@ -85,7 +88,7 @@ func TestNeedsAdminFollowsTheStepsThatRemain(t *testing.T) {
 	if !plan.NeedsAdmin {
 		t.Fatal("7-Zip needs admin")
 	}
-	if err := a.IgnoreUpdate("7zip", "always", 0); err != nil {
+	if _, err := a.IgnoreUpdate("7zip", "always", 0); err != nil {
 		t.Fatal(err)
 	}
 	plan, _ = a.PlanUpgrades(nil)
@@ -96,7 +99,7 @@ func TestNeedsAdminFollowsTheStepsThatRemain(t *testing.T) {
 
 func TestSkippingAVersionHidesOnlyThatVersion(t *testing.T) {
 	a, _ := updatesApp(t)
-	if err := a.IgnoreUpdate("git", "version", 0); err != nil {
+	if _, err := a.IgnoreUpdate("git", "version", 0); err != nil {
 		t.Fatal(err)
 	}
 	if got := stepIDs(t, a); !sameSet(got, []string{"7zip"}) {
@@ -110,12 +113,12 @@ func TestSkippingAVersionHidesOnlyThatVersion(t *testing.T) {
 
 func TestSkippingAVersionNeedsAnUpdateToSkip(t *testing.T) {
 	a, _ := updatesApp(t)
-	wantErr(t, a.IgnoreUpdate("vlc", "version", 0), "check for updates first")
+	wantErr(t, ignoreErr(a.IgnoreUpdate("vlc", "version", 0)), "check for updates first")
 }
 
 func TestAPauseEndsOnItsOwn(t *testing.T) {
 	a, clock := updatesApp(t)
-	if err := a.IgnoreUpdate("git", "until", 7); err != nil {
+	if _, err := a.IgnoreUpdate("git", "until", 7); err != nil {
 		t.Fatal(err)
 	}
 	*clock = day0.AddDate(0, 0, 6)
@@ -130,11 +133,11 @@ func TestAPauseEndsOnItsOwn(t *testing.T) {
 
 func TestIgnoreUpdateRefusesBadRequests(t *testing.T) {
 	a, _ := updatesApp(t)
-	wantErr(t, a.IgnoreUpdate("not-an-app", "always", 0), "not a catalog app")
-	wantErr(t, a.IgnoreUpdate("git", "forever", 0), "unknown way")
-	wantErr(t, a.IgnoreUpdate("git", "until", 0), "between 1 and 365")
-	wantErr(t, a.IgnoreUpdate("git", "until", 366), "between 1 and 365")
-	wantErr(t, a.IgnoreUpdate("git", "until", -3), "between 1 and 365")
+	wantErr(t, ignoreErr(a.IgnoreUpdate("not-an-app", "always", 0)), "not a catalog app")
+	wantErr(t, ignoreErr(a.IgnoreUpdate("git", "forever", 0)), "unknown way")
+	wantErr(t, ignoreErr(a.IgnoreUpdate("git", "until", 0)), "between 1 and 365")
+	wantErr(t, ignoreErr(a.IgnoreUpdate("git", "until", 366)), "between 1 and 365")
+	wantErr(t, ignoreErr(a.IgnoreUpdate("git", "until", -3)), "between 1 and 365")
 	if _, err := os.Stat(a.ignored.Path); !os.IsNotExist(err) {
 		t.Fatal("a refused request must not write anything")
 	}
@@ -142,8 +145,8 @@ func TestIgnoreUpdateRefusesBadRequests(t *testing.T) {
 
 func TestWithoutAStoreIgnoringFailsClearly(t *testing.T) {
 	a := testApp(t) // no store: the settings folder was unavailable
-	wantErr(t, a.IgnoreUpdate("git", "always", 0), "settings folder")
-	wantErr(t, a.StopIgnoringUpdate("git"), "settings folder")
+	wantErr(t, ignoreErr(a.IgnoreUpdate("git", "always", 0)), "settings folder")
+	wantErr(t, stopErr(a.StopIgnoringUpdate("git")), "settings folder")
 	a.upgrades = []system.Upgrade{{ID: "Git.Git", Current: "1", Available: "2"}}
 	if plan, err := a.PlanUpgrades(nil); err != nil || len(plan.Steps) != 1 {
 		t.Fatalf("with no store there is nothing to ignore: %+v %v", plan, err)
@@ -167,9 +170,59 @@ func TestADamagedListStopsUpdatesInsteadOfUpdatingEverything(t *testing.T) {
 func TestEverythingIgnoredMeansNothingToUpdate(t *testing.T) {
 	a, _ := updatesApp(t)
 	for _, id := range []string{"git", "7zip"} {
-		if err := a.IgnoreUpdate(id, "always", 0); err != nil {
+		if _, err := a.IgnoreUpdate(id, "always", 0); err != nil {
 			t.Fatal(err)
 		}
 	}
 	wantErr(t, a.ApplyUpgrades(nil), "nothing to update")
+}
+
+func TestTheListReturnedByIgnoringReflectsTheChoice(t *testing.T) {
+	a, clock := updatesApp(t)
+	list, err := a.IgnoreUpdate("git", "until", 10)
+	if err != nil {
+		t.Fatal(err)
+	}
+	byID := map[string]UpgradeInfo{}
+	for _, u := range list {
+		byID[u.ID] = u
+	}
+	if len(list) != 2 || byID["git"].Ignore != "until" || byID["git"].IgnoreUntil != clock.AddDate(0, 0, 10).Format(time.RFC3339) || byID["7zip"].Ignore != "" {
+		t.Fatalf("%+v", list)
+	}
+	list, err = a.IgnoreUpdate("7zip", "version", 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, u := range list {
+		if u.ID == "7zip" && (u.Ignore != "version" || u.IgnoreVersion != "24") {
+			t.Fatalf("%+v", u)
+		}
+	}
+	list, err = a.StopIgnoringUpdate("git")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, u := range list {
+		if u.ID == "git" && u.Ignore != "" {
+			t.Fatalf("stopped ignoring, still marked: %+v", u)
+		}
+	}
+	if _, err := a.IgnoreUpdate("git", "until", 10); err != nil {
+		t.Fatal(err)
+	}
+	*clock = clock.AddDate(1, 0, 0)
+	list, _ = a.currentUpgrades()
+	for _, u := range list {
+		switch u.ID {
+		case "git":
+			if u.Ignore != "" {
+				t.Fatalf("a pause that ended must not show as active: %+v", u)
+			}
+		case "7zip":
+			if u.Ignore != "version" {
+				t.Fatalf("a skipped version stays skipped: %+v", u)
+			}
+		}
+	}
 }
