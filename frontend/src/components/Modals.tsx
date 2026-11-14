@@ -122,7 +122,7 @@ export function RunModal(p: {
                                 <span className="grow">{label(s)}</span>
                                 {s.version && s.kind === "upgrade" && p.advanced && <span className="mono muted">→ {s.version}</span>}
                                 {s.admin && <span className="tag"><Icon name="lock" size={11}/></span>}
-                                <span className={`stat ${st}`} aria-label={st}><Icon name={ICON[st]} size={15}/></span>
+                                <span className={`stat ${st}`} role="img" aria-label={t(`run.status.${st}` as Key)}><Icon name={ICON[st]} size={15}/></span>
                                 {st === "running" && (run.percent[stepKey(s)] ?? 0) > 0 && (
                                     <progress className="dl" value={run.percent[stepKey(s)]} max={100} aria-label={`${run.percent[stepKey(s)]}%`}/>
                                 )}
