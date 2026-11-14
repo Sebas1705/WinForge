@@ -22,7 +22,7 @@
 :root[data-style=minimal] :is(.modal, .drawer, .menu-pop, .toast) { border-radius: 6px; box-shadow: 0 1px 2px rgba(0, 0, 0, .25); background: var(--bg); }
 :root[data-style=minimal] :is(button, input:not([type]), input[type=text], select, .searchbox, .chip, .pill) { border-radius: 4px; box-shadow: none; }
 :root[data-style=minimal] button { background: transparent; }
-:root[data-style=minimal] button.primary { background: var(--accent); }
+:root[data-style=minimal] :is(button.primary, .seg button.on, .chips button.on) { background: var(--accent); color: var(--on-accent); }
 :root[data-style=minimal] .navitem.on, :root[data-style=minimal] aside .row.on { background: transparent; box-shadow: none; border-color: transparent; color: var(--accent-ink); font-weight: 600; }
 :root[data-style=minimal] .rail { border-right-color: var(--line); }
 :root[data-style=minimal] :is(.appcard, .profilecard, .tile, .quicktile):hover { border-color: var(--text); }
@@ -34,12 +34,13 @@
    Material 3 flavour: tonal surfaces, soft elevation, rounded shapes, pill buttons. */
 :root[data-style=material] {
     --bg: #111317; --rail: #181b20; --surface: #242830; --surface2: #30353e; --line: transparent; --cell: #434956;
+    --muted: #aab4c2; --accent-ink: color-mix(in srgb, var(--accent) 62%, #fff);
     --elev1: 0 1px 2px rgba(0, 0, 0, .35), 0 1px 3px 1px rgba(0, 0, 0, .2);
     --elev2: 0 2px 6px 2px rgba(0, 0, 0, .25), 0 1px 2px rgba(0, 0, 0, .35);
     --elev3: 0 8px 20px 4px rgba(0, 0, 0, .3), 0 2px 6px rgba(0, 0, 0, .4);
 }
 :root[data-style=material][data-theme=light] {
-    --bg: #f6f2f8; --rail: #efeaf3; --surface: #ffffff; --surface2: #ece6f0; --line: transparent; --cell: #d9d3de;
+    --muted: #5a5163; --accent-ink: color-mix(in srgb, var(--accent) 50%, #000); --bg: #f6f2f8; --rail: #efeaf3; --surface: #ffffff; --surface2: #ece6f0; --line: transparent; --cell: #d9d3de;
     --elev1: 0 1px 2px rgba(60, 40, 90, .22), 0 1px 3px 1px rgba(60, 40, 90, .12);
     --elev2: 0 2px 6px 2px rgba(60, 40, 90, .15), 0 1px 2px rgba(60, 40, 90, .25);
     --elev3: 0 8px 20px 4px rgba(60, 40, 90, .18), 0 2px 6px rgba(60, 40, 90, .25);
@@ -64,6 +65,7 @@
 :root[data-style=material] .navitem.on, :root[data-style=material] aside .row.on {
     background: color-mix(in srgb, var(--accent) 24%, var(--surface2)); border-color: transparent; box-shadow: none; border-radius: 99px;
 }
+:root[data-style=material] .navitem.on em { color: var(--text); }
 :root[data-style=material] .seg button:first-child { border-radius: 99px 0 0 99px; }
 :root[data-style=material] .seg button:last-child { border-radius: 0 99px 99px 0; }
 :root[data-style=material] .seg button { margin-left: 2px; }
@@ -78,12 +80,13 @@
 :root[data-style=liquid] {
     --bg: #0d1117; --rail: rgba(255, 255, 255, .05); --surface: rgba(255, 255, 255, .07); --surface2: rgba(255, 255, 255, .11);
     --line: rgba(255, 255, 255, .16); --cell: rgba(255, 255, 255, .14);
+    --muted: #b6c0cd; --accent-ink: color-mix(in srgb, var(--accent) 60%, #fff);
     --glass-edge: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 -1px 0 rgba(255, 255, 255, .04);
     --glass-blur: blur(22px) saturate(160%);
     --glass-shadow: 0 10px 30px rgba(0, 0, 0, .28);
 }
 :root[data-style=liquid][data-theme=light] {
-    --bg: #e9eef8; --rail: rgba(255, 255, 255, .45); --surface: rgba(255, 255, 255, .55); --surface2: rgba(255, 255, 255, .75);
+    --muted: #46546a; --accent-ink: color-mix(in srgb, var(--accent) 50%, #000); --bg: #e9eef8; --rail: rgba(255, 255, 255, .45); --surface: rgba(255, 255, 255, .55); --surface2: rgba(255, 255, 255, .75);
     --line: rgba(255, 255, 255, .85); --cell: rgba(40, 60, 100, .14);
     --glass-edge: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 -1px 0 rgba(255, 255, 255, .3);
     --glass-shadow: 0 10px 30px rgba(40, 60, 110, .16);
@@ -113,14 +116,17 @@
     border-radius: 99px; background: var(--surface2); box-shadow: var(--glass-edge);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
+:root[data-style=liquid] :is(.chip, .pill) { background: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+:root[data-style=liquid] .chip.done { background: color-mix(in srgb, var(--accent) 14%, transparent); }
 :root[data-style=liquid] :is(button.icon, button.link, button.swatch) { background: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
-:root[data-style=liquid] button.primary { background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 80%, #fff), var(--accent)); box-shadow: var(--glass-edge), 0 6px 16px color-mix(in srgb, var(--accent) 35%, transparent); }
+:root[data-style=liquid] button.primary { background: var(--accent) linear-gradient(180deg, color-mix(in srgb, var(--accent) 80%, #fff), var(--accent)); box-shadow: var(--glass-edge), 0 6px 16px color-mix(in srgb, var(--accent) 35%, transparent); }
 :root[data-style=liquid] :is(input:not([type]), input[type=text], select) { border-radius: 14px; background: var(--surface); box-shadow: var(--glass-edge); }
 :root[data-style=liquid] .searchbox { border-radius: 99px; background: var(--surface); box-shadow: var(--glass-edge); }
 :root[data-style=liquid] .navitem { border-radius: 14px; }
 :root[data-style=liquid] .navitem.on, :root[data-style=liquid] aside .row.on {
     background: var(--surface2); box-shadow: var(--glass-edge); border-radius: 14px; border-color: var(--line);
 }
+:root[data-style=liquid] :is(.seg button.on, .chips button.on) { background: var(--accent); color: var(--on-accent); }
 :root[data-style=liquid] .seg button:first-child { border-radius: 99px 0 0 99px; }
 :root[data-style=liquid] .seg button:last-child { border-radius: 0 99px 99px 0; }
 :root[data-style=liquid] .list li { border-radius: 16px; }
@@ -182,7 +188,7 @@
 :root[data-style=brutalist][data-theme=dark] {
     --bg: #1a1a1f; --rail: #26262d; --surface: #2c2c35; --surface2: #3a3a46; --line: #f4f1e8; --cell: #55556a;
     --text: #f4f1e8; --muted: #b9b5a6; --on-accent: #111111; --ok: #5fe39b; --warn: #ffc857; --bad: #ff6b7a;
-    --accent-ink: var(--accent);
+    --accent-ink: color-mix(in srgb, var(--accent) 60%, #fff);
     --ink: #f4f1e8; color-scheme: dark;
 }
 :root[data-style=brutalist] { --font-display: "Bricolage Grotesque", "Arial Black", "Segoe UI", system-ui, sans-serif; }
