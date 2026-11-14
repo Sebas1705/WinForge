@@ -2,7 +2,7 @@ import {render, screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import App from "../App";
-import {resetApi} from "./apiMock";
+import {api, resetApi} from "./apiMock";
 
 vi.mock("../api", async () => (await import("./apiMock")).moduleMock);
 
@@ -67,6 +67,17 @@ describe("what assistive technology is told", () => {
         expect(status).toHaveDisplayValue("Any state");
         expect(screen.getByRole("checkbox", {name: "Select Firefox"})).toBeInTheDocument();
         expect(screen.queryByRole("checkbox", {name: "Firefox"})).not.toBeInTheDocument();
+    });
+
+    it("says what each update checkbox is for, in both languages", async () => {
+        api.Upgrades.mockResolvedValue([{id: "git", name: "Git", publisher: "Vendor", current: "1.0", available: "2.0"}]);
+        const user = await openApp();
+        await go(user, /Updates/);
+        expect(await screen.findByRole("checkbox", {name: "Include Git in the update"})).toBeChecked();
+        expect(screen.queryByRole("checkbox", {name: "Git"})).not.toBeInTheDocument();
+        await user.click(screen.getByRole("button", {name: "Appearance and language"}));
+        await user.click(within(screen.getByRole("dialog")).getByRole("button", {name: "Español"}));
+        expect(await screen.findByRole("checkbox", {name: "Incluir Git en la actualización"})).toBeInTheDocument();
     });
 
     it("keeps the help icon out of the page heading's name, but readable on its own", async () => {
