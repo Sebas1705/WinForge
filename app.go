@@ -13,6 +13,7 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 
 	"github.com/Sebas1705/WinForge/catalogdata"
+	"github.com/Sebas1705/WinForge/internal/appconfig"
 	"github.com/Sebas1705/WinForge/internal/catalog"
 	"github.com/Sebas1705/WinForge/internal/health"
 	"github.com/Sebas1705/WinForge/internal/install"
@@ -27,7 +28,11 @@ import (
 type App struct {
 	ctx   context.Context
 	cat   *catalog.Catalog
-	store *profile.Store
+	store *profile.Store // guarded by mu: the person can move it to another folder while the app runs
+
+	config       *appconfig.Store               // nil when the settings folder is unavailable
+	defaultStore func() (*profile.Store, error) // replaced by tests; nil means profile.DefaultStore
+	profilesNote string                         // why the chosen profiles folder is not in use, if it is not
 
 	mu            sync.Mutex
 	installed     map[string]system.Installed
@@ -58,6 +63,12 @@ func NewApp() *App {
 		panic(err)
 	}
 	app := newApp(cat, profile.DefaultStore, install.DefaultPendingStore)
+	if c, err := appconfig.DefaultStore(); err != nil {
+		log.Printf("winforge: config: %v", err)
+	} else {
+		app.config = c
+		app.useConfiguredProfiles()
+	}
 	if s, err := updates.DefaultStore(); err != nil {
 		log.Printf("winforge: ignored updates: %v", err)
 	} else {
@@ -96,10 +107,16 @@ func newApp(cat *catalog.Catalog, openStore func() (*profile.Store, error), open
 
 // StartupError is the problem found while starting, or "" when all is well.
 func (a *App) StartupError() string {
-	if a.startupErr == nil {
-		return ""
+	a.mu.Lock()
+	note := a.profilesNote
+	a.mu.Unlock()
+	switch {
+	case a.startupErr != nil && note != "":
+		return a.startupErr.Error() + " " + note
+	case a.startupErr != nil:
+		return a.startupErr.Error()
 	}
-	return a.startupErr.Error()
+	return note
 }
 
 // loadPending, savePending and clearPending tolerate a missing pending store.
@@ -198,10 +215,11 @@ func (a *App) GetState() (State, error) {
 	}
 	st.Pending = a.livePending(installed)
 	st.StartupError = a.StartupError()
-	if a.store == nil {
+	store := a.profileStore()
+	if store == nil {
 		return st, nil
 	}
-	user, err := a.store.List(a.cat)
+	user, err := store.List(a.cat)
 	if err != nil {
 		return st, err
 	}
@@ -306,18 +324,20 @@ func (a *App) SaveProfile(p catalog.Profile) error {
 		return err
 	}
 	p.Kind = "custom"
-	if a.store == nil {
+	store := a.profileStore()
+	if store == nil {
 		return errStorageUnavailable
 	}
-	return a.store.Save(p)
+	return store.Save(p)
 }
 
 // DeleteProfile removes a user profile.
 func (a *App) DeleteProfile(id string) error {
-	if a.store == nil {
+	store := a.profileStore()
+	if store == nil {
 		return errStorageUnavailable
 	}
-	return a.store.Delete(id)
+	return store.Delete(id)
 }
 
 // ProfileFromPC builds a profile out of the catalog apps installed right now.

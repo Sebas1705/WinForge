@@ -12,6 +12,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/Sebas1705/WinForge/internal/catalog"
@@ -226,7 +227,9 @@ func (s *Store) Save(p catalog.Profile) error {
 	return os.Rename(tmp, path)
 }
 
-// Delete removes a profile; a missing profile is not an error.
+// Delete removes a profile; a missing profile is not an error. A folder kept in sync between
+// PCs can hold "conflicted copies" of the same profile under other file names; those go too,
+// or the profile would come back the next time the list is read.
 func (s *Store) Delete(id string) error {
 	path, err := s.path(id)
 	if err != nil {
@@ -234,6 +237,25 @@ func (s *Store) Delete(id string) error {
 	}
 	if err := os.Remove(path); err != nil && !errors.Is(err, os.ErrNotExist) {
 		return err
+	}
+	entries, err := os.ReadDir(s.Dir)
+	if err != nil {
+		return nil // nothing else to look at
+	}
+	for _, e := range entries {
+		if e.IsDir() || filepath.Ext(e.Name()) != ".json" || e.Name() == id+".json" {
+			continue
+		}
+		b, err := os.ReadFile(filepath.Join(s.Dir, e.Name()))
+		if err != nil {
+			continue
+		}
+		var f File
+		if json.Unmarshal(b, &f) == nil && f.WinForge >= 1 && f.Profile.ID == id {
+			if err := os.Remove(filepath.Join(s.Dir, e.Name())); err != nil && !errors.Is(err, os.ErrNotExist) {
+				return err
+			}
+		}
 	}
 	return nil
 }
@@ -247,7 +269,14 @@ func (s *Store) List(cat *catalog.Catalog) ([]catalog.Profile, error) {
 	if err != nil {
 		return nil, err
 	}
-	var out []catalog.Profile
+	// Two files can hold the same profile (a sync client's conflicted copy): the one written last wins,
+	// and on a tie the one named after its id.
+	type found struct {
+		p         catalog.Profile
+		mod       time.Time
+		canonical bool
+	}
+	byID := map[string]found{}
 	for _, e := range entries {
 		if e.IsDir() || filepath.Ext(e.Name()) != ".json" {
 			continue
@@ -260,8 +289,24 @@ func (s *Store) List(cat *catalog.Catalog) ([]catalog.Profile, error) {
 		if err != nil {
 			continue
 		}
-		out = append(out, imp.Profile)
+		var mod time.Time
+		if info, err := e.Info(); err == nil {
+			mod = info.ModTime()
+		}
+		cand := found{imp.Profile, mod, e.Name() == imp.Profile.ID+".json"}
+		if prev, ok := byID[imp.Profile.ID]; !ok || cand.mod.After(prev.mod) || (cand.mod.Equal(prev.mod) && cand.canonical && !prev.canonical) {
+			byID[imp.Profile.ID] = cand
+		}
 	}
-	sort.Slice(out, func(i, j int) bool { return out[i].Name < out[j].Name })
+	var out []catalog.Profile
+	for _, f := range byID {
+		out = append(out, f.p)
+	}
+	sort.Slice(out, func(i, j int) bool {
+		if out[i].Name != out[j].Name {
+			return out[i].Name < out[j].Name
+		}
+		return out[i].ID < out[j].ID
+	})
 	return out, nil
 }
