@@ -7,6 +7,8 @@
     --text: #e7ebf0; --muted: #8996a6; --on-accent: #1b1200;
     --ok: #6fd3a0; --bad: #f0707a; --warn: #f2b84b;
     --accent: #ff9f2e;
+    /* Non-text contrast (3:1): field borders, the focus ring and the selected edge. */
+    --control: #7a8799; --focus: var(--accent);
     /* Accent as TEXT: identical in dark, darkened in light where the raw accent is unreadable on white. */
     --accent-ink: color-mix(in srgb, var(--accent) 80%, #fff);
     --font-display: "Bricolage Grotesque", "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
@@ -21,11 +23,12 @@
     --text: #18202a; --muted: #536070;
     --ok: #0b7048; --warn: #8f5900; --bad: #b02a35;
     --accent-ink: color-mix(in srgb, var(--accent) 50%, #000);
+    --control: #6b7685; --focus: var(--text);
 }
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; background: var(--bg); color: var(--text); }
 button, input, select { font: inherit; color: inherit; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .mono { font-family: var(--font-mono); font-size: .92em; }
 .muted { color: var(--muted); }
 .small { font-size: 12px; }
@@ -51,7 +54,7 @@ button.icon { padding: 3px 8px; font-size: 16px; line-height: 1; background: tra
 button.link { background: none; border: 0; padding: 0; color: var(--text); text-align: left; }
 button.link:hover { color: var(--accent-ink); }
 input:not([type]), input[type=text], select {
-    background: var(--surface); border: 1px solid var(--line); border-radius: 7px; padding: 7px 10px;
+    background: var(--surface); border: 1px solid var(--control); border-radius: 7px; padding: 7px 10px;
 }
 input[type=checkbox] { accent-color: var(--accent); width: 15px; height: 15px; }
 .check { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); white-space: nowrap; }
@@ -70,7 +73,7 @@ input[type=checkbox] { accent-color: var(--accent); width: 15px; height: 15px; }
 .brand b { color: var(--accent-ink); font-weight: 700; }
 .navitem { display: flex; align-items: center; gap: 10px; width: 100%; background: transparent; border-color: transparent; text-align: left; padding: 8px 10px; }
 .navitem em { margin-left: auto; font-style: normal; color: var(--muted); font-size: 12px; }
-.navitem.on { background: var(--surface); border-color: var(--line); box-shadow: inset 3px 0 0 var(--accent); }
+.navitem.on { background: var(--surface); border-color: var(--line); box-shadow: inset 3px 0 0 var(--accent-ink); }
 .railfoot { display: flex; align-items: center; justify-content: space-between; padding: 4px 6px 0; }
 .content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 main { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
@@ -123,7 +126,7 @@ h2 { font-size: 19px; font-weight: 600; margin-bottom: 12px; }
 .cats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 6px 34px; }
 .cats li { display: grid; grid-template-columns: 170px 1fr 64px; align-items: center; gap: 12px; padding: 5px 0; }
 .bar { height: 5px; background: var(--cell); border-radius: 3px; overflow: hidden; }
-.bar i { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+.bar i { display: block; height: 100%; background: var(--accent-ink); border-radius: 3px; }
 .cats .mono { text-align: right; }
 
 /* profiles */
@@ -134,7 +137,7 @@ aside h4 { margin: 14px 8px 4px; color: var(--muted); font: 500 11px var(--font-
 aside .row { display: grid; grid-template-columns: 1fr auto; gap: 5px 8px; width: 100%; text-align: left; border-color: transparent; background: transparent; padding: 7px 10px; }
 aside .row .strip { grid-column: 1 / -1; }
 aside .row em { font-style: normal; color: var(--muted); font-size: 12px; }
-aside .row.on { background: var(--surface); border-color: var(--line); box-shadow: inset 3px 0 0 var(--accent); }
+aside .row.on { background: var(--surface); border-color: var(--line); box-shadow: inset 3px 0 0 var(--accent-ink); }
 .stack { display: flex; flex-direction: column; gap: 6px; margin-top: auto; padding-top: 12px; }
 .detail { flex: 1; min-width: 0; padding: 26px 32px; overflow: auto; }
 .detail h2 { font-size: 30px; margin-bottom: 4px; }
