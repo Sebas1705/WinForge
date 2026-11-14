@@ -18,6 +18,8 @@ export function Catalog(p: {
     initialCategory: string; advanced: boolean;
     onInstall: () => void; onInstallOne: (a: App) => void; onSave: () => void; openURL: (u: string) => void;
     onDetail: (a: App) => void;
+    /** Whether the single-key "/" shortcut is on (a setting). Ctrl+K is always on. */
+    slashSearch?: boolean;
 }) {
     const [f, setF] = useState<Filter>({query: "", category: p.initialCategory, installed: "all", openSourceOnly: false, sub: ""});
     const [sort, setSort] = useState<SortKey>("name");
@@ -26,15 +28,22 @@ export function Catalog(p: {
     useEffect(() => { setF((x) => ({...x, category: p.initialCategory, sub: ""})); }, [p.initialCategory]);
     useEffect(() => { try { localStorage.setItem("winforge.catalogView", view); } catch { /* not persisted */ } }, [view]);
 
-    // "/" jumps to search unless the user is already typing.
+    // "/" jumps to search unless the user is typing, a dialog is open (focus must stay inside it), or a
+    // modifier is held. AltGr arrives as Ctrl+Alt on some layouts, where "/" is a normal character.
+    const slash = p.slashSearch ?? true;
     useEffect(() => {
+        if (!slash) return;
         const key = (e: KeyboardEvent) => {
-            const tag = (e.target as HTMLElement | null)?.tagName;
-            if (e.key === "/" && tag !== "INPUT" && tag !== "SELECT" && tag !== "TEXTAREA") { e.preventDefault(); search.current?.focus(); }
+            if (e.key !== "/" || e.defaultPrevented || e.isComposing || e.metaKey || (e.ctrlKey && !e.altKey)) return;
+            const el = e.target as HTMLElement | null;
+            const typing = el && (el.tagName === "INPUT" || el.tagName === "SELECT" || el.tagName === "TEXTAREA" || el.isContentEditable);
+            if (typing || document.querySelector(".overlay, .drawer-overlay")) return;
+            e.preventDefault();
+            search.current?.focus();
         };
         window.addEventListener("keydown", key);
         return () => window.removeEventListener("keydown", key);
-    }, []);
+    }, [slash]);
 
     // Typing stays instant; the 876-card list catches up a moment later.
     const query = useDeferredValue(f.query);
@@ -72,7 +81,7 @@ export function Catalog(p: {
             <div className="toolbar">
                 <div className="searchbox">
                     <Icon name="search" size={16}/>
-                    <input ref={search} className="search" placeholder={t("catalog.search")} value={f.query}
+                    <input ref={search} className="search" placeholder={t(slash ? "catalog.search" : "catalog.searchNoSlash")} value={f.query}
                            onChange={(e) => setF({...f, query: e.target.value})}/>
                 </div>
                 <select aria-label={t("catalog.state.all")} value={f.installed}

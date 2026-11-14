@@ -64,6 +64,7 @@ const baseEn = {
     "profiles.none": "No profile matches.",
 
     "catalog.search": "Search apps, publishers, winget ids…  ( / · Ctrl+K )",
+    "catalog.searchNoSlash": "Search apps, publishers, winget ids…  ( Ctrl+K )",
     "catalog.all": "All",
     "catalog.state.all": "Any state",
     "catalog.state.installed": "Installed",
@@ -139,6 +140,8 @@ const baseEn = {
     "settings.auto": "Automatic",
     "settings.updates": "Updates",
     "settings.checkAtStart": "Check at startup",
+    "settings.shortcuts": "Shortcuts",
+    "settings.slashSearch": "Press / to search",
     "settings.checkNow": "Check now",
     "settings.version": "Version {v}",
 
@@ -241,6 +244,7 @@ const baseEs: Record<keyof typeof baseEn, string> = {
     "profiles.none": "Ningún perfil coincide.",
 
     "catalog.search": "Buscar apps, editores, ids de winget…  ( / · Ctrl+K )",
+    "catalog.searchNoSlash": "Buscar apps, editores, ids de winget…  ( Ctrl+K )",
     "catalog.all": "Todas",
     "catalog.state.all": "Cualquier estado",
     "catalog.state.installed": "Instaladas",
@@ -316,6 +320,8 @@ const baseEs: Record<keyof typeof baseEn, string> = {
     "settings.auto": "Automático",
     "settings.updates": "Actualizaciones",
     "settings.checkAtStart": "Buscar al iniciar",
+    "settings.shortcuts": "Atajos",
+    "settings.slashSearch": "Pulsar / para buscar",
     "settings.checkNow": "Comprobar ahora",
     "settings.version": "Versión {v}",
 

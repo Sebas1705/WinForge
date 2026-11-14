@@ -14,6 +14,8 @@ export interface Settings {
     accent: string;
     density: Density;
     checkUpdates: boolean;
+    /** Single-key shortcut ("/" opens search). Can be switched off: WCAG 2.1.4. */
+    keyShortcuts: boolean;
     language: LangSetting;
     detail: DetailLevel;
 }
@@ -26,7 +28,7 @@ export const ACCENTS: { name: string; value: string }[] = [
     {name: "Pink", value: "#ff6b9d"},
 ];
 
-export const DEFAULTS: Settings = {theme: "system", style: "classic", accent: ACCENTS[0].value, density: "comfortable", checkUpdates: true, language: "auto", detail: "simple"};
+export const DEFAULTS: Settings = {theme: "system", style: "classic", accent: ACCENTS[0].value, density: "comfortable", checkUpdates: true, keyShortcuts: true, language: "auto", detail: "simple"};
 
 const KEY = "winforge.settings";
 
@@ -39,6 +41,7 @@ export function normalize(raw: unknown): Settings {
         accent: typeof r.accent === "string" && /^#[0-9a-f]{6}$/i.test(r.accent) ? r.accent : DEFAULTS.accent,
         density: r.density === "compact" || r.density === "comfortable" ? r.density : DEFAULTS.density,
         checkUpdates: typeof r.checkUpdates === "boolean" ? r.checkUpdates : DEFAULTS.checkUpdates,
+        keyShortcuts: typeof r.keyShortcuts === "boolean" ? r.keyShortcuts : DEFAULTS.keyShortcuts,
         language: r.language === "en" || r.language === "es" || r.language === "auto" ? r.language : DEFAULTS.language,
         detail: r.detail === "advanced" || r.detail === "simple" ? r.detail : DEFAULTS.detail,
     };

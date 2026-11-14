@@ -368,7 +368,13 @@ export default function App() {
             e.preventDefault();
             setCategory("");
             setTab("catalog");
-            window.setTimeout(() => document.querySelector<HTMLInputElement>("input.search")?.focus(), 30);
+            // The catalog may need a few frames to mount (it renders a long list), so wait for the box.
+            let tries = 0;
+            const focusSearch = () => {
+                const box = document.querySelector<HTMLInputElement>("input.search");
+                if (box) { box.focus(); box.select(); } else if (tries++ < 60) requestAnimationFrame(focusSearch);
+            };
+            requestAnimationFrame(focusSearch);
         };
         window.addEventListener("keydown", key);
         return () => window.removeEventListener("keydown", key);
@@ -480,7 +486,7 @@ export default function App() {
                         <Catalog apps={state.apps} featured={state.featured ?? []} advanced={advanced} selection={selection} setSelection={setSelection} initialCategory={category}
                                  onInstall={() => void startProfile(selectionProfile(selection))}
                                  onInstallOne={(a) => void startProfile(selectionProfile([a.id], a.name))}
-                                 onSave={saveSelection} openURL={(u) => safe(api.OpenURL(u))} onDetail={setDetail}/>
+                                 onSave={saveSelection} openURL={(u) => safe(api.OpenURL(u))} onDetail={setDetail} slashSearch={settings.keyShortcuts}/>
                     ) : tab === "health" ? (
                         <Health advanced={advanced} result={health} busy={healthBusy} step={scanStep.health ?? null} updatesBusy={healthUpdBusy} admin={state.admin} byId={byId}
                                 onScan={() => void scanHealth()} onUpdates={() => void healthUpdates()} onExport={() => void exportHealth()}

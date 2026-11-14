@@ -9,7 +9,7 @@ describe("settings", () => {
     });
     it("keeps valid values", () => {
         expect(normalize({theme: "light", accent: "#AABBCC", density: "compact"}))
-            .toEqual({theme: "light", style: "classic", accent: "#AABBCC", density: "compact", checkUpdates: true, language: "auto", detail: "simple"});
+            .toEqual({theme: "light", style: "classic", accent: "#AABBCC", density: "compact", checkUpdates: true, keyShortcuts: true, language: "auto", detail: "simple"});
         expect(normalize({style: "liquid"}).style).toBe("liquid");
         expect(normalize({style: "vaporwave"}).style).toBe("classic");
         expect(normalize({style: 3}).style).toBe("classic");
@@ -18,6 +18,8 @@ describe("settings", () => {
         expect(normalize({language: "es"}).language).toBe("es");
         expect(normalize({language: "klingon"}).language).toBe("auto");
         expect(normalize({checkUpdates: false}).checkUpdates).toBe(false);
+        expect(normalize({keyShortcuts: false}).keyShortcuts).toBe(false);
+        expect(normalize({keyShortcuts: "no"}).keyShortcuts).toBe(true);
     });
     it("resolves system theme from the OS preference", () => {
         expect(resolveTheme("system", true)).toBe("dark");
@@ -26,7 +28,7 @@ describe("settings", () => {
     });
     it("applies to the document root", () => {
         const root = document.createElement("html");
-        apply({theme: "system", style: "neumorphic", accent: "#3ecf8e", density: "compact", checkUpdates: true, language: "auto", detail: "simple"}, root, false);
+        apply({theme: "system", style: "neumorphic", accent: "#3ecf8e", density: "compact", checkUpdates: true, keyShortcuts: true, language: "auto", detail: "simple"}, root, false);
         expect(root.dataset.style).toBe("neumorphic");
         expect(root.dataset.theme).toBe("light");
         expect(root.dataset.density).toBe("compact");
