@@ -1,4 +1,4 @@
-import {useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState, type Ref} from "react";
 import {api, errText, type CleanCategory, type CleanResult} from "../../api";
 import {Icon} from "../../components/Icon";
 import {ConfirmDialog} from "../../components/Modals";
@@ -11,11 +11,11 @@ import {TaskStatus, type TaskRunner} from "./useTask";
 const reason = (error: string): string =>
     error === "needs-admin" ? t("storage.clean.error.needsAdmin") : error === "unknown category" ? t("storage.clean.error.unknown") : error;
 
-function Result(p: { r: CleanResult }) {
+function Result(p: { r: CleanResult; ref?: Ref<HTMLDivElement> }) {
     const {r} = p;
     const problems = r.outcomes.filter((o) => o.error);
     return (
-        <div className="resultline" role="status">
+        <div className="resultline" role="status" tabIndex={-1} ref={p.ref}>
             <p>{r.freedBytes > 0 ? t("storage.clean.result", {size: formatBytes(r.freedBytes), files: fileCount(r.files)}) : t("storage.clean.resultNone")}</p>
             {r.failed > 0 && <p className="muted small">{t("storage.clean.failed", {n: r.failed})}</p>}
             {problems.length > 0 && (
@@ -38,6 +38,17 @@ export function Cleanup(p: { task: TaskRunner; admin: boolean; say: (m: string) 
     const [stopped, setStopped] = useState(false);
     const [confirming, setConfirming] = useState(false);
     const locked = p.task.busy !== null;
+    // The button that opened the confirmation is disabled while cleaning, so focus would fall to the page
+    // top. When it is lost, it goes to the result (or the section heading) once the work ends.
+    const resultRef = useRef<HTMLDivElement>(null);
+    const headingRef = useRef<HTMLHeadingElement>(null);
+    const refocus = useRef(false);
+    useEffect(() => {
+        if (locked || !refocus.current) return;
+        refocus.current = false;
+        const a = document.activeElement;
+        if (!a || a === document.body) (resultRef.current ?? headingRef.current)?.focus();
+    }, [locked, result]);
 
     const shown = useMemo(() => visibleCategories(cats ?? []), [cats]);
     const chosen = shown.filter((c) => selected.has(c.id));
@@ -63,6 +74,7 @@ export function Cleanup(p: { task: TaskRunner; admin: boolean; say: (m: string) 
     const clean = async () => {
         const ids = chosen.map((c) => c.id);
         if (ids.length === 0) return;
+        refocus.current = true;
         const out = await p.task.run("clean", () => api.StorageClean(ids));
         if (!out) return;
         if (out.error !== undefined) {
@@ -78,7 +90,7 @@ export function Cleanup(p: { task: TaskRunner; admin: boolean; say: (m: string) 
 
     return (
         <section aria-labelledby="storage-clean">
-            <h2 id="storage-clean">{t("storage.clean.title")}</h2>
+            <h2 id="storage-clean" tabIndex={-1} ref={headingRef}>{t("storage.clean.title")}</h2>
             <p className="muted small">{t("storage.clean.intro")}</p>
             <div className="toolrow">
                 <button className="primary" disabled={locked} onClick={startScan}>
@@ -88,7 +100,7 @@ export function Cleanup(p: { task: TaskRunner; admin: boolean; say: (m: string) 
             <TaskStatus task={p.task} names={["scan", "clean"]}/>
 
             {stopped && cats !== null && <p className="muted small" role="status">{t("storage.stopped")}</p>}
-            {result && <Result r={result}/>}
+            {result && <Result r={result} ref={resultRef}/>}
 
             {cats !== null && shown.length === 0 && <p className="muted" role="status">{t("storage.clean.nothing")}</p>}
             {shown.length > 0 && (
