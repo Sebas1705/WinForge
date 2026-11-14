@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import {api, errText, on, type ImportResult, type UpdateInfo} from "./api";
+import {api, errText, on, type ProfilesFolderInfo, type ImportResult, type UpdateInfo} from "./api";
 import {AppDetail} from "./components/AppDetail";
 import {Icon, type IconName} from "./components/Icon";
 import {ScanProgress, type ScanKind} from "./components/ScanProgress";
@@ -62,6 +62,10 @@ export default function App() {
     const [naming, setNaming] = useState<null | { title: string; initial: string; onOk: (n: string) => void }>(null);
     const [settings, setSettings] = useState<prefs.Settings>(prefs.load);
     const [showSettings, setShowSettings] = useState(false);
+    const [folder, setFolder] = useState<ProfilesFolderInfo | null>(null);
+    // A folder the person picked and has not confirmed yet, and whether to copy the profiles into it.
+    const [pendingFolder, setPendingFolder] = useState<string | null>(null);
+    const [copyProfiles, setCopyProfiles] = useState(true);
     const [update, setUpdate] = useState<UpdateInfo | null>(null);
     const [updating, setUpdating] = useState<{ done: number; total: number } | null>(null);
     const [upgrades, setUpgrades] = useState<UpgradeInfo[] | null>(null);
@@ -123,6 +127,35 @@ export default function App() {
         setUpgradesBusy(true);
         try { setUpgrades(await api.Upgrades()); } catch (e) { say(errText(e)); } finally { setUpgradesBusy(false); }
     }, [say]);
+
+    // Where profiles are kept is read when Settings opens, so it is never stale after a change from elsewhere.
+    useEffect(() => {
+        if (!showSettings) return;
+        api.ProfilesFolder().then(setFolder).catch((e) => say(errText(e)));
+    }, [showSettings, say]);
+    const pickFolder = async () => {
+        try {
+            const dir = await api.PickFolder();
+            if (dir) { setCopyProfiles(true); setPendingFolder(dir); }
+        } catch (e) { say(errText(e)); }
+    };
+    const confirmFolder = async () => {
+        const dir = pendingFolder;
+        if (!dir) return;
+        try {
+            const r = await api.SetProfilesFolder(dir, copyProfiles);
+            setFolder(r.info);
+            say(t("folder.done", {path: r.info.path}) + (copyProfiles ? " " + t("folder.copied", {copied: r.copied, skipped: r.skipped}) : ""));
+            await refresh(); // the profiles on screen are the new folder's
+        } catch (e) { say(errText(e)); }
+    };
+    const resetFolder = async () => {
+        try {
+            setFolder(await api.ResetProfilesFolder());
+            say(t("folder.resetDone"));
+            await refresh();
+        } catch (e) { say(errText(e)); }
+    };
 
     // Hiding an update, or bringing it back, never asks winget again: the backend answers from the last check.
     const ignoreUpdate = async (id: string, c: { mode: "always" | "version" | "until"; days?: number }) => {
@@ -531,7 +564,17 @@ export default function App() {
                               onScript={() => runner?.profile && api.ExportScript(runner.profile).then((p) => p && say(t("toast.savedTo", {path: p}))).catch((e) => say(errText(e)))}
                               onCopy={() => void copyLog()} onRetry={() => void resume(false)} onRetryAdmin={() => void retryAdmin()}/>}
             {showSettings && <SettingsDialog value={settings} onChange={setSettings} version={state?.version ?? ""}
-                                             onCheck={() => void checkUpdate(true)} onClose={() => setShowSettings(false)}/>}
+                                             onCheck={() => void checkUpdate(true)} onClose={() => setShowSettings(false)}
+                                             folder={folder} onChangeFolder={() => void pickFolder()} onResetFolder={() => void resetFolder()}/>}
+            {pendingFolder && (
+                <ConfirmDialog title={t("folder.title")} body={t("folder.body", {path: pendingFolder})} confirm={t("folder.confirm")}
+                               onConfirm={() => void confirmFolder()} onClose={() => setPendingFolder(null)}>
+                    <label className="check">
+                        <input type="checkbox" checked={copyProfiles} onChange={(e) => setCopyProfiles(e.target.checked)}/>
+                        {t("folder.copy", {n: folder?.count ?? 0})}
+                    </label>
+                </ConfirmDialog>
+            )}
             {restartAsk && <ConfirmDialog title={t("health.restartTitle")} body={t("health.restartBody")} confirm={t("health.restartNow")} danger
                                           onConfirm={() => void restartPC()} onClose={() => setRestartAsk(false)}/>}
             {naming && <NameDialog {...naming} onClose={() => setNaming(null)}/>}

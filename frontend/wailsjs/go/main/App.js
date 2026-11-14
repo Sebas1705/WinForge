@@ -154,8 +154,16 @@ export function ProfileFromPC(arg1, arg2, arg3) {
   return window['go']['main']['App']['ProfileFromPC'](arg1, arg2, arg3);
 }
 
+export function ProfilesFolder() {
+  return window['go']['main']['App']['ProfilesFolder']();
+}
+
 export function RemoveGame(arg1) {
   return window['go']['main']['App']['RemoveGame'](arg1);
+}
+
+export function ResetProfilesFolder() {
+  return window['go']['main']['App']['ResetProfilesFolder']();
 }
 
 export function RestartAsAdmin() {
@@ -188,6 +196,10 @@ export function SaveTextFile(arg1, arg2) {
 
 export function SetGamesRoot() {
   return window['go']['main']['App']['SetGamesRoot']();
+}
+
+export function SetProfilesFolder(arg1, arg2) {
+  return window['go']['main']['App']['SetProfilesFolder'](arg1, arg2);
 }
 
 export function ShareCode(arg1) {

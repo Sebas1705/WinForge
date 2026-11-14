@@ -5,6 +5,7 @@ import {Strip} from "./Strip";
 import {useModal} from "./useModal";
 import {Ring} from "./Visual";
 import {t, tOpt, type Key} from "../lib/i18n";
+import type {ProfilesFolderInfo} from "../api";
 import type {App, Plan, Step, StepStatus} from "../lib/model";
 import * as prefs from "../lib/settings";
 import {formatElapsed} from "../lib/tally";
@@ -252,6 +253,8 @@ const STYLE_LABEL = {
 
 export function SettingsDialog(p: {
     version: string; value: prefs.Settings; onChange: (s: prefs.Settings) => void; onCheck: () => void; onClose: () => void;
+    /** Where profiles are kept, and the actions to move them; absent while it is not known yet. */
+    folder?: ProfilesFolderInfo | null; onChangeFolder?: () => void; onResetFolder?: () => void;
 }) {
     const set = (patch: Partial<prefs.Settings>) => p.onChange({...p.value, ...patch});
     const dialog = useRef<HTMLDivElement>(null);
@@ -300,6 +303,18 @@ export function SettingsDialog(p: {
                     <label className="check"><input type="checkbox" checked={p.value.keyShortcuts}
                            onChange={(e) => set({keyShortcuts: e.target.checked})}/> {t("settings.slashSearch")}</label>
                 </div>
+                {p.folder && (
+                    <div className="field stacked folderrow"><span>{t("settings.profilesFolder")}</span>
+                        <code className="mono small folderpath" title={p.folder.path}>{p.folder.path}</code>
+                        <span className="muted small">{t("settings.profilesFolderCount", {n: p.folder.count})}</span>
+                        <div className="actions tight">
+                            <button onClick={p.onChangeFolder}>{t("settings.profilesFolderChange")}</button>
+                            {p.folder.custom && <button className="ghost" onClick={p.onResetFolder}>{t("settings.profilesFolderDefault")}</button>}
+                        </div>
+                        <p className="muted small nogap">{t("settings.profilesFolderHint")}</p>
+                        {p.folder.problem && <p className="small folderproblem" role="note"><Icon name="alert" size={14}/> {p.folder.problem}</p>}
+                    </div>
+                )}
                 <div className="field"><span>{t("settings.updates")}</span>
                     <label className="check"><input type="checkbox" checked={p.value.checkUpdates}
                            onChange={(e) => set({checkUpdates: e.target.checked})}/> {t("settings.checkAtStart")}</label>

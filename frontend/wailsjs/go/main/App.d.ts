@@ -82,7 +82,11 @@ export function PlayGame(arg1:string,arg2:string):Promise<void>;
 
 export function ProfileFromPC(arg1:string,arg2:string,arg3:boolean):Promise<catalog.Profile>;
 
+export function ProfilesFolder():Promise<main.FolderInfo>;
+
 export function RemoveGame(arg1:string):Promise<void>;
+
+export function ResetProfilesFolder():Promise<main.FolderInfo>;
 
 export function RestartAsAdmin():Promise<void>;
 
@@ -99,6 +103,8 @@ export function SaveProfile(arg1:catalog.Profile):Promise<void>;
 export function SaveTextFile(arg1:string,arg2:string):Promise<string>;
 
 export function SetGamesRoot():Promise<string>;
+
+export function SetProfilesFolder(arg1:string,arg2:boolean):Promise<main.FolderChange>;
 
 export function ShareCode(arg1:catalog.Profile):Promise<string>;
 
