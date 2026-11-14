@@ -273,7 +273,7 @@ export function SettingsDialog(p: {
                 <div className="field"><span>{t("settings.accent")}</span>
                     <div className="swatches">
                         {prefs.ACCENTS.map((c) => (
-                            <button key={c.value} title={c.name} aria-label={c.name} aria-pressed={p.value.accent === c.value}
+                            <button key={c.value} title={t(`accent.${c.name}` as Key)} aria-label={t(`accent.${c.name}` as Key)} aria-pressed={p.value.accent === c.value}
                                     className={"swatch" + (p.value.accent === c.value ? " on" : "")} style={{background: c.value}}
                                     onClick={() => set({accent: c.value})}/>
                         ))}

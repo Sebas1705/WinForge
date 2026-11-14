@@ -29,6 +29,8 @@
 html, body, #root { height: 100%; margin: 0; background: var(--bg); color: var(--text); }
 button, input, select { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+/* Scrolling a focused control into view must leave room for its 4px ring, or the ring is cut at the edge. */
+.page, .detail, .list, aside, .modal, .drawer, .steps, .log, .tablewrap, .chips, .catalog { scroll-padding: 8px; }
 .mono { font-family: var(--font-mono); font-size: .92em; }
 .muted { color: var(--muted); }
 .small { font-size: 12px; }
