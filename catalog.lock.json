@@ -4995,16 +4995,6 @@
       "35cdecccb8d52c5cb8785306088e590c9f8f4b656f1d99877f832fd130b3b5c5"
     ]
   },
-  "minio-client": {
-    "version": "2025.08.13",
-    "publisher": "MinIO",
-    "installerHosts": [
-      "dl.min.io"
-    ],
-    "installerSha256": [
-      "c8db13ebeda31497f354c0e950809db0ae9b2a2a69b8afee68c128c37300c157"
-    ]
-  },
   "miro": {
     "version": "0.11.196",
     "publisher": "Miro",

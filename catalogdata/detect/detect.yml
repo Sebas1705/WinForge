@@ -1384,9 +1384,6 @@
 - id: minecraft-note-block-studio
   registry:
     - "^Minecraft Note Block Studio(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
-- id: minio-client
-  registry:
-    - "^MinIO Client(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"
 - id: miro
   registry:
     - "^Miro(\\s+(version\\s+)?v?\\d|\\s*[\\(\\[]|\\s+x(64|86)\\b|\\s*$)"

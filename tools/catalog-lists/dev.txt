@@ -364,7 +364,6 @@ dev/database|PlanetScale.CLI
 dev/database|SurrealDB.SurrealDB
 dev/database|PocketBase.PocketBase
 dev/database|MinIO.MinIO
-dev/database|MinIO.Client|minio-client
 dev/database|RabbitMQ.RabbitMQ
 dev/database|Nats-io.NatsServer
 dev/database|Nats-io.Nats
