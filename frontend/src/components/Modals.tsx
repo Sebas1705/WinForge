@@ -99,7 +99,7 @@ export function RunModal(p: {
             <div className="modal" ref={dialog} role="dialog" aria-modal="true" aria-label={heading}>
                 {started ? (
                     <div className="runhead">
-                        <Ring size={92} stroke={9} value={cells.length ? done / cells.length : 0} tone={finished ? (failedCount ? "warn" : "ok") : "accent"}>
+                        <Ring size={92} stroke={9} value={cells.length ? done / cells.length : 0} tone={finished ? (failedCount ? "warn" : "ok") : "accent"} label={t("run.ringLabel", {done, total: cells.length})}>
                             {finished ? <Icon name={failedCount ? "alert" : "check"} size={30}/> : <span className="ringnum">{done}<small>/{cells.length}</small></span>}
                         </Ring>
                         <div className="grow">
@@ -111,7 +111,7 @@ export function RunModal(p: {
                                 </p>
                             )}
                             {finished && <p className="muted">{failedCount > 0 ? t("run.failedHint") : run.reboot ? t("run.rebootNote") : t("run.reboot")}</p>}
-                            <Strip cells={cells} size="lg"/>
+                            <Strip cells={cells} size="lg" label={null}/>
                             <span className="mono muted small">{t("run.stepOf", {done, total: cells.length})}{elapsed && ` · ${elapsed}`}</span>
                         </div>
                     </div>

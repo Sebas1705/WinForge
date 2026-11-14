@@ -42,12 +42,12 @@ export function Home(p: {
     return (
         <div className="page home">
             <header className="hero">
-                <Ring size={110} stroke={11} value={p.apps.length ? found / p.apps.length : 0}>
+                <Ring size={110} stroke={11} value={p.apps.length ? found / p.apps.length : 0} label={null}>
                     <span className="ringnum big">{found}</span>
                 </Ring>
                 <div className="grow">
                     <span className="eyebrow">{t("home.eyebrow")}</span>
-                    <h1>{t("home.foundOf", {total: p.apps.length})}</h1>
+                    <h1 aria-label={`${found} ${t("home.foundOf", {total: p.apps.length})}`}>{t("home.foundOf", {total: p.apps.length})}</h1>
                     <Ruler apps={p.apps}/>
                 </div>
             </header>
@@ -62,7 +62,7 @@ export function Home(p: {
                             <button key={id} className={"quicktile" + (full ? " full" : "")} onClick={() => p.onOpenProfile(id)}>
                                 <span className="bubble"><Icon name={full ? "check" : icon} size={26}/></span>
                                 <b>{t(`home.tile.${id}` as Key)}</b>
-                                <span className="mono muted small">{tl.have}/{tl.total}</span>
+                                <span className="mono muted small"><span aria-hidden="true">{tl.have}/{tl.total}</span><span className="sr-only">{t("tally.of", {have: tl.have, total: tl.total})}</span></span>
                             </button>
                         );
                     })}
@@ -85,7 +85,7 @@ export function Home(p: {
 
             <div className="two">
                 <button className="statuscard" onClick={p.onOpenHealth}>
-                    <Ring size={72} stroke={8} value={h && h.total ? h.ok / h.total : 0} tone={worst as "ok" | "warn" | "bad" | "muted"}>
+                    <Ring size={72} stroke={8} value={h && h.total ? h.ok / h.total : 0} tone={worst as "ok" | "warn" | "bad" | "muted"} label={null}>
                         <Icon name={worst === "ok" ? "check" : worst === "muted" ? "pulse" : "alert"} size={26}/>
                     </Ring>
                     <div>
@@ -126,8 +126,8 @@ export function Home(p: {
                                     <IconStack apps={profileApps(profile.resolved, byId)} max={5} size={34}/>
                                     <button className="link title" onClick={() => p.onOpenProfile(profile.id)}>{profileText(profile, getLang()).name}</button>
                                     <span className="grow"/>
-                                    <Ring size={36} stroke={4} value={tl.have / tl.total}><span className="mono tiny">{missing}</span></Ring>
-                                    <button className="primary sm" onClick={() => p.onInstall(profile)}>{t("common.install")}</button>
+                                    <Ring size={36} stroke={4} value={tl.have / tl.total} label={t("tally.installed", {have: tl.have, total: tl.total})}><span className="mono tiny">{missing}</span></Ring>
+                                    <button className="primary sm" aria-label={t("common.installNamed", {name: profileText(profile, getLang()).name})} onClick={() => p.onInstall(profile)}>{t("common.install")}</button>
                                 </li>
                             );
                         })}
@@ -142,7 +142,7 @@ export function Home(p: {
                         <li key={s.top}>
                             <button className="link" onClick={() => p.onOpenCategory(s.top)}><Icon name={categoryIcon(s.top)} size={17}/>{categoryLabel(s.top)}</button>
                             <span className="bar" aria-hidden><i style={{width: `${(100 * s.have) / s.total}%`}}/></span>
-                            <span className="mono muted">{s.have}/{s.total}</span>
+                            <span className="mono muted"><span aria-hidden="true">{s.have}/{s.total}</span><span className="sr-only">{t("tally.of", {have: s.have, total: s.total})}</span></span>
                         </li>
                     ))}
                 </ul>

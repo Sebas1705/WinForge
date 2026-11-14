@@ -1,4 +1,4 @@
-import {useCallback, useDeferredValue, useEffect, useMemo, useRef, useState} from "react";
+import {useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent} from "react";
 import {AppCard} from "../components/AppCard";
 import {AppIcon} from "../components/AppIcon";
 import {Icon, categoryIcon} from "../components/Icon";
@@ -70,18 +70,30 @@ export function Catalog(p: {
         setSelection(n);
     }, [setSelection]);
     const selectVisible = () => p.setSelection(new Set([...p.selection, ...list.filter((a) => !a.installed).map((a) => a.id)]));
+    // Tabs are one Tab stop; the arrow keys move between them, as the tabs pattern says.
+    const tabKeys = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft" && e.key !== "Home" && e.key !== "End") return;
+        const tabs = [...e.currentTarget.querySelectorAll<HTMLElement>("[role=tab]")];
+        const at = tabs.indexOf(document.activeElement as HTMLElement);
+        if (at < 0) return;
+        e.preventDefault();
+        const next = e.key === "Home" ? 0 : e.key === "End" ? tabs.length - 1 : (at + (e.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+        tabs[next].focus();
+        tabs[next].click();
+    };
     const chip = (key: string, icon: Parameters<typeof Icon>[0]["name"], label: string, count: number) => (
-        <button key={key} role="tab" aria-selected={f.category === key} className={f.category === key ? "on" : ""} onClick={() => setF({...f, category: key, sub: ""})}>
+        <button key={key} role="tab" aria-selected={f.category === key} tabIndex={f.category === key ? 0 : -1} className={f.category === key ? "on" : ""} onClick={() => setF({...f, category: key, sub: ""})}>
             <Icon name={icon} size={15}/>{label} <em>{count}</em>
         </button>
     );
 
     return (
         <div className="catalog">
+            <h1 className="sr-only">{t("nav.catalog")}</h1>
             <div className="toolbar">
                 <div className="searchbox">
                     <Icon name="search" size={16}/>
-                    <input ref={search} className="search" placeholder={t(slash ? "catalog.search" : "catalog.searchNoSlash")} value={f.query}
+                    <input ref={search} className="search" aria-label={t("catalog.searchLabel")} aria-keyshortcuts={slash ? "/ Control+K" : "Control+K"} placeholder={t(slash ? "catalog.search" : "catalog.searchNoSlash")} value={f.query}
                            onChange={(e) => setF({...f, query: e.target.value})}/>
                 </div>
                 <select aria-label={t("catalog.state.all")} value={f.installed}
@@ -102,17 +114,17 @@ export function Catalog(p: {
                     <button className={view === "list" ? "on" : ""} aria-pressed={view === "list"} title={t("catalog.view.list")} aria-label={t("catalog.view.list")} onClick={() => setView("list")}><Icon name="list" size={15}/></button>
                 </div>
             </div>
-            <div className="chips" role="tablist">
+            <div className="chips" role="tablist" aria-label={t("nav.catalog")} onKeyDown={tabKeys}>
                 {chip("", "layers", t("catalog.all"), p.apps.length)}
                 {p.featured.length > 0 && chip(POPULAR, "star", t("catalog.popular"), p.featured.length)}
                 {stats.map((s) => chip(s.top, categoryIcon(s.top), categoryLabel(s.top), s.total))}
             </div>
 
             {subs.length > 1 && (
-                <div className="chips subchips" role="tablist" aria-label={categoryLabel(f.category)}>
-                    <button role="tab" aria-selected={!f.sub} className={!f.sub ? "on" : ""} onClick={() => setF({...f, sub: ""})}>{t("catalog.all")}</button>
+                <div className="chips subchips" role="tablist" aria-label={categoryLabel(f.category)} onKeyDown={tabKeys}>
+                    <button role="tab" aria-selected={!f.sub} tabIndex={!f.sub ? 0 : -1} className={!f.sub ? "on" : ""} onClick={() => setF({...f, sub: ""})}>{t("catalog.all")}</button>
                     {subs.map((s) => (
-                        <button key={s.sub} role="tab" aria-selected={f.sub === s.sub} className={f.sub === s.sub ? "on" : ""} onClick={() => setF({...f, sub: s.sub})}>
+                        <button key={s.sub} role="tab" aria-selected={f.sub === s.sub} tabIndex={f.sub === s.sub ? 0 : -1} className={f.sub === s.sub ? "on" : ""} onClick={() => setF({...f, sub: s.sub})}>
                             {subLabel(f.category, s.sub)} <em>{s.count}</em>
                         </button>
                     ))}

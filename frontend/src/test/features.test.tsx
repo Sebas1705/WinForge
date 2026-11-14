@@ -31,7 +31,7 @@ beforeEach(() => {
 async function failFirefox(user: ReturnType<typeof userEvent.setup>, reason: string, state = makeState()) {
     await go(user, /Catalog/);
     const card = screen.getByRole("button", {name: "Firefox"}).closest("article") as HTMLElement;
-    await user.click(within(card).getByRole("button", {name: "Install"}));
+    await user.click(within(card).getByRole("button", {name: "Install Firefox"}));
     await user.click(await screen.findByRole("button", {name: "Run 1 steps"}));
     await emit.install({step: step("firefox", "Firefox"), status: "start"});
     await emit.install({step: step("firefox", "Firefox"), status: "failed", error: "winget exited with code 0x8a150049", reason});
@@ -71,7 +71,7 @@ describe("when a step fails", () => {
         const user = await openApp();
         await go(user, /Catalog/);
         const card = screen.getByRole("button", {name: "Firefox"}).closest("article") as HTMLElement;
-        await user.click(within(card).getByRole("button", {name: "Install"}));
+        await user.click(within(card).getByRole("button", {name: "Install Firefox"}));
         await user.click(await screen.findByRole("button", {name: "Run 1 steps"}));
         await emit.install({step: step("firefox", "Firefox"), status: "start"});
         await emit.install({step: step("firefox", "Firefox"), status: "output", line: "  42%", percent: 42});
@@ -84,7 +84,7 @@ describe("when a step fails", () => {
         const user = await openApp();
         await go(user, /Catalog/);
         const card = screen.getByRole("button", {name: "Firefox"}).closest("article") as HTMLElement;
-        await user.click(within(card).getByRole("button", {name: "Install"}));
+        await user.click(within(card).getByRole("button", {name: "Install Firefox"}));
         await user.click(await screen.findByRole("button", {name: "Run 1 steps"}));
         await emit.install({step: step("firefox", "Firefox"), status: "ok", reason: "reboot"});
         await emit.done([]);
@@ -210,7 +210,7 @@ describe("keyboard", () => {
         const user = await openApp();
         await go(user, /Catalog/);
         const card = screen.getByRole("button", {name: "Firefox"}).closest("article") as HTMLElement;
-        await user.click(within(card).getByRole("button", {name: "Install"}));
+        await user.click(within(card).getByRole("button", {name: "Install Firefox"}));
         await screen.findByRole("dialog");
         await user.keyboard("{Control>}k{/Control}");
         expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -240,7 +240,7 @@ describe("the / shortcut", () => {
         const user = await openApp();
         await go(user, /Catalog/);
         const card = screen.getByRole("button", {name: "Firefox"}).closest("article") as HTMLElement;
-        await user.click(within(card).getByRole("button", {name: "Install"}));
+        await user.click(within(card).getByRole("button", {name: "Install Firefox"}));
         const dialog = await screen.findByRole("dialog");
         const before = document.activeElement;
         await user.keyboard("/");

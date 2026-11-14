@@ -28,7 +28,7 @@ export function ScanProgress(p: { kind: ScanKind; current: string | null; compac
 
     return (
         <div className={"scanprogress" + (p.compact ? " compact" : "")} role="status" aria-live="polite">
-            <Ring size={p.compact ? 56 : 84} stroke={p.compact ? 6 : 8} value={Math.max(at, 0) / steps.length} tone="accent">
+            <Ring size={p.compact ? 56 : 84} stroke={p.compact ? 6 : 8} value={Math.max(at, 0) / steps.length} tone="accent" label={null}>
                 <span className="ringnum">{Math.max(at, 0)}<small>/{steps.length}</small></span>
             </Ring>
             <div className="grow">

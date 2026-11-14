@@ -47,7 +47,7 @@ export function Profiles(p: {
                 <span className="grow"/>
                 <div className="searchbox">
                     <Icon name="search" size={16}/>
-                    <input className="search" placeholder={t("profiles.search")} value={q} onChange={(e) => setQ(e.target.value)}/>
+                    <input className="search" aria-label={t("profiles.search")} placeholder={t("profiles.search")} value={q} onChange={(e) => setQ(e.target.value)}/>
                 </div>
                 <button onClick={p.onFromPC}><Icon name="plus" size={14}/> {t("profiles.fromPC")}</button>
                 <button className="ghost" onClick={p.onImport}>{t("profiles.import")}</button>
@@ -68,7 +68,7 @@ export function Profiles(p: {
                                     <span className="line muted">{pt(x).desc}</span>
                                     <span className="foot">
                                         <span className="mono muted small">{t("profiles.appCount", {n: tl.total})}</span>
-                                        <Ring size={34} stroke={4} value={tl.total ? tl.have / tl.total : 0} tone={full ? "ok" : "accent"}>
+                                        <Ring size={34} stroke={4} value={tl.total ? tl.have / tl.total : 0} tone={full ? "ok" : "accent"} label={t("tally.installed", {have: tl.have, total: tl.total})}>
                                             {full ? <Icon name="check" size={14}/> : <span className="mono tiny">{tl.have}</span>}
                                         </Ring>
                                     </span>
@@ -125,7 +125,7 @@ function ProfileDetail(p: {
                     <h1>{text.name}</h1>
                     <p className="muted">{text.desc}</p>
                 </div>
-                <Ring size={84} stroke={9} value={tally.total ? tally.have / tally.total : 0} tone={full ? "ok" : "accent"}>
+                <Ring size={84} stroke={9} value={tally.total ? tally.have / tally.total : 0} tone={full ? "ok" : "accent"} label={t("tally.installed", {have: tally.have, total: tally.total})}>
                     {full ? <Icon name="check" size={26}/> : <span className="ringnum">{tally.have}<small>/{tally.total}</small></span>}
                 </Ring>
             </header>

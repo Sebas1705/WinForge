@@ -1,3 +1,4 @@
+import {t} from "../lib/i18n";
 import type {App} from "../lib/model";
 import {rulerOrder, topCategory} from "../lib/tally";
 import {useMemo} from "react";
@@ -9,10 +10,10 @@ export interface Cell { on: boolean; name?: string; state?: string }
  * recurring motif, and every lit cell is a fact (an installed app, a finished
  * step), never decoration.
  */
-export function Strip({cells, size = "md", label}: { cells: Cell[]; size?: "sm" | "md" | "lg"; label?: string }) {
+export function Strip({cells, size = "md", label}: { cells: Cell[]; size?: "sm" | "md" | "lg"; label?: string | null }) {
     const on = cells.filter((c) => c.on).length;
     return (
-        <div className={`strip ${size}${cells.length > 120 ? " dense" : ""}`} role="img" aria-label={label ?? `${on}/${cells.length}`}>
+        <div className={`strip ${size}${cells.length > 120 ? " dense" : ""}`} {...(label === null ? {"aria-hidden": true} : {role: "img", "aria-label": label ?? t("tally.of", {have: on, total: cells.length})})}>
             {cells.map((c, i) => <i key={i} className={(c.on ? "on " : "") + (c.state ?? "")} title={c.name}/>)}
         </div>
     );
@@ -30,7 +31,7 @@ export function Ruler({apps}: { apps: App[] }) {
         return out;
     }, [apps]);
     return (
-        <div className="ruler" role="img" aria-label={`${apps.filter((a) => a.installed).length}/${apps.length}`}>
+        <div className="ruler" role="img" aria-label={t("tally.installed", {have: apps.filter((a) => a.installed).length, total: apps.length})}>
             {groups.map((g) => (
                 <div className="ruler-group" key={g.top} style={{flexGrow: g.items.length}}>
                     {g.items.map((a) => <i key={a.id} className={a.installed ? "on" : ""} title={a.name}/>)}
