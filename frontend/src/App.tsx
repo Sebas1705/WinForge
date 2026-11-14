@@ -4,6 +4,8 @@ import {AppDetail} from "./components/AppDetail";
 import {Icon, type IconName} from "./components/Icon";
 import {ScanProgress, type ScanKind} from "./components/ScanProgress";
 import {CodeDialog, ConfirmDialog, NameDialog, RunModal, Segmented, SettingsDialog, Tour, stepKey, type RunState} from "./components/Modals";
+import {Palette, type PaletteItem} from "./components/Palette";
+import {rank} from "./lib/palette";
 import {POPULAR} from "./views/Catalog";
 import {IconsContext, loadIcons, type IconIndex} from "./lib/icons";
 import {reportMarkdown, type HealthLink, type HealthResult} from "./lib/health";
@@ -62,6 +64,8 @@ export default function App() {
     const [naming, setNaming] = useState<null | { title: string; initial: string; onOk: (n: string) => void }>(null);
     const [settings, setSettings] = useState<prefs.Settings>(prefs.load);
     const [showSettings, setShowSettings] = useState(false);
+    const [showPalette, setShowPalette] = useState(false);
+    const [catalogSeed, setCatalogSeed] = useState<{ q: string; n: number } | null>(null);
     const [folder, setFolder] = useState<ProfilesFolderInfo | null>(null);
     // A folder the person picked and has not confirmed yet, and whether to copy the profiles into it.
     const [pendingFolder, setPendingFolder] = useState<string | null>(null);
@@ -411,20 +415,12 @@ export default function App() {
         } catch (e) { say(errText(e)); }
     };
 
-    // Ctrl+K (Cmd+K) jumps to catalog search from any screen, unless a dialog is open.
+    // Ctrl+K (Cmd+K) opens the command palette from any screen, unless a dialog is already open.
     useEffect(() => {
         const key = (e: KeyboardEvent) => {
             if (!(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== "k" || document.querySelector(".overlay, .drawer-overlay")) return;
             e.preventDefault();
-            setCategory("");
-            setTab("catalog");
-            // The catalog may need a few frames to mount (it renders a long list), so wait for the box.
-            let tries = 0;
-            const focusSearch = () => {
-                const box = document.querySelector<HTMLInputElement>("input.search");
-                if (box) { box.focus(); box.select(); } else if (tries++ < 60) requestAnimationFrame(focusSearch);
-            };
-            requestAnimationFrame(focusSearch);
+            setShowPalette(true);
         };
         window.addEventListener("keydown", key);
         return () => window.removeEventListener("keydown", key);
@@ -450,6 +446,34 @@ export default function App() {
     ];
 
     const byId = new Map((state?.apps ?? []).map((a) => [a.id, a]));
+
+    // What the palette offers for what has been typed: pages and actions first, then apps and profiles once there is
+    // something to look for, and always a way to turn the text into a catalog search.
+    const buildPalette = (q: string): PaletteItem[] => {
+        const text = q.trim();
+        const cmds: (PaletteItem & { keywords?: string })[] = [
+            ...nav.map(([id, label]): PaletteItem & { keywords?: string } => ({id: "go-" + id, kind: "go", label, keywords: t("palette.goto", {page: label}), run: () => go(id)})),
+            {id: "rescan", kind: "action", label: t("palette.cmd.rescan"), keywords: "refresh reload", run: () => void refresh()},
+            {id: "updates", kind: "action", label: t("palette.cmd.updates"), keywords: "upgrade winget", run: () => { setTab("updates"); void checkUpgrades(); }},
+            {id: "health", kind: "action", label: t("palette.cmd.health"), keywords: "check drivers bios", run: () => { setTab("health"); void scanHealth(); }},
+            {id: "settings", kind: "action", label: t("palette.cmd.settings"), keywords: "theme style dark light language idioma tema", run: () => setShowSettings(true)},
+            {id: "guide", kind: "action", label: t("palette.cmd.guide"), keywords: "tour help ayuda", run: () => setShowTour(true)},
+            {id: "mode", kind: "action", label: advanced ? t("palette.cmd.simple") : t("palette.cmd.advanced"), keywords: "simple advanced avanzado sencillo",
+                run: () => setSettings({...settings, detail: advanced ? "simple" : "advanced"})},
+            {id: "selfUpdate", kind: "action", label: t("palette.cmd.selfUpdate"), keywords: "winforge version", run: () => void checkUpdate(true)},
+        ];
+        // Empty: every page and action, so the whole menu can be browsed. Typing narrows it to the best few.
+        const out: PaletteItem[] = rank(cmds, text, text ? 8 : cmds.length);
+        if (text.length >= 2) {
+            out.push(...rank((state?.apps ?? []).map((a): PaletteItem & { keywords: string } => ({id: "app-" + a.id, kind: "app", label: a.name, keywords: a.id + " " + a.publisher + " " + a.winget, run: () => setDetail(a)})), text, 5));
+            out.push(...rank((state?.profiles ?? []).map((pr): PaletteItem & { keywords: string } => {
+                const name = profileText(pr, getLang()).name;
+                return {id: "profile-" + pr.id, kind: "profile", label: name, keywords: pr.id, run: () => { setFocusProfile(pr.id); setTab("profiles"); }};
+            }), text, 3));
+            out.push({id: "search", kind: "search", label: t("palette.cmd.search", {q: text}), run: () => { setCategory(""); setCatalogSeed({q: text, n: Date.now()}); setTab("catalog"); }});
+        }
+        return out;
+    };
     // A detail panel shows the live state: it follows rescans and installs.
     const shown = detail ? byId.get(detail.id) ?? detail : null;
 
@@ -536,7 +560,7 @@ export default function App() {
                         <Catalog apps={state.apps} featured={state.featured ?? []} advanced={advanced} selection={selection} setSelection={setSelection} initialCategory={category}
                                  onInstall={() => void startProfile(selectionProfile(selection))}
                                  onInstallOne={(a) => void startProfile(selectionProfile([a.id], a.name))}
-                                 onSave={saveSelection} openURL={(u) => safe(api.OpenURL(u))} onDetail={setDetail} slashSearch={settings.keyShortcuts}/>
+                                 onSave={saveSelection} openURL={(u) => safe(api.OpenURL(u))} onDetail={setDetail} slashSearch={settings.keyShortcuts} seed={catalogSeed}/>
                     ) : tab === "health" ? (
                         <Health advanced={advanced} result={health} busy={healthBusy} step={scanStep.health ?? null} updatesBusy={healthUpdBusy} admin={state.admin} byId={byId}
                                 onScan={() => void scanHealth()} onUpdates={() => void healthUpdates()} onExport={() => void exportHealth()}
@@ -580,6 +604,7 @@ export default function App() {
             {naming && <NameDialog {...naming} onClose={() => setNaming(null)}/>}
             {codeDialog && <CodeDialog title={t("dlg.importCode")} placeholder={t("dlg.codePlaceholder")} ok={t("profiles.import")}
                                        onOk={(c) => void importCode(c)} onClose={() => setCodeDialog(false)}/>}
+            {showPalette && <Palette build={buildPalette} onClose={() => setShowPalette(false)}/>}
             {showTour && <Tour onClose={closeTour}/>}
             {shown && <AppDetail advanced={advanced} app={shown} byId={byId} onClose={() => setDetail(null)} openURL={(u) => safe(api.OpenURL(u))}
                                  onInstall={(a) => { setDetail(null); void startProfile(selectionProfile([a.id], a.name)); }}
