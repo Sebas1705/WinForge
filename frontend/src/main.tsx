@@ -10,6 +10,7 @@ import App from "./App";
 import {ErrorBoundary} from "./components/ErrorBoundary";
 import "./style.css";
 import "./visual.css";
+import "./styles.css";
 
 createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
