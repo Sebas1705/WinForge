@@ -98,6 +98,38 @@ describe("installing", () => {
         expect(within(dialog).queryByLabelText("ok")).not.toBeInTheDocument();
     });
 
+    it("keeps focus in the run dialog when the start button goes away, and announces each step", async () => {
+        const user = await openApp();
+        const dialog = await openFirefoxPlan(user);
+        await user.click(within(dialog).getByRole("button", {name: "Run 1 steps"}));
+        // The pressed button is gone; focus must not fall to the page behind the dialog.
+        await waitFor(() => expect(document.activeElement).toBe(within(dialog).getByRole("heading", {name: "Installing…"})));
+        const live = dialog.querySelector("[aria-live=polite]") as HTMLElement;
+        expect(live).toHaveTextContent("Installing… 0 of 1");
+        await emit.install({step: step("firefox", "Firefox"), status: "start"});
+        await waitFor(() => expect(live).toHaveTextContent("Installing Firefox… 0 of 1"));
+        await emit.install({step: step("firefox", "Firefox"), status: "output", line: "Downloading 40%", percent: 40});
+        expect(await within(dialog).findByRole("progressbar", {name: "Firefox: 40%"})).toBeInTheDocument();
+        await emit.install({step: step("firefox", "Firefox"), status: "ok"});
+        await emit.done([]);
+        // Stop disappeared too: focus moves to the new heading, which says how it ended.
+        await waitFor(() => expect(document.activeElement).toBe(within(dialog).getByRole("heading", {name: "Done"})));
+        expect(live).toHaveTextContent("Done. 1 of 1");
+    });
+
+    it("announces a failed run with its count and keeps the retry button reachable", async () => {
+        const user = await openApp();
+        const dialog = await openFirefoxPlan(user);
+        await user.click(within(dialog).getByRole("button", {name: "Run 1 steps"}));
+        await emit.install({step: step("firefox", "Firefox"), status: "start"});
+        await emit.install({step: step("firefox", "Firefox"), status: "failed", error: "exit 1603", reason: "network"});
+        await emit.done(["winget:firefox"]);
+        const live = dialog.querySelector("[aria-live=polite]") as HTMLElement;
+        await waitFor(() => expect(live).toHaveTextContent("Finished with errors. 0 of 1, Failed: 1"));
+        expect(document.activeElement).toBe(within(dialog).getByRole("heading", {name: "Finished with errors"}));
+        expect(within(dialog).getByRole("button", {name: /Retry/})).toBeInTheDocument();
+    });
+
     it("starts the run once even if the confirm button is double-clicked", async () => {
         const user = await openApp();
         const dialog = await openFirefoxPlan(user);
