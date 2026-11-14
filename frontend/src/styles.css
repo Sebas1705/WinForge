@@ -257,3 +257,14 @@
 
 .field.stacked { flex-direction: column; align-items: stretch; }
 .modal.small { overflow: auto; }
+
+/* ---- non-text contrast, shared by every style (WCAG 1.4.11, 3:1) ----
+   Field borders use --control; the selected state gets an accent-ink edge or ring, because
+   the accent fill alone is below 3:1 against light surfaces. Brutalist already uses ink outlines. */
+:root[data-style=minimal], :root[data-style=material], :root[data-style=liquid], :root[data-style=neumorphic] { --control: #7a8799; }
+:root[data-style=minimal][data-theme=light], :root[data-style=material][data-theme=light], :root[data-style=liquid][data-theme=light], :root[data-style=neumorphic][data-theme=light] { --control: #6b7685; }
+:root[data-style=brutalist] { --control: var(--ink); }
+:root[data-style] :is(input:not([type]), input[type=text], select, .searchbox) { border-color: var(--control); }
+:root[data-style]:not([data-style=brutalist]) :is(.seg button.on, .chips button.on) { border-color: var(--accent-ink); box-shadow: inset 0 0 0 1px var(--accent-ink); }
+:root[data-style]:not([data-style=brutalist]) :is(.navitem.on, aside .row.on) { box-shadow: inset 3px 0 0 var(--accent-ink); }
+:root[data-style]:not([data-style=brutalist]) :is(.list li.sel, .appcard.sel) { border-color: var(--accent-ink); }
