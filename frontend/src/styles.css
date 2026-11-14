@@ -34,13 +34,13 @@
    Material 3 flavour: tonal surfaces, soft elevation, rounded shapes, pill buttons. */
 :root[data-style=material] {
     --bg: #111317; --rail: #181b20; --surface: #242830; --surface2: #30353e; --line: transparent; --cell: #434956;
-    --muted: #aab4c2; --accent-ink: color-mix(in srgb, var(--accent) 62%, #fff);
+    --bad: #ff9099; --muted: #b4bdca; --accent-ink: color-mix(in srgb, var(--accent) 62%, #fff);
     --elev1: 0 1px 2px rgba(0, 0, 0, .35), 0 1px 3px 1px rgba(0, 0, 0, .2);
     --elev2: 0 2px 6px 2px rgba(0, 0, 0, .25), 0 1px 2px rgba(0, 0, 0, .35);
     --elev3: 0 8px 20px 4px rgba(0, 0, 0, .3), 0 2px 6px rgba(0, 0, 0, .4);
 }
 :root[data-style=material][data-theme=light] {
-    --muted: #5a5163; --accent-ink: color-mix(in srgb, var(--accent) 50%, #000); --bg: #f6f2f8; --rail: #efeaf3; --surface: #ffffff; --surface2: #ece6f0; --line: transparent; --cell: #d9d3de;
+    --bad: #b02a35; --muted: #5a5163; --accent-ink: color-mix(in srgb, var(--accent) 50%, #000); --bg: #f6f2f8; --rail: #efeaf3; --surface: #ffffff; --surface2: #ece6f0; --line: transparent; --cell: #d9d3de;
     --elev1: 0 1px 2px rgba(60, 40, 90, .22), 0 1px 3px 1px rgba(60, 40, 90, .12);
     --elev2: 0 2px 6px 2px rgba(60, 40, 90, .15), 0 1px 2px rgba(60, 40, 90, .25);
     --elev3: 0 8px 20px 4px rgba(60, 40, 90, .18), 0 2px 6px rgba(60, 40, 90, .25);
@@ -80,13 +80,13 @@
 :root[data-style=liquid] {
     --bg: #0d1117; --rail: rgba(255, 255, 255, .05); --surface: rgba(255, 255, 255, .07); --surface2: rgba(255, 255, 255, .11);
     --line: rgba(255, 255, 255, .16); --cell: rgba(255, 255, 255, .14);
-    --muted: #b6c0cd; --accent-ink: color-mix(in srgb, var(--accent) 60%, #fff);
+    --bad: #ff9099; --muted: #b6c0cd; --accent-ink: color-mix(in srgb, var(--accent) 60%, #fff);
     --glass-edge: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 -1px 0 rgba(255, 255, 255, .04);
     --glass-blur: blur(22px) saturate(160%);
     --glass-shadow: 0 10px 30px rgba(0, 0, 0, .28);
 }
 :root[data-style=liquid][data-theme=light] {
-    --muted: #46546a; --accent-ink: color-mix(in srgb, var(--accent) 50%, #000); --bg: #e9eef8; --rail: rgba(255, 255, 255, .45); --surface: rgba(255, 255, 255, .55); --surface2: rgba(255, 255, 255, .75);
+    --muted: #46546a; --accent-ink: color-mix(in srgb, var(--accent) 50%, #000); --ok: #0a6a41; --warn: #7d4d00; --bad: #a3242f; --bg: #e9eef8; --rail: rgba(255, 255, 255, .45); --surface: rgba(255, 255, 255, .55); --surface2: rgba(255, 255, 255, .75);
     --line: rgba(255, 255, 255, .85); --cell: rgba(40, 60, 100, .14);
     --glass-edge: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 -1px 0 rgba(255, 255, 255, .3);
     --glass-shadow: 0 10px 30px rgba(40, 60, 110, .16);
@@ -159,6 +159,7 @@
 :root[data-style=neumorphic] :is(button, .chip, .pill) { border-radius: 14px; border-color: transparent; box-shadow: var(--raise-sm); }
 :root[data-style=neumorphic] :is(button.icon, button.link, button.swatch) { box-shadow: none; background: transparent; }
 :root[data-style=neumorphic] button:hover:not(:disabled) { border-color: transparent; color: var(--accent-ink); }
+:root[data-style=neumorphic] button.primary:hover:not(:disabled) { color: var(--on-accent); }
 :root[data-style=neumorphic] button:active:not(:disabled), :root[data-style=neumorphic] .seg button.on, :root[data-style=neumorphic] .chips button.on { box-shadow: var(--sink); }
 :root[data-style=neumorphic] button.primary { box-shadow: var(--raise-sm); }
 :root[data-style=neumorphic] button.primary:active:not(:disabled) { box-shadow: var(--sink); }
@@ -187,7 +188,7 @@
 }
 :root[data-style=brutalist][data-theme=dark] {
     --bg: #1a1a1f; --rail: #26262d; --surface: #2c2c35; --surface2: #3a3a46; --line: #f4f1e8; --cell: #55556a;
-    --text: #f4f1e8; --muted: #b9b5a6; --on-accent: #111111; --ok: #5fe39b; --warn: #ffc857; --bad: #ff6b7a;
+    --text: #f4f1e8; --muted: #b9b5a6; --on-accent: #111111; --ok: #5fe39b; --warn: #ffc857; --bad: #ff9099;
     --accent-ink: color-mix(in srgb, var(--accent) 60%, #fff);
     --ink: #f4f1e8; color-scheme: dark;
 }
@@ -205,6 +206,7 @@
 :root[data-style=brutalist] :is(button.icon, button.link, button.swatch) { box-shadow: none; }
 :root[data-style=brutalist] button.icon { border-color: transparent; }
 :root[data-style=brutalist] button:hover:not(:disabled) { border-color: var(--ink); background: var(--accent); color: var(--on-accent); }
+:root[data-style=brutalist] button:hover:not(:disabled) * { color: inherit; }
 :root[data-style=brutalist] button:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: none; }
 :root[data-style=brutalist] button.primary { background: var(--accent); border-color: var(--ink); }
 :root[data-style=brutalist] button.primary:hover:not(:disabled) { filter: none; background: var(--ink); color: var(--bg); }
