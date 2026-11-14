@@ -217,6 +217,61 @@ describe("keyboard", () => {
     });
 });
 
+describe("the / shortcut", () => {
+    it("jumps to the catalog search", async () => {
+        const user = await openApp();
+        await go(user, /Catalog/);
+        const box = screen.getByPlaceholderText(/Search apps/);
+        await user.keyboard("/");
+        expect(box).toHaveFocus();
+        expect(box).toHaveValue(""); // the key opens the box, it is not typed into it
+    });
+
+    it("is typed normally once the search box has focus", async () => {
+        const user = await openApp();
+        await go(user, /Catalog/);
+        const box = screen.getByPlaceholderText(/Search apps/);
+        await user.click(box);
+        await user.keyboard("a/b");
+        expect(box).toHaveValue("a/b");
+    });
+
+    it("does not pull focus out of an open dialog", async () => {
+        const user = await openApp();
+        await go(user, /Catalog/);
+        const card = screen.getByRole("button", {name: "Firefox"}).closest("article") as HTMLElement;
+        await user.click(within(card).getByRole("button", {name: "Install"}));
+        const dialog = await screen.findByRole("dialog");
+        const before = document.activeElement;
+        await user.keyboard("/");
+        expect(screen.getByPlaceholderText(/Search apps/)).not.toHaveFocus();
+        expect(dialog).toContainElement(document.activeElement as HTMLElement);
+        expect(document.activeElement).toBe(before);
+    });
+
+    it("ignores Ctrl+/ and Cmd+/, which belong to the system", async () => {
+        const user = await openApp();
+        await go(user, /Catalog/);
+        await user.keyboard("{Control>}/{/Control}");
+        await user.keyboard("{Meta>}/{/Meta}");
+        expect(screen.getByPlaceholderText(/Search apps/)).not.toHaveFocus();
+    });
+
+    it("can be switched off in the settings, and Ctrl+K keeps working", async () => {
+        const user = await openApp();
+        await go(user, /Catalog/);
+        await user.click(screen.getByRole("button", {name: "Appearance and language"}));
+        await user.click(within(screen.getByRole("dialog")).getByRole("checkbox", {name: "Press / to search"}));
+        await user.click(within(screen.getByRole("dialog")).getByRole("button", {name: "Done"}));
+        const box = screen.getByPlaceholderText(/Search apps/);
+        await user.keyboard("/");
+        expect(box).not.toHaveFocus();
+        await user.keyboard("{Control>}k{/Control}");
+        await waitFor(() => expect(box).toHaveFocus());
+        expect(JSON.parse(localStorage.getItem("winforge.settings") ?? "{}").keyShortcuts).toBe(false);
+    });
+});
+
 describe("startup error", () => {
     it("tells the user when the settings folder could not be opened", async () => {
         await openApp(makeState({startupError: "Could not open WinForge's settings folder"}));

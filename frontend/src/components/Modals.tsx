@@ -296,6 +296,10 @@ export function SettingsDialog(p: {
                     <Segmented value={p.value.density} onChange={(density) => set({density})}
                                options={[["comfortable", t("settings.comfortable")], ["compact", t("settings.compact")]]}/>
                 </div>
+                <div className="field"><span>{t("settings.shortcuts")}</span>
+                    <label className="check"><input type="checkbox" checked={p.value.keyShortcuts}
+                           onChange={(e) => set({keyShortcuts: e.target.checked})}/> {t("settings.slashSearch")}</label>
+                </div>
                 <div className="field"><span>{t("settings.updates")}</span>
                     <label className="check"><input type="checkbox" checked={p.value.checkUpdates}
                            onChange={(e) => set({checkUpdates: e.target.checked})}/> {t("settings.checkAtStart")}</label>
