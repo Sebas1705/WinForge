@@ -60,6 +60,27 @@ describe("what assistive technology is told", () => {
         expect(screen.getByRole("textbox", {name: "Search profiles"})).toBeInTheDocument();
     });
 
+    it("names the status filter by what it does, not by its current value, and says what the card checkbox is for", async () => {
+        const user = await openApp();
+        await go(user, /Catalog/);
+        const status = screen.getByRole("combobox", {name: "Status"});
+        expect(status).toHaveDisplayValue("Any state");
+        expect(screen.getByRole("checkbox", {name: "Select Firefox"})).toBeInTheDocument();
+        expect(screen.queryByRole("checkbox", {name: "Firefox"})).not.toBeInTheDocument();
+    });
+
+    it("keeps the help icon out of the page heading's name, but readable on its own", async () => {
+        const user = await openApp();
+        for (const [tab, name] of [[/Profiles/, "Profiles"], [/PC health/, "PC health"]] as const) {
+            await go(user, tab);
+            const heading = screen.getByRole("heading", {level: 1});
+            expect(heading).toHaveAccessibleName(name);
+            const help = within(heading).getByRole("img");
+            expect(help.getAttribute("aria-label")).toMatch(/\w{4,}/);
+            expect(help).toHaveAttribute("tabindex", "0");
+        }
+    });
+
     it("moves between catalog tabs with the arrow keys, as one Tab stop", async () => {
         const user = await openApp();
         await go(user, /Catalog/);

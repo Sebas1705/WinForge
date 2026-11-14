@@ -42,7 +42,7 @@ export function Profiles(p: {
         <div className="page">
             <header className="pagehead">
                 <div>
-                    <h1>{t("nav.profiles")} <Tip text={t("profiles.help")}/></h1>
+                    <h1 aria-labelledby="profiles-title"><span id="profiles-title">{t("nav.profiles")}</span> <Tip text={t("profiles.help")}/></h1>
                 </div>
                 <span className="grow"/>
                 <div className="searchbox">

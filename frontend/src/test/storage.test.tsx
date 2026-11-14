@@ -73,9 +73,9 @@ describe("storage: navigation", () => {
 describe("storage: drives", () => {
     it("draws one bar per drive with the share used", async () => {
         await open();
-        const c = await screen.findByRole("meter", {name: "C: Windows: 95% used"});
+        const c = await screen.findByRole("meter", {name: "C: Windows, 95% used"});
         expect(c).toHaveAttribute("aria-valuenow", "95");
-        expect(screen.getByRole("meter", {name: "D:: 50% used"})).toHaveAttribute("aria-valuenow", "50");
+        expect(screen.getByRole("meter", {name: "D:, 50% used"})).toHaveAttribute("aria-valuenow", "50");
         const drives = section("Your drives");
         expect(within(drives).getByText("95 GB used of 100 GB · 5 GB free")).toBeInTheDocument();
         expect(within(drives).getByText("512 GB used of 1 TB · 512 GB free")).toBeInTheDocument();
@@ -107,7 +107,7 @@ describe("storage: drives", () => {
         await open();
         expect(await screen.findByText("Size not available")).toBeInTheDocument();
         expect(screen.queryByText(/Low space/)).not.toBeInTheDocument();
-        expect(screen.getByRole("meter", {name: "X: Card: 0% used"})).toBeInTheDocument();
+        expect(screen.getByRole("meter", {name: "X: Card, 0% used"})).toBeInTheDocument();
     });
 
     it("says so when there are no drives, and reports a failed read", async () => {
@@ -894,7 +894,7 @@ describe("storage: optimize", () => {
         const dialog = await screen.findByRole("dialog", {name: "Optimize storage"});
         expect(within(dialog).getByText(title)).toBeInTheDocument(); // the step has a human name, not the raw id
         expect(api.ApplyRepairs).not.toHaveBeenCalled();
-        await user.click(within(dialog).getByRole("button", {name: "Run 1 steps"}));
+        await user.click(within(dialog).getByRole("button", {name: "Run 1 step"}));
         expect(api.ApplyRepairs).toHaveBeenCalledWith([id]);
     });
 
@@ -903,7 +903,7 @@ describe("storage: optimize", () => {
         await screen.findByRole("meter", {name: /C: Windows/});
         await user.click(within(section("Optimize")).getByRole("button", {name: "Run: Turn off hibernation"}));
         const dialog = await screen.findByRole("dialog", {name: "Optimize storage"});
-        await user.click(within(dialog).getByRole("button", {name: "Run 1 steps"}));
+        await user.click(within(dialog).getByRole("button", {name: "Run 1 step"}));
         const step = {kind: "recipe" as const, id: "optimize-hibernate-off", name: "x", admin: true};
         const reads = api.StorageVolumes.mock.calls.length;
         await emit.install({step, status: "start"});
@@ -918,7 +918,7 @@ describe("storage: Spanish", () => {
     it("shows the tab, the drives and the junk scan in Spanish, with decimal commas", async () => {
         api.StorageScan.mockResolvedValue([cat("temp-user", 1.5 * GB, {files: 3}), cat("windows-old", 12 * GB, {risk: "review", needsAdmin: true})]);
         const user = await open({lang: "es", admin: false});
-        expect(await screen.findByRole("meter", {name: "C: Windows: 95% usado"})).toBeInTheDocument();
+        expect(await screen.findByRole("meter", {name: "C: Windows, 95% usado"})).toBeInTheDocument();
         expect(screen.getByText("95 GB usados de 100 GB · 5 GB libres")).toBeInTheDocument();
         expect(screen.getByText(/Poco espacio: solo quedan 5 GB libres/)).toBeInTheDocument();
         await user.click(screen.getByRole("button", {name: /Buscar basura/}));

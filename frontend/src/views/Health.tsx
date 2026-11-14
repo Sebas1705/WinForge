@@ -52,7 +52,7 @@ export function Health(p: {
         <div className="page health">
             <header className="pagehead">
                 <div>
-                    <h1>{t("health.title")} <Tip text={t("health.help")}/></h1>
+                    <h1 aria-labelledby="health-title"><span id="health-title">{t("health.title")}</span> <Tip text={t("health.help")}/></h1>
                     <p className="muted">{t("health.readOnly")}</p>
                 </div>
                 <span className="grow"/>
@@ -88,7 +88,7 @@ export function Health(p: {
                             const tn = tone(list);
                             const issues = list.filter((f) => f.severity === "bad" || f.severity === "warn").length;
                             return (
-                                <button key={g} className={`area ${tn}`} onClick={() => (sections.current[g] ?? sections.current.attention)?.scrollIntoView({behavior: "smooth", block: "start"})}>
+                                <button key={g} className={`area ${tn}`} aria-label={`${t(`group.${g}` as Key)}: ${issues ? t("health.areaIssues", {n: issues}) : t("health.areaOk")}`} onClick={() => (sections.current[g] ?? sections.current.attention)?.scrollIntoView({behavior: "smooth", block: "start"})}>
                                     <span className="bubble"><Icon name={GROUP_ICON[g]} size={22}/></span>
                                     <b>{t(`group.${g}` as Key)}</b>
                                     <span className="status"><Icon name={issues ? "alert" : "check"} size={14}/>{issues ? issues : ""}</span>

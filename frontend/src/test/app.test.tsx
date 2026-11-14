@@ -71,7 +71,7 @@ describe("installing", () => {
         expect(api.Apply).not.toHaveBeenCalled();
 
         const scans = api.GetState.mock.calls.length;
-        await user.click(within(dialog).getByRole("button", {name: "Run 1 steps"}));
+        await user.click(within(dialog).getByRole("button", {name: "Run 1 step"}));
         expect(api.Apply).toHaveBeenCalledTimes(1);
 
         await emit.install({step: step("firefox", "Firefox"), status: "start"});
@@ -90,7 +90,7 @@ describe("installing", () => {
         const user = await openApp();
         const dialog = await openFirefoxPlan(user);
         expect(within(dialog).getByRole("img", {name: "Waiting"})).toBeInTheDocument();
-        await user.click(within(dialog).getByRole("button", {name: "Run 1 steps"}));
+        await user.click(within(dialog).getByRole("button", {name: "Run 1 step"}));
         await emit.install({step: step("firefox", "Firefox"), status: "start"});
         expect(await within(dialog).findByRole("img", {name: "In progress"})).toBeInTheDocument();
         await emit.install({step: step("firefox", "Firefox"), status: "ok"});
@@ -101,7 +101,7 @@ describe("installing", () => {
     it("keeps focus in the run dialog when the start button goes away, and announces each step", async () => {
         const user = await openApp();
         const dialog = await openFirefoxPlan(user);
-        await user.click(within(dialog).getByRole("button", {name: "Run 1 steps"}));
+        await user.click(within(dialog).getByRole("button", {name: "Run 1 step"}));
         // The pressed button is gone; focus must not fall to the page behind the dialog.
         await waitFor(() => expect(document.activeElement).toBe(within(dialog).getByRole("heading", {name: "Installing…"})));
         const live = dialog.querySelector("[aria-live=polite]") as HTMLElement;
@@ -120,7 +120,7 @@ describe("installing", () => {
     it("announces a failed run with its count and keeps the retry button reachable", async () => {
         const user = await openApp();
         const dialog = await openFirefoxPlan(user);
-        await user.click(within(dialog).getByRole("button", {name: "Run 1 steps"}));
+        await user.click(within(dialog).getByRole("button", {name: "Run 1 step"}));
         await emit.install({step: step("firefox", "Firefox"), status: "start"});
         await emit.install({step: step("firefox", "Firefox"), status: "failed", error: "exit 1603", reason: "network"});
         await emit.done(["winget:firefox"]);
@@ -133,7 +133,7 @@ describe("installing", () => {
     it("starts the run once even if the confirm button is double-clicked", async () => {
         const user = await openApp();
         const dialog = await openFirefoxPlan(user);
-        await user.dblClick(within(dialog).getByRole("button", {name: "Run 1 steps"}));
+        await user.dblClick(within(dialog).getByRole("button", {name: "Run 1 step"}));
         expect(api.Apply).toHaveBeenCalledTimes(1);
     });
 
@@ -142,7 +142,7 @@ describe("installing", () => {
         api.Apply.mockImplementation(() => new Promise<void>((r) => { release = r; }));
         const user = await openApp();
         const dialog = await openFirefoxPlan(user);
-        await user.click(within(dialog).getByRole("button", {name: "Run 1 steps"}));
+        await user.click(within(dialog).getByRole("button", {name: "Run 1 step"}));
         await emit.install({step: step("firefox", "Firefox"), status: "start"});
         release();
         await waitFor(() => expect(api.Apply).toHaveBeenCalled());
@@ -153,9 +153,9 @@ describe("installing", () => {
         api.Apply.mockRejectedValueOnce(new Error("an installation is already running"));
         const user = await openApp();
         const dialog = await openFirefoxPlan(user);
-        await user.click(within(dialog).getByRole("button", {name: "Run 1 steps"}));
+        await user.click(within(dialog).getByRole("button", {name: "Run 1 step"}));
         expect(await screen.findByRole("status")).toHaveTextContent("an installation is already running");
-        const again = within(screen.getByRole("dialog")).getByRole("button", {name: "Run 1 steps"});
+        const again = within(screen.getByRole("dialog")).getByRole("button", {name: "Run 1 step"});
         expect(again).toBeEnabled();
         await user.click(again);
         expect(api.Apply).toHaveBeenCalledTimes(2);
@@ -164,7 +164,7 @@ describe("installing", () => {
     it("cannot be dismissed with Escape while running, but can once it has finished", async () => {
         const user = await openApp();
         await openFirefoxPlan(user);
-        await user.click(screen.getByRole("button", {name: "Run 1 steps"}));
+        await user.click(screen.getByRole("button", {name: "Run 1 step"}));
         await emit.install({step: step("firefox", "Firefox"), status: "start"});
         await user.keyboard("{Escape}");
         expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -177,7 +177,7 @@ describe("installing", () => {
     it("stops once: the button disables itself and reports it is stopping", async () => {
         const user = await openApp();
         await openFirefoxPlan(user);
-        await user.click(screen.getByRole("button", {name: "Run 1 steps"}));
+        await user.click(screen.getByRole("button", {name: "Run 1 step"}));
         await emit.install({step: step("firefox", "Firefox"), status: "start"});
         const stop = screen.getByRole("button", {name: "Stop"});
         await user.dblClick(stop);
@@ -188,7 +188,7 @@ describe("installing", () => {
     it("shows the failure reason and the right hint when a step fails", async () => {
         const user = await openApp();
         await openFirefoxPlan(user);
-        await user.click(screen.getByRole("button", {name: "Run 1 steps"}));
+        await user.click(screen.getByRole("button", {name: "Run 1 step"}));
         await emit.install({step: step("firefox", "Firefox"), status: "start"});
         await emit.install({step: step("firefox", "Firefox"), status: "failed", error: "winget exited with code 0x80070005"});
         await emit.done(["firefox"]);
@@ -270,7 +270,7 @@ describe("profiles", () => {
     it("never replaces an existing profile: a saved selection gets a free id", async () => {
         const user = await openApp();
         await go(user, /Catalog/);
-        await user.click(within(cardOf("Firefox")).getByRole("checkbox", {name: "Firefox"}));
+        await user.click(within(cardOf("Firefox")).getByRole("checkbox", {name: "Select Firefox"}));
         await user.click(screen.getByRole("button", {name: "Save as profile…"}));
         const name = within(await screen.findByRole("dialog", {name: "Save selection as a profile"})).getByRole("textbox");
         await user.type(name, "Gaming{Enter}"); // "gaming" is a built-in id
@@ -494,7 +494,7 @@ describe("robustness", () => {
         resetApi(state);
         const user = await openApp();
         await go(user, /Catalog/);
-        await user.click(within(cardOf("Firefox")).getByRole("checkbox", {name: "Firefox"}));
+        await user.click(within(cardOf("Firefox")).getByRole("checkbox", {name: "Select Firefox"}));
         await user.click(screen.getByRole("button", {name: "Rescan PC"}));
         await waitFor(() => expect(api.GetState.mock.calls.length).toBeGreaterThan(1));
         expect(screen.getByText(/1 selected, 1 to install/)).toBeInTheDocument();

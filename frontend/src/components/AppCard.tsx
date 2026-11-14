@@ -21,7 +21,7 @@ export const AppCard = memo(function AppCard(p: {
         <article className={"appcard" + (p.selected ? " sel" : "") + (p.compact ? " compact" : "")}>
             {p.onToggle && (
                 <label className="pick" title={a.name}>
-                    <input type="checkbox" checked={!!p.selected} onChange={() => p.onToggle?.(a.id)} aria-label={a.name}/>
+                    <input type="checkbox" checked={!!p.selected} onChange={() => p.onToggle?.(a.id)} aria-label={t("catalog.select", {name: a.name})}/>
                 </label>
             )}
             <button className="cardbody" onClick={() => p.onOpen(a)} aria-label={a.name}>

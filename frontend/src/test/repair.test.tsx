@@ -48,7 +48,7 @@ describe("fixing what the health page finds", () => {
         expect(within(dialog).getByText("repair-missing-drivers".length ? "Find drivers for devices that have none" : "")).toBeInTheDocument();
         expect(api.ApplyRepairs).not.toHaveBeenCalled();
         const scans = api.HealthScan.mock.calls.length;
-        await user.click(within(dialog).getByRole("button", {name: "Run 1 steps"}));
+        await user.click(within(dialog).getByRole("button", {name: "Run 1 step"}));
         expect(api.ApplyRepairs).toHaveBeenCalledWith(["repair-missing-drivers"]);
 
         await emit.install({step: step("repair-missing-drivers", "x"), status: "start"});
@@ -86,7 +86,7 @@ describe("fixing what the health page finds", () => {
         const user = await openHealth();
         const card = screen.getByText("2 devices need a driver").closest("li") as HTMLElement;
         await user.click(within(card).getByRole("button", {name: "Fix it for me"}));
-        await user.click(await screen.findByRole("button", {name: "Run 1 steps"}));
+        await user.click(await screen.findByRole("button", {name: "Run 1 step"}));
         await emit.install({step: step("repair-missing-drivers", "x"), status: "start"});
         await emit.install({step: step("repair-missing-drivers", "x"), status: "failed", error: "recipe exited with code 1", reason: "installer"});
         await emit.done(["repair-missing-drivers"]);

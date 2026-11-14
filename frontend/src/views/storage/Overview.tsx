@@ -23,7 +23,7 @@ function Volume({v}: { v: StorageVolume }) {
                 <span className="muted small">
                     {known ? t("storage.volume.line", {used: formatBytes(used), total: formatBytes(v.totalBytes), free: formatBytes(free)}) : t("storage.volume.unknown")}
                 </span>
-                {known && <span className="grow volpct small">{t("storage.volume.freePct", {pct: freePct})}</span>}
+                {known && <span className="grow volpct small"><span className="sr-only">. </span>{t("storage.volume.freePct", {pct: freePct})}</span>}
             </div>
             <div className="volbar" role="meter" aria-label={t("storage.volume.usedLabel", {drive: name, pct: usedPct})}
                  aria-valuemin={0} aria-valuemax={100} aria-valuenow={usedPct}>
