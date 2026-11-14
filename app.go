@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 
@@ -18,6 +19,7 @@ import (
 	"github.com/Sebas1705/WinForge/internal/profile"
 	"github.com/Sebas1705/WinForge/internal/storage"
 	"github.com/Sebas1705/WinForge/internal/system"
+	"github.com/Sebas1705/WinForge/internal/updates"
 )
 
 // App is the object bound to the frontend. Every exported method is callable
@@ -33,6 +35,8 @@ type App struct {
 	healthReport  *health.Report
 	healthUpdates *health.UpdateScan
 	pending       *install.PendingStore
+	ignored       *updates.Store   // updates the person chose not to install; nil when the settings folder is unavailable
+	now           func() time.Time // replaced by tests
 	restorePath   string
 	installing    map[string]bool
 
@@ -53,7 +57,13 @@ func NewApp() *App {
 		// broken build, not a user error.
 		panic(err)
 	}
-	return newApp(cat, profile.DefaultStore, install.DefaultPendingStore)
+	app := newApp(cat, profile.DefaultStore, install.DefaultPendingStore)
+	if s, err := updates.DefaultStore(); err != nil {
+		log.Printf("winforge: ignored updates: %v", err)
+	} else {
+		app.ignored = s
+	}
+	return app
 }
 
 // errStorageUnavailable is what profile operations return when the user's
@@ -398,50 +408,12 @@ func (a *App) OpenURL(u string) {
 	}
 }
 
-// UpgradeInfo is an installed catalog app with a newer version available.
-type UpgradeInfo struct {
-	ID        string `json:"id"` // catalog id
-	Name      string `json:"name"`
-	Publisher string `json:"publisher"`
-	Current   string `json:"current"`
-	Available string `json:"available"`
-}
-
-// Upgrades asks winget which installed packages have updates and keeps those
-// the catalog knows; everything else on the PC is left alone.
-func (a *App) Upgrades() ([]UpgradeInfo, error) {
-	ups, err := system.WingetUpgrades(a.ctx)
-	if err != nil {
-		return nil, err
-	}
-	a.mu.Lock()
-	a.upgrades = ups
-	a.mu.Unlock()
-	out := []UpgradeInfo{}
-	for _, s := range install.UpgradePlan(a.cat, ups, nil).Steps {
-		app := a.cat.Apps[s.ID]
-		cur := ""
-		for _, u := range ups {
-			if u.ID == app.Winget {
-				cur = u.Current
-			}
-		}
-		out = append(out, UpgradeInfo{ID: s.ID, Name: app.Name, Publisher: app.Publisher, Current: cur, Available: s.Version})
-	}
-	return out, nil
-}
-
-// PlanUpgrades previews updating the given catalog apps (all when empty).
-func (a *App) PlanUpgrades(ids []string) install.Plan {
-	a.mu.Lock()
-	ups := a.upgrades
-	a.mu.Unlock()
-	return install.UpgradePlan(a.cat, ups, ids)
-}
-
 // ApplyUpgrades updates the given catalog apps in the background.
 func (a *App) ApplyUpgrades(ids []string) error {
-	plan := a.PlanUpgrades(ids)
+	plan, err := a.PlanUpgrades(ids)
+	if err != nil {
+		return err
+	}
 	if len(plan.Steps) == 0 {
 		return errors.New("nothing to update")
 	}
