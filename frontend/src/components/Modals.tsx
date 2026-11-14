@@ -45,6 +45,7 @@ export function RunModal(p: {
     const current = run.plan.steps.find((s) => stateOf(s) === "running");
     const logRef = useRef<HTMLPreElement>(null);
     const dialog = useRef<HTMLDivElement>(null);
+    const headingRef = useRef<HTMLHeadingElement>(null);
     const [now, setNow] = useState(Date.now());
     const [end, setEnd] = useState<number | null>(null);
     const [showLog, setShowLog] = useState(p.advanced);
@@ -53,6 +54,13 @@ export function RunModal(p: {
     // Escape closes the dialog only when nothing is running: stopping an
     // installation is a deliberate act with its own button.
     useModal(dialog, run.running ? undefined : p.onClose);
+
+    // The button pressed to start (or Stop, when the run ends) disappears, which would drop focus to the page.
+    // The heading is a stable place that also announces the new state.
+    useEffect(() => {
+        const a = document.activeElement;
+        if (!a || a === document.body || !dialog.current?.contains(a)) headingRef.current?.focus({preventScroll: true});
+    }, [started, finished]);
 
     useEffect(() => { logRef.current?.scrollTo?.(0, logRef.current.scrollHeight); }, [run.log, showLog]);
     useEffect(() => {
@@ -81,6 +89,10 @@ export function RunModal(p: {
             : <span className="avatar recipe" style={{width: 26, height: 26}}><Icon name="settings" size={14}/></span>;
     };
     const currentApp = current && current.kind !== "recipe" ? p.byId.get(current.id) : undefined;
+    // Spoken once per step, not per tick: the elapsed time and the download percent stay out of it.
+    const announce = !started ? ""
+        : run.running ? `${current ? t("run.working", {name: current.name}) : t("run.installing")} ${t("run.stepOf", {done, total: cells.length})}`
+        : `${heading}. ${t("run.stepOf", {done: done - failedCount, total: cells.length})}${failedCount > 0 ? `, ${t("run.status.failed")}: ${failedCount}` : ""}`;
 
     return (
         <div className="overlay">
@@ -91,7 +103,7 @@ export function RunModal(p: {
                             {finished ? <Icon name={failedCount ? "alert" : "check"} size={30}/> : <span className="ringnum">{done}<small>/{cells.length}</small></span>}
                         </Ring>
                         <div className="grow">
-                            <h3>{heading}</h3>
+                            <h3 tabIndex={-1} ref={headingRef}>{heading}</h3>
                             {current && (
                                 <p className="now">
                                     {currentApp ? <AppIcon id={currentApp.id} name={currentApp.name} category={currentApp.category} size={28}/> : null}
@@ -103,7 +115,8 @@ export function RunModal(p: {
                             <span className="mono muted small">{t("run.stepOf", {done, total: cells.length})}{elapsed && ` · ${elapsed}`}</span>
                         </div>
                     </div>
-                ) : <h3>{heading}</h3>}
+                ) : <h3 tabIndex={-1} ref={headingRef}>{heading}</h3>}
+                <p className="sr-only" aria-live="polite" aria-atomic="true">{announce}</p>
 
                 {!started && run.plan.needsAdmin && !p.admin && (
                     <div className="banner warn">
@@ -124,7 +137,7 @@ export function RunModal(p: {
                                 {s.admin && <span className="tag"><Icon name="lock" size={11}/></span>}
                                 <span className={`stat ${st}`} role="img" aria-label={t(`run.status.${st}` as Key)}><Icon name={ICON[st]} size={15}/></span>
                                 {st === "running" && (run.percent[stepKey(s)] ?? 0) > 0 && (
-                                    <progress className="dl" value={run.percent[stepKey(s)]} max={100} aria-label={`${run.percent[stepKey(s)]}%`}/>
+                                    <progress className="dl" value={run.percent[stepKey(s)]} max={100} aria-label={`${s.name}: ${run.percent[stepKey(s)]}%`}/>
                                 )}
                                 {st === "failed" && reasonOf(s) && <p className="why">{t(`run.reason.${reasonOf(s)}` as Key)}</p>}
                             </li>

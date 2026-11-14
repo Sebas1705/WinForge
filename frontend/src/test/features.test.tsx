@@ -75,9 +75,9 @@ describe("when a step fails", () => {
         await user.click(await screen.findByRole("button", {name: "Run 1 steps"}));
         await emit.install({step: step("firefox", "Firefox"), status: "start"});
         await emit.install({step: step("firefox", "Firefox"), status: "output", line: "  42%", percent: 42});
-        expect(await screen.findByRole("progressbar", {name: "42%"})).toBeInTheDocument();
+        expect(await screen.findByRole("progressbar", {name: "Firefox: 42%"})).toBeInTheDocument();
         await emit.install({step: step("firefox", "Firefox"), status: "ok"});
-        expect(screen.queryByRole("progressbar", {name: "42%"})).not.toBeInTheDocument();
+        expect(screen.queryByRole("progressbar", {name: "Firefox: 42%"})).not.toBeInTheDocument();
     });
 
     it("tells the person to restart Windows when a step needs it", async () => {
