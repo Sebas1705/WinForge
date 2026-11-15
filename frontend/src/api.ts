@@ -7,6 +7,9 @@ import type {InstallEvent, Plan, Profile, State, UpgradeInfo} from "./lib/model"
 
 export interface ProfilesFolderInfo { path: string; default: string; custom: boolean; count: number; problem?: string }
 export interface ProfilesFolderChange { copied: number; skipped: number; info: ProfilesFolderInfo }
+export interface DriftApp { id: string; name: string }
+export interface DriftChange { id: string; name: string; from: string; to: string }
+export interface DriftInfo { hasBaseline: boolean; at?: string; removed: DriftApp[]; added: DriftApp[]; updated: DriftChange[]; count: number }
 export interface UpdateInfo { current: string; latest: string; available: boolean; url: string; notes: string }
 export interface BackupSet { id: string; files: number; bytes: number }
 export interface BackupRequest { sets: string[]; apps: boolean; folders: string[] }
@@ -56,6 +59,8 @@ export const api = Go as unknown as {
     ExportProfile(p: Profile): Promise<string>;
     ExportWinget(p: Profile): Promise<string>;
     ExportConfigure(p: Profile): Promise<string>;
+    ProfileDrift(id: string): Promise<DriftInfo>;
+    AcceptProfileState(id: string): Promise<void>;
     ExportScript(p: Profile): Promise<string>;
     ImportProfile(): Promise<ImportResult | null>;
     RestartAsAdmin(): Promise<void>;
