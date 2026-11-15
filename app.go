@@ -19,6 +19,7 @@ import (
 	"github.com/Sebas1705/WinForge/internal/health"
 	"github.com/Sebas1705/WinForge/internal/install"
 	"github.com/Sebas1705/WinForge/internal/profile"
+	"github.com/Sebas1705/WinForge/internal/startup"
 	"github.com/Sebas1705/WinForge/internal/storage"
 	"github.com/Sebas1705/WinForge/internal/system"
 	"github.com/Sebas1705/WinForge/internal/updates"
@@ -57,6 +58,13 @@ type App struct {
 	running    bool
 	cancel     context.CancelFunc
 	startupErr error
+
+	// The Startup page: what the last list showed, and the machine behind it. startupSys, elevated
+	// and reveal are replaced by tests (nil means the real registry, token and Explorer).
+	startupState startupSession
+	startupSys   startup.System
+	elevated     func() bool
+	reveal       func(path string) error
 }
 
 func NewApp() *App {
