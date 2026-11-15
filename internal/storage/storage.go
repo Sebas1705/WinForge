@@ -164,6 +164,22 @@ var Specs = []Spec{
 		Dirs: func(e Env) []string { return list(under(e.LocalAppData, "go-build")) }},
 	{ID: "dev-gradle", Risk: Review,
 		Dirs: func(e Env) []string { return list(under(e.Home, ".gradle", "caches")) }},
+	// Downloaded again on the next build; only the download folders, never a setting, a key or a project.
+	{ID: "dev-yarn", Risk: Safe,
+		Dirs: func(e Env) []string { return list(under(e.LocalAppData, "Yarn", "Cache")) }},
+	{ID: "dev-pnpm", Risk: Review,
+		Dirs: func(e Env) []string { return list(under(e.LocalAppData, "pnpm", "store")) }},
+	{ID: "dev-cargo", Risk: Review,
+		Dirs: func(e Env) []string {
+			return list(under(e.Home, ".cargo", "registry", "cache"), under(e.Home, ".cargo", "registry", "src"))
+		}},
+	{ID: "dev-gradle-wrapper", Risk: Review,
+		Dirs: func(e Env) []string { return list(under(e.Home, ".gradle", "wrapper", "dists")) }},
+	{ID: "dev-android", Risk: Safe,
+		Dirs: func(e Env) []string { return list(under(e.Home, ".android", "cache")) }},
+	// Docker's own commands do the removing; containers and volumes are never touched.
+	{ID: "docker-build-cache", Risk: Review, Special: "docker-build-cache"},
+	{ID: "docker-dangling", Risk: Review, Special: "docker-dangling"},
 }
 
 // SpecFor returns the category with that id.

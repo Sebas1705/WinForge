@@ -60,6 +60,22 @@ func cleanOne(ctx context.Context, id string, o Options, th *throttle) Outcome {
 				"Clear-RecycleBin -Force -ErrorAction SilentlyContinue")
 			return err
 		})
+	case "docker-build-cache":
+		return docker(viaCommand(ctx, o, s, out, func() error {
+			if o.Runner == nil {
+				return errors.New("no way to run commands")
+			}
+			_, err := o.Runner.Run(ctx, "docker", "builder", "prune", "--all", "--force")
+			return err
+		}))
+	case "docker-dangling":
+		return docker(viaCommand(ctx, o, s, out, func() error {
+			if o.Runner == nil {
+				return errors.New("no way to run commands")
+			}
+			_, err := o.Runner.Run(ctx, "docker", "image", "prune", "--force")
+			return err
+		}))
 	case "windows-old":
 		return viaCommand(ctx, o, s, out, func() error {
 			r := o.windowsOld()
@@ -86,6 +102,12 @@ func cleanOne(ctx context.Context, id string, o Options, th *throttle) Outcome {
 		out.Failed += failed
 	}
 	return out
+}
+
+// docker drops the count of items left over: what Docker keeps is in use, not a failure to remove it.
+func docker(o Outcome) Outcome {
+	o.Failed = 0
+	return o
 }
 
 // viaCommand runs a command-based category and measures what it freed by
