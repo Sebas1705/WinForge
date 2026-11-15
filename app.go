@@ -370,6 +370,18 @@ func (a *App) ExportWinget(p catalog.Profile) (string, error) {
 	})
 }
 
+// ExportConfigure writes the profile's apps as a "winget configure" file. Recipes are left out: they
+// run scripts, which do not belong in a file another person will apply.
+func (a *App) ExportConfigure(p catalog.Profile) (string, error) {
+	res, err := a.cat.ResolveProfile(&p)
+	if err != nil {
+		return "", err
+	}
+	return a.saveWith(p.ID+".winget", "winget configuration (*.winget)", "*.winget", func() ([]byte, error) {
+		return profile.WingetConfigure(p.Name, res.Apps, res.Recipes, a.cat)
+	})
+}
+
 func (a *App) saveWith(name, label, pattern string, render func() ([]byte, error)) (string, error) {
 	b, err := render()
 	if err != nil {

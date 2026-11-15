@@ -143,6 +143,7 @@ function ProfileDetail(p: {
                             <button role="menuitem" onClick={() => run(() => api.ExportProfile(current))}>{t("profiles.export")}</button>
                             <button role="menuitem" title={t("profiles.shareCodeHint")} onClick={() => { setMenu(false); void shareCode(); }}>{t("profiles.shareCode")}</button>
                             {p.advanced && <button role="menuitem" title={t("profiles.exportWingetHint")} onClick={() => run(() => api.ExportWinget(current))}>{t("profiles.exportWinget")}</button>}
+                            {p.advanced && <button role="menuitem" title={t("profiles.exportConfigureHint")} onClick={() => run(() => api.ExportConfigure(current))}>{t("profiles.exportConfigure")}</button>}
                             {p.advanced && <button role="menuitem" title={t("profiles.exportScriptHint")} disabled={missingAll === 0} onClick={() => run(() => api.ExportScript(current))}>{t("profiles.exportScript")}</button>}
                             {!current.builtin && <button role="menuitem" className="danger" onClick={() => { setMenu(false); setConfirmDelete(true); }}>{t("profiles.delete")}</button>}
                         </div>

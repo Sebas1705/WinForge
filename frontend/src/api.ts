@@ -55,6 +55,7 @@ export const api = Go as unknown as {
     ProfileFromPC(id: string, name: string, pin: boolean): Promise<Profile>;
     ExportProfile(p: Profile): Promise<string>;
     ExportWinget(p: Profile): Promise<string>;
+    ExportConfigure(p: Profile): Promise<string>;
     ExportScript(p: Profile): Promise<string>;
     ImportProfile(): Promise<ImportResult | null>;
     RestartAsAdmin(): Promise<void>;

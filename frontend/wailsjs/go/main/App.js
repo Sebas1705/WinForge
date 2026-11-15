@@ -50,6 +50,10 @@ export function Emulation() {
   return window['go']['main']['App']['Emulation']();
 }
 
+export function ExportConfigure(arg1) {
+  return window['go']['main']['App']['ExportConfigure'](arg1);
+}
+
 export function ExportProfile(arg1) {
   return window['go']['main']['App']['ExportProfile'](arg1);
 }

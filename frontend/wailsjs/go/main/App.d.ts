@@ -30,6 +30,8 @@ export function DiscardPending():Promise<void>;
 
 export function Emulation():Promise<catalog.Emulation>;
 
+export function ExportConfigure(arg1:catalog.Profile):Promise<string>;
+
 export function ExportProfile(arg1:catalog.Profile):Promise<string>;
 
 export function ExportScript(arg1:catalog.Profile):Promise<string>;
