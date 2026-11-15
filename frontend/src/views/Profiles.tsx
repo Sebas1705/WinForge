@@ -10,6 +10,8 @@ import {profileText} from "../lib/profileText";
 import type {App, Profile, ProfileInfo, State} from "../lib/model";
 import {selectionProfile} from "../lib/model";
 import {profileApps, profileTally} from "../lib/tally";
+import {withApps} from "../lib/drift";
+import {DriftPanel} from "./profiles/DriftPanel";
 
 export function Profiles(p: {
     state: State; focus: string | null; advanced: boolean;
@@ -26,7 +28,7 @@ export function Profiles(p: {
 
     if (current) {
         return <ProfileDetail profile={current} apps={apps} advanced={p.advanced} onBack={() => setSel(null)}
-                              onInstall={p.onInstall} onChanged={async () => { await p.onChanged(); setSel(null); }} say={p.say}
+                              onInstall={p.onInstall} onChanged={async () => { await p.onChanged(); setSel(null); }} onRefresh={p.onChanged} scan={p.state.apps} say={p.say}
                               onEdit={p.onEdit} onDetail={p.onDetail}/>;
     }
 
@@ -68,6 +70,7 @@ export function Profiles(p: {
                                     <span className="line muted">{pt(x).desc}</span>
                                     <span className="foot">
                                         <span className="mono muted small">{t("profiles.appCount", {n: tl.total})}</span>
+                                        {(x.changes ?? 0) > 0 && <span className="pill changed">{x.changes === 1 ? t("drift.badgeOne") : t("drift.badge", {n: x.changes ?? 0})}</span>}
                                         <Ring size={34} stroke={4} value={tl.total ? tl.have / tl.total : 0} tone={full ? "ok" : "accent"} label={t("tally.installed", {have: tl.have, total: tl.total})}>
                                             {full ? <Icon name="check" size={14}/> : <span className="mono tiny">{tl.have}</span>}
                                         </Ring>
@@ -86,6 +89,10 @@ function ProfileDetail(p: {
     profile: ProfileInfo; apps: Map<string, App>; advanced: boolean;
     onBack: () => void; onInstall: (p: Profile) => void; onChanged: () => Promise<void>; say: (m: string) => void;
     onEdit: (p: ProfileInfo) => void; onDetail: (a: App) => void;
+    /** Reads the profiles again without leaving the page. */
+    onRefresh: () => Promise<void>;
+    /** Changes when the PC is scanned again. */
+    scan: unknown;
 }) {
     const {profile: current} = p;
     const text = profileText(current, getLang());
@@ -143,12 +150,16 @@ function ProfileDetail(p: {
                             <button role="menuitem" onClick={() => run(() => api.ExportProfile(current))}>{t("profiles.export")}</button>
                             <button role="menuitem" title={t("profiles.shareCodeHint")} onClick={() => { setMenu(false); void shareCode(); }}>{t("profiles.shareCode")}</button>
                             {p.advanced && <button role="menuitem" title={t("profiles.exportWingetHint")} onClick={() => run(() => api.ExportWinget(current))}>{t("profiles.exportWinget")}</button>}
+                            {p.advanced && <button role="menuitem" title={t("profiles.exportConfigureHint")} onClick={() => run(() => api.ExportConfigure(current))}>{t("profiles.exportConfigure")}</button>}
                             {p.advanced && <button role="menuitem" title={t("profiles.exportScriptHint")} disabled={missingAll === 0} onClick={() => run(() => api.ExportScript(current))}>{t("profiles.exportScript")}</button>}
                             {!current.builtin && <button role="menuitem" className="danger" onClick={() => { setMenu(false); setConfirmDelete(true); }}>{t("profiles.delete")}</button>}
                         </div>
                     )}
                 </div>
             </div>
+
+            <DriftPanel profile={current} scan={p.scan} say={p.say}
+                        onAdd={async (ids) => { await api.SaveProfile(withApps(current, ids)); await p.onRefresh(); }}/>
 
             <div className="tilegrid">
                 {current.resolved.map((id) => {

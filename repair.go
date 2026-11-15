@@ -23,7 +23,7 @@ func (a *App) ApplyRepairs(ids []string) error {
 	if len(plan.Steps) == 0 {
 		return errors.New("nothing to repair")
 	}
-	return a.start(plan, "repair")
+	return a.start(plan, "repair", "")
 }
 
 // RestartPC restarts Windows in 30 seconds, which leaves time to cancel with

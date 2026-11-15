@@ -1013,6 +1013,78 @@ export namespace main {
 	        this.problems = source["problems"];
 	    }
 	}
+	export class DriftApp {
+	    id: string;
+	    name: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new DriftApp(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	    }
+	}
+	export class DriftChange {
+	    id: string;
+	    name: string;
+	    from: string;
+	    to: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new DriftChange(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.from = source["from"];
+	        this.to = source["to"];
+	    }
+	}
+	export class DriftInfo {
+	    hasBaseline: boolean;
+	    at?: string;
+	    removed: DriftApp[];
+	    added: DriftApp[];
+	    updated: DriftChange[];
+	    count: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new DriftInfo(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.hasBaseline = source["hasBaseline"];
+	        this.at = source["at"];
+	        this.removed = this.convertValues(source["removed"], DriftApp);
+	        this.added = this.convertValues(source["added"], DriftApp);
+	        this.updated = this.convertValues(source["updated"], DriftChange);
+	        this.count = source["count"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class FolderInfo {
 	    path: string;
 	    default: string;
@@ -1283,6 +1355,7 @@ export namespace main {
 	    builtin: boolean;
 	    resolved: string[];
 	    resolvedRecipes: string[];
+	    changes: number;
 	
 	    static createFrom(source: any = {}) {
 	        return new ProfileInfo(source);
@@ -1300,6 +1373,7 @@ export namespace main {
 	        this.builtin = source["builtin"];
 	        this.resolved = source["resolved"];
 	        this.resolvedRecipes = source["resolvedRecipes"];
+	        this.changes = source["changes"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

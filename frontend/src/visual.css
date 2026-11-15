@@ -398,3 +398,11 @@ img, svg { -webkit-user-drag: none; user-drag: none; }
 .palette-empty, .palette-hint { margin: 0; padding: 4px 6px; }
 .menu-pop.end { left: auto; right: 0; } /* a menu at the end of a row opens inwards, not off the window */
 .menu-pop { color: var(--text); } /* a popup is its own surface: it must not inherit the colour of the row it opens from */
+
+/* profile drift */
+.drift { margin: 6px 0 22px; padding: 14px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; display: flex; flex-direction: column; gap: 10px; }
+.drift h2 { font-size: 17px; margin: 0; }
+.drift h3 { font: 600 13px var(--font-body); margin: 0 0 4px; color: var(--muted); }
+.drift p { margin: 0; }
+.drift-ok { display: flex; align-items: center; gap: 6px; }
+.pill.changed { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, transparent); }

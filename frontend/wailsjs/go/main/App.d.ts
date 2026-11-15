@@ -6,6 +6,8 @@ import {main} from '../models';
 import {install} from '../models';
 import {storage} from '../models';
 
+export function AcceptProfileState(arg1:string):Promise<void>;
+
 export function Apply(arg1:catalog.Profile):Promise<void>;
 
 export function ApplyRepairs(arg1:Array<string>):Promise<void>;
@@ -29,6 +31,8 @@ export function DeleteProfile(arg1:string):Promise<void>;
 export function DiscardPending():Promise<void>;
 
 export function Emulation():Promise<catalog.Emulation>;
+
+export function ExportConfigure(arg1:catalog.Profile):Promise<string>;
 
 export function ExportProfile(arg1:catalog.Profile):Promise<string>;
 
@@ -79,6 +83,8 @@ export function PlanUninstall(arg1:Array<string>):Promise<install.Plan>;
 export function PlanUpgrades(arg1:Array<string>):Promise<install.Plan>;
 
 export function PlayGame(arg1:string,arg2:string):Promise<void>;
+
+export function ProfileDrift(arg1:string):Promise<main.DriftInfo>;
 
 export function ProfileFromPC(arg1:string,arg2:string,arg3:boolean):Promise<catalog.Profile>;
 

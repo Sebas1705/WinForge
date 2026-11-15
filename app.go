@@ -15,6 +15,7 @@ import (
 	"github.com/Sebas1705/WinForge/catalogdata"
 	"github.com/Sebas1705/WinForge/internal/appconfig"
 	"github.com/Sebas1705/WinForge/internal/catalog"
+	"github.com/Sebas1705/WinForge/internal/drift"
 	"github.com/Sebas1705/WinForge/internal/health"
 	"github.com/Sebas1705/WinForge/internal/install"
 	"github.com/Sebas1705/WinForge/internal/profile"
@@ -40,6 +41,8 @@ type App struct {
 	healthReport  *health.Report
 	healthUpdates *health.UpdateScan
 	pending       *install.PendingStore
+	applied       *drift.Store     // what the PC looked like when each profile was applied; nil when the settings folder is unavailable
+	baselineFor   string           // a profile that was just applied in full: the next scan is its baseline
 	ignored       *updates.Store   // updates the person chose not to install; nil when the settings folder is unavailable
 	now           func() time.Time // replaced by tests
 	restorePath   string
@@ -68,6 +71,11 @@ func NewApp() *App {
 	} else {
 		app.config = c
 		app.useConfiguredProfiles()
+	}
+	if d, err := drift.DefaultStore(); err != nil {
+		log.Printf("winforge: profile history: %v", err)
+	} else {
+		app.applied = d
 	}
 	if s, err := updates.DefaultStore(); err != nil {
 		log.Printf("winforge: ignored updates: %v", err)
@@ -181,6 +189,8 @@ type ProfileInfo struct {
 	Builtin         bool     `json:"builtin"`
 	Resolved        []string `json:"resolved"`
 	ResolvedRecipes []string `json:"resolvedRecipes"`
+	// Changes is how many things differ on this PC since the profile was last applied; 0 when none or never recorded.
+	Changes int `json:"changes"`
 }
 
 // GetState rescans the PC and returns the full UI state.
@@ -195,6 +205,7 @@ func (a *App) GetState() (State, error) {
 	a.mu.Lock()
 	a.installed = installed
 	a.mu.Unlock()
+	a.rememberBaseline(installed)
 
 	for _, id := range sortedApps(a.cat) {
 		app := a.cat.Apps[id]
@@ -217,16 +228,34 @@ func (a *App) GetState() (State, error) {
 	st.StartupError = a.StartupError()
 	store := a.profileStore()
 	if store == nil {
+		a.attachDrift(&st, installed)
 		return st, nil
 	}
 	user, err := store.List(a.cat)
 	if err != nil {
+		a.attachDrift(&st, installed)
 		return st, err
 	}
 	for _, p := range user {
 		st.Profiles = append(st.Profiles, a.profileInfo(p, false))
 	}
+	a.attachDrift(&st, installed)
 	return st, nil
+}
+
+// attachDrift fills in how many things changed since each profile was applied.
+func (a *App) attachDrift(st *State, installed map[string]system.Installed) {
+	apps := make(map[string][]string, len(st.Profiles))
+	for _, p := range st.Profiles {
+		apps[p.ID] = p.Resolved
+	}
+	for i, n := range a.driftCounts(apps, installed) {
+		for j := range st.Profiles {
+			if st.Profiles[j].ID == i {
+				st.Profiles[j].Changes = n
+			}
+		}
+	}
 }
 
 func (a *App) profileInfo(p catalog.Profile, builtin bool) ProfileInfo {
@@ -269,11 +298,11 @@ func (a *App) Apply(p catalog.Profile) error {
 	if err != nil {
 		return err
 	}
-	return a.start(plan, p.Name)
+	return a.start(plan, p.Name, a.wholeProfileID(p))
 }
 
 // start runs a plan in the background; only one runs at a time.
-func (a *App) start(plan install.Plan, title string) error {
+func (a *App) start(plan install.Plan, title, baselineFor string) error {
 	a.mu.Lock()
 	if a.running {
 		a.mu.Unlock()
@@ -299,6 +328,11 @@ func (a *App) start(plan install.Plan, title string) error {
 		})
 		a.mu.Lock()
 		a.running = false
+		// A whole profile that finished without a failure and was not stopped: the scan the interface asks for
+		// next is the state the profile left the PC in, and becomes its baseline.
+		if baselineFor != "" && len(failed) == 0 && ctx.Err() == nil {
+			a.baselineFor = baselineFor
+		}
 		a.mu.Unlock()
 		cancel()
 		runtime.EventsEmit(a.ctx, "install:done", failed)
@@ -337,7 +371,15 @@ func (a *App) DeleteProfile(id string) error {
 	if store == nil {
 		return errStorageUnavailable
 	}
-	return store.Delete(id)
+	if err := store.Delete(id); err != nil {
+		return err
+	}
+	if a.applied != nil {
+		if err := a.applied.Remove(id); err != nil {
+			log.Printf("winforge: forgetting the history of %s: %v", id, err)
+		}
+	}
+	return nil
 }
 
 // ProfileFromPC builds a profile out of the catalog apps installed right now.
@@ -367,6 +409,18 @@ func (a *App) ExportWinget(p catalog.Profile) (string, error) {
 	}
 	return a.saveWith(p.ID+".winget.json", "winget import file (*.json)", "*.json", func() ([]byte, error) {
 		return profile.WingetImport(res.Apps, a.cat)
+	})
+}
+
+// ExportConfigure writes the profile's apps as a "winget configure" file. Recipes are left out: they
+// run scripts, which do not belong in a file another person will apply.
+func (a *App) ExportConfigure(p catalog.Profile) (string, error) {
+	res, err := a.cat.ResolveProfile(&p)
+	if err != nil {
+		return "", err
+	}
+	return a.saveWith(p.ID+".winget", "winget configuration (*.winget)", "*.winget", func() ([]byte, error) {
+		return profile.WingetConfigure(p.Name, res.Apps, res.Recipes, a.cat)
 	})
 }
 
@@ -437,7 +491,7 @@ func (a *App) ApplyUpgrades(ids []string) error {
 	if len(plan.Steps) == 0 {
 		return errors.New("nothing to update")
 	}
-	return a.start(plan, "updates")
+	return a.start(plan, "updates", "")
 }
 
 // ExportScript writes a PowerShell script for what applying the profile would

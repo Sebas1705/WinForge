@@ -17,7 +17,7 @@ const handlers = {
 /** Every call the app can make into Go, as a spy. Defaults describe a quiet, healthy PC. */
 export const api = {
     GetState: vi.fn(), Plan: vi.fn(), Apply: vi.fn(), Cancel: vi.fn(), SaveProfile: vi.fn(), DeleteProfile: vi.fn(),
-    ProfileFromPC: vi.fn(), ExportProfile: vi.fn(), ExportWinget: vi.fn(), ExportScript: vi.fn(), ImportProfile: vi.fn(),
+    ProfileFromPC: vi.fn(), ExportProfile: vi.fn(), ExportWinget: vi.fn(), ExportConfigure: vi.fn(), ProfileDrift: vi.fn(), AcceptProfileState: vi.fn(), ExportScript: vi.fn(), ImportProfile: vi.fn(),
     RestartAsAdmin: vi.fn(), OpenURL: vi.fn(), CheckUpdate: vi.fn(), InstallUpdate: vi.fn(), Upgrades: vi.fn(), PlanUpgrades: vi.fn(),
     ApplyUpgrades: vi.fn(), IgnoreUpdate: vi.fn(), ProfilesFolder: vi.fn(), SetProfilesFolder: vi.fn(), ResetProfilesFolder: vi.fn(), StopIgnoringUpdate: vi.fn(), HealthScan: vi.fn(), HealthUpdates: vi.fn(), SaveTextFile: vi.fn(), OpenLink: vi.fn(),
     ResumePending: vi.fn(), PlanPending: vi.fn(), DiscardPending: vi.fn(), PlanUninstall: vi.fn(), ApplyUninstall: vi.fn(),
@@ -44,6 +44,8 @@ export function resetApi(state: State = makeState()): void {
     api.CheckUpdate.mockResolvedValue({current: "v0.0.0-test", latest: "", available: false, url: "", notes: ""});
     api.Upgrades.mockResolvedValue([]);
     api.IgnoreUpdate.mockResolvedValue([]);
+    api.ProfileDrift.mockResolvedValue({hasBaseline: false, removed: [], added: [], updated: [], count: 0});
+    api.AcceptProfileState.mockResolvedValue(undefined);
     api.ProfilesFolder.mockResolvedValue({path: "C:\\Users\\me\\AppData\\Roaming\\WinForge\\profiles", default: "C:\\Users\\me\\AppData\\Roaming\\WinForge\\profiles", custom: false, count: 2});
     api.StopIgnoringUpdate.mockResolvedValue([]);
     api.SaveTextFile.mockResolvedValue("C:\\report.md");

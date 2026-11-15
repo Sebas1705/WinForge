@@ -55,7 +55,7 @@ func (a *App) ResumePending() error {
 	for _, s := range p.Steps {
 		plan.NeedsAdmin = plan.NeedsAdmin || s.Admin
 	}
-	return a.start(plan, p.Title)
+	return a.start(plan, p.Title, "")
 }
 
 // PlanPending previews what ResumePending would do, so the person sees the steps first.
@@ -85,7 +85,7 @@ func (a *App) ApplyUninstall(ids []string) error {
 	if len(plan.Steps) == 0 {
 		return errors.New("nothing to remove")
 	}
-	return a.start(plan, "uninstall")
+	return a.start(plan, "uninstall", "")
 }
 
 // InstallWinget gets winget going on a PC that lacks it: first by registering

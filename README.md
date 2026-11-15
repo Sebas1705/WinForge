@@ -22,6 +22,8 @@ WinForge scans the PC, shows which apps of a **curated catalog** are installed, 
 - **Updates**: lists catalog apps that have a newer version (parsed from `winget upgrade`, locale-independent) and updates the ones you tick. Apps outside the catalog are never touched.
 - **Ignoring updates**: each update has an Ignore menu: skip that version (a newer one shows again), pause for 7, 30 or 90 days, or never update the app. Ignored updates are listed apart with the reason and a Stop ignoring button, are not counted in the menu badge, and are left out of Update all even when it is asked for by name. A damaged list stops updating rather than updating everything.
 - **Portable plans**: any plan can be exported as a readable PowerShell script (`winforge-cli script <profile>` too), so a setup can be replayed on a PC without WinForge.
+- **winget configure**: in advanced mode a profile can also be exported as a `.winget` file for `winget configure` (`winforge-cli configure <profile>` prints it), so a setup can be applied on a PC without WinForge or kept in a repository. It writes apps only, as `Microsoft.WinGet.DSC/WinGetPackage` resources, with every value quoted and pinned versions kept; WinForge recipes run scripts and are named in a comment but left out. The output is checked with `winget configure validate`.
+- **Profile drift**: after a whole profile is applied, WinForge remembers which catalog apps (and versions) were installed. The profile page then reports what changed since: apps of the profile that are gone, apps installed since that the profile does not list (with an *Add to this profile* button on your own profiles), and versions that moved. *Accept these changes* makes the PC the new reference without touching it, and profile cards show how many changes there are. A selection that only shares a profile's name never rewrites its history.
 - **Icons and links**: each app shows its own icon and opens a detail panel with its website, publisher, license and install command.
 - **PC health**: firmware (BIOS age, UEFI, Secure Boot, TPM, virtualization), drivers (missing, unsigned, old, GPU freshness), storage (disk health, free space), security (antivirus, firewall, BitLocker), Windows (support status, pending restart) and Windows Update (pending drivers and firmware). Read-only, with links to the right vendor pages.
 - **Made to be scanned, not read**: a store-style catalog of icon cards (grid or list), profiles as cards with their apps' icons and a progress ring, quick-start tiles and a "popular" shelf on the home screen, a health score with one card per area, short plain-language descriptions in Spanish and English for ~100 popular apps and every built-in profile, "?" help bubbles, and a three-screen first-run guide.
@@ -49,8 +51,9 @@ internal/
   updater/       release lookup, semver compare, SHA-256-verified installer download
   updates/       the updates a person chose to ignore: never, one version, or for a while
   appconfig/     the few settings kept on disk, such as where profiles live
+  drift/         what the PC looked like when a profile was applied, and what changed since
   storage/       cleanup categories, biggest files and folders, duplicates, Recycle Bin
-cmd/winforge-cli headless: scan | profiles | plan | apply | export | check
+cmd/winforge-cli headless: scan | profiles | plan | apply | script | configure | export | check
 cmd/winforge-verify  catalog verifier
 app.go, main.go, frontend/   Wails desktop app (Go + React/TypeScript)
 ```

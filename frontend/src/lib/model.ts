@@ -39,6 +39,8 @@ export interface ProfileInfo extends Profile {
     builtin: boolean;
     resolved: string[];
     resolvedRecipes: string[];
+    /** How many things differ on this PC since the profile was last applied; 0 when none or never recorded. */
+    changes?: number;
 }
 
 export interface State {

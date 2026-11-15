@@ -22,6 +22,7 @@ const usage = `usage:
   winforge-cli plan <profile>           show what applying a profile would do
   winforge-cli apply <profile>          install what is missing, then run recipes
   winforge-cli script <profile>         print a PowerShell script for what is missing
+  winforge-cli configure <profile>      print the profile as a winget configure file (apps only)
   winforge-cli health [updates]         check firmware, drivers, storage and security (read-only)
   winforge-cli export <id> [pin]        write this PC's catalog apps as a profile (stdout)
   winforge-cli check <file.json>        validate a profile file against the catalog`
@@ -65,6 +66,19 @@ func main() {
 			fatal(err)
 		}
 		fmt.Print(install.Script(cat, install.BuildPlan(cat, res, scan(ctx, cat)), cat.Profiles[os.Args[2]].Name))
+	case "configure":
+		if len(os.Args) < 3 {
+			fatal(fmt.Errorf(usage))
+		}
+		res, err := cat.Resolve(os.Args[2])
+		if err != nil {
+			fatal(err)
+		}
+		b, err := profile.WingetConfigure(cat.Profiles[os.Args[2]].Name, res.Apps, res.Recipes, cat)
+		if err != nil {
+			fatal(err)
+		}
+		os.Stdout.Write(b)
 	case "plan", "apply":
 		if len(os.Args) < 3 {
 			fatal(fmt.Errorf(usage))
