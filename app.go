@@ -51,6 +51,7 @@ type App struct {
 	// storage remembers what the storage scans listed; emitter and runner are
 	// replaced by tests (nil means the real Wails events and real commands).
 	storage    storageSession
+	env        *storage.Env // replaced by tests; nil means this PC's real folders
 	emitter    func(event string, data any)
 	runner     storage.Runner
 	running    bool
