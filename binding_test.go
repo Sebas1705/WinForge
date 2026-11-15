@@ -289,15 +289,15 @@ func TestResumePendingRefusesSecondRun(t *testing.T) {
 
 func TestPlanUpgradesUsesLastScan(t *testing.T) {
 	a := testApp(t)
-	if plan := a.PlanUpgrades(nil); len(plan.Steps) != 0 {
-		t.Errorf("no scan yet: want no steps, got %+v", plan.Steps)
+	if plan, err := a.PlanUpgrades(nil); err != nil || len(plan.Steps) != 0 {
+		t.Errorf("no scan yet: want no steps, got %+v %v", plan.Steps, err)
 	}
 	a.upgrades = []system.Upgrade{{ID: "Git.Git", Current: "1", Available: "2"}}
-	plan := a.PlanUpgrades(nil)
-	if len(plan.Steps) != 1 || plan.Steps[0].ID != "git" {
+	plan, err := a.PlanUpgrades(nil)
+	if err != nil || len(plan.Steps) != 1 || plan.Steps[0].ID != "git" {
 		t.Errorf("plan = %+v", plan.Steps)
 	}
-	if plan := a.PlanUpgrades([]string{"vlc"}); len(plan.Steps) != 0 {
+	if plan, _ := a.PlanUpgrades([]string{"vlc"}); len(plan.Steps) != 0 {
 		t.Errorf("a filter for an app without an update must yield nothing, got %+v", plan.Steps)
 	}
 	a.running = true

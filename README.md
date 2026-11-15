@@ -20,6 +20,7 @@ WinForge scans the PC, shows which apps of a **curated catalog** are installed, 
 - **Detection**: winget's inventory, the Uninstall registry keys, PATH and known folders - so tools installed by hand or by a version manager count as installed.
 - **Install what you choose**: a whole profile, a subset of it (per-app checkboxes), or a single app from the catalog.
 - **Updates**: lists catalog apps that have a newer version (parsed from `winget upgrade`, locale-independent) and updates the ones you tick. Apps outside the catalog are never touched.
+- **Ignoring updates**: each update has an Ignore menu: skip that version (a newer one shows again), pause for 7, 30 or 90 days, or never update the app. Ignored updates are listed apart with the reason and a Stop ignoring button, are not counted in the menu badge, and are left out of Update all even when it is asked for by name. A damaged list stops updating rather than updating everything.
 - **Portable plans**: any plan can be exported as a readable PowerShell script (`winforge-cli script <profile>` too), so a setup can be replayed on a PC without WinForge.
 - **Icons and links**: each app shows its own icon and opens a detail panel with its website, publisher, license and install command.
 - **PC health**: firmware (BIOS age, UEFI, Secure Boot, TPM, virtualization), drivers (missing, unsigned, old, GPU freshness), storage (disk health, free space), security (antivirus, firewall, BitLocker), Windows (support status, pending restart) and Windows Update (pending drivers and firmware). Read-only, with links to the right vendor pages.
@@ -46,6 +47,8 @@ internal/
   install/       plan (diff against the PC) and runner (winget + recipes)
   profile/       store, export/import, `winget import` export
   updater/       release lookup, semver compare, SHA-256-verified installer download
+  updates/       the updates a person chose to ignore: never, one version, or for a while
+  appconfig/     the few settings kept on disk, such as where profiles live
   storage/       cleanup categories, biggest files and folders, duplicates, Recycle Bin
 cmd/winforge-cli headless: scan | profiles | plan | apply | export | check
 cmd/winforge-verify  catalog verifier
@@ -162,5 +165,9 @@ UI tests (`cd frontend && npm test`) drive the whole app against a mocked Go API
 ## Appearance
 
 The gear button sets language (automatic, Spanish, English), theme (system, dark, light), **design style** (classic, minimal, material, liquid glass, neumorphic, brutalist), accent colour and list density; choices persist per user. Catalog text (app names, descriptions, profile names) comes from the catalog and is not translated.
+
+**Profiles folder.** Settings can keep the profiles in a folder you choose, for example one that OneDrive or Dropbox syncs between PCs. Moving offers to copy the profiles first and never overwrites a file already there; the old folder is left as it is. If the folder is not available at start (OneDrive not signed in), the default folder is used and a note says why; the choice is kept for when it comes back. Conflicted copies a sync client leaves behind do not show a profile twice, and deleting a profile removes them too.
+
+**Command palette.** Ctrl+K (Cmd+K) opens a palette from any screen: type a page, an action (scan again, check updates, health scan, settings, simple or advanced mode), an app or a profile, move with the arrow keys and press Enter. Text that matches nothing else becomes a catalog search. It matches without accents and in any word order. `/` still jumps to the catalog search and can be switched off in Settings.
 
 Design styles live in `frontend/src/styles.css`, each scoped to `:root[data-style=...]` so the classic look is untouched; a style changes shape, depth and surfaces, never layout. The default visual language is "steel and ember": slate surfaces and one warm accent that lights only what is done or chosen. Its recurring motif is the **tally strip**, one cell per app (or per step during an install), lit when installed; the home screen shows every catalog app as one tick on a ruler. Fonts (Bricolage Grotesque, IBM Plex Sans and Mono, latin subsets) are bundled, so the app works offline. The logo source is `frontend/src/logo.svg`; `build/appicon.png` and `build/windows/icon.ico` are rendered from it.

@@ -78,6 +78,10 @@ export function HealthUpdates() {
   return window['go']['main']['App']['HealthUpdates']();
 }
 
+export function IgnoreUpdate(arg1, arg2, arg3) {
+  return window['go']['main']['App']['IgnoreUpdate'](arg1, arg2, arg3);
+}
+
 export function ImportCode(arg1) {
   return window['go']['main']['App']['ImportCode'](arg1);
 }
@@ -150,8 +154,16 @@ export function ProfileFromPC(arg1, arg2, arg3) {
   return window['go']['main']['App']['ProfileFromPC'](arg1, arg2, arg3);
 }
 
+export function ProfilesFolder() {
+  return window['go']['main']['App']['ProfilesFolder']();
+}
+
 export function RemoveGame(arg1) {
   return window['go']['main']['App']['RemoveGame'](arg1);
+}
+
+export function ResetProfilesFolder() {
+  return window['go']['main']['App']['ResetProfilesFolder']();
 }
 
 export function RestartAsAdmin() {
@@ -186,12 +198,20 @@ export function SetGamesRoot() {
   return window['go']['main']['App']['SetGamesRoot']();
 }
 
+export function SetProfilesFolder(arg1, arg2) {
+  return window['go']['main']['App']['SetProfilesFolder'](arg1, arg2);
+}
+
 export function ShareCode(arg1) {
   return window['go']['main']['App']['ShareCode'](arg1);
 }
 
 export function StartupError() {
   return window['go']['main']['App']['StartupError']();
+}
+
+export function StopIgnoringUpdate(arg1) {
+  return window['go']['main']['App']['StopIgnoringUpdate'](arg1);
 }
 
 export function StorageBigFiles(arg1, arg2) {

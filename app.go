@@ -8,16 +8,19 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 
 	"github.com/Sebas1705/WinForge/catalogdata"
+	"github.com/Sebas1705/WinForge/internal/appconfig"
 	"github.com/Sebas1705/WinForge/internal/catalog"
 	"github.com/Sebas1705/WinForge/internal/health"
 	"github.com/Sebas1705/WinForge/internal/install"
 	"github.com/Sebas1705/WinForge/internal/profile"
 	"github.com/Sebas1705/WinForge/internal/storage"
 	"github.com/Sebas1705/WinForge/internal/system"
+	"github.com/Sebas1705/WinForge/internal/updates"
 )
 
 // App is the object bound to the frontend. Every exported method is callable
@@ -25,7 +28,11 @@ import (
 type App struct {
 	ctx   context.Context
 	cat   *catalog.Catalog
-	store *profile.Store
+	store *profile.Store // guarded by mu: the person can move it to another folder while the app runs
+
+	config       *appconfig.Store               // nil when the settings folder is unavailable
+	defaultStore func() (*profile.Store, error) // replaced by tests; nil means profile.DefaultStore
+	profilesNote string                         // why the chosen profiles folder is not in use, if it is not
 
 	mu            sync.Mutex
 	installed     map[string]system.Installed
@@ -33,6 +40,8 @@ type App struct {
 	healthReport  *health.Report
 	healthUpdates *health.UpdateScan
 	pending       *install.PendingStore
+	ignored       *updates.Store   // updates the person chose not to install; nil when the settings folder is unavailable
+	now           func() time.Time // replaced by tests
 	restorePath   string
 	installing    map[string]bool
 
@@ -53,7 +62,19 @@ func NewApp() *App {
 		// broken build, not a user error.
 		panic(err)
 	}
-	return newApp(cat, profile.DefaultStore, install.DefaultPendingStore)
+	app := newApp(cat, profile.DefaultStore, install.DefaultPendingStore)
+	if c, err := appconfig.DefaultStore(); err != nil {
+		log.Printf("winforge: config: %v", err)
+	} else {
+		app.config = c
+		app.useConfiguredProfiles()
+	}
+	if s, err := updates.DefaultStore(); err != nil {
+		log.Printf("winforge: ignored updates: %v", err)
+	} else {
+		app.ignored = s
+	}
+	return app
 }
 
 // errStorageUnavailable is what profile operations return when the user's
@@ -86,10 +107,16 @@ func newApp(cat *catalog.Catalog, openStore func() (*profile.Store, error), open
 
 // StartupError is the problem found while starting, or "" when all is well.
 func (a *App) StartupError() string {
-	if a.startupErr == nil {
-		return ""
+	a.mu.Lock()
+	note := a.profilesNote
+	a.mu.Unlock()
+	switch {
+	case a.startupErr != nil && note != "":
+		return a.startupErr.Error() + " " + note
+	case a.startupErr != nil:
+		return a.startupErr.Error()
 	}
-	return a.startupErr.Error()
+	return note
 }
 
 // loadPending, savePending and clearPending tolerate a missing pending store.
@@ -188,10 +215,11 @@ func (a *App) GetState() (State, error) {
 	}
 	st.Pending = a.livePending(installed)
 	st.StartupError = a.StartupError()
-	if a.store == nil {
+	store := a.profileStore()
+	if store == nil {
 		return st, nil
 	}
-	user, err := a.store.List(a.cat)
+	user, err := store.List(a.cat)
 	if err != nil {
 		return st, err
 	}
@@ -296,18 +324,20 @@ func (a *App) SaveProfile(p catalog.Profile) error {
 		return err
 	}
 	p.Kind = "custom"
-	if a.store == nil {
+	store := a.profileStore()
+	if store == nil {
 		return errStorageUnavailable
 	}
-	return a.store.Save(p)
+	return store.Save(p)
 }
 
 // DeleteProfile removes a user profile.
 func (a *App) DeleteProfile(id string) error {
-	if a.store == nil {
+	store := a.profileStore()
+	if store == nil {
 		return errStorageUnavailable
 	}
-	return a.store.Delete(id)
+	return store.Delete(id)
 }
 
 // ProfileFromPC builds a profile out of the catalog apps installed right now.
@@ -398,50 +428,12 @@ func (a *App) OpenURL(u string) {
 	}
 }
 
-// UpgradeInfo is an installed catalog app with a newer version available.
-type UpgradeInfo struct {
-	ID        string `json:"id"` // catalog id
-	Name      string `json:"name"`
-	Publisher string `json:"publisher"`
-	Current   string `json:"current"`
-	Available string `json:"available"`
-}
-
-// Upgrades asks winget which installed packages have updates and keeps those
-// the catalog knows; everything else on the PC is left alone.
-func (a *App) Upgrades() ([]UpgradeInfo, error) {
-	ups, err := system.WingetUpgrades(a.ctx)
-	if err != nil {
-		return nil, err
-	}
-	a.mu.Lock()
-	a.upgrades = ups
-	a.mu.Unlock()
-	out := []UpgradeInfo{}
-	for _, s := range install.UpgradePlan(a.cat, ups, nil).Steps {
-		app := a.cat.Apps[s.ID]
-		cur := ""
-		for _, u := range ups {
-			if u.ID == app.Winget {
-				cur = u.Current
-			}
-		}
-		out = append(out, UpgradeInfo{ID: s.ID, Name: app.Name, Publisher: app.Publisher, Current: cur, Available: s.Version})
-	}
-	return out, nil
-}
-
-// PlanUpgrades previews updating the given catalog apps (all when empty).
-func (a *App) PlanUpgrades(ids []string) install.Plan {
-	a.mu.Lock()
-	ups := a.upgrades
-	a.mu.Unlock()
-	return install.UpgradePlan(a.cat, ups, ids)
-}
-
 // ApplyUpgrades updates the given catalog apps in the background.
 func (a *App) ApplyUpgrades(ids []string) error {
-	plan := a.PlanUpgrades(ids)
+	plan, err := a.PlanUpgrades(ids)
+	if err != nil {
+		return err
+	}
 	if len(plan.Steps) == 0 {
 		return errors.New("nothing to update")
 	}

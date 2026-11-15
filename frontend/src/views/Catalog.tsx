@@ -20,6 +20,8 @@ export function Catalog(p: {
     onDetail: (a: App) => void;
     /** Whether the single-key "/" shortcut is on (a setting). Ctrl+K is always on. */
     slashSearch?: boolean;
+    /** Fills the search box and focuses it; a new object each time, so the same text can be asked twice. */
+    seed?: { q: string; n: number } | null;
 }) {
     const [f, setF] = useState<Filter>({query: "", category: p.initialCategory, installed: "all", openSourceOnly: false, sub: ""});
     const [sort, setSort] = useState<SortKey>("name");
@@ -27,6 +29,12 @@ export function Catalog(p: {
     const search = useRef<HTMLInputElement>(null);
     useEffect(() => { setF((x) => ({...x, category: p.initialCategory, sub: ""})); }, [p.initialCategory]);
     useEffect(() => { try { localStorage.setItem("winforge.catalogView", view); } catch { /* not persisted */ } }, [view]);
+
+    useEffect(() => {
+        if (!p.seed) return;
+        setF((x) => ({...x, query: p.seed!.q, category: "", sub: ""}));
+        search.current?.focus();
+    }, [p.seed]);
 
     // "/" jumps to search unless the user is typing, a dialog is open (focus must stay inside it), or a
     // modifier is held. AltGr arrives as Ctrl+Alt on some layouts, where "/" is a normal character.
@@ -93,7 +101,7 @@ export function Catalog(p: {
             <div className="toolbar">
                 <div className="searchbox">
                     <Icon name="search" size={16}/>
-                    <input ref={search} className="search" aria-label={t("catalog.searchLabel")} aria-keyshortcuts={slash ? "/ Control+K" : "Control+K"} placeholder={t(slash ? "catalog.search" : "catalog.searchNoSlash")} value={f.query}
+                    <input ref={search} className="search" aria-label={t("catalog.searchLabel")} aria-keyshortcuts={slash ? "/" : undefined} placeholder={t(slash ? "catalog.search" : "catalog.searchNoSlash")} value={f.query}
                            onChange={(e) => setF({...f, query: e.target.value})}/>
                 </div>
                 <select aria-label={t("catalog.stateLabel")} value={f.installed}

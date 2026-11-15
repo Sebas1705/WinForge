@@ -198,12 +198,12 @@ describe("share codes", () => {
 });
 
 describe("keyboard", () => {
-    it("Ctrl+K opens the catalog search from any screen", async () => {
+    it("Ctrl+K opens the command palette from any screen, with the text box focused", async () => {
         const user = await openApp();
         await go(user, /Settings backup/);
         await user.keyboard("{Control>}k{/Control}");
-        const box = await screen.findByPlaceholderText(/Search apps/);
-        await waitFor(() => expect(box).toHaveFocus());
+        const palette = await screen.findByRole("dialog", {name: "Command palette"});
+        await waitFor(() => expect(within(palette).getByRole("combobox")).toHaveFocus());
     });
 
     it("Ctrl+K does nothing behind an open dialog", async () => {
@@ -266,8 +266,9 @@ describe("the / shortcut", () => {
         const box = screen.getByPlaceholderText(/Search apps/);
         await user.keyboard("/");
         expect(box).not.toHaveFocus();
+        expect(box).toHaveAttribute("placeholder", expect.not.stringContaining("/")); // nothing promises a shortcut that is off
         await user.keyboard("{Control>}k{/Control}");
-        await waitFor(() => expect(box).toHaveFocus());
+        expect(await screen.findByRole("dialog", {name: "Command palette"})).toBeInTheDocument();
         expect(JSON.parse(localStorage.getItem("winforge.settings") ?? "{}").keyShortcuts).toBe(false);
     });
 });

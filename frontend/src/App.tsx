@@ -1,9 +1,11 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import {api, errText, on, type ImportResult, type UpdateInfo} from "./api";
+import {api, errText, on, type ProfilesFolderInfo, type ImportResult, type UpdateInfo} from "./api";
 import {AppDetail} from "./components/AppDetail";
 import {Icon, type IconName} from "./components/Icon";
 import {ScanProgress, type ScanKind} from "./components/ScanProgress";
 import {CodeDialog, ConfirmDialog, NameDialog, RunModal, Segmented, SettingsDialog, Tour, stepKey, type RunState} from "./components/Modals";
+import {Palette, type PaletteItem} from "./components/Palette";
+import {rank} from "./lib/palette";
 import {POPULAR} from "./views/Catalog";
 import {IconsContext, loadIcons, type IconIndex} from "./lib/icons";
 import {reportMarkdown, type HealthLink, type HealthResult} from "./lib/health";
@@ -14,6 +16,7 @@ import {
     type App as CatalogApp, type Profile, type ProfileInfo, type State, type UpgradeInfo,
 } from "./lib/model";
 import * as prefs from "./lib/settings";
+import {pendingUpgrades} from "./lib/updates";
 import logo from "./logo.svg";
 import {Catalog} from "./views/Catalog";
 import {Health} from "./views/Health";
@@ -61,10 +64,18 @@ export default function App() {
     const [naming, setNaming] = useState<null | { title: string; initial: string; onOk: (n: string) => void }>(null);
     const [settings, setSettings] = useState<prefs.Settings>(prefs.load);
     const [showSettings, setShowSettings] = useState(false);
+    const [showPalette, setShowPalette] = useState(false);
+    const [catalogSeed, setCatalogSeed] = useState<{ q: string; n: number } | null>(null);
+    const [folder, setFolder] = useState<ProfilesFolderInfo | null>(null);
+    // A folder the person picked and has not confirmed yet, and whether to copy the profiles into it.
+    const [pendingFolder, setPendingFolder] = useState<string | null>(null);
+    const [copyProfiles, setCopyProfiles] = useState(true);
     const [update, setUpdate] = useState<UpdateInfo | null>(null);
     const [updating, setUpdating] = useState<{ done: number; total: number } | null>(null);
     const [upgrades, setUpgrades] = useState<UpgradeInfo[] | null>(null);
     const [upgradesBusy, setUpgradesBusy] = useState(false);
+    // What counts as waiting: updates the person chose to hide are listed apart and not counted.
+    const pending = pendingUpgrades(upgrades);
     const [health, setHealth] = useState<HealthResult | null>(null);
     const [healthBusy, setHealthBusy] = useState(false);
     const [healthUpdBusy, setHealthUpdBusy] = useState(false);
@@ -120,6 +131,49 @@ export default function App() {
         setUpgradesBusy(true);
         try { setUpgrades(await api.Upgrades()); } catch (e) { say(errText(e)); } finally { setUpgradesBusy(false); }
     }, [say]);
+
+    // Where profiles are kept is read when Settings opens, so it is never stale after a change from elsewhere.
+    useEffect(() => {
+        if (!showSettings) return;
+        api.ProfilesFolder().then(setFolder).catch((e) => say(errText(e)));
+    }, [showSettings, say]);
+    const pickFolder = async () => {
+        try {
+            const dir = await api.PickFolder();
+            if (dir) { setCopyProfiles(true); setPendingFolder(dir); }
+        } catch (e) { say(errText(e)); }
+    };
+    const confirmFolder = async () => {
+        const dir = pendingFolder;
+        if (!dir) return;
+        try {
+            const r = await api.SetProfilesFolder(dir, copyProfiles);
+            setFolder(r.info);
+            say(t("folder.done", {path: r.info.path}) + (copyProfiles ? " " + t("folder.copied", {copied: r.copied, skipped: r.skipped}) : ""));
+            await refresh(); // the profiles on screen are the new folder's
+        } catch (e) { say(errText(e)); }
+    };
+    const resetFolder = async () => {
+        try {
+            setFolder(await api.ResetProfilesFolder());
+            say(t("folder.resetDone"));
+            await refresh();
+        } catch (e) { say(errText(e)); }
+    };
+
+    // Hiding an update, or bringing it back, never asks winget again: the backend answers from the last check.
+    const ignoreUpdate = async (id: string, c: { mode: "always" | "version" | "until"; days?: number }) => {
+        try {
+            setUpgrades(await api.IgnoreUpdate(id, c.mode, c.days ?? 0));
+            say(t("updates.hiddenToast", {name: byId.get(id)?.name ?? id}));
+        } catch (e) { say(errText(e)); }
+    };
+    const stopIgnoring = async (id: string) => {
+        try {
+            setUpgrades(await api.StopIgnoringUpdate(id));
+            say(t("updates.shownToast", {name: byId.get(id)?.name ?? id}));
+        } catch (e) { say(errText(e)); }
+    };
 
     const scanHealth = useCallback(async () => {
         setHealthBusy(true);
@@ -361,20 +415,12 @@ export default function App() {
         } catch (e) { say(errText(e)); }
     };
 
-    // Ctrl+K (Cmd+K) jumps to catalog search from any screen, unless a dialog is open.
+    // Ctrl+K (Cmd+K) opens the command palette from any screen, unless a dialog is already open.
     useEffect(() => {
         const key = (e: KeyboardEvent) => {
             if (!(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== "k" || document.querySelector(".overlay, .drawer-overlay")) return;
             e.preventDefault();
-            setCategory("");
-            setTab("catalog");
-            // The catalog may need a few frames to mount (it renders a long list), so wait for the box.
-            let tries = 0;
-            const focusSearch = () => {
-                const box = document.querySelector<HTMLInputElement>("input.search");
-                if (box) { box.focus(); box.select(); } else if (tries++ < 60) requestAnimationFrame(focusSearch);
-            };
-            requestAnimationFrame(focusSearch);
+            setShowPalette(true);
         };
         window.addEventListener("keydown", key);
         return () => window.removeEventListener("keydown", key);
@@ -392,7 +438,7 @@ export default function App() {
         ["home", t("nav.home"), null],
         ["profiles", t("nav.profiles"), state?.profiles.length ?? null],
         ["catalog", t("nav.catalog"), state?.apps.length ?? null],
-        ["updates", t("nav.updates"), upgrades && upgrades.length > 0 ? upgrades.length : null],
+        ["updates", t("nav.updates"), pending && pending.length > 0 ? pending.length : null],
         ["health", t("nav.health"), health && health.ok < health.total ? health.total - health.ok : null],
         ["storage", t("nav.storage"), null],
         ["games", t("nav.games"), null],
@@ -400,6 +446,34 @@ export default function App() {
     ];
 
     const byId = new Map((state?.apps ?? []).map((a) => [a.id, a]));
+
+    // What the palette offers for what has been typed: pages and actions first, then apps and profiles once there is
+    // something to look for, and always a way to turn the text into a catalog search.
+    const buildPalette = (q: string): PaletteItem[] => {
+        const text = q.trim();
+        const cmds: (PaletteItem & { keywords?: string })[] = [
+            ...nav.map(([id, label]): PaletteItem & { keywords?: string } => ({id: "go-" + id, kind: "go", label, keywords: t("palette.goto", {page: label}), run: () => go(id)})),
+            {id: "rescan", kind: "action", label: t("palette.cmd.rescan"), keywords: "refresh reload", run: () => void refresh()},
+            {id: "updates", kind: "action", label: t("palette.cmd.updates"), keywords: "upgrade winget", run: () => { setTab("updates"); void checkUpgrades(); }},
+            {id: "health", kind: "action", label: t("palette.cmd.health"), keywords: "check drivers bios", run: () => { setTab("health"); void scanHealth(); }},
+            {id: "settings", kind: "action", label: t("palette.cmd.settings"), keywords: "theme style dark light language idioma tema", run: () => setShowSettings(true)},
+            {id: "guide", kind: "action", label: t("palette.cmd.guide"), keywords: "tour help ayuda", run: () => setShowTour(true)},
+            {id: "mode", kind: "action", label: advanced ? t("palette.cmd.simple") : t("palette.cmd.advanced"), keywords: "simple advanced avanzado sencillo",
+                run: () => setSettings({...settings, detail: advanced ? "simple" : "advanced"})},
+            {id: "selfUpdate", kind: "action", label: t("palette.cmd.selfUpdate"), keywords: "winforge version", run: () => void checkUpdate(true)},
+        ];
+        // Empty: every page and action, so the whole menu can be browsed. Typing narrows it to the best few.
+        const out: PaletteItem[] = rank(cmds, text, text ? 8 : cmds.length);
+        if (text.length >= 2) {
+            out.push(...rank((state?.apps ?? []).map((a): PaletteItem & { keywords: string } => ({id: "app-" + a.id, kind: "app", label: a.name, keywords: a.id + " " + a.publisher + " " + a.winget, run: () => setDetail(a)})), text, 5));
+            out.push(...rank((state?.profiles ?? []).map((pr): PaletteItem & { keywords: string } => {
+                const name = profileText(pr, getLang()).name;
+                return {id: "profile-" + pr.id, kind: "profile", label: name, keywords: pr.id, run: () => { setFocusProfile(pr.id); setTab("profiles"); }};
+            }), text, 3));
+            out.push({id: "search", kind: "search", label: t("palette.cmd.search", {q: text}), run: () => { setCategory(""); setCatalogSeed({q: text, n: Date.now()}); setTab("catalog"); }});
+        }
+        return out;
+    };
     // A detail panel shows the live state: it follows rescans and installs.
     const shown = detail ? byId.get(detail.id) ?? detail : null;
 
@@ -472,7 +546,7 @@ export default function App() {
 
                 <main>
                     {!state ? <div className="pad"><h2>{t("rail.scanning")}</h2><ScanProgress kind="pc" current={scanStep.pc ?? null}/></div> : tab === "home" ? (
-                        <Home apps={state.apps} profiles={state.profiles} featured={state.featured ?? []} upgrades={upgrades} upgradesBusy={upgradesBusy}
+                        <Home apps={state.apps} profiles={state.profiles} featured={state.featured ?? []} upgrades={pending} upgradesBusy={upgradesBusy}
                               health={health} onOpenHealth={() => go("health")} onOpenPopular={() => { setCategory(POPULAR); setTab("catalog"); }}
                               onInstallApp={(a) => void startProfile(selectionProfile([a.id], a.name))} onDetail={setDetail}
                               onInstall={(p) => void startProfile(p)}
@@ -486,7 +560,7 @@ export default function App() {
                         <Catalog apps={state.apps} featured={state.featured ?? []} advanced={advanced} selection={selection} setSelection={setSelection} initialCategory={category}
                                  onInstall={() => void startProfile(selectionProfile(selection))}
                                  onInstallOne={(a) => void startProfile(selectionProfile([a.id], a.name))}
-                                 onSave={saveSelection} openURL={(u) => safe(api.OpenURL(u))} onDetail={setDetail} slashSearch={settings.keyShortcuts}/>
+                                 onSave={saveSelection} openURL={(u) => safe(api.OpenURL(u))} onDetail={setDetail} slashSearch={settings.keyShortcuts} seed={catalogSeed}/>
                     ) : tab === "health" ? (
                         <Health advanced={advanced} result={health} busy={healthBusy} step={scanStep.health ?? null} updatesBusy={healthUpdBusy} admin={state.admin} byId={byId}
                                 onScan={() => void scanHealth()} onUpdates={() => void healthUpdates()} onExport={() => void exportHealth()}
@@ -503,7 +577,8 @@ export default function App() {
                         <Backup say={say} advanced={advanced} appCount={state.apps.filter((a) => a.installed).length}
                                 onInstallProfile={(p, done) => void startProfile(p, done)}/>
                     ) : (
-                        <Updates upgrades={upgrades} busy={upgradesBusy} onCheck={() => void checkUpgrades()} onUpdate={(ids) => void startUpgrades(ids)} byId={byId} onDetail={setDetail}/>
+                        <Updates upgrades={upgrades} busy={upgradesBusy} onCheck={() => void checkUpgrades()} onUpdate={(ids) => void startUpgrades(ids)}
+                                 onIgnore={(id, c) => void ignoreUpdate(id, c)} onStopIgnoring={(id) => void stopIgnoring(id)} byId={byId} onDetail={setDetail}/>
                     )}
                 </main>
             </div>
@@ -513,12 +588,23 @@ export default function App() {
                               onScript={() => runner?.profile && api.ExportScript(runner.profile).then((p) => p && say(t("toast.savedTo", {path: p}))).catch((e) => say(errText(e)))}
                               onCopy={() => void copyLog()} onRetry={() => void resume(false)} onRetryAdmin={() => void retryAdmin()}/>}
             {showSettings && <SettingsDialog value={settings} onChange={setSettings} version={state?.version ?? ""}
-                                             onCheck={() => void checkUpdate(true)} onClose={() => setShowSettings(false)}/>}
+                                             onCheck={() => void checkUpdate(true)} onClose={() => setShowSettings(false)}
+                                             folder={folder} onChangeFolder={() => void pickFolder()} onResetFolder={() => void resetFolder()}/>}
+            {pendingFolder && (
+                <ConfirmDialog title={t("folder.title")} body={t("folder.body", {path: pendingFolder})} confirm={t("folder.confirm")}
+                               onConfirm={() => void confirmFolder()} onClose={() => setPendingFolder(null)}>
+                    <label className="check">
+                        <input type="checkbox" checked={copyProfiles} onChange={(e) => setCopyProfiles(e.target.checked)}/>
+                        {t("folder.copy", {n: folder?.count ?? 0})}
+                    </label>
+                </ConfirmDialog>
+            )}
             {restartAsk && <ConfirmDialog title={t("health.restartTitle")} body={t("health.restartBody")} confirm={t("health.restartNow")} danger
                                           onConfirm={() => void restartPC()} onClose={() => setRestartAsk(false)}/>}
             {naming && <NameDialog {...naming} onClose={() => setNaming(null)}/>}
             {codeDialog && <CodeDialog title={t("dlg.importCode")} placeholder={t("dlg.codePlaceholder")} ok={t("profiles.import")}
                                        onOk={(c) => void importCode(c)} onClose={() => setCodeDialog(false)}/>}
+            {showPalette && <Palette build={buildPalette} onClose={() => setShowPalette(false)}/>}
             {showTour && <Tour onClose={closeTour}/>}
             {shown && <AppDetail advanced={advanced} app={shown} byId={byId} onClose={() => setDetail(null)} openURL={(u) => safe(api.OpenURL(u))}
                                  onInstall={(a) => { setDetail(null); void startProfile(selectionProfile([a.id], a.name)); }}

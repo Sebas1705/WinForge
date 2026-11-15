@@ -381,3 +381,20 @@ img, svg { -webkit-user-drag: none; user-drag: none; }
 .optcard { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
 .optcard .grow { display: flex; flex-direction: column; gap: 3px; }
 .optwarn { display: inline-flex; align-items: center; gap: 5px; color: var(--warn); }
+
+/* settings: where profiles are kept */
+.folderrow .folderpath { display: block; overflow-wrap: anywhere; background: var(--bg); border: 1px solid var(--line); border-radius: 7px; padding: 6px 8px; user-select: all; }
+.folderproblem { display: flex; gap: 6px; align-items: flex-start; margin: 0; color: var(--warn); }
+.folderproblem svg { flex: none; margin-top: 2px; }
+
+/* command palette */
+.palette-overlay { place-items: start center; padding-top: min(14vh, 120px); }
+.palette { width: min(580px, 100%); padding: 12px; gap: 8px; overflow: hidden; }
+.palette input { width: 100%; font-size: 16px; padding: 10px 12px; }
+.palette ul { list-style: none; margin: 0; padding: 0; max-height: min(52vh, 380px); overflow: auto; display: flex; flex-direction: column; gap: 2px; }
+.palette li { display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 8px; cursor: pointer; }
+.palette li[aria-selected="true"] { background: var(--surface2); box-shadow: inset 3px 0 0 var(--accent-ink); }
+.palette .kind { flex: none; font-size: 12px; color: var(--muted); }
+.palette-empty, .palette-hint { margin: 0; padding: 4px 6px; }
+.menu-pop.end { left: auto; right: 0; } /* a menu at the end of a row opens inwards, not off the window */
+.menu-pop { color: var(--text); } /* a popup is its own surface: it must not inherit the colour of the row it opens from */

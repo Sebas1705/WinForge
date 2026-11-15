@@ -5,6 +5,8 @@ import {EventsOn} from "../wailsjs/runtime/runtime";
 import type {HealthResult} from "./lib/health";
 import type {InstallEvent, Plan, Profile, State, UpgradeInfo} from "./lib/model";
 
+export interface ProfilesFolderInfo { path: string; default: string; custom: boolean; count: number; problem?: string }
+export interface ProfilesFolderChange { copied: number; skipped: number; info: ProfilesFolderInfo }
 export interface UpdateInfo { current: string; latest: string; available: boolean; url: string; notes: string }
 export interface BackupSet { id: string; files: number; bytes: number }
 export interface BackupRequest { sets: string[]; apps: boolean; folders: string[] }
@@ -62,6 +64,11 @@ export const api = Go as unknown as {
     Upgrades(): Promise<UpgradeInfo[]>;
     PlanUpgrades(ids: string[]): Promise<Plan>;
     ApplyUpgrades(ids: string[]): Promise<void>;
+    IgnoreUpdate(id: string, mode: string, days: number): Promise<UpgradeInfo[]>;
+    ProfilesFolder(): Promise<ProfilesFolderInfo>;
+    SetProfilesFolder(dir: string, copyExisting: boolean): Promise<ProfilesFolderChange>;
+    ResetProfilesFolder(): Promise<ProfilesFolderInfo>;
+    StopIgnoringUpdate(id: string): Promise<UpgradeInfo[]>;
     HealthScan(): Promise<HealthResult>;
     HealthUpdates(): Promise<HealthResult>;
     SaveTextFile(name: string, content: string): Promise<string>;

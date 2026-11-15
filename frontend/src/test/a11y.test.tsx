@@ -55,7 +55,7 @@ describe("what assistive technology is told", () => {
         await go(user, /Catalog/);
         expect(screen.getByRole("heading", {level: 1, name: "Catalog"})).toBeInTheDocument();
         const box = screen.getByRole("textbox", {name: "Search apps"});
-        expect(box).toHaveAttribute("aria-keyshortcuts", "/ Control+K");
+        expect(box).toHaveAttribute("aria-keyshortcuts", "/"); // Ctrl+K belongs to the palette now
         await go(user, /Profiles/);
         expect(screen.getByRole("textbox", {name: "Search profiles"})).toBeInTheDocument();
     });
