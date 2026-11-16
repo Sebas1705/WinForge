@@ -222,6 +222,18 @@ export function StartupError() {
   return window['go']['main']['App']['StartupError']();
 }
 
+export function StartupList() {
+  return window['go']['main']['App']['StartupList']();
+}
+
+export function StartupReveal(arg1) {
+  return window['go']['main']['App']['StartupReveal'](arg1);
+}
+
+export function StartupSet(arg1, arg2) {
+  return window['go']['main']['App']['StartupSet'](arg1, arg2);
+}
+
 export function StopIgnoringUpdate(arg1) {
   return window['go']['main']['App']['StopIgnoringUpdate'](arg1);
 }
@@ -250,6 +262,14 @@ export function StorageFolders(arg1) {
   return window['go']['main']['App']['StorageFolders'](arg1);
 }
 
+export function StorageProjects(arg1, arg2) {
+  return window['go']['main']['App']['StorageProjects'](arg1, arg2);
+}
+
+export function StorageProjectsClean(arg1) {
+  return window['go']['main']['App']['StorageProjectsClean'](arg1);
+}
+
 export function StorageRecycle(arg1) {
   return window['go']['main']['App']['StorageRecycle'](arg1);
 }
@@ -260,6 +280,10 @@ export function StorageReveal(arg1) {
 
 export function StorageScan() {
   return window['go']['main']['App']['StorageScan']();
+}
+
+export function StorageVirtualDisks() {
+  return window['go']['main']['App']['StorageVirtualDisks']();
 }
 
 export function StorageVolumes() {

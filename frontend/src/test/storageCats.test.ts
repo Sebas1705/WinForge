@@ -6,6 +6,7 @@ import {DICTS, KEYS} from "../lib/i18n";
 const IDS = [
     "temp-user", "temp-windows", "recycle-bin", "thumbnails", "crash-dumps", "delivery-optimization", "windows-update", "windows-old",
     "cache-chrome", "cache-edge", "cache-firefox", "cache-brave", "shader-cache", "dev-npm", "dev-pip", "dev-nuget", "dev-go", "dev-gradle",
+    "dev-yarn", "dev-pnpm", "dev-cargo", "dev-gradle-wrapper", "dev-android", "docker-build-cache", "docker-dangling",
 ];
 const OPTIMIZE = ["optimize-trim", "optimize-defrag", "optimize-component-cleanup", "optimize-hibernate-off"];
 const keys = new Set(KEYS as string[]);

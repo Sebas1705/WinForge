@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 
@@ -19,12 +20,13 @@ import (
 // on files and folders that were listed to the person: it cannot name any other
 // path to move to the Recycle Bin or reveal.
 type storageSession struct {
-	mu      sync.Mutex
-	cancel  context.CancelFunc // of the task that is running, if any
-	busy    bool
-	listed  map[string]bool // files a scan returned
-	folders map[string]bool // folders a scan returned (reveal only)
-	groups  []storage.DupGroup
+	mu       sync.Mutex
+	cancel   context.CancelFunc // of the task that is running, if any
+	busy     bool
+	listed   map[string]bool // files a scan returned
+	folders  map[string]bool // folders a scan returned (reveal only)
+	groups   []storage.DupGroup
+	projects map[string]bool // build folders the last project search listed: the only ones that can be removed
 }
 
 func pathKey(p string) string { return strings.ToLower(filepath.Clean(p)) }
@@ -40,9 +42,17 @@ func (a *App) emitEvent(name string, data any) {
 	}
 }
 
+// storageEnv is where this PC keeps what storage works on. Tests give it a layout in a temporary folder.
+func (a *App) storageEnv() storage.Env {
+	if a.env != nil {
+		return *a.env
+	}
+	return storage.DefaultEnv()
+}
+
 func (a *App) storageOptions(ctx context.Context) storage.Options {
 	return storage.Options{
-		Env:      storage.DefaultEnv(),
+		Env:      a.storageEnv(),
 		Runner:   storage.OSRunner{},
 		Admin:    system.IsElevated(),
 		Progress: func(p storage.Progress) { a.emitEvent("storage:progress", p) },
@@ -288,4 +298,84 @@ func (a *App) StorageCancel() {
 	if cancel != nil {
 		cancel()
 	}
+}
+
+// StorageProjects looks for the dependency and build folders of projects nobody has worked on for minDays
+// days or more, under the given folders. It changes nothing; the folders it lists are the only ones
+// StorageProjectsClean will accept.
+func (a *App) StorageProjects(roots []string, minDays int) ([]storage.ProjectJunk, error) {
+	if len(roots) == 0 {
+		return nil, errors.New("choose at least one folder")
+	}
+	ctx, end, err := a.beginStorageTask()
+	if err != nil {
+		return nil, err
+	}
+	defer end()
+	minDays = max(1, min(minDays, 3650))
+	out, err := storage.FindProjectJunk(ctx, roots, time.Duration(minDays)*24*time.Hour, a.clock(), func(p storage.Progress) { a.emitEvent("storage:progress", p) })
+	if err != nil {
+		return nil, err
+	}
+	paths := make([]string, len(out))
+	for i, j := range out {
+		paths[i] = j.Path
+	}
+	a.storage.mu.Lock()
+	a.storage.projects = map[string]bool{}
+	a.storage.mu.Unlock()
+	a.remember(nil, paths) // they can be shown in Explorer
+	a.storage.mu.Lock()
+	for _, p := range paths {
+		a.storage.projects[pathKey(p)] = true
+	}
+	a.storage.mu.Unlock()
+	return out, nil
+}
+
+// StorageProjectsClean deletes folders a project search listed. It cannot be undone, so it only accepts
+// what that search returned, and each one is proved again at the moment it is removed.
+func (a *App) StorageProjectsClean(paths []string) (storage.ProjectResult, error) {
+	if len(paths) == 0 {
+		return storage.ProjectResult{}, errors.New("nothing selected to remove")
+	}
+	a.storage.mu.Lock()
+	for _, p := range paths {
+		if !a.storage.projects[pathKey(p)] {
+			a.storage.mu.Unlock()
+			return storage.ProjectResult{}, fmt.Errorf("%q was not listed by a project search, so it is not removed", p)
+		}
+	}
+	a.storage.mu.Unlock()
+	ctx, end, err := a.beginStorageTask()
+	if err != nil {
+		return storage.ProjectResult{}, err
+	}
+	defer end()
+	res := storage.RemoveProjectJunk(ctx, a.storageEnv(), paths, a.clock(), func(p storage.Progress) { a.emitEvent("storage:progress", p) })
+	// What is gone is no longer listed; what was refused stays so the person can try again after fixing it.
+	failed := map[string]bool{}
+	for _, f := range res.Failed {
+		failed[pathKey(f)] = true
+	}
+	a.storage.mu.Lock()
+	for _, p := range paths {
+		if !failed[pathKey(p)] {
+			delete(a.storage.projects, pathKey(p))
+		}
+	}
+	a.storage.mu.Unlock()
+	return res, nil
+}
+
+// StorageVirtualDisks lists the disk images WSL and Docker Desktop keep. They can be shown in Explorer, and
+// nothing else: they are never offered for removal, so they are not added to what can be moved or deleted.
+func (a *App) StorageVirtualDisks() []storage.VirtualDisk {
+	disks := storage.VirtualDisks(a.storageEnv())
+	paths := make([]string, len(disks))
+	for i, d := range disks {
+		paths[i] = d.Path
+	}
+	a.remember(nil, paths) // reveal only
+	return disks
 }

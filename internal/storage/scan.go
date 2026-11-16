@@ -87,6 +87,14 @@ func measure(ctx context.Context, o Options, s Spec, c *Category, th *throttle) 
 				return err
 			}
 		}
+	case "docker-build-cache", "docker-dangling":
+		read := dockerBuildCache
+		if s.Special == "docker-dangling" {
+			read = dockerDanglingImages
+		}
+		size, n, ok := read(ctx, o.Runner)
+		c.Available = ok
+		c.Bytes, c.Files = size, n
 	case "windows-old":
 		r := o.windowsOld()
 		if r == "" {

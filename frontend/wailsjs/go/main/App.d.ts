@@ -4,6 +4,7 @@ import {catalog} from '../models';
 import {settings} from '../models';
 import {main} from '../models';
 import {install} from '../models';
+import {startup} from '../models';
 import {storage} from '../models';
 
 export function AcceptProfileState(arg1:string):Promise<void>;
@@ -116,6 +117,12 @@ export function ShareCode(arg1:catalog.Profile):Promise<string>;
 
 export function StartupError():Promise<string>;
 
+export function StartupList():Promise<Array<startup.Item>>;
+
+export function StartupReveal(arg1:string):Promise<void>;
+
+export function StartupSet(arg1:string,arg2:boolean):Promise<Array<startup.Item>>;
+
 export function StopIgnoringUpdate(arg1:string):Promise<Array<main.UpgradeInfo>>;
 
 export function StorageBigFiles(arg1:string,arg2:number):Promise<Array<storage.BigFile>>;
@@ -130,11 +137,17 @@ export function StorageDuplicates(arg1:Array<string>,arg2:number):Promise<Array<
 
 export function StorageFolders(arg1:string):Promise<Array<storage.FolderSize>>;
 
+export function StorageProjects(arg1:Array<string>,arg2:number):Promise<Array<storage.ProjectJunk>>;
+
+export function StorageProjectsClean(arg1:Array<string>):Promise<storage.ProjectResult>;
+
 export function StorageRecycle(arg1:Array<string>):Promise<storage.RecycleResult>;
 
 export function StorageReveal(arg1:string):Promise<void>;
 
 export function StorageScan():Promise<Array<storage.Category>>;
+
+export function StorageVirtualDisks():Promise<Array<storage.VirtualDisk>>;
 
 export function StorageVolumes():Promise<Array<storage.Volume>>;
 

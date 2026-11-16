@@ -1,6 +1,7 @@
 import {backupEn, backupEs} from "./i18n.backup";
 import {gamesEn, gamesEs} from "./i18n.games";
 import {repairEn, repairEs} from "./i18n.repair";
+import {startupEn, startupEs} from "./i18n.startup";
 import {storageEn, storageEs} from "./i18n.storage";
 import {subEn, subEs} from "./i18n.sub";
 import {healthEn, healthEs} from "./i18n.health";
@@ -261,7 +262,7 @@ const baseEn = {
     "cat.utilities": "Utilities",
 } as const;
 
-const en = {...baseEn, ...healthEn, ...uiEn, ...backupEn, ...subEn, ...gamesEn, ...repairEn, ...storageEn} as const;
+const en = {...baseEn, ...healthEn, ...uiEn, ...backupEn, ...subEn, ...gamesEn, ...repairEn, ...storageEn, ...startupEn} as const;
 
 export type Key = keyof typeof en;
 
@@ -516,7 +517,7 @@ const baseEs: Record<keyof typeof baseEn, string> = {
     "cat.utilities": "Utilidades",
 };
 
-const es: Record<Key, string> = {...baseEs, ...healthEs, ...uiEs, ...backupEs, ...subEs, ...gamesEs, ...repairEs, ...storageEs};
+const es: Record<Key, string> = {...baseEs, ...healthEs, ...uiEs, ...backupEs, ...subEs, ...gamesEs, ...repairEs, ...storageEs, ...startupEs};
 
 export type Lang = "en" | "es";
 export type LangSetting = Lang | "auto";

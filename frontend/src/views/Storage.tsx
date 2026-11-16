@@ -4,6 +4,7 @@ import {t} from "../lib/i18n";
 import {Biggest} from "./storage/Biggest";
 import {Cleanup} from "./storage/Cleanup";
 import {Duplicates} from "./storage/Duplicates";
+import {Projects} from "./storage/Projects";
 import {Optimize} from "./storage/Optimize";
 import {Overview} from "./storage/Overview";
 import {useTask} from "./storage/useTask";
@@ -45,6 +46,7 @@ export function Storage(p: {
             <Cleanup task={task} admin={p.admin} say={p.say} onAdmin={p.onAdmin} onCleaned={() => void loadVolumes()}/>
             <Biggest task={task} home={defaults?.home ?? ""} say={p.say}/>
             <Duplicates task={task} defaults={defaults} say={p.say}/>
+            <Projects task={task} defaults={defaults} say={p.say} onCleaned={() => void loadVolumes()}/>
             <Optimize onOptimize={p.onOptimize}/>
         </div>
     );

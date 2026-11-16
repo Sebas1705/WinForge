@@ -400,7 +400,7 @@ func TestEverySpecStaysInsideKnownFolders(t *testing.T) {
 		}
 	}
 	// The interface names these ids; keep them stable.
-	if len(storage.Specs) != 18 {
-		t.Errorf("%d categories: the frontend lists 18 (update both together)", len(storage.Specs))
+	if len(storage.Specs) != 25 {
+		t.Errorf("%d categories: the frontend lists 25 (update both together)", len(storage.Specs))
 	}
 }

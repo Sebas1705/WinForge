@@ -45,7 +45,14 @@ export interface DupFile { path: string; modified: string }
 export interface DupGroup { id: string; sizeBytes: number; files: DupFile[] }
 export interface RecycleResult { moved: number; freedBytes: number; failed: string[] }
 export interface StorageDefaults { home: string; downloads: string; documents: string; pictures: string; videos: string }
-export interface StorageProgress { task: "scan" | "clean" | "big" | "folders" | "dups"; files: number; bytes: number; current?: string }
+export interface StorageProgress { task: "scan" | "clean" | "big" | "folders" | "dups" | "projects" | "projects-clean"; files: number; bytes: number; current?: string }
+export interface ProjectJunk { path: string; project: string; projectPath: string; kind: string; sizeBytes: number; files: number; lastTouched: string }
+export interface ProjectResult { freedBytes: number; removed: number; files: number; failed: string[]; reasons: string[] }
+export interface VirtualDisk { path: string; name: string; kind: "wsl" | "docker"; sizeBytes: number; modified: string }
+export interface StartupItem {
+    id: string; name: string; source: string; command: string; target: string; publisher: string;
+    enabled: boolean; needsAdmin: boolean; missing: boolean; caution: boolean;
+}
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
 
 export const api = Go as unknown as {
@@ -113,7 +120,13 @@ export const api = Go as unknown as {
     StorageFolders(root: string): Promise<FolderSize[]>;
     StorageDuplicates(roots: string[], minMB: number): Promise<DupGroup[]>;
     StorageRecycle(paths: string[]): Promise<RecycleResult>;
+    StorageProjects(roots: string[], minDays: number): Promise<ProjectJunk[]>;
+    StorageProjectsClean(paths: string[]): Promise<ProjectResult>;
+    StorageVirtualDisks(): Promise<VirtualDisk[]>;
     StorageReveal(path: string): Promise<void>;
+    StartupList(): Promise<StartupItem[]>;
+    StartupSet(id: string, enabled: boolean): Promise<StartupItem[]>;
+    StartupReveal(id: string): Promise<void>;
     StorageCancel(): Promise<void>;
 };
 

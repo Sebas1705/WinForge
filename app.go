@@ -19,6 +19,7 @@ import (
 	"github.com/Sebas1705/WinForge/internal/health"
 	"github.com/Sebas1705/WinForge/internal/install"
 	"github.com/Sebas1705/WinForge/internal/profile"
+	"github.com/Sebas1705/WinForge/internal/startup"
 	"github.com/Sebas1705/WinForge/internal/storage"
 	"github.com/Sebas1705/WinForge/internal/system"
 	"github.com/Sebas1705/WinForge/internal/updates"
@@ -51,11 +52,19 @@ type App struct {
 	// storage remembers what the storage scans listed; emitter and runner are
 	// replaced by tests (nil means the real Wails events and real commands).
 	storage    storageSession
+	env        *storage.Env // replaced by tests; nil means this PC's real folders
 	emitter    func(event string, data any)
 	runner     storage.Runner
 	running    bool
 	cancel     context.CancelFunc
 	startupErr error
+
+	// The Startup page: what the last list showed, and the machine behind it. startupSys, elevated
+	// and reveal are replaced by tests (nil means the real registry, token and Explorer).
+	startupState startupSession
+	startupSys   startup.System
+	elevated     func() bool
+	reveal       func(path string) error
 }
 
 func NewApp() *App {
