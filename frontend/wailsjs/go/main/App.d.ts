@@ -130,11 +130,17 @@ export function StorageDuplicates(arg1:Array<string>,arg2:number):Promise<Array<
 
 export function StorageFolders(arg1:string):Promise<Array<storage.FolderSize>>;
 
+export function StorageProjects(arg1:Array<string>,arg2:number):Promise<Array<storage.ProjectJunk>>;
+
+export function StorageProjectsClean(arg1:Array<string>):Promise<storage.ProjectResult>;
+
 export function StorageRecycle(arg1:Array<string>):Promise<storage.RecycleResult>;
 
 export function StorageReveal(arg1:string):Promise<void>;
 
 export function StorageScan():Promise<Array<storage.Category>>;
+
+export function StorageVirtualDisks():Promise<Array<storage.VirtualDisk>>;
 
 export function StorageVolumes():Promise<Array<storage.Volume>>;
 

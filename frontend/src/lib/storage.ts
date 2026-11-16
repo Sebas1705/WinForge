@@ -13,6 +13,9 @@ export const categoryName = (id: string): string => tOpt(`storage.cat.${id}`) ??
 /** One-line hint of a cleanup category; empty for an unknown id. */
 export const categoryHint = (id: string): string => tOpt(`storage.cat.${id}.hint`) ?? "";
 
+/** Docker reports what it can free in bytes, not as files, so a count would be a made-up number. */
+export const showsFileCount = (id: string): boolean => !id.startsWith("docker-");
+
 /** "1 file" / "12 files". */
 export const fileCount = (n: number): string => t(n === 1 ? "storage.files.one" : "storage.files.other", {n});
 

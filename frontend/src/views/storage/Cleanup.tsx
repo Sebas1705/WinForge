@@ -4,7 +4,7 @@ import {Icon} from "../../components/Icon";
 import {ConfirmDialog} from "../../components/Modals";
 import {formatBytes} from "../../lib/format";
 import {t} from "../../lib/i18n";
-import {categoryHint, categoryName, fileCount, initialSelection, visibleCategories} from "../../lib/storage";
+import {categoryHint, categoryName, fileCount, initialSelection, showsFileCount, visibleCategories} from "../../lib/storage";
 import {TaskStatus, type TaskRunner} from "./useTask";
 
 // The backend reports short codes for what it did not do; anything else is shown as it came.
@@ -123,7 +123,7 @@ export function Cleanup(p: { task: TaskRunner; admin: boolean; say: (m: string) 
                                     </span>
                                     <span className="cleansize">
                                         <b className="mono">{formatBytes(c.bytes)}</b>
-                                        <small className="muted">{fileCount(c.files)}</small>
+                                        {showsFileCount(c.id) && <small className="muted">{fileCount(c.files)}</small>}
                                     </span>
                                 </label>
                             </li>

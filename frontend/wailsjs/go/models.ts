@@ -1757,6 +1757,69 @@ export namespace storage {
 	        this.error = source["error"];
 	    }
 	}
+	export class ProjectJunk {
+	    path: string;
+	    project: string;
+	    projectPath: string;
+	    kind: string;
+	    sizeBytes: number;
+	    files: number;
+	    // Go type: time
+	    lastTouched: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new ProjectJunk(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.path = source["path"];
+	        this.project = source["project"];
+	        this.projectPath = source["projectPath"];
+	        this.kind = source["kind"];
+	        this.sizeBytes = source["sizeBytes"];
+	        this.files = source["files"];
+	        this.lastTouched = this.convertValues(source["lastTouched"], null);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class ProjectResult {
+	    freedBytes: number;
+	    removed: number;
+	    files: number;
+	    failed: string[];
+	    reasons: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new ProjectResult(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.freedBytes = source["freedBytes"];
+	        this.removed = source["removed"];
+	        this.files = source["files"];
+	        this.failed = source["failed"];
+	        this.reasons = source["reasons"];
+	    }
+	}
 	export class RecycleResult {
 	    moved: number;
 	    freedBytes: number;
@@ -1789,6 +1852,45 @@ export namespace storage {
 	        this.files = source["files"];
 	        this.failed = source["failed"];
 	        this.outcomes = this.convertValues(source["outcomes"], Outcome);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class VirtualDisk {
+	    path: string;
+	    name: string;
+	    kind: string;
+	    sizeBytes: number;
+	    // Go type: time
+	    modified: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new VirtualDisk(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.path = source["path"];
+	        this.name = source["name"];
+	        this.kind = source["kind"];
+	        this.sizeBytes = source["sizeBytes"];
+	        this.modified = this.convertValues(source["modified"], null);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
