@@ -79,7 +79,7 @@ type App struct {
 	// The Windows features page reads through featuresSys (nil means this PC); tests replace it.
 	featuresSys winfeatures.System
 	// The Services and Scheduled tasks tabs of the Startup page (servicesbind.go, tasksbind.go).
-	svc svcFeature
+	svc   svcFeature
 	hhist hhistState // PC health history and battery (healthhistorybind.go)
 	// The Uninstall page: what this session uninstalled and what the last leftovers search listed.
 	uninst uninstallState

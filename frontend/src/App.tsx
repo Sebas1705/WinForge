@@ -31,8 +31,7 @@ import {Profiles} from "./views/Profiles";
 import {historyError} from "./views/History";
 import {Updates} from "./views/Updates";
 
-type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games" | "storage" | "startup" | "developer";
-type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games" | "storage" | "startup" | "uninstall";
+type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games" | "storage" | "startup" | "developer" | "uninstall";
 
 interface Runner {
     /** Called when the person confirms the plan. */
@@ -47,8 +46,7 @@ interface Runner {
 // Go names runs that have no profile by what they do; show that in the person's language.
 const pendingTitle = (title: string) => (title === "updates" ? t("run.updateTitle") : title === "uninstall" ? t("detail.uninstall") : title);
 
-const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive", games: "gamepad", storage: "disk", startup: "rocket", developer: "code"};
-const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive", games: "gamepad", storage: "disk", startup: "rocket", uninstall: "trash"};
+const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive", games: "gamepad", storage: "disk", startup: "rocket", developer: "code", uninstall: "trash"};
 
 function tourSeen(): boolean {
     try { return localStorage.getItem("winforge.tour") === "1"; } catch { return true; }
@@ -642,6 +640,7 @@ export default function App() {
                         <Startup admin={state.admin} say={say} onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>
                     ) : tab === "developer" ? (
                         <Developer admin={state.admin} say={say} refreshKey={developerTick} onRun={(ids) => void startRepair(ids)}
+                                   onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>
                     ) : tab === "uninstall" ? (
                         <Uninstall apps={state.apps} admin={state.admin} say={say} refreshKey={uninstallTick} onUninstall={(list) => void startUninstallMany(list)}
                                    onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>

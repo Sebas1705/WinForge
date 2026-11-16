@@ -51,7 +51,8 @@ describe("history: the list", () => {
             entry("c", "git", {action: "update", from: "0.9", to: "1.0", at: at(12, 8), result: "restart"}),
         ]));
         await openUpdates();
-        const days = await screen.findAllByRole("heading", {level: 3});
+        await screen.findByRole("heading", {name: "History", level: 2});
+        const days = within(document.querySelector("section.history") as HTMLElement).getAllByRole("heading", {level: 3});
         expect(days).toHaveLength(2);
         expect(days[0].textContent).toMatch(/14/);
         expect(days[1].textContent).toMatch(/12/);
