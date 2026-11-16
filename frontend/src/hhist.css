@@ -1,0 +1,35 @@
+/* PC health: History section and Battery card. Colours come from the shared tokens only, so every
+   style x theme keeps its contrast: text uses --text / --muted (4.5:1), lines and markers use
+   --accent-ink / --text and axes use --control (3:1). Nothing relies on colour alone: series differ
+   by marker shape and dash pattern, are named at the line's end, and are also available as a table. */
+.hh, .hh-battery { margin-bottom: 24px; }
+.hh h3, .hh-battery h3 { font-size: 15px; margin: 18px 0 8px; }
+.hh-statements { margin: 0 0 8px; padding-left: 20px; display: grid; gap: 4px; }
+.hh-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 14px; margin-top: 12px; }
+.hh-chart { margin: 0; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; min-width: 0; }
+.hh-chart figcaption { margin-bottom: 6px; }
+.hh-svg { width: 100%; height: auto; display: block; overflow: visible; }
+.hh-grid { stroke: var(--line); stroke-width: 1; }
+.hh-axis { stroke: var(--control); stroke-width: 1.5; }
+.hh-tick { fill: var(--muted); font: 11px var(--font-mono); }
+.hh-endlabel { fill: var(--text); font: 600 12px var(--font-body); }
+.hh-s { --hh: var(--accent-ink); }
+.hh-s.hh-alt { --hh: var(--text); }
+.hh-line { stroke: var(--hh); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.hh-marker { stroke: var(--hh); fill: var(--bg); }
+.hh-legend { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 12px; }
+.hh-legend li { display: flex; align-items: center; gap: 6px; }
+.hh-chart > button { margin-top: 8px; }
+.hh-table { margin-top: 8px; max-height: 260px; }
+.hh-table th[scope=row], .hh-drives th[scope=row], .hh-battery th[scope=row] { font-weight: 500; text-align: left; }
+.hh-verdict { display: flex; gap: 12px; align-items: center; padding: 12px 14px; margin-bottom: 12px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--control); border-radius: 12px; }
+.hh-verdict p { margin: 0; }
+.hh-verdict .sev { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--cell); }
+.hh-verdict.good { border-left-color: var(--ok); }
+.hh-verdict.good .sev { color: var(--ok); }
+.hh-verdict.worn { border-left-color: var(--warn); }
+.hh-verdict.worn .sev { color: var(--warn); }
+.hh-verdict.replace { border-left-color: var(--bad); }
+.hh-verdict.replace .sev { color: var(--bad); }
+.hh-battery .specs { margin-bottom: 10px; }
+@media (max-width: 560px) { .hh-chart { padding: 10px; } }

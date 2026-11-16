@@ -38,6 +38,7 @@ type HealthResult struct {
 
 // HealthScan reads firmware, drivers, storage and security. It only reads.
 func (a *App) HealthScan() (HealthResult, error) {
+	extras := a.startHealthExtras() // drive counters and battery, read while the scan runs
 	r, err := health.CollectWith(a.ctx, func(s string) { a.scanStep("health", s) })
 	if err != nil {
 		return HealthResult{}, err
@@ -45,6 +46,7 @@ func (a *App) HealthScan() (HealthResult, error) {
 	a.mu.Lock()
 	a.healthReport = r
 	a.mu.Unlock()
+	a.recordHealth(r, extras())
 	return a.healthResult(), nil
 }
 

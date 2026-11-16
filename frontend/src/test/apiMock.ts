@@ -19,7 +19,7 @@ export const api = {
     GetState: vi.fn(), Plan: vi.fn(), Apply: vi.fn(), Cancel: vi.fn(), SaveProfile: vi.fn(), DeleteProfile: vi.fn(),
     ProfileFromPC: vi.fn(), ExportProfile: vi.fn(), ExportWinget: vi.fn(), ExportConfigure: vi.fn(), ProfileDrift: vi.fn(), AcceptProfileState: vi.fn(), ExportScript: vi.fn(), ImportProfile: vi.fn(),
     RestartAsAdmin: vi.fn(), OpenURL: vi.fn(), CheckUpdate: vi.fn(), InstallUpdate: vi.fn(), Upgrades: vi.fn(), PlanUpgrades: vi.fn(),
-    ApplyUpgrades: vi.fn(), IgnoreUpdate: vi.fn(), ProfilesFolder: vi.fn(), SetProfilesFolder: vi.fn(), ResetProfilesFolder: vi.fn(), StopIgnoringUpdate: vi.fn(), HealthScan: vi.fn(), HealthUpdates: vi.fn(), SaveTextFile: vi.fn(), OpenLink: vi.fn(),
+    ApplyUpgrades: vi.fn(), IgnoreUpdate: vi.fn(), ProfilesFolder: vi.fn(), SetProfilesFolder: vi.fn(), ResetProfilesFolder: vi.fn(), StopIgnoringUpdate: vi.fn(), HealthScan: vi.fn(), HealthUpdates: vi.fn(), HealthHistory: vi.fn(), HealthHistoryClear: vi.fn(), Battery: vi.fn(), SaveTextFile: vi.fn(), OpenLink: vi.fn(),
     ResumePending: vi.fn(), PlanPending: vi.fn(), DiscardPending: vi.fn(), PlanUninstall: vi.fn(), ApplyUninstall: vi.fn(),
     InstallWinget: vi.fn(), ShareCode: vi.fn(), ImportCode: vi.fn(), BackupSets: vi.fn(), PickFolder: vi.fn(), CreateBackup: vi.fn(),
     PickBackup: vi.fn(), RestoreSettings: vi.fn(), RestoreFolders: vi.fn(), Emulation: vi.fn(), PatchROM: vi.fn(),
@@ -78,6 +78,9 @@ export function resetApi(state: State = makeState()): void {
     api.StorageRecycle.mockResolvedValue({moved: 0, freedBytes: 0, failed: []});
     api.StorageReveal.mockResolvedValue(undefined);
     api.StartupList.mockResolvedValue([]);
+    api.HealthHistory.mockResolvedValue({snapshots: [], statements: [], enough: false});
+    api.HealthHistoryClear.mockResolvedValue(undefined);
+    api.Battery.mockResolvedValue({present: false, batteries: [], designMWh: 0, fullMWh: 0, healthPct: 0, cycles: null, verdict: "unknown", history: [], goodMinPct: 80, replaceBelowPct: 60});
     api.StartupSet.mockResolvedValue([]);
     api.StartupReveal.mockResolvedValue(undefined);
     api.ServicesList.mockResolvedValue([]);

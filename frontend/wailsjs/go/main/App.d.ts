@@ -27,6 +27,8 @@ export function ApplyUpgrades(arg1:Array<string>):Promise<void>;
 
 export function BackupSets():Promise<Array<settings.Found>>;
 
+export function Battery():Promise<any>;
+
 export function Cancel():Promise<void>;
 
 export function CancelRestart():Promise<void>;
@@ -62,6 +64,10 @@ export function FeaturesList():Promise<Array<winfeatures.Feature>>;
 export function GamesState():Promise<main.GamesView>;
 
 export function GetState():Promise<main.State>;
+
+export function HealthHistory():Promise<any>;
+
+export function HealthHistoryClear():Promise<void>;
 
 export function HealthScan():Promise<main.HealthResult>;
 

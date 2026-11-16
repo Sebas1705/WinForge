@@ -38,6 +38,10 @@ export function BackupSets() {
   return window['go']['main']['App']['BackupSets']();
 }
 
+export function Battery() {
+  return window['go']['main']['App']['Battery']();
+}
+
 export function Cancel() {
   return window['go']['main']['App']['Cancel']();
 }
@@ -108,6 +112,14 @@ export function GamesState() {
 
 export function GetState() {
   return window['go']['main']['App']['GetState']();
+}
+
+export function HealthHistory() {
+  return window['go']['main']['App']['HealthHistory']();
+}
+
+export function HealthHistoryClear() {
+  return window['go']['main']['App']['HealthHistoryClear']();
 }
 
 export function HealthScan() {

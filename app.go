@@ -80,6 +80,7 @@ type App struct {
 	featuresSys winfeatures.System
 	// The Services and Scheduled tasks tabs of the Startup page (servicesbind.go, tasksbind.go).
 	svc svcFeature
+	hhist hhistState // PC health history and battery (healthhistorybind.go)
 }
 
 func NewApp() *App {
@@ -111,6 +112,7 @@ func NewApp() *App {
 	} else {
 		app.history = h
 	}
+	app.openHealthHistory()
 	return app
 }
 

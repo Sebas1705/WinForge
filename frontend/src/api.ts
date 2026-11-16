@@ -3,6 +3,7 @@
 import * as Go from "../wailsjs/go/main/App";
 import {EventsOn} from "../wailsjs/runtime/runtime";
 import type {HealthResult} from "./lib/health";
+import type {BatteryInfo, HHView} from "./lib/hhist";
 import type {InstallEvent, Plan, Profile, State, UpgradeInfo} from "./lib/model";
 
 export interface ProfilesFolderInfo { path: string; default: string; custom: boolean; count: number; problem?: string }
@@ -118,6 +119,9 @@ export const api = Go as unknown as {
     StopIgnoringUpdate(id: string): Promise<UpgradeInfo[]>;
     HealthScan(): Promise<HealthResult>;
     HealthUpdates(): Promise<HealthResult>;
+    HealthHistory(): Promise<HHView>;
+    HealthHistoryClear(): Promise<void>;
+    Battery(): Promise<BatteryInfo>;
     SaveTextFile(name: string, content: string): Promise<string>;
     OpenLink(url: string): Promise<void>;
     ResumePending(): Promise<void>;
