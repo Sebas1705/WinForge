@@ -24,6 +24,7 @@ import (
 	"github.com/Sebas1705/WinForge/internal/storage"
 	"github.com/Sebas1705/WinForge/internal/system"
 	"github.com/Sebas1705/WinForge/internal/updates"
+	"github.com/Sebas1705/WinForge/internal/winfeatures"
 )
 
 // App is the object bound to the frontend. Every exported method is callable
@@ -71,6 +72,8 @@ type App struct {
 	// replaced by tests; nil means the real registry).
 	envState envSession
 	envSys   envdoctor.System
+	// The Windows features page reads through featuresSys (nil means this PC); tests replace it.
+	featuresSys winfeatures.System
 }
 
 func NewApp() *App {

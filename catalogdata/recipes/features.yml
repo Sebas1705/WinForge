@@ -1,0 +1,168 @@
+# Windows optional features turned on and off from the Windows features page
+# (WSL, Virtual Machine Platform, Hyper-V, Windows Sandbox, .NET Framework 3.5).
+# They are recipes like any other, run through the same plan, progress and retry
+# as installs, and all need administrator rights. Every one is idempotent: its
+# check exits 0 when the feature is already in the wanted state. When Windows
+# says a restart is needed the script exits 3010, which the runner reports as
+# "restart needed" rather than as a failure.
+#
+# Turning a feature off never deletes anything: WSL distributions, virtual
+# machines and virtual disks stay where they are. Turning WSL off leaves Virtual
+# Machine Platform on, because other tools (Windows Sandbox, Android emulators,
+# Docker) may need it. The ids start with "feature-" and are run only through
+# RepairPlan, with a restore point first (internal/install/plan.go). The state
+# shown on the page comes from internal/winfeatures.
+
+- id: feature-wsl-on
+  description: Turn on the Windows Subsystem for Linux and Virtual Machine Platform, and make WSL 2 the default version.
+  admin: true
+  check: |
+    foreach ($name in 'Microsoft-Windows-Subsystem-Linux', 'VirtualMachinePlatform') {
+        $f = Get-CimInstance Win32_OptionalFeature -Filter "Name='$name'" -ErrorAction SilentlyContinue
+        if (-not $f -or $f.InstallState -ne 1) { exit 1 }
+    }
+    exit 0
+  powershell: |
+    $restart = $false
+    foreach ($name in 'Microsoft-Windows-Subsystem-Linux', 'VirtualMachinePlatform') {
+        "Turning on $name ..."
+        dism.exe /online /enable-feature /featurename:$name /all /norestart
+        $code = $LASTEXITCODE
+        if ($code -eq 3010) { $restart = $true }
+        elseif ($code -ne 0) { "Windows could not turn on $name (code $code)."; exit $code }
+    }
+    if (Get-Command wsl.exe -ErrorAction SilentlyContinue) {
+        'Making WSL 2 the default version ...'
+        try { wsl.exe --set-default-version 2 | Out-Null } catch { }
+        if ($LASTEXITCODE -ne 0) { 'WSL 2 could not be made the default yet (it may need a restart first). The features are on.' }
+    }
+    if ($restart) { 'Restart Windows to finish turning on WSL.'; exit 3010 }
+    'Done.'
+    exit 0
+
+- id: feature-wsl-off
+  description: Turn off the Windows Subsystem for Linux feature, keeping installed distributions and Virtual Machine Platform as they are.
+  admin: true
+  check: |
+    $f = Get-CimInstance Win32_OptionalFeature -Filter "Name='Microsoft-Windows-Subsystem-Linux'" -ErrorAction SilentlyContinue
+    if (-not $f -or $f.InstallState -ne 1) { exit 0 } else { exit 1 }
+  powershell: |
+    $name = 'Microsoft-Windows-Subsystem-Linux'
+    "Turning off $name (Virtual Machine Platform and your distributions are left alone) ..."
+    dism.exe /online /disable-feature /featurename:$name /norestart
+    $code = $LASTEXITCODE
+    if ($code -eq 3010) { 'Restart Windows to finish turning off WSL.'; exit 3010 }
+    exit $code
+
+- id: feature-vmp-on
+  description: Turn on Virtual Machine Platform, which WSL 2, Windows Sandbox and many emulators need.
+  admin: true
+  check: |
+    $f = Get-CimInstance Win32_OptionalFeature -Filter "Name='VirtualMachinePlatform'" -ErrorAction SilentlyContinue
+    if ($f -and $f.InstallState -eq 1) { exit 0 } else { exit 1 }
+  powershell: |
+    $name = 'VirtualMachinePlatform'
+    "Turning on $name ..."
+    dism.exe /online /enable-feature /featurename:$name /all /norestart
+    $code = $LASTEXITCODE
+    if ($code -eq 3010) { 'Restart Windows to finish turning on Virtual Machine Platform.'; exit 3010 }
+    exit $code
+
+- id: feature-vmp-off
+  description: Turn off Virtual Machine Platform, which WSL 2, Windows Sandbox and many emulators need.
+  admin: true
+  check: |
+    $f = Get-CimInstance Win32_OptionalFeature -Filter "Name='VirtualMachinePlatform'" -ErrorAction SilentlyContinue
+    if (-not $f -or $f.InstallState -ne 1) { exit 0 } else { exit 1 }
+  powershell: |
+    $name = 'VirtualMachinePlatform'
+    "Turning off $name (WSL 2 distributions will not start until it is back on; their files are kept) ..."
+    dism.exe /online /disable-feature /featurename:$name /norestart
+    $code = $LASTEXITCODE
+    if ($code -eq 3010) { 'Restart Windows to finish turning off Virtual Machine Platform.'; exit 3010 }
+    exit $code
+
+- id: feature-hyperv-on
+  description: Turn on Hyper-V, Windows' own virtual machine manager (Windows Pro, Enterprise and Education only).
+  admin: true
+  check: |
+    $f = Get-CimInstance Win32_OptionalFeature -Filter "Name='Microsoft-Hyper-V-All'" -ErrorAction SilentlyContinue
+    if ($f -and $f.InstallState -eq 1) { exit 0 } else { exit 1 }
+  powershell: |
+    $name = 'Microsoft-Hyper-V-All'
+    "Turning on $name ..."
+    dism.exe /online /enable-feature /featurename:$name /all /norestart
+    $code = $LASTEXITCODE
+    if ($code -eq 3010) { 'Restart Windows to finish turning on Hyper-V.'; exit 3010 }
+    exit $code
+
+- id: feature-hyperv-off
+  description: Turn off Hyper-V, keeping your virtual machines and virtual disks where they are.
+  admin: true
+  check: |
+    $f = Get-CimInstance Win32_OptionalFeature -Filter "Name='Microsoft-Hyper-V-All'" -ErrorAction SilentlyContinue
+    if (-not $f -or $f.InstallState -ne 1) { exit 0 } else { exit 1 }
+  powershell: |
+    $name = 'Microsoft-Hyper-V-All'
+    "Turning off $name (your virtual machines and virtual disks are not touched) ..."
+    dism.exe /online /disable-feature /featurename:$name /norestart
+    $code = $LASTEXITCODE
+    if ($code -eq 3010) { 'Restart Windows to finish turning off Hyper-V.'; exit 3010 }
+    exit $code
+
+- id: feature-sandbox-on
+  description: Turn on Windows Sandbox, a throwaway Windows desktop for trying things safely (Windows Pro, Enterprise and Education only).
+  admin: true
+  check: |
+    $f = Get-CimInstance Win32_OptionalFeature -Filter "Name='Containers-DisposableClientVM'" -ErrorAction SilentlyContinue
+    if ($f -and $f.InstallState -eq 1) { exit 0 } else { exit 1 }
+  powershell: |
+    $name = 'Containers-DisposableClientVM'
+    "Turning on $name (Windows Sandbox) ..."
+    dism.exe /online /enable-feature /featurename:$name /all /norestart
+    $code = $LASTEXITCODE
+    if ($code -eq 3010) { 'Restart Windows to finish turning on Windows Sandbox.'; exit 3010 }
+    exit $code
+
+- id: feature-sandbox-off
+  description: Turn off Windows Sandbox.
+  admin: true
+  check: |
+    $f = Get-CimInstance Win32_OptionalFeature -Filter "Name='Containers-DisposableClientVM'" -ErrorAction SilentlyContinue
+    if (-not $f -or $f.InstallState -ne 1) { exit 0 } else { exit 1 }
+  powershell: |
+    $name = 'Containers-DisposableClientVM'
+    "Turning off $name (Windows Sandbox) ..."
+    dism.exe /online /disable-feature /featurename:$name /norestart
+    $code = $LASTEXITCODE
+    if ($code -eq 3010) { 'Restart Windows to finish turning off Windows Sandbox.'; exit 3010 }
+    exit $code
+
+- id: feature-netfx3-on
+  description: Turn on .NET Framework 3.5, which some older programs and installers still ask for (it may download files from Windows Update).
+  admin: true
+  check: |
+    $f = Get-CimInstance Win32_OptionalFeature -Filter "Name='NetFx3'" -ErrorAction SilentlyContinue
+    if ($f -and $f.InstallState -eq 1) { exit 0 } else { exit 1 }
+  powershell: |
+    $name = 'NetFx3'
+    "Turning on $name (.NET Framework 3.5; this can take a few minutes and needs an internet connection) ..."
+    dism.exe /online /enable-feature /featurename:$name /all /norestart
+    $code = $LASTEXITCODE
+    if ($code -eq 3010) { 'Restart Windows to finish turning on .NET Framework 3.5.'; exit 3010 }
+    if ($code -ne 0) { 'Windows could not get the files for .NET Framework 3.5. Check the internet connection and Windows Update, then try again.' }
+    exit $code
+
+- id: feature-netfx3-off
+  description: Turn off .NET Framework 3.5.
+  admin: true
+  check: |
+    $f = Get-CimInstance Win32_OptionalFeature -Filter "Name='NetFx3'" -ErrorAction SilentlyContinue
+    if (-not $f -or $f.InstallState -ne 1) { exit 0 } else { exit 1 }
+  powershell: |
+    $name = 'NetFx3'
+    "Turning off $name (.NET Framework 3.5) ..."
+    dism.exe /online /disable-feature /featurename:$name /norestart
+    $code = $LASTEXITCODE
+    if ($code -eq 3010) { 'Restart Windows to finish turning off .NET Framework 3.5.'; exit 3010 }
+    exit $code

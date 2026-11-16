@@ -97,17 +97,28 @@ var riskyRepairs = map[string]bool{
 	"repair-windows-files":   true,
 }
 
-// isMaintenance says whether a recipe id names a repair or a disk optimization,
-// the only recipes RepairPlan will run.
+// featurePrefix starts the id of every recipe that turns a Windows optional
+// feature on or off (WSL, Hyper-V, ...). Each one is risky: it changes the
+// operating system image, so a restore point is made first.
+const featurePrefix = "feature-"
+
+// isMaintenance says whether a recipe id names a repair, a disk optimization or
+// a Windows feature switch, the only recipes RepairPlan will run.
 func isMaintenance(id string) bool {
-	return strings.HasPrefix(id, "repair-") || strings.HasPrefix(id, "optimize-")
+	return strings.HasPrefix(id, "repair-") || strings.HasPrefix(id, "optimize-") || strings.HasPrefix(id, featurePrefix)
 }
 
-// RepairPlan turns repair and optimization recipe ids into steps. Only recipes
-// whose id starts with "repair-" or "optimize-" are accepted, so this can never
-// run a profile's recipes or anything else from the catalog. A restore point
-// goes first when any repair touches drivers or system files; duplicates are
-// dropped.
+// isRisky says whether a recipe gets a restore point first: the listed repairs
+// and every Windows feature switch.
+func isRisky(id string) bool {
+	return riskyRepairs[id] || strings.HasPrefix(id, featurePrefix)
+}
+
+// RepairPlan turns repair, optimization and Windows feature recipe ids into
+// steps. Only recipes whose id starts with "repair-", "optimize-" or "feature-"
+// are accepted, so this can never run a profile's recipes or anything else from
+// the catalog. A restore point goes first when any step touches drivers, system
+// files or Windows features; duplicates are dropped.
 func RepairPlan(cat *catalog.Catalog, ids []string) (Plan, error) {
 	p := Plan{Steps: []Step{}, AlreadyInstalled: []string{}}
 	seen := map[string]bool{}
@@ -122,7 +133,7 @@ func RepairPlan(cat *catalog.Catalog, ids []string) (Plan, error) {
 		}
 		seen[id] = true
 		wanted = append(wanted, id)
-		risky = risky || riskyRepairs[id]
+		risky = risky || isRisky(id)
 	}
 	if risky {
 		wanted = append([]string{"repair-restore-point"}, wanted...)
