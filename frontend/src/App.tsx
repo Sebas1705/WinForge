@@ -24,6 +24,7 @@ import {Backup} from "./views/Backup";
 import {Games} from "./views/Games";
 import {Developer} from "./views/Developer";
 import {Startup} from "./views/Startup";
+import {Uninstall} from "./views/Uninstall";
 import {Storage} from "./views/Storage";
 import {Home} from "./views/Home";
 import {Profiles} from "./views/Profiles";
@@ -31,6 +32,7 @@ import {historyError} from "./views/History";
 import {Updates} from "./views/Updates";
 
 type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games" | "storage" | "startup" | "developer";
+type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games" | "storage" | "startup" | "uninstall";
 
 interface Runner {
     /** Called when the person confirms the plan. */
@@ -46,6 +48,7 @@ interface Runner {
 const pendingTitle = (title: string) => (title === "updates" ? t("run.updateTitle") : title === "uninstall" ? t("detail.uninstall") : title);
 
 const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive", games: "gamepad", storage: "disk", startup: "rocket", developer: "code"};
+const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive", games: "gamepad", storage: "disk", startup: "rocket", uninstall: "trash"};
 
 function tourSeen(): boolean {
     try { return localStorage.getItem("winforge.tour") === "1"; } catch { return true; }
@@ -330,6 +333,32 @@ export default function App() {
         } catch (e) { say(errText(e)); } finally { starting.current = false; }
     };
 
+    // The Uninstall page: a run of uninstalls is checked by scanning the PC again once it is over, whether or not
+    // the dialog is still open. What the scan finds still installed is said, never assumed gone.
+    const [uninstallTick, setUninstallTick] = useState(0);
+    const verifying = useRef<string[]>([]);
+    useEffect(() => on.done(() => {
+        const ids = verifying.current;
+        verifying.current = [];
+        if (ids.length === 0) return;
+        api.UninstallVerify(ids).then((v) => {
+            if (v.removed.length > 0) say(t("uninst.removedToast", {names: v.removed.map((x) => x.name).join(", ")}));
+            if (v.still.length > 0) say(t("uninst.stillToast", {names: v.still.map((x) => x.name).join(", ")}));
+            setUninstallTick((n) => n + 1);
+        }).catch((e) => say(errText(e)));
+    }), [say]);
+
+    const startUninstallMany = async (list: { id: string; name: string }[]) => {
+        if (starting.current || list.length === 0) return;
+        starting.current = true;
+        try {
+            const ids = list.map((a) => a.id);
+            const plan = await api.PlanUninstall(ids);
+            const title = list.length === 1 ? t("run.uninstallTitle", {name: list[0].name}) : t("uninst.runTitle", {n: list.length});
+            openRun(title, plan, {start: async () => { await api.UninstallApps(ids); verifying.current = ids; }});
+        } catch (e) { say(errText(e)); } finally { starting.current = false; }
+    };
+
     // Repairs run like an install; when they finish the health page is read again.
     // Storage maintenance ("optimize-*") goes through the same runner; the drives are measured again after.
     const startRepair = async (ids: string[]) => {
@@ -475,6 +504,7 @@ export default function App() {
         ["storage", t("nav.storage"), null],
         ["startup", t("nav.startup"), null],
         ["developer", t("nav.developer"), null],
+        ["uninstall", t("nav.uninstall"), null],
         ["games", t("nav.games"), null],
         ["backup", t("nav.backup"), null],
     ];
@@ -608,6 +638,8 @@ export default function App() {
                         <Startup admin={state.admin} say={say} onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>
                     ) : tab === "developer" ? (
                         <Developer admin={state.admin} say={say} refreshKey={developerTick} onRun={(ids) => void startRepair(ids)}
+                    ) : tab === "uninstall" ? (
+                        <Uninstall apps={state.apps} admin={state.admin} say={say} refreshKey={uninstallTick} onUninstall={(list) => void startUninstallMany(list)}
                                    onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>
                     ) : tab === "games" ? (
                         <Games apps={state.apps} say={say} onOpen={(u) => safe(api.OpenURL(u))} onDetail={setDetail}

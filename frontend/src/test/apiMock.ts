@@ -30,6 +30,7 @@ export const api = {
     EnvScan: vi.fn(), EnvFix: vi.fn(), EnvBackups: vi.fn(), EnvRestore: vi.fn(), FeaturesList: vi.fn(), WSLInfo: vi.fn(),
     ServicesList: vi.fn(), ServicesSetMode: vi.fn(), ServicesRestore: vi.fn(), TasksList: vi.fn(), TasksSetEnabled: vi.fn(), TasksRestore: vi.fn(),
     StorageFolders: vi.fn(), StorageDuplicates: vi.fn(), StorageRecycle: vi.fn(), StorageReveal: vi.fn(), StartupList: vi.fn(), StartupSet: vi.fn(), StartupReveal: vi.fn(), StorageProjects: vi.fn(), StorageProjectsClean: vi.fn(), StorageVirtualDisks: vi.fn(), StorageCancel: vi.fn(), HistoryList: vi.fn(), HistoryRollbackPlan: vi.fn(), HistoryRollback: vi.fn(),
+    StorageFolders: vi.fn(), StorageDuplicates: vi.fn(), StorageRecycle: vi.fn(), StorageReveal: vi.fn(), StartupList: vi.fn(), StartupSet: vi.fn(), StartupReveal: vi.fn(), UninstallList: vi.fn(), UninstallApps: vi.fn(), UninstallVerify: vi.fn(), LeftoversFind: vi.fn(), LeftoversRecycle: vi.fn(), StorageProjects: vi.fn(), StorageProjectsClean: vi.fn(), StorageVirtualDisks: vi.fn(), StorageCancel: vi.fn(),
 };
 
 export function resetApi(state: State = makeState()): void {
@@ -89,6 +90,11 @@ export function resetApi(state: State = makeState()): void {
     api.TasksList.mockResolvedValue([]);
     api.TasksSetEnabled.mockResolvedValue([]);
     api.TasksRestore.mockResolvedValue([]);
+    api.UninstallList.mockResolvedValue({apps: [], removed: []});
+    api.UninstallApps.mockResolvedValue(undefined);
+    api.UninstallVerify.mockResolvedValue({removed: [], still: []});
+    api.LeftoversFind.mockResolvedValue({appId: "", appName: "", candidates: [], searched: []});
+    api.LeftoversRecycle.mockResolvedValue({moved: 0, freedBytes: 0, failed: []});
     api.StorageProjects.mockResolvedValue([]);
     api.StorageProjectsClean.mockResolvedValue({freedBytes: 0, removed: 0, files: 0, failed: [], reasons: []});
     api.StorageVirtualDisks.mockResolvedValue([]);

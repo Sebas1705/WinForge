@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"io/fs"
 	"os"
 	"os/exec"
 	"unicode/utf16"
@@ -17,6 +18,17 @@ const maxBatch = 40
 // counts as moved only if it is gone afterwards; anything else (in use, no
 // rights, not a plain file) is reported in failed and left where it was.
 func Recycle(ctx context.Context, run Runner, paths []string) (moved int, freed int64, failed []string) {
+	return recycle(ctx, run, paths, false)
+}
+
+// RecycleFolders moves folders, with everything in them, to the Recycle Bin. Only a plain folder is
+// accepted: a link or junction (which the shell would resolve to what it points at), a file or a path
+// that is gone is reported in failed and left alone. A folder counts as moved only if it is gone afterwards.
+func RecycleFolders(ctx context.Context, run Runner, paths []string) (moved int, freed int64, failed []string) {
+	return recycle(ctx, run, paths, true)
+}
+
+func recycle(ctx context.Context, run Runner, paths []string, folders bool) (moved int, freed int64, failed []string) {
 	if run == nil {
 		return 0, 0, append([]string(nil), paths...)
 	}
@@ -27,11 +39,21 @@ func Recycle(ctx context.Context, run Runner, paths []string) (moved int, freed 
 	var todo []item
 	for _, p := range paths {
 		st, err := os.Lstat(p)
-		if err != nil || !st.Mode().IsRegular() {
+		if err != nil {
 			failed = append(failed, p)
 			continue
 		}
-		todo = append(todo, item{p, st.Size()})
+		var size int64
+		switch {
+		case folders && st.IsDir() && st.Mode()&(os.ModeSymlink|os.ModeIrregular) == 0:
+			_, _ = walk(ctx, p, func(_ string, info fs.FileInfo) { size += info.Size() })
+		case !folders && st.Mode().IsRegular():
+			size = st.Size()
+		default:
+			failed = append(failed, p)
+			continue
+		}
+		todo = append(todo, item{p, size})
 	}
 	for start := 0; start < len(todo); start += maxBatch {
 		end := min(start+maxBatch, len(todo))
@@ -45,7 +67,7 @@ func Recycle(ctx context.Context, run Runner, paths []string) (moved int, freed 
 			}
 			break
 		}
-		_, _ = run.Run(ctx, "powershell.exe", recycleArgs(batch)...)
+		_, _ = run.Run(ctx, "powershell.exe", recycleArgs(batch, folders)...)
 		for _, it := range todo[start:end] {
 			if _, err := os.Lstat(it.path); errors.Is(err, os.ErrNotExist) {
 				moved++
@@ -61,12 +83,16 @@ func Recycle(ctx context.Context, run Runner, paths []string) (moved int, freed 
 // recycleArgs builds the PowerShell command that sends the paths to the
 // Recycle Bin. The paths travel as base64 JSON inside an encoded command, so no
 // character in a file name can be read as part of the command.
-func recycleArgs(paths []string) []string {
+func recycleArgs(paths []string, folders bool) []string {
 	j, _ := json.Marshal(paths)
+	method := "DeleteFile"
+	if folders {
+		method = "DeleteDirectory"
+	}
 	script := `Add-Type -AssemblyName Microsoft.VisualBasic
 $paths = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('` + base64.StdEncoding.EncodeToString(j) + `')) | ConvertFrom-Json
 foreach ($p in $paths) {
-    try { [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile($p, 'OnlyErrorDialogs', 'SendToRecycleBin') } catch { }
+    try { [Microsoft.VisualBasic.FileIO.FileSystem]::` + method + `($p, 'OnlyErrorDialogs', 'SendToRecycleBin') } catch { }
 }`
 	u := utf16.Encode([]rune(script))
 	buf := make([]byte, 0, len(u)*2)

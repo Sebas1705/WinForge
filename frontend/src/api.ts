@@ -88,6 +88,16 @@ export interface HistoryEntry {
 }
 export interface HistoryFilter { app: string; result: string; limit: number }
 export interface HistoryPage { entries: HistoryEntry[]; total: number; apps: { id: string; name: string }[] }
+export interface UninstallApp { id: string; name: string; version?: string; publisher: string; admin?: boolean; sizeBytes?: number }
+export interface UninstallRemoved { id: string; name: string }
+export interface UninstallListing { apps: UninstallApp[]; removed: UninstallRemoved[] }
+export interface UninstallVerified { removed: UninstallRemoved[]; still: UninstallRemoved[] }
+export interface LeftoverWhy { rule: "name" | "publisherName" | "nested" | "wingetId" | "wingetPackage"; value: string }
+export interface LeftoverCandidate {
+    path: string; kind: "folder" | "shortcut"; place: string; sizeBytes: number; files: number; modified: string; why: LeftoverWhy;
+}
+export interface LeftoversResult { appId: string; appName: string; candidates: LeftoverCandidate[]; searched: { place: string; path: string }[] }
+export interface LeftoversRecycleResult { moved: number; freedBytes: number; failed: { path: string; reason: string }[] }
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
 
 export const api = Go as unknown as {
@@ -171,6 +181,11 @@ export const api = Go as unknown as {
     TasksList(): Promise<TaskItem[]>;
     TasksSetEnabled(id: string, enabled: boolean, confirmed: boolean): Promise<TaskItem[]>;
     TasksRestore(id: string, confirmed: boolean): Promise<TaskItem[]>;
+    UninstallList(): Promise<UninstallListing>;
+    UninstallApps(ids: string[]): Promise<void>;
+    UninstallVerify(ids: string[]): Promise<UninstallVerified>;
+    LeftoversFind(appId: string): Promise<LeftoversResult>;
+    LeftoversRecycle(paths: string[]): Promise<LeftoversRecycleResult>;
     StorageCancel(): Promise<void>;
     EnvScan(): Promise<EnvReport>;
     EnvFix(ids: string[]): Promise<EnvFixResult>;
