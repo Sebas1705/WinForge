@@ -83,6 +83,8 @@ type App struct {
 	hhist hhistState // PC health history and battery (healthhistorybind.go)
 	// The Uninstall page: what this session uninstalled and what the last leftovers search listed.
 	uninst uninstallState
+	// The Updates page's automatic updates (the scheduled task); replaced by tests.
+	sched schedSession
 }
 
 func NewApp() *App {

@@ -13,6 +13,7 @@ import (
 	"github.com/Sebas1705/WinForge/internal/catalog"
 	"github.com/Sebas1705/WinForge/internal/install"
 	"github.com/Sebas1705/WinForge/internal/profile"
+	"github.com/Sebas1705/WinForge/internal/sched"
 	"github.com/Sebas1705/WinForge/internal/system"
 )
 
@@ -24,6 +25,9 @@ const usage = `usage:
   winforge-cli script <profile>         print a PowerShell script for what is missing
   winforge-cli configure <profile>      print the profile as a winget configure file (apps only)
   winforge-cli health [updates]         check firmware, drivers, storage and security (read-only)
+  winforge-cli updates [--mode notify|apply] [--scheduled]
+                                        check for updates, or update what may be updated unattended
+                                        (see: winforge-cli updates --help)
   winforge-cli export <id> [pin]        write this PC's catalog apps as a profile (stdout)
   winforge-cli check <file.json>        validate a profile file against the catalog`
 
@@ -31,6 +35,9 @@ func main() {
 	if len(os.Args) < 2 {
 		fmt.Fprintln(os.Stderr, usage)
 		os.Exit(2)
+	}
+	if sched.IsUpdatesCommand(os.Args) { // before the catalog loads: --help must always work
+		os.Exit(sched.RunCLI(os.Args[2:], os.Stdout, os.Stderr, sched.Deps{}))
 	}
 	cat, err := catalog.Load(catalogdata.FS)
 	if err != nil {
