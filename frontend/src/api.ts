@@ -98,6 +98,18 @@ export interface LeftoverCandidate {
 }
 export interface LeftoversResult { appId: string; appName: string; candidates: LeftoverCandidate[]; searched: { place: string; path: string }[] }
 export interface LeftoversRecycleResult { moved: number; freedBytes: number; failed: { path: string; reason: string }[] }
+export type AutoResult = "found" | "updated" | "failed" | "ignored" | "needs-admin" | "skipped";
+export interface AutoItem { id: string; name: string; from: string; to: string; result: AutoResult; reason?: string; reboot?: boolean }
+export interface AutoReport {
+    id: string; started: string; finished: string; mode: "notify" | "apply"; scheduled: boolean;
+    error?: string; items: AutoItem[]; notified?: boolean; fingerprint?: string;
+    status: "ok" | "attention" | "partial" | "failed" | "error";
+}
+export interface AutoSettings { mode: "notify" | "apply"; frequency: "daily" | "weekly"; weekday: number; time: string }
+export interface AutoState extends AutoSettings {
+    on: boolean; enabled: boolean; foreign: boolean; nextRun?: string; canEnable: boolean;
+    problem?: "runner-missing" | "task-program-missing"; runs: AutoReport[];
+}
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
 
 export const api = Go as unknown as {
@@ -196,6 +208,12 @@ export const api = Go as unknown as {
     HistoryList(filter: HistoryFilter): Promise<HistoryPage>;
     HistoryRollbackPlan(id: string): Promise<Plan>;
     HistoryRollback(id: string, skipNewer: boolean): Promise<void>;
+    AutoState(): Promise<AutoState>;
+    AutoEnable(s: AutoSettings, lang: string): Promise<AutoState>;
+    AutoDisable(): Promise<AutoState>;
+    AutoRunNow(): Promise<AutoReport>;
+    AutoSetLanguage(lang: string): Promise<void>;
+    LaunchTarget(): Promise<string>;
 };
 
 export const on = {

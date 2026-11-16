@@ -7,6 +7,7 @@ import {useDismiss} from "../components/useModal";
 import {getLang, t} from "../lib/i18n";
 import type {App, UpgradeInfo} from "../lib/model";
 import {PAUSE_DAYS, splitUpgrades} from "../lib/updates";
+import {AutoUpdates} from "./AutoUpdates";
 
 type Choice = { mode: "always" | "version" | "until"; days?: number };
 
@@ -89,6 +90,8 @@ export function Updates(p: {
                     {picked.size === list.length && list.length > 0 ? t("updates.all") : t("updates.updateN", {n: picked.size})}
                 </button>
             </header>
+
+            <AutoUpdates/>
 
             {p.upgrades === null && !p.busy && <p className="muted empty">{t("updates.notChecked")}</p>}
             {p.upgrades !== null && list.length === 0 && <p className="muted empty">{t("updates.none")}</p>}

@@ -84,7 +84,7 @@ func TestStatus(t *testing.T) {
 		"error beats all":    {Report{Mode: Apply, Error: ErrCodeCheck, Items: it(ResultUpdated)}, "error"},
 		"ignored is no news": {Report{Mode: Notify, Items: it(ResultIgnored)}, "ok"},
 	} {
-		if got := c.r.Status(); got != c.want {
+		if got := c.r.Summary(); got != c.want {
 			t.Errorf("%s: %s", name, got)
 		}
 	}

@@ -1,0 +1,32 @@
+/* Automatic updates card. Only the repo's colour tokens are used, so the six styles and both themes
+   keep their contrast: text is --text or --muted on --surface, edges that must be seen use --control. */
+.autocard { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 16px 18px; margin: 0 0 18px; }
+.autocard h2 { font-size: 18px; margin: 0 0 4px; font-family: var(--font-display); }
+.autocard h3 { font-size: 14px; margin: 14px 0 6px; }
+.autocard p { margin: 6px 0; }
+.autostatus { margin-top: 10px; }
+.autowarn { display: flex; gap: 8px; align-items: flex-start; border-left: 3px solid var(--warn); padding: 4px 0 4px 10px; color: var(--text); }
+.autowarn svg { flex: none; margin-top: 2px; color: var(--warn); }
+.autoform { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px; display: grid; gap: 12px; }
+.autoform fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; }
+.autoform legend { font-weight: 600; padding: 0; margin-bottom: 6px; }
+.autochoice { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.autochoice input { margin-top: 3px; accent-color: var(--accent); }
+.autochoice small { display: block; }
+.autorow { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
+.autoform .check { color: var(--text); }
+.autocard select, .autocard input[type=time] { background: var(--surface); border: 1px solid var(--control); border-radius: 7px; padding: 6px 10px; }
+.autopromise { margin: 4px 0 0; padding-left: 20px; display: grid; gap: 6px; text-align: left; }
+.autocheck, .autoruns { border-top: 1px solid var(--line); margin-top: 12px; }
+.autoruns h3 { margin: 8px 0 4px; }
+.autoitems, .autorunlist { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 4px; }
+.autoitems li { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; padding: 4px 8px; border-radius: 8px; }
+.autoitems .autoresult { display: inline-flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.autorun { border: 1px solid var(--line); border-radius: 9px; padding: 8px 10px; }
+.autorunhead { display: flex; gap: 10px; align-items: center; }
+.autorunhead .chip { margin: 0 8px; }
+.autorun .autoitems { margin-top: 6px; }
+@media (max-width: 760px) {
+    .autocard { padding: 14px; }
+    .autoitems li { display: grid; gap: 2px; }
+}

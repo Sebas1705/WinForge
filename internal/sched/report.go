@@ -56,6 +56,8 @@ type Report struct {
 	// news is not announced again on every run.
 	Notified    bool   `json:"notified,omitempty"`
 	Fingerprint string `json:"fingerprint,omitempty"`
+	// Status is Summary(), stored so the interface does not have to work it out again.
+	Status string `json:"status"`
 }
 
 // Count is how many items have the result.
@@ -79,8 +81,8 @@ func (r Report) Restart() bool {
 	return false
 }
 
-// Status summarises a run for the list: "error", "failed", "partial", "attention" or "ok".
-func (r Report) Status() string {
+// Summary names how a run went for the list: "error", "failed", "partial", "attention" or "ok".
+func (r Report) Summary() string {
 	updated, failed := r.Count(ResultUpdated), r.Count(ResultFailed)
 	switch {
 	case r.Error != "":
@@ -200,6 +202,9 @@ func (s LogStore) List() ([]Report, error) {
 		}
 		if r.Items == nil {
 			r.Items = []Item{}
+		}
+		if r.Status == "" {
+			r.Status = r.Summary()
 		}
 		out = append(out, r)
 	}

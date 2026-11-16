@@ -179,8 +179,8 @@ func TestFailuresAreExplainedAndCounted(t *testing.T) {
 	if rep.ExitCode() != ExitFailures {
 		t.Errorf("exit %d", rep.ExitCode())
 	}
-	if rep.Status() != "partial" {
-		t.Errorf("status %s", rep.Status())
+	if rep.Summary() != "partial" {
+		t.Errorf("status %s", rep.Summary())
 	}
 }
 
@@ -222,7 +222,7 @@ func TestEverythingIgnoredIsQuiet(t *testing.T) {
 	}
 	e.Rules = rules(map[string]updates.Rule{"git": {Mode: updates.Always}})
 	rep := Execute(context.Background(), e, Apply)
-	if _, ok := Compose(rep, "en"); ok || rep.Status() != "ok" {
+	if _, ok := Compose(rep, "en"); ok || rep.Summary() != "ok" {
 		t.Errorf("%+v", rep)
 	}
 }

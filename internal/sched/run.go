@@ -62,6 +62,7 @@ func Execute(ctx context.Context, env Env, mode Mode) Report {
 	finish := func() Report {
 		rep.Finished = env.now()
 		rep.Fingerprint = rep.fingerprint()
+		rep.Status = rep.Summary()
 		return rep
 	}
 	if env.Cat == nil {

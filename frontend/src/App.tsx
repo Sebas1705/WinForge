@@ -104,6 +104,10 @@ export default function App() {
     // The language is applied during render so every child translates with it.
     setLang(resolveLang(settings.language, navigator.language));
     useEffect(() => { document.documentElement.lang = resolveLang(settings.language, navigator.language); }, [settings.language]);
+    // The scheduled run has no window: it words its notification in the language kept here, and a click on
+    // that notification starts WinForge with a link that opens the Updates page.
+    useEffect(() => { api.AutoSetLanguage(resolveLang(settings.language, navigator.language)).catch(() => { /* only matters once the schedule is on */ }); }, [settings.language]);
+    useEffect(() => { api.LaunchTarget().then((target) => { if (target === "updates") go("updates"); }).catch(() => { /* a normal start */ }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const toastTimer = useRef<number>(0);
     const say = useCallback((m: string) => {
