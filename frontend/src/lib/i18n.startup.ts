@@ -4,7 +4,7 @@
 export const startupEn = {
     "nav.startup": "Startup",
     "startup.title": "Startup",
-    "startup.intro": "Programs that start when you sign in to Windows. Switching one off keeps it installed and keeps its entry, so you can switch it back on. It takes effect the next time you sign in. Only the Run keys and the Startup folders are listed here, not scheduled tasks or services.",
+    "startup.intro": "Programs that start when you sign in to Windows. Switching one off keeps it installed and keeps its entry, so you can switch it back on. It takes effect the next time you sign in. Only the Run keys and the Startup folders are listed here; services and scheduled tasks have their own tabs.",
     "startup.refresh": "Refresh",
     "startup.loading": "Reading what starts with Windows…",
     "startup.empty": "Nothing starts with Windows from these places.",
@@ -47,7 +47,7 @@ export const startupEn = {
 export const startupEs: Record<keyof typeof startupEn, string> = {
     "nav.startup": "Arranque",
     "startup.title": "Arranque",
-    "startup.intro": "Programas que se inician al entrar en Windows. Desactivar uno lo deja instalado y conserva su entrada, así que puedes volver a activarlo. Surte efecto la próxima vez que inicies sesión. Aquí solo se listan las claves Run y las carpetas de Inicio, no las tareas programadas ni los servicios.",
+    "startup.intro": "Programas que se inician al entrar en Windows. Desactivar uno lo deja instalado y conserva su entrada, así que puedes volver a activarlo. Surte efecto la próxima vez que inicies sesión. Aquí solo se listan las claves Run y las carpetas de Inicio; los servicios y las tareas programadas tienen sus propias pestañas.",
     "startup.refresh": "Actualizar",
     "startup.loading": "Leyendo lo que arranca con Windows…",
     "startup.empty": "No arranca nada con Windows desde estos lugares.",

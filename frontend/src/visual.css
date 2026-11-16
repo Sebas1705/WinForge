@@ -421,3 +421,9 @@ img, svg { -webkit-user-drag: none; user-drag: none; }
 .developerpage .tablewrap { margin: 0 0 14px; }
 .developerpage td, .developerpage th { text-align: left; vertical-align: top; padding: 6px 10px; }
 .developerpage td .mono { overflow-wrap: anywhere; }
+.starttabs { padding: 0 0 14px; border-bottom: none; }
+.startuppage [role=tabpanel] .pagehead { align-items: flex-start; margin-bottom: 14px; }
+.svcrow { flex-wrap: wrap; }
+.svcrow .grow { flex: 1; min-width: 0; flex-basis: 220px; }
+.svcrow select { max-width: 100%; }
+.svcrow.on { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }

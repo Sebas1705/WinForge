@@ -74,6 +74,8 @@ type App struct {
 	envSys   envdoctor.System
 	// The Windows features page reads through featuresSys (nil means this PC); tests replace it.
 	featuresSys winfeatures.System
+	// The Services and Scheduled tasks tabs of the Startup page (servicesbind.go, tasksbind.go).
+	svc svcFeature
 }
 
 func NewApp() *App {

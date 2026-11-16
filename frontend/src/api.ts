@@ -68,6 +68,19 @@ export interface Feature {
 }
 export interface WSLDistro { name: string; state: string; version: number; isDefault: boolean }
 export interface WSLInfo { installed: boolean; defaultVersion: number; distros: WSLDistro[] }
+export type ServiceMode = "auto" | "delayed" | "manual" | "disabled";
+/** A third-party Windows service. The only change offered is its start mode. */
+export interface ServiceItem {
+    id: string; name: string; displayName: string; publisher: string;
+    state: "running" | "stopped" | "other"; startMode: ServiceMode; binary: string;
+    needsAdmin: boolean; caution: boolean; dependents: string[]; changed: boolean; original: ServiceMode | "";
+}
+/** A third-party scheduled task that starts at log on or at startup. The only change is on/off. */
+export interface TaskItem {
+    id: string; name: string; folder: string; triggers: ("logon" | "boot")[]; action: string;
+    state: "ready" | "disabled" | "running" | "unknown"; enabled: boolean; lastResult: number | null;
+    needsAdmin: boolean; caution: boolean; changed: boolean; original: "enabled" | "disabled" | "";
+}
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
 
 export const api = Go as unknown as {
@@ -142,6 +155,12 @@ export const api = Go as unknown as {
     StartupList(): Promise<StartupItem[]>;
     StartupSet(id: string, enabled: boolean): Promise<StartupItem[]>;
     StartupReveal(id: string): Promise<void>;
+    ServicesList(): Promise<ServiceItem[]>;
+    ServicesSetMode(id: string, mode: ServiceMode, confirmed: boolean): Promise<ServiceItem[]>;
+    ServicesRestore(id: string, confirmed: boolean): Promise<ServiceItem[]>;
+    TasksList(): Promise<TaskItem[]>;
+    TasksSetEnabled(id: string, enabled: boolean, confirmed: boolean): Promise<TaskItem[]>;
+    TasksRestore(id: string, confirmed: boolean): Promise<TaskItem[]>;
     StorageCancel(): Promise<void>;
     EnvScan(): Promise<EnvReport>;
     EnvFix(ids: string[]): Promise<EnvFixResult>;

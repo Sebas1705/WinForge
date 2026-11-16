@@ -28,6 +28,7 @@ export const api = {
     StorageVolumes: vi.fn(), StorageDefaults: vi.fn(), StorageScan: vi.fn(), StorageClean: vi.fn(), StorageBigFiles: vi.fn(),
     StorageFolders: vi.fn(), StorageDuplicates: vi.fn(), StorageRecycle: vi.fn(), StorageReveal: vi.fn(), StartupList: vi.fn(), StartupSet: vi.fn(), StartupReveal: vi.fn(), StorageProjects: vi.fn(), StorageProjectsClean: vi.fn(), StorageVirtualDisks: vi.fn(), StorageCancel: vi.fn(),
     EnvScan: vi.fn(), EnvFix: vi.fn(), EnvBackups: vi.fn(), EnvRestore: vi.fn(), FeaturesList: vi.fn(), WSLInfo: vi.fn(),
+    ServicesList: vi.fn(), ServicesSetMode: vi.fn(), ServicesRestore: vi.fn(), TasksList: vi.fn(), TasksSetEnabled: vi.fn(), TasksRestore: vi.fn(),
 };
 
 export function resetApi(state: State = makeState()): void {
@@ -78,6 +79,12 @@ export function resetApi(state: State = makeState()): void {
     api.StartupList.mockResolvedValue([]);
     api.StartupSet.mockResolvedValue([]);
     api.StartupReveal.mockResolvedValue(undefined);
+    api.ServicesList.mockResolvedValue([]);
+    api.ServicesSetMode.mockResolvedValue([]);
+    api.ServicesRestore.mockResolvedValue([]);
+    api.TasksList.mockResolvedValue([]);
+    api.TasksSetEnabled.mockResolvedValue([]);
+    api.TasksRestore.mockResolvedValue([]);
     api.StorageProjects.mockResolvedValue([]);
     api.StorageProjectsClean.mockResolvedValue({freedBytes: 0, removed: 0, files: 0, failed: [], reasons: []});
     api.StorageVirtualDisks.mockResolvedValue([]);
