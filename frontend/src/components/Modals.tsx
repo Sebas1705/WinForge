@@ -78,7 +78,7 @@ export function RunModal(p: {
     const heading = !started ? run.title : run.running ? t("run.installing") : failedCount > 0 ? t("run.errors") : t("run.done");
     const elapsed = run.startedAt ? formatElapsed((end ?? now) - run.startedAt) : "";
     const label = (s: Step) =>
-        s.kind === "recipe" && (s.id.startsWith("repair-") || s.id.startsWith("optimize-")) ? (tOpt(`repair.${s.id}`) ?? s.name)
+        s.kind === "recipe" && (s.id.startsWith("repair-") || s.id.startsWith("optimize-") || s.id.startsWith("feature-")) ? (tOpt(`repair.${s.id}`) ?? s.name)
             : s.kind === "recipe" ? `${t("run.setup")}: ${s.name}`
             : s.kind === "upgrade" ? `${t("run.update")}: ${s.name}`
             : s.kind === "uninstall" ? `${t("run.uninstall")}: ${s.name}` : s.name;

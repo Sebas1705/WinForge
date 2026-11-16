@@ -53,6 +53,21 @@ export interface StartupItem {
     id: string; name: string; source: string; command: string; target: string; publisher: string;
     enabled: boolean; needsAdmin: boolean; missing: boolean; caution: boolean;
 }
+export interface EnvFinding {
+    id: string; kind: string; severity: "problem" | "note"; scope: "user" | "machine"; subject: string; paths: string[];
+    fixable: boolean; fixKind: "remove-path-entry" | "unset-variable" | "";
+}
+export interface EnvTool { name: string; found: string[] }
+export interface EnvVar { name: string; scope: "user" | "machine"; value: string }
+export interface EnvReport { findings: EnvFinding[]; userPath: string[]; machinePath: string[]; tools: EnvTool[]; vars: EnvVar[] }
+export interface EnvFixResult { applied: number; failed: string[]; backupId: string }
+export interface EnvBackup { id: string; time: string; changed: string[] }
+export type FeatureId = "wsl" | "vmp" | "hyperv" | "sandbox" | "netfx3";
+export interface Feature {
+    id: FeatureId; state: "on" | "off" | "unavailable" | "unknown"; restartPending: boolean; enable: string; disable: string; needsAdmin: boolean;
+}
+export interface WSLDistro { name: string; state: string; version: number; isDefault: boolean }
+export interface WSLInfo { installed: boolean; defaultVersion: number; distros: WSLDistro[] }
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
 
 export const api = Go as unknown as {
@@ -128,6 +143,12 @@ export const api = Go as unknown as {
     StartupSet(id: string, enabled: boolean): Promise<StartupItem[]>;
     StartupReveal(id: string): Promise<void>;
     StorageCancel(): Promise<void>;
+    EnvScan(): Promise<EnvReport>;
+    EnvFix(ids: string[]): Promise<EnvFixResult>;
+    EnvBackups(): Promise<EnvBackup[]>;
+    EnvRestore(id: string): Promise<void>;
+    FeaturesList(): Promise<Feature[]>;
+    WSLInfo(): Promise<WSLInfo>;
 };
 
 export const on = {

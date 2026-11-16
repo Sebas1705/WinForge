@@ -27,6 +27,7 @@ export const api = {
     GamesState: vi.fn(), SetGamesRoot: vi.fn(), InstallGame: vi.fn(), RemoveGame: vi.fn(), PlayGame: vi.fn(), OpenGameFolder: vi.fn(),
     StorageVolumes: vi.fn(), StorageDefaults: vi.fn(), StorageScan: vi.fn(), StorageClean: vi.fn(), StorageBigFiles: vi.fn(),
     StorageFolders: vi.fn(), StorageDuplicates: vi.fn(), StorageRecycle: vi.fn(), StorageReveal: vi.fn(), StartupList: vi.fn(), StartupSet: vi.fn(), StartupReveal: vi.fn(), StorageProjects: vi.fn(), StorageProjectsClean: vi.fn(), StorageVirtualDisks: vi.fn(), StorageCancel: vi.fn(),
+    EnvScan: vi.fn(), EnvFix: vi.fn(), EnvBackups: vi.fn(), EnvRestore: vi.fn(), FeaturesList: vi.fn(), WSLInfo: vi.fn(),
 };
 
 export function resetApi(state: State = makeState()): void {
@@ -81,6 +82,12 @@ export function resetApi(state: State = makeState()): void {
     api.StorageProjectsClean.mockResolvedValue({freedBytes: 0, removed: 0, files: 0, failed: [], reasons: []});
     api.StorageVirtualDisks.mockResolvedValue([]);
     api.StorageCancel.mockResolvedValue(undefined);
+    api.EnvScan.mockResolvedValue({findings: [], userPath: [], machinePath: [], tools: [], vars: []});
+    api.EnvFix.mockResolvedValue({applied: 0, failed: [], backupId: ""});
+    api.EnvBackups.mockResolvedValue([]);
+    api.EnvRestore.mockResolvedValue(undefined);
+    api.FeaturesList.mockResolvedValue([]);
+    api.WSLInfo.mockResolvedValue({installed: false, defaultVersion: 0, distros: []});
     api.PlayGame.mockResolvedValue(undefined);
     api.OpenGameFolder.mockResolvedValue(undefined);
     api.PlanPending.mockImplementation(async () => ({steps: [], alreadyInstalled: [], needsAdmin: false}));
