@@ -9,6 +9,12 @@ import {install} from '../models';
 import {startup} from '../models';
 import {storage} from '../models';
 
+export function HistoryList(arg1:any):Promise<any>;
+
+export function HistoryRollback(arg1:string,arg2:boolean):Promise<void>;
+
+export function HistoryRollbackPlan(arg1:string):Promise<any>;
+
 export function AcceptProfileState(arg1:string):Promise<void>;
 
 export function Apply(arg1:catalog.Profile):Promise<void>;

@@ -18,6 +18,8 @@ const (
 	StepUpgrade StepKind = "upgrade"
 	// StepUninstall removes an installed app.
 	StepUninstall StepKind = "uninstall"
+	// StepRollback puts an installed app back on an older version (see rollback.go).
+	StepRollback StepKind = "rollback"
 )
 
 // Step is one unit of work.

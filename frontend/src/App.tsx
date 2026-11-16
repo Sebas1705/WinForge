@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import {api, errText, on, type ProfilesFolderInfo, type ImportResult, type UpdateInfo} from "./api";
+import {api, errText, on, type HistoryEntry, type ProfilesFolderInfo, type ImportResult, type UpdateInfo} from "./api";
 import {AppDetail} from "./components/AppDetail";
 import {Icon, type IconName} from "./components/Icon";
 import {ScanProgress, type ScanKind} from "./components/ScanProgress";
@@ -27,6 +27,7 @@ import {Startup} from "./views/Startup";
 import {Storage} from "./views/Storage";
 import {Home} from "./views/Home";
 import {Profiles} from "./views/Profiles";
+import {historyError} from "./views/History";
 import {Updates} from "./views/Updates";
 
 type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games" | "storage" | "startup" | "developer";
@@ -87,6 +88,7 @@ export default function App() {
     const [restartAsk, setRestartAsk] = useState(false);
     const [storageTick, setStorageTick] = useState(0);
     const [developerTick, setDeveloperTick] = useState(0);
+    const [historyTick, setHistoryTick] = useState(0); // bumped when a run ends, so the history is read again
     const [restarting, setRestarting] = useState(false);
     const [showTour, setShowTour] = useState(() => !tourSeen());
     const advanced = settings.detail === "advanced";
@@ -269,8 +271,33 @@ export default function App() {
         starting.current = true;
         try {
             const plan = await api.PlanUpgrades(ids);
-            openRun(t("run.updateTitle"), plan, {start: () => api.ApplyUpgrades(ids), after: () => void checkUpgrades()});
+            openRun(t("run.updateTitle"), plan, {start: () => api.ApplyUpgrades(ids), after: () => { void checkUpgrades(); setHistoryTick((n) => n + 1); }});
         } catch (e) { say(errText(e)); } finally { starting.current = false; }
+    };
+
+    // Going back to an earlier version runs through the same window as an install; the backend builds
+    // the plan itself from the history entry, so only its id travels.
+    const startRollback = async (e: HistoryEntry, skipNewer: boolean) => {
+        if (starting.current) return;
+        starting.current = true;
+        const name = byId.get(e.app)?.name ?? e.name;
+        try {
+            const plan = await api.HistoryRollbackPlan(e.id);
+            openRun(t("hist.runTitle", {name, version: e.from}), plan, {
+                start: async () => {
+                    try { await api.HistoryRollback(e.id, skipNewer); } catch (err) {
+                        const h = historyError(err, name);
+                        if (h.refresh) setHistoryTick((n) => n + 1);
+                        throw new Error(h.text);
+                    }
+                },
+                after: () => { void checkUpgrades(); setHistoryTick((n) => n + 1); },
+            });
+        } catch (err) {
+            const h = historyError(err, name);
+            say(h.text);
+            if (h.refresh) setHistoryTick((n) => n + 1);
+        } finally { starting.current = false; }
     };
 
     // Picks up what the last run left undone (failed or never reached). With
@@ -590,7 +617,8 @@ export default function App() {
                                 onInstallProfile={(p, done) => void startProfile(p, done)}/>
                     ) : (
                         <Updates upgrades={upgrades} busy={upgradesBusy} onCheck={() => void checkUpgrades()} onUpdate={(ids) => void startUpgrades(ids)}
-                                 onIgnore={(id, c) => void ignoreUpdate(id, c)} onStopIgnoring={(id) => void stopIgnoring(id)} byId={byId} onDetail={setDetail}/>
+                                 onIgnore={(id, c) => void ignoreUpdate(id, c)} onStopIgnoring={(id) => void stopIgnoring(id)} byId={byId} onDetail={setDetail}
+                                 historyKey={historyTick} say={say} onRollback={(e, skip) => void startRollback(e, skip)}/>
                     )}
                 </main>
             </div>

@@ -119,6 +119,8 @@ func Run(ctx context.Context, cat *catalog.Catalog, plan Plan, ex Executor, emit
 			code, err = runWinget(ctx, WingetUpgradeArgs(cat.Apps[s.ID]), s, ex, track)
 		case StepUninstall:
 			code, err = runWinget(ctx, WingetUninstallArgs(cat.Apps[s.ID]), s, ex, track)
+		case StepRollback:
+			code, err = runRollback(ctx, cat.Apps[s.ID], s, ex, track)
 		case StepRecipe:
 			code, err = runRecipe(ctx, cat.Recipes[s.ID], s, ex, track)
 		}
@@ -129,7 +131,7 @@ func Run(ctx context.Context, cat *catalog.Catalog, plan Plan, ex Executor, emit
 		if err != nil {
 			broken[s.ID] = true
 			failed = append(failed, s.ID)
-			emit(Event{Step: s, Status: StatusFailed, Err: err.Error(), Reason: Explain(code, tail)})
+			emit(Event{Step: s, Status: StatusFailed, Err: err.Error(), Reason: explainStep(s, code, tail)})
 			continue
 		}
 		emit(Event{Step: s, Status: StatusOK})

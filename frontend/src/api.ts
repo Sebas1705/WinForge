@@ -81,6 +81,12 @@ export interface TaskItem {
     state: "ready" | "disabled" | "running" | "unknown"; enabled: boolean; lastResult: number | null;
     needsAdmin: boolean; caution: boolean; changed: boolean; original: "enabled" | "disabled" | "";
 }
+export interface HistoryEntry {
+    id: string; app: string; name: string; action: "install" | "update" | "rollback"; from: string; to: string;
+    at: string; result: "ok" | "failed" | "restart"; source: "profile" | "update" | "single"; reason?: string; canRollback: boolean;
+}
+export interface HistoryFilter { app: string; result: string; limit: number }
+export interface HistoryPage { entries: HistoryEntry[]; total: number; apps: { id: string; name: string }[] }
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
 
 export const api = Go as unknown as {
@@ -168,6 +174,9 @@ export const api = Go as unknown as {
     EnvRestore(id: string): Promise<void>;
     FeaturesList(): Promise<Feature[]>;
     WSLInfo(): Promise<WSLInfo>;
+    HistoryList(filter: HistoryFilter): Promise<HistoryPage>;
+    HistoryRollbackPlan(id: string): Promise<Plan>;
+    HistoryRollback(id: string, skipNewer: boolean): Promise<void>;
 };
 
 export const on = {

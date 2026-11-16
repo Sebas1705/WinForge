@@ -18,6 +18,7 @@ import (
 	"github.com/Sebas1705/WinForge/internal/drift"
 	"github.com/Sebas1705/WinForge/internal/envdoctor"
 	"github.com/Sebas1705/WinForge/internal/health"
+	"github.com/Sebas1705/WinForge/internal/history"
 	"github.com/Sebas1705/WinForge/internal/install"
 	"github.com/Sebas1705/WinForge/internal/profile"
 	"github.com/Sebas1705/WinForge/internal/startup"
@@ -48,6 +49,9 @@ type App struct {
 	baselineFor   string           // a profile that was just applied in full: the next scan is its baseline
 	ignored       *updates.Store   // updates the person chose not to install; nil when the settings folder is unavailable
 	now           func() time.Time // replaced by tests
+	history       history.Store    // what was installed, updated and rolled back; nil when the settings folder is unavailable
+	historyState  historySession
+	detect        func() map[string]system.Installed // replaced by tests; nil means scan this PC
 	restorePath   string
 	installing    map[string]bool
 
@@ -101,6 +105,11 @@ func NewApp() *App {
 		log.Printf("winforge: ignored updates: %v", err)
 	} else {
 		app.ignored = s
+	}
+	if h, err := history.DefaultStore(); err != nil {
+		log.Printf("winforge: history: %v", err)
+	} else {
+		app.history = h
 	}
 	return app
 }
@@ -337,15 +346,18 @@ func (a *App) start(plan install.Plan, title, baselineFor string) error {
 	// is left when the run ends - or when the PC restarts mid-run - can be resumed.
 	a.savePending(install.Pending{Title: title, Steps: plan.Steps})
 	done := map[string]bool{}
+	hist := a.historyBegin(plan, title) // read before anything runs, so "before" is true
 
 	go func() {
 		failed := install.Run(ctx, a.cat, plan, install.OSExecutor{}, func(e install.Event) {
+			hist.Observe(e)
 			if e.Status == install.StatusOK {
 				done[install.StepKey(e.Step)] = true
 				a.savePending(install.Pending{Title: title, Steps: install.Without(plan.Steps, done)})
 			}
 			runtime.EventsEmit(a.ctx, "install", e)
 		})
+		a.historyFinish(hist)
 		a.mu.Lock()
 		a.running = false
 		// A whole profile that finished without a failure and was not stopped: the scan the interface asks for

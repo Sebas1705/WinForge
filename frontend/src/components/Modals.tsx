@@ -81,7 +81,8 @@ export function RunModal(p: {
         s.kind === "recipe" && (s.id.startsWith("repair-") || s.id.startsWith("optimize-") || s.id.startsWith("feature-")) ? (tOpt(`repair.${s.id}`) ?? s.name)
             : s.kind === "recipe" ? `${t("run.setup")}: ${s.name}`
             : s.kind === "upgrade" ? `${t("run.update")}: ${s.name}`
-            : s.kind === "uninstall" ? `${t("run.uninstall")}: ${s.name}` : s.name;
+            : s.kind === "uninstall" ? `${t("run.uninstall")}: ${s.name}`
+            : s.kind === "rollback" ? `${t("hist.step")}: ${s.name}` : s.name;
     const reasonOf = (s: Step) => run.reasons[stepKey(s)];
     const needsAdminRetry = !p.admin && run.plan.steps.some((s) => stateOf(s) === "failed" && reasonOf(s) === "admin");
     const stepIcon = (s: Step) => {

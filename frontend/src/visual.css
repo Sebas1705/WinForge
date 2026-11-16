@@ -427,3 +427,10 @@ img, svg { -webkit-user-drag: none; user-drag: none; }
 .svcrow .grow { flex: 1; min-width: 0; flex-basis: 220px; }
 .svcrow select { max-width: 100%; }
 .svcrow.on { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+/* Install and update history (Updates page) */
+.history { margin-top: 28px; }
+.history .toolrow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 14px; }
+.history .histday h3 { font-size: 13px; margin: 14px 0 4px; color: var(--muted); font-weight: 600; text-transform: capitalize; }
+.history .list { flex: none; overflow: visible; padding: 0; }
+.history .histmain { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.history .histmore { margin-top: 10px; }

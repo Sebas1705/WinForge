@@ -1,5 +1,7 @@
 import {useEffect, useRef, useState} from "react";
+import type {HistoryEntry} from "../api";
 import {AppIcon} from "../components/AppIcon";
+import {History} from "./History";
 import {Icon} from "../components/Icon";
 import {useDismiss} from "../components/useModal";
 import {getLang, t} from "../lib/i18n";
@@ -60,6 +62,7 @@ export function Updates(p: {
     onCheck: () => void; onUpdate: (ids: string[]) => void;
     onIgnore: (id: string, c: Choice) => void; onStopIgnoring: (id: string) => void;
     byId: Map<string, App>; onDetail: (a: App) => void;
+    historyKey: number; say: (m: string) => void; onRollback: (e: HistoryEntry, skipNewer: boolean) => void;
 }) {
     const [picked, setPicked] = useState<Set<string>>(new Set());
     const [showIgnored, setShowIgnored] = useState(false);
@@ -130,6 +133,8 @@ export function Updates(p: {
                     )}
                 </section>
             )}
+
+            <History byId={p.byId} refreshKey={p.historyKey} say={p.say} onRollback={p.onRollback}/>
         </div>
     );
 }
