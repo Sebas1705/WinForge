@@ -16,6 +16,7 @@ import (
 	"github.com/Sebas1705/WinForge/internal/appconfig"
 	"github.com/Sebas1705/WinForge/internal/catalog"
 	"github.com/Sebas1705/WinForge/internal/drift"
+	"github.com/Sebas1705/WinForge/internal/envdoctor"
 	"github.com/Sebas1705/WinForge/internal/health"
 	"github.com/Sebas1705/WinForge/internal/install"
 	"github.com/Sebas1705/WinForge/internal/profile"
@@ -65,6 +66,11 @@ type App struct {
 	startupSys   startup.System
 	elevated     func() bool
 	reveal       func(path string) error
+
+	// The Environment page: which fixes the last scan offered, and the machine behind it (envSys is
+	// replaced by tests; nil means the real registry).
+	envState envSession
+	envSys   envdoctor.System
 }
 
 func NewApp() *App {
