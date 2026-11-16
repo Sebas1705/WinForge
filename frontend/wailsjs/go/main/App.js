@@ -54,6 +54,22 @@ export function Emulation() {
   return window['go']['main']['App']['Emulation']();
 }
 
+export function EnvBackups() {
+  return window['go']['main']['App']['EnvBackups']();
+}
+
+export function EnvFix(arg1) {
+  return window['go']['main']['App']['EnvFix'](arg1);
+}
+
+export function EnvRestore(arg1) {
+  return window['go']['main']['App']['EnvRestore'](arg1);
+}
+
+export function EnvScan() {
+  return window['go']['main']['App']['EnvScan']();
+}
+
 export function ExportConfigure(arg1) {
   return window['go']['main']['App']['ExportConfigure'](arg1);
 }
@@ -68,6 +84,10 @@ export function ExportScript(arg1) {
 
 export function ExportWinget(arg1) {
   return window['go']['main']['App']['ExportWinget'](arg1);
+}
+
+export function FeaturesList() {
+  return window['go']['main']['App']['FeaturesList']();
 }
 
 export function GamesState() {
@@ -292,4 +312,8 @@ export function StorageVolumes() {
 
 export function Upgrades() {
   return window['go']['main']['App']['Upgrades']();
+}
+
+export function WSLInfo() {
+  return window['go']['main']['App']['WSLInfo']();
 }

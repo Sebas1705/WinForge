@@ -46,8 +46,8 @@ is measured demand: check the other tool's own repository before copying a behav
 |---|---|---|---|---|
 | 11 | Update and install history, with "go back to the previous version" (`winget install --version`) | Updates are the one action people regret. WinForge already knows the version before and after; it only does not keep it. | Medium | Low |
 | 12 | Uninstall center: catalog apps first, then the leftovers (AppData, ProgramData, empty Start menu entries) shown for review and sent to the Recycle Bin | Completes the lifecycle (install, update, ignore, remove). Leftovers are the part people pay Revo-style tools for. | Medium to high | Medium: leftovers are guessed, so each is listed, never deleted by default |
-| 13 | Environment doctor: broken or duplicate PATH entries, `JAVA_HOME` or `ANDROID_HOME` pointing nowhere, several Pythons or JDKs and which one wins | A developer-only problem that no cleanup or health scan looks at, and the owner's own PCs are exactly that case. Read-only first, fixes later. | Medium | Low (read-only), medium (fixes: user variables only, with an undo list) |
-| 14 | Windows features and WSL setup as recipes (WSL, Virtual Machine Platform, Hyper-V, Sandbox, .NET 3.5), with the restart handled | The first thing a new developer PC needs. A recipe fits the existing runner, restore point and retry. | Medium | Medium: needs administrator rights and a restart |
+| 13 | (done) Environment doctor: broken or duplicate PATH entries, `JAVA_HOME` or `ANDROID_HOME` pointing nowhere, several Pythons or JDKs and which one wins | A developer-only problem that no cleanup or health scan looks at, and the owner's own PCs are exactly that case. Read-only first, fixes later. | Medium | Low (read-only), medium (fixes: user variables only, with an undo list) |
+| 14 | (done) Windows features and WSL setup as recipes (WSL, Virtual Machine Platform, Hyper-V, Sandbox, .NET 3.5), with the restart handled | The first thing a new developer PC needs. A recipe fits the existing runner, restore point and retry. | Medium | Medium: needs administrator rights and a restart |
 | 15 | Health history: keep each scan's score and show the trend, plus a laptop battery report (`powercfg /batteryreport`) | Today a scan is a snapshot. A falling SSD or battery figure is only visible over time. | Low to medium | Low |
 | 16 | Services and scheduled tasks viewer, third-party only, with a reversible switch (completes #5) | The half of "what runs at boot" that the startup page leaves out. | Medium | Medium: only items not from Microsoft, startup type only, never delete |
 | 17 | Offline kit: download the installers of a profile with their hashes to a folder or USB, and install from it | For a PC with no network or a slow one. Hashes already come from winget manifests. | Medium | Low |
@@ -72,7 +72,7 @@ is measured demand: check the other tool's own repository before copying a behav
 3. **C (done):** 3, 5. Developer caches, Docker, old project folders and virtual disks in Storage, and a startup manager.
 4. **D:** 2, 19. Needs care because it acts while nobody is watching; the tray and notification make it visible.
 5. **E:** 11, 12. Managing what is installed: go back a version, and remove an app with its leftovers.
-6. **F:** 13, 14. The developer PC: an environment doctor, and WSL and Windows features as recipes.
+6. **F (done):** 13, 14. The developer PC: an environment doctor, and WSL and Windows features as recipes.
 7. **G:** 15, 16. What the PC does over time and at boot: health history, services and tasks.
 8. **Later:** 6, 7 (each reviewed one recipe at a time), then 17, 18, 20, 21, 22.
 

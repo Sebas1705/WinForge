@@ -3,6 +3,8 @@
 import {catalog} from '../models';
 import {settings} from '../models';
 import {main} from '../models';
+import {envdoctor} from '../models';
+import {winfeatures} from '../models';
 import {install} from '../models';
 import {startup} from '../models';
 import {storage} from '../models';
@@ -33,6 +35,14 @@ export function DiscardPending():Promise<void>;
 
 export function Emulation():Promise<catalog.Emulation>;
 
+export function EnvBackups():Promise<Array<envdoctor.Backup>>;
+
+export function EnvFix(arg1:Array<string>):Promise<envdoctor.FixResult>;
+
+export function EnvRestore(arg1:string):Promise<void>;
+
+export function EnvScan():Promise<envdoctor.Report>;
+
 export function ExportConfigure(arg1:catalog.Profile):Promise<string>;
 
 export function ExportProfile(arg1:catalog.Profile):Promise<string>;
@@ -40,6 +50,8 @@ export function ExportProfile(arg1:catalog.Profile):Promise<string>;
 export function ExportScript(arg1:catalog.Profile):Promise<string>;
 
 export function ExportWinget(arg1:catalog.Profile):Promise<string>;
+
+export function FeaturesList():Promise<Array<winfeatures.Feature>>;
 
 export function GamesState():Promise<main.GamesView>;
 
@@ -152,3 +164,5 @@ export function StorageVirtualDisks():Promise<Array<storage.VirtualDisk>>;
 export function StorageVolumes():Promise<Array<storage.Volume>>;
 
 export function Upgrades():Promise<Array<main.UpgradeInfo>>;
+
+export function WSLInfo():Promise<winfeatures.WSLInfo>;

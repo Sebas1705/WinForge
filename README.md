@@ -27,6 +27,7 @@ WinForge scans the PC, shows which apps of a **curated catalog** are installed, 
 - **Icons and links**: each app shows its own icon and opens a detail panel with its website, publisher, license and install command.
 - **PC health**: firmware (BIOS age, UEFI, Secure Boot, TPM, virtualization), drivers (missing, unsigned, old, GPU freshness), storage (disk health, free space), security (antivirus, firewall, BitLocker), Windows (support status, pending restart) and Windows Update (pending drivers and firmware). Read-only, with links to the right vendor pages.
 - **Startup**: the programs that start when you sign in, from the Run registry keys (current user, all users, 32-bit) and the two Startup folders, each with a switch. Switching off works the way Task Manager does, through the `StartupApproved` values, so nothing is deleted: the entry or shortcut stays and the same switch turns it back on. Items for all users need administrator rights and are locked without them. Anything that looks like Windows or security software asks first. It does not list scheduled tasks or services.
+- **Developer**: an *environment doctor* and Windows features. The doctor only reads: it finds PATH entries that do not exist, repeat, are empty, relative or files, `JAVA_HOME`-style variables that point nowhere or at a folder that is not that tool, a variable that disagrees with the program that really runs, programs installed several times (which one wins and which are hidden) and Microsoft Store stubs standing in for Python. It never runs the programs it finds. Only user variables can be fixed, only the entries you tick, and a backup of the old values is saved first so the page can undo it; system-wide findings are reported, never changed. The features part shows WSL (with its distributions), Virtual Machine Platform, Hyper-V, Windows Sandbox and .NET 3.5 and turns them on or off as recipes: administrator rights, a restore point first and a restart when Windows asks. Turning WSL off leaves your distributions and Virtual Machine Platform alone.
 - **Made to be scanned, not read**: a store-style catalog of icon cards (grid or list), profiles as cards with their apps' icons and a progress ring, quick-start tiles and a "popular" shelf on the home screen, a health score with one card per area, short plain-language descriptions in Spanish and English for ~100 popular apps and every built-in profile, "?" help bubbles, and a three-screen first-run guide.
 - **Simple or advanced**: simple (the default) hides ids, versions, publishers' links, logs and script/winget exports; advanced shows them. Switch in the sidebar.
 
@@ -53,6 +54,8 @@ internal/
   updates/       the updates a person chose to ignore: never, one version, or for a while
   appconfig/     the few settings kept on disk, such as where profiles live
   drift/         what the PC looked like when a profile was applied, and what changed since
+  envdoctor/     PATH and *_HOME checks, user-variable fixes with backup and undo
+  winfeatures/   state of Windows optional features and of WSL
   startup/       what starts with Windows, and switching it on and off without deleting it
   storage/       cleanup categories, old project folders, virtual disks, biggest files and folders, duplicates, Recycle Bin
 cmd/winforge-cli headless: scan | profiles | plan | apply | script | configure | export | check
