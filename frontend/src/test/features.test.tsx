@@ -128,11 +128,11 @@ describe("uninstalling", () => {
         const panel = await screen.findByRole("dialog");
         await user.click(within(panel).getByRole("button", {name: "Uninstall"}));
         const sure = await screen.findByRole("alertdialog", {name: "Uninstall “VLC”?"});
-        expect(api.ApplyUninstall).not.toHaveBeenCalled();
+        expect(api.UninstallApps).not.toHaveBeenCalled();
         await user.click(within(sure).getByRole("button", {name: "Uninstall"}));
         await waitFor(() => expect(api.PlanUninstall).toHaveBeenCalledWith(["vlc"]));
         await user.click(await screen.findByRole("button", {name: "Run 1 step"}));
-        expect(api.ApplyUninstall).toHaveBeenCalledWith(["vlc"]);
+        expect(api.UninstallApps).toHaveBeenCalledWith(["vlc"]);
     });
 
     it("keeps the app if the person says no", async () => {

@@ -326,14 +326,9 @@ export default function App() {
         } finally { starting.current = false; }
     };
 
-    const startUninstall = async (a: CatalogApp) => {
-        if (starting.current) return;
-        starting.current = true;
-        try {
-            const plan = await api.PlanUninstall([a.id]);
-            openRun(t("run.uninstallTitle", {name: a.name}), plan, {start: () => api.ApplyUninstall([a.id])});
-        } catch (e) { say(errText(e)); } finally { starting.current = false; }
-    };
+    // Removing one app from its detail panel goes the same way as the Uninstall page: the PC is scanned again
+    // afterwards, so the result is checked and the app shows up there for a leftovers review.
+    const startUninstall = (a: CatalogApp) => startUninstallMany([{id: a.id, name: a.name}]);
 
     // The Uninstall page: a run of uninstalls is checked by scanning the PC again once it is over, whether or not
     // the dialog is still open. What the scan finds still installed is said, never assumed gone.

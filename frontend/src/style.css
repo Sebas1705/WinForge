@@ -164,10 +164,10 @@ aside .row.on { background: var(--surface); border-color: var(--line); box-shado
 .chips button.on em { color: inherit; opacity: .75; }
 .list { flex: 1; overflow: auto; list-style: none; margin: 0; padding: 8px 14px; }
 .page .list { padding: 0; }
-.list li { display: flex; gap: 14px; align-items: center; padding: 9px 10px; border-radius: 9px; border: 1px solid transparent; }
+.list li { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; padding: 9px 10px; border-radius: 9px; border: 1px solid transparent; }
 .list li:hover { background: var(--surface); }
 .list li.sel { background: color-mix(in srgb, var(--accent) 10%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
-.list label { display: flex; gap: 12px; align-items: center; flex: 1; min-width: 0; cursor: pointer; }
+.list label { display: flex; gap: 12px; align-items: center; flex: 1 1 200px; min-width: 0; cursor: pointer; }
 .list .desc { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .avatar {
     flex: none; width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center;
