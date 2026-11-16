@@ -1569,6 +1569,41 @@ export namespace settings {
 
 }
 
+export namespace startup {
+	
+	export class Item {
+	    id: string;
+	    name: string;
+	    source: string;
+	    command: string;
+	    target: string;
+	    publisher: string;
+	    enabled: boolean;
+	    needsAdmin: boolean;
+	    missing: boolean;
+	    caution: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new Item(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.source = source["source"];
+	        this.command = source["command"];
+	        this.target = source["target"];
+	        this.publisher = source["publisher"];
+	        this.enabled = source["enabled"];
+	        this.needsAdmin = source["needsAdmin"];
+	        this.missing = source["missing"];
+	        this.caution = source["caution"];
+	    }
+	}
+
+}
+
 export namespace storage {
 	
 	export class BigFile {

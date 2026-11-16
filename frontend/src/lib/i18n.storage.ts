@@ -210,7 +210,7 @@ export const storageEn = {
     "storage.vdisk.item": "{name} · {size}",
     "storage.vdisk.modified": "Changed {date}",
     "storage.vdisk.reveal": "Show in folder",
-    "storage.vdisk.compact": "To shrink one, close your Linux sessions, run `wsl --shutdown` and compact it with Optimize-VHD or diskpart.",
+    "storage.vdisk.compact": "To shrink one, close your Linux sessions, run wsl --shutdown and compact it with Optimize-VHD or diskpart.",
 } as const;
 
 export const storageEs: Record<keyof typeof storageEn, string> = {
@@ -420,5 +420,5 @@ export const storageEs: Record<keyof typeof storageEn, string> = {
     "storage.vdisk.item": "{name} · {size}",
     "storage.vdisk.modified": "Modificado {date}",
     "storage.vdisk.reveal": "Mostrar en la carpeta",
-    "storage.vdisk.compact": "Para encoger uno, cierra tus sesiones de Linux, ejecuta `wsl --shutdown` y compáctalo con Optimize-VHD o diskpart.",
+    "storage.vdisk.compact": "Para encoger uno, cierra tus sesiones de Linux, ejecuta wsl --shutdown y compáctalo con Optimize-VHD o diskpart.",
 };

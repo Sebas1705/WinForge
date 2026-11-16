@@ -25,9 +25,9 @@ Not present: anything that runs on a schedule, a startup manager, cleanup of dev
 |---|---|---|---|---|
 | 1 | Ignore, skip a version or pause updates per app (done) | Updates apply what is ticked, with no memory. The most asked-for control in UniGetUI. | Low | Low |
 | 2 | Scheduled automatic updates (a scheduled task running `winforge-cli`, with a notification) | It is what Ninite Pro charges for. Today WinForge only acts while open. | Medium | Medium |
-| 3 | Developer cache cleanup | Where developers lose tens of GB; fits the Storage tab. Regenerable, but slow to download again. | Medium | Medium |
+| 3 | Developer cache cleanup (done) | Where developers lose tens of GB; fits the Storage tab. Regenerable, but slow to download again. | Medium | Medium |
 | 4 | Export a profile as a `winget configure` file (done) | Replays a setup on a PC without WinForge and fits in a repository. Script and `winget import` export already exist. | Low to medium | Low |
-| 5 | Startup manager (programs, tasks, services; disable, never delete) | Boot time review; nothing covers it today. | Medium | Low (reversible) |
+| 5 | Startup manager (done for Run keys and Startup folders; tasks and services are not listed; disable, never delete) | Boot time review; nothing covers it today. | Medium | Low (reversible) |
 | 6 | Privacy and Windows cleanup as reversible recipes | Most asked-for in WinUtil and O&O. Each tweak needs a preview, an undo and a restore point. | Medium to high | High unless each one is reviewed |
 | 7 | End-of-life and known-vulnerability report for installed software | Read-only, built on the catalog's verified publishers. | Medium | Low |
 | 8 | Profile drift ("what changed on this PC since you applied it") (done) | Turns profiles into something maintained, not installed once. | Medium | Low |
@@ -46,7 +46,7 @@ Not present: anything that runs on a schedule, a startup manager, cleanup of dev
 1. **A (done):** 1, 9, 10. Ignoring updates, a profiles folder that can live in OneDrive or Dropbox, and the
    command palette.
 2. **B (done):** 4, 8. Profiles as portable configuration, and a record of how the PC drifts from them.
-3. **C:** 3, 5. Most of the value for developers.
+3. **C (done):** 3, 5. Developer caches, Docker, old project folders and virtual disks in Storage, and a startup manager.
 4. **D:** 2. Needs care because it acts while nobody is watching.
 5. **Later:** 6, 7, each reviewed one recipe at a time.
 

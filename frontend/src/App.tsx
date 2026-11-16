@@ -22,12 +22,13 @@ import {Catalog} from "./views/Catalog";
 import {Health} from "./views/Health";
 import {Backup} from "./views/Backup";
 import {Games} from "./views/Games";
+import {Startup} from "./views/Startup";
 import {Storage} from "./views/Storage";
 import {Home} from "./views/Home";
 import {Profiles} from "./views/Profiles";
 import {Updates} from "./views/Updates";
 
-type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games" | "storage";
+type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games" | "storage" | "startup";
 
 interface Runner {
     /** Called when the person confirms the plan. */
@@ -42,7 +43,7 @@ interface Runner {
 // Go names runs that have no profile by what they do; show that in the person's language.
 const pendingTitle = (title: string) => (title === "updates" ? t("run.updateTitle") : title === "uninstall" ? t("detail.uninstall") : title);
 
-const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive", games: "gamepad", storage: "disk"};
+const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive", games: "gamepad", storage: "disk", startup: "rocket"};
 
 function tourSeen(): boolean {
     try { return localStorage.getItem("winforge.tour") === "1"; } catch { return true; }
@@ -441,6 +442,7 @@ export default function App() {
         ["updates", t("nav.updates"), pending && pending.length > 0 ? pending.length : null],
         ["health", t("nav.health"), health && health.ok < health.total ? health.total - health.ok : null],
         ["storage", t("nav.storage"), null],
+        ["startup", t("nav.startup"), null],
         ["games", t("nav.games"), null],
         ["backup", t("nav.backup"), null],
     ];
@@ -570,6 +572,8 @@ export default function App() {
                     ) : tab === "storage" ? (
                         <Storage admin={state.admin} say={say} refreshKey={storageTick} onOptimize={(ids) => void startRepair(ids)}
                                  onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>
+                    ) : tab === "startup" ? (
+                        <Startup admin={state.admin} say={say} onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>
                     ) : tab === "games" ? (
                         <Games apps={state.apps} say={say} onOpen={(u) => safe(api.OpenURL(u))} onDetail={setDetail}
                                onBrowse={() => { setCategory("gaming"); setTab("catalog"); }}/>

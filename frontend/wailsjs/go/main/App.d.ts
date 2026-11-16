@@ -4,6 +4,7 @@ import {catalog} from '../models';
 import {settings} from '../models';
 import {main} from '../models';
 import {install} from '../models';
+import {startup} from '../models';
 import {storage} from '../models';
 
 export function AcceptProfileState(arg1:string):Promise<void>;
@@ -115,6 +116,12 @@ export function SetProfilesFolder(arg1:string,arg2:boolean):Promise<main.FolderC
 export function ShareCode(arg1:catalog.Profile):Promise<string>;
 
 export function StartupError():Promise<string>;
+
+export function StartupList():Promise<Array<startup.Item>>;
+
+export function StartupReveal(arg1:string):Promise<void>;
+
+export function StartupSet(arg1:string,arg2:boolean):Promise<Array<startup.Item>>;
 
 export function StopIgnoringUpdate(arg1:string):Promise<Array<main.UpgradeInfo>>;
 

@@ -179,7 +179,7 @@ describe("storage: virtual disks", () => {
         expect(await screen.findByText("Ubuntu22.04LTS · 40 GB")).toBeInTheDocument();
         expect(screen.getByText("Docker Desktop · 12 GB")).toBeInTheDocument();
         expect(screen.getByText(disks[0].path)).toBeInTheDocument();
-        expect(screen.getByText(/run `wsl --shutdown`/)).toBeInTheDocument();
+        expect(screen.getByText(/run wsl --shutdown and compact it/)).toBeInTheDocument();
         expect(screen.queryByRole("checkbox", {name: /Ubuntu/})).toBeNull();
         await user.click(screen.getByRole("button", {name: "Show in folder: Ubuntu22.04LTS"}));
         expect(api.StorageReveal).toHaveBeenCalledWith(disks[0].path);

@@ -26,6 +26,7 @@ WinForge scans the PC, shows which apps of a **curated catalog** are installed, 
 - **Profile drift**: after a whole profile is applied, WinForge remembers which catalog apps (and versions) were installed. The profile page then reports what changed since: apps of the profile that are gone, apps installed since that the profile does not list (with an *Add to this profile* button on your own profiles), and versions that moved. *Accept these changes* makes the PC the new reference without touching it, and profile cards show how many changes there are. A selection that only shares a profile's name never rewrites its history.
 - **Icons and links**: each app shows its own icon and opens a detail panel with its website, publisher, license and install command.
 - **PC health**: firmware (BIOS age, UEFI, Secure Boot, TPM, virtualization), drivers (missing, unsigned, old, GPU freshness), storage (disk health, free space), security (antivirus, firewall, BitLocker), Windows (support status, pending restart) and Windows Update (pending drivers and firmware). Read-only, with links to the right vendor pages.
+- **Startup**: the programs that start when you sign in, from the Run registry keys (current user, all users, 32-bit) and the two Startup folders, each with a switch. Switching off works the way Task Manager does, through the `StartupApproved` values, so nothing is deleted: the entry or shortcut stays and the same switch turns it back on. Items for all users need administrator rights and are locked without them. Anything that looks like Windows or security software asks first. It does not list scheduled tasks or services.
 - **Made to be scanned, not read**: a store-style catalog of icon cards (grid or list), profiles as cards with their apps' icons and a progress ring, quick-start tiles and a "popular" shelf on the home screen, a health score with one card per area, short plain-language descriptions in Spanish and English for ~100 popular apps and every built-in profile, "?" help bubbles, and a three-screen first-run guide.
 - **Simple or advanced**: simple (the default) hides ids, versions, publishers' links, logs and script/winget exports; advanced shows them. Switch in the sidebar.
 
@@ -52,6 +53,7 @@ internal/
   updates/       the updates a person chose to ignore: never, one version, or for a while
   appconfig/     the few settings kept on disk, such as where profiles live
   drift/         what the PC looked like when a profile was applied, and what changed since
+  startup/       what starts with Windows, and switching it on and off without deleting it
   storage/       cleanup categories, old project folders, virtual disks, biggest files and folders, duplicates, Recycle Bin
 cmd/winforge-cli headless: scan | profiles | plan | apply | script | configure | export | check
 cmd/winforge-verify  catalog verifier

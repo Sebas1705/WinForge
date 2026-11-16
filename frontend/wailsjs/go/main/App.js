@@ -222,6 +222,18 @@ export function StartupError() {
   return window['go']['main']['App']['StartupError']();
 }
 
+export function StartupList() {
+  return window['go']['main']['App']['StartupList']();
+}
+
+export function StartupReveal(arg1) {
+  return window['go']['main']['App']['StartupReveal'](arg1);
+}
+
+export function StartupSet(arg1, arg2) {
+  return window['go']['main']['App']['StartupSet'](arg1, arg2);
+}
+
 export function StopIgnoringUpdate(arg1) {
   return window['go']['main']['App']['StopIgnoringUpdate'](arg1);
 }

@@ -49,6 +49,10 @@ export interface StorageProgress { task: "scan" | "clean" | "big" | "folders" | 
 export interface ProjectJunk { path: string; project: string; projectPath: string; kind: string; sizeBytes: number; files: number; lastTouched: string }
 export interface ProjectResult { freedBytes: number; removed: number; files: number; failed: string[]; reasons: string[] }
 export interface VirtualDisk { path: string; name: string; kind: "wsl" | "docker"; sizeBytes: number; modified: string }
+export interface StartupItem {
+    id: string; name: string; source: string; command: string; target: string; publisher: string;
+    enabled: boolean; needsAdmin: boolean; missing: boolean; caution: boolean;
+}
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
 
 export const api = Go as unknown as {
@@ -120,6 +124,9 @@ export const api = Go as unknown as {
     StorageProjectsClean(paths: string[]): Promise<ProjectResult>;
     StorageVirtualDisks(): Promise<VirtualDisk[]>;
     StorageReveal(path: string): Promise<void>;
+    StartupList(): Promise<StartupItem[]>;
+    StartupSet(id: string, enabled: boolean): Promise<StartupItem[]>;
+    StartupReveal(id: string): Promise<void>;
     StorageCancel(): Promise<void>;
 };
 

@@ -336,6 +336,8 @@ img, svg { -webkit-user-drag: none; user-drag: none; }
 .cleanlist label:hover { border-color: var(--accent); }
 .cleanlist label.on { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
 .cleanlist .grow { display: flex; flex-direction: column; gap: 3px; }
+.startuppage .toolrow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 14px; }
+.startuplist .mono { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
 .cleanlist li:has(> .iconbtn) { display: flex; align-items: center; gap: 8px; }
 .cleanlist li:has(> .iconbtn) > label { flex: 1; min-width: 0; }
 .cleanlist .vdisk { display: flex; align-items: center; gap: 14px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); min-height: 56px; }
