@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import {api, errText, on, type ProfilesFolderInfo, type ImportResult, type UpdateInfo} from "./api";
+import {api, errText, on, type HistoryEntry, type ProfilesFolderInfo, type ImportResult, type UpdateInfo} from "./api";
 import {AppDetail} from "./components/AppDetail";
 import {Icon, type IconName} from "./components/Icon";
 import {ScanProgress, type ScanKind} from "./components/ScanProgress";
@@ -22,13 +22,16 @@ import {Catalog} from "./views/Catalog";
 import {Health} from "./views/Health";
 import {Backup} from "./views/Backup";
 import {Games} from "./views/Games";
+import {Developer} from "./views/Developer";
 import {Startup} from "./views/Startup";
+import {Uninstall} from "./views/Uninstall";
 import {Storage} from "./views/Storage";
 import {Home} from "./views/Home";
 import {Profiles} from "./views/Profiles";
+import {historyError} from "./views/History";
 import {Updates} from "./views/Updates";
 
-type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games" | "storage" | "startup";
+type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games" | "storage" | "startup" | "developer" | "uninstall";
 
 interface Runner {
     /** Called when the person confirms the plan. */
@@ -43,7 +46,7 @@ interface Runner {
 // Go names runs that have no profile by what they do; show that in the person's language.
 const pendingTitle = (title: string) => (title === "updates" ? t("run.updateTitle") : title === "uninstall" ? t("detail.uninstall") : title);
 
-const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive", games: "gamepad", storage: "disk", startup: "rocket"};
+const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive", games: "gamepad", storage: "disk", startup: "rocket", developer: "code", uninstall: "trash"};
 
 function tourSeen(): boolean {
     try { return localStorage.getItem("winforge.tour") === "1"; } catch { return true; }
@@ -85,6 +88,8 @@ export default function App() {
     const [codeDialog, setCodeDialog] = useState(false);
     const [restartAsk, setRestartAsk] = useState(false);
     const [storageTick, setStorageTick] = useState(0);
+    const [developerTick, setDeveloperTick] = useState(0);
+    const [historyTick, setHistoryTick] = useState(0); // bumped when a run ends, so the history is read again
     const [restarting, setRestarting] = useState(false);
     const [showTour, setShowTour] = useState(() => !tourSeen());
     const advanced = settings.detail === "advanced";
@@ -97,6 +102,10 @@ export default function App() {
     // The language is applied during render so every child translates with it.
     setLang(resolveLang(settings.language, navigator.language));
     useEffect(() => { document.documentElement.lang = resolveLang(settings.language, navigator.language); }, [settings.language]);
+    // The scheduled run has no window: it words its notification in the language kept here, and a click on
+    // that notification starts WinForge with a link that opens the Updates page.
+    useEffect(() => { api.AutoSetLanguage(resolveLang(settings.language, navigator.language)).catch(() => { /* only matters once the schedule is on */ }); }, [settings.language]);
+    useEffect(() => { api.LaunchTarget().then((target) => { if (target === "updates") go("updates"); }).catch(() => { /* a normal start */ }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const toastTimer = useRef<number>(0);
     const say = useCallback((m: string) => {
@@ -267,8 +276,33 @@ export default function App() {
         starting.current = true;
         try {
             const plan = await api.PlanUpgrades(ids);
-            openRun(t("run.updateTitle"), plan, {start: () => api.ApplyUpgrades(ids), after: () => void checkUpgrades()});
+            openRun(t("run.updateTitle"), plan, {start: () => api.ApplyUpgrades(ids), after: () => { void checkUpgrades(); setHistoryTick((n) => n + 1); }});
         } catch (e) { say(errText(e)); } finally { starting.current = false; }
+    };
+
+    // Going back to an earlier version runs through the same window as an install; the backend builds
+    // the plan itself from the history entry, so only its id travels.
+    const startRollback = async (e: HistoryEntry, skipNewer: boolean) => {
+        if (starting.current) return;
+        starting.current = true;
+        const name = byId.get(e.app)?.name ?? e.name;
+        try {
+            const plan = await api.HistoryRollbackPlan(e.id);
+            openRun(t("hist.runTitle", {name, version: e.from}), plan, {
+                start: async () => {
+                    try { await api.HistoryRollback(e.id, skipNewer); } catch (err) {
+                        const h = historyError(err, name);
+                        if (h.refresh) setHistoryTick((n) => n + 1);
+                        throw new Error(h.text);
+                    }
+                },
+                after: () => { void checkUpgrades(); setHistoryTick((n) => n + 1); },
+            });
+        } catch (err) {
+            const h = historyError(err, name);
+            say(h.text);
+            if (h.refresh) setHistoryTick((n) => n + 1);
+        } finally { starting.current = false; }
     };
 
     // Picks up what the last run left undone (failed or never reached). With
@@ -301,6 +335,32 @@ export default function App() {
         } catch (e) { say(errText(e)); } finally { starting.current = false; }
     };
 
+    // The Uninstall page: a run of uninstalls is checked by scanning the PC again once it is over, whether or not
+    // the dialog is still open. What the scan finds still installed is said, never assumed gone.
+    const [uninstallTick, setUninstallTick] = useState(0);
+    const verifying = useRef<string[]>([]);
+    useEffect(() => on.done(() => {
+        const ids = verifying.current;
+        verifying.current = [];
+        if (ids.length === 0) return;
+        api.UninstallVerify(ids).then((v) => {
+            if (v.removed.length > 0) say(t("uninst.removedToast", {names: v.removed.map((x) => x.name).join(", ")}));
+            if (v.still.length > 0) say(t("uninst.stillToast", {names: v.still.map((x) => x.name).join(", ")}));
+            setUninstallTick((n) => n + 1);
+        }).catch((e) => say(errText(e)));
+    }), [say]);
+
+    const startUninstallMany = async (list: { id: string; name: string }[]) => {
+        if (starting.current || list.length === 0) return;
+        starting.current = true;
+        try {
+            const ids = list.map((a) => a.id);
+            const plan = await api.PlanUninstall(ids);
+            const title = list.length === 1 ? t("run.uninstallTitle", {name: list[0].name}) : t("uninst.runTitle", {n: list.length});
+            openRun(title, plan, {start: async () => { await api.UninstallApps(ids); verifying.current = ids; }});
+        } catch (e) { say(errText(e)); } finally { starting.current = false; }
+    };
+
     // Repairs run like an install; when they finish the health page is read again.
     // Storage maintenance ("optimize-*") goes through the same runner; the drives are measured again after.
     const startRepair = async (ids: string[]) => {
@@ -309,10 +369,12 @@ export default function App() {
         try {
             const plan = await api.PlanRepairs(ids);
             const optimizing = ids.length > 0 && ids.every((id) => id.startsWith("optimize-"));
-            openRun(t(optimizing ? "run.optimizeTitle" : "run.repairTitle"), plan, {
+            const features = ids.length > 0 && ids.every((id) => id.startsWith("feature-"));
+            openRun(t(optimizing ? "run.optimizeTitle" : features ? "run.featureTitle" : "run.repairTitle"), plan, {
                 start: () => api.ApplyRepairs(ids),
                 after: () => {
-                    if (ids.some((id) => !id.startsWith("optimize-"))) void scanHealth();
+                    if (ids.some((id) => !id.startsWith("optimize-") && !id.startsWith("feature-"))) void scanHealth();
+                    if (ids.some((id) => id.startsWith("feature-"))) setDeveloperTick((n) => n + 1);
                     if (ids.some((id) => id.startsWith("optimize-"))) setStorageTick((n) => n + 1);
                 },
             });
@@ -443,6 +505,8 @@ export default function App() {
         ["health", t("nav.health"), health && health.ok < health.total ? health.total - health.ok : null],
         ["storage", t("nav.storage"), null],
         ["startup", t("nav.startup"), null],
+        ["developer", t("nav.developer"), null],
+        ["uninstall", t("nav.uninstall"), null],
         ["games", t("nav.games"), null],
         ["backup", t("nav.backup"), null],
     ];
@@ -574,6 +638,12 @@ export default function App() {
                                  onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>
                     ) : tab === "startup" ? (
                         <Startup admin={state.admin} say={say} onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>
+                    ) : tab === "developer" ? (
+                        <Developer admin={state.admin} say={say} refreshKey={developerTick} onRun={(ids) => void startRepair(ids)}
+                                   onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>
+                    ) : tab === "uninstall" ? (
+                        <Uninstall apps={state.apps} admin={state.admin} say={say} refreshKey={uninstallTick} onUninstall={(list) => void startUninstallMany(list)}
+                                   onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>
                     ) : tab === "games" ? (
                         <Games apps={state.apps} say={say} onOpen={(u) => safe(api.OpenURL(u))} onDetail={setDetail}
                                onBrowse={() => { setCategory("gaming"); setTab("catalog"); }}/>
@@ -582,7 +652,8 @@ export default function App() {
                                 onInstallProfile={(p, done) => void startProfile(p, done)}/>
                     ) : (
                         <Updates upgrades={upgrades} busy={upgradesBusy} onCheck={() => void checkUpgrades()} onUpdate={(ids) => void startUpgrades(ids)}
-                                 onIgnore={(id, c) => void ignoreUpdate(id, c)} onStopIgnoring={(id) => void stopIgnoring(id)} byId={byId} onDetail={setDetail}/>
+                                 onIgnore={(id, c) => void ignoreUpdate(id, c)} onStopIgnoring={(id) => void stopIgnoring(id)} byId={byId} onDetail={setDetail}
+                                 historyKey={historyTick} say={say} onRollback={(e, skip) => void startRollback(e, skip)}/>
                     )}
                 </main>
             </div>

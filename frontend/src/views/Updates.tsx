@@ -1,10 +1,13 @@
 import {useEffect, useRef, useState} from "react";
+import type {HistoryEntry} from "../api";
 import {AppIcon} from "../components/AppIcon";
+import {History} from "./History";
 import {Icon} from "../components/Icon";
 import {useDismiss} from "../components/useModal";
 import {getLang, t} from "../lib/i18n";
 import type {App, UpgradeInfo} from "../lib/model";
 import {PAUSE_DAYS, splitUpgrades} from "../lib/updates";
+import {AutoUpdates} from "./AutoUpdates";
 
 type Choice = { mode: "always" | "version" | "until"; days?: number };
 
@@ -60,6 +63,7 @@ export function Updates(p: {
     onCheck: () => void; onUpdate: (ids: string[]) => void;
     onIgnore: (id: string, c: Choice) => void; onStopIgnoring: (id: string) => void;
     byId: Map<string, App>; onDetail: (a: App) => void;
+    historyKey: number; say: (m: string) => void; onRollback: (e: HistoryEntry, skipNewer: boolean) => void;
 }) {
     const [picked, setPicked] = useState<Set<string>>(new Set());
     const [showIgnored, setShowIgnored] = useState(false);
@@ -86,6 +90,8 @@ export function Updates(p: {
                     {picked.size === list.length && list.length > 0 ? t("updates.all") : t("updates.updateN", {n: picked.size})}
                 </button>
             </header>
+
+            <AutoUpdates/>
 
             {p.upgrades === null && !p.busy && <p className="muted empty">{t("updates.notChecked")}</p>}
             {p.upgrades !== null && list.length === 0 && <p className="muted empty">{t("updates.none")}</p>}
@@ -130,6 +136,8 @@ export function Updates(p: {
                     )}
                 </section>
             )}
+
+            <History byId={p.byId} refreshKey={p.historyKey} say={p.say} onRollback={p.onRollback}/>
         </div>
     );
 }

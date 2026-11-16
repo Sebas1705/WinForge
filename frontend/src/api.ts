@@ -3,6 +3,7 @@
 import * as Go from "../wailsjs/go/main/App";
 import {EventsOn} from "../wailsjs/runtime/runtime";
 import type {HealthResult} from "./lib/health";
+import type {BatteryInfo, HHView} from "./lib/hhist";
 import type {InstallEvent, Plan, Profile, State, UpgradeInfo} from "./lib/model";
 
 export interface ProfilesFolderInfo { path: string; default: string; custom: boolean; count: number; problem?: string }
@@ -53,6 +54,62 @@ export interface StartupItem {
     id: string; name: string; source: string; command: string; target: string; publisher: string;
     enabled: boolean; needsAdmin: boolean; missing: boolean; caution: boolean;
 }
+export interface EnvFinding {
+    id: string; kind: string; severity: "problem" | "note"; scope: "user" | "machine"; subject: string; paths: string[];
+    fixable: boolean; fixKind: "remove-path-entry" | "unset-variable" | "";
+}
+export interface EnvTool { name: string; found: string[] }
+export interface EnvVar { name: string; scope: "user" | "machine"; value: string }
+export interface EnvReport { findings: EnvFinding[]; userPath: string[]; machinePath: string[]; tools: EnvTool[]; vars: EnvVar[] }
+export interface EnvFixResult { applied: number; failed: string[]; backupId: string }
+export interface EnvBackup { id: string; time: string; changed: string[] }
+export type FeatureId = "wsl" | "vmp" | "hyperv" | "sandbox" | "netfx3";
+export interface Feature {
+    id: FeatureId; state: "on" | "off" | "unavailable" | "unknown"; restartPending: boolean; enable: string; disable: string; needsAdmin: boolean;
+}
+export interface WSLDistro { name: string; state: string; version: number; isDefault: boolean }
+export interface WSLInfo { installed: boolean; defaultVersion: number; distros: WSLDistro[] }
+export type ServiceMode = "auto" | "delayed" | "manual" | "disabled";
+/** A third-party Windows service. The only change offered is its start mode. */
+export interface ServiceItem {
+    id: string; name: string; displayName: string; publisher: string;
+    state: "running" | "stopped" | "other"; startMode: ServiceMode; binary: string;
+    needsAdmin: boolean; caution: boolean; dependents: string[]; changed: boolean; original: ServiceMode | "";
+}
+/** A third-party scheduled task that starts at log on or at startup. The only change is on/off. */
+export interface TaskItem {
+    id: string; name: string; folder: string; triggers: ("logon" | "boot")[]; action: string;
+    state: "ready" | "disabled" | "running" | "unknown"; enabled: boolean; lastResult: number | null;
+    needsAdmin: boolean; caution: boolean; changed: boolean; original: "enabled" | "disabled" | "";
+}
+export interface HistoryEntry {
+    id: string; app: string; name: string; action: "install" | "update" | "rollback"; from: string; to: string;
+    at: string; result: "ok" | "failed" | "restart"; source: "profile" | "update" | "single"; reason?: string; canRollback: boolean;
+}
+export interface HistoryFilter { app: string; result: string; limit: number }
+export interface HistoryPage { entries: HistoryEntry[]; total: number; apps: { id: string; name: string }[] }
+export interface UninstallApp { id: string; name: string; version?: string; publisher: string; admin?: boolean; sizeBytes?: number }
+export interface UninstallRemoved { id: string; name: string }
+export interface UninstallListing { apps: UninstallApp[]; removed: UninstallRemoved[] }
+export interface UninstallVerified { removed: UninstallRemoved[]; still: UninstallRemoved[] }
+export interface LeftoverWhy { rule: "name" | "publisherName" | "nested" | "wingetId" | "wingetPackage"; value: string }
+export interface LeftoverCandidate {
+    path: string; kind: "folder" | "shortcut"; place: string; sizeBytes: number; files: number; modified: string; why: LeftoverWhy;
+}
+export interface LeftoversResult { appId: string; appName: string; candidates: LeftoverCandidate[]; searched: { place: string; path: string }[] }
+export interface LeftoversRecycleResult { moved: number; freedBytes: number; failed: { path: string; reason: string }[] }
+export type AutoResult = "found" | "updated" | "failed" | "ignored" | "needs-admin" | "skipped";
+export interface AutoItem { id: string; name: string; from: string; to: string; result: AutoResult; reason?: string; reboot?: boolean }
+export interface AutoReport {
+    id: string; started: string; finished: string; mode: "notify" | "apply"; scheduled: boolean;
+    error?: string; items: AutoItem[]; notified?: boolean; fingerprint?: string;
+    status: "ok" | "attention" | "partial" | "failed" | "error";
+}
+export interface AutoSettings { mode: "notify" | "apply"; frequency: "daily" | "weekly"; weekday: number; time: string }
+export interface AutoState extends AutoSettings {
+    on: boolean; enabled: boolean; foreign: boolean; nextRun?: string; canEnable: boolean;
+    problem?: "runner-missing" | "task-program-missing"; runs: AutoReport[];
+}
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
 
 export const api = Go as unknown as {
@@ -84,6 +141,9 @@ export const api = Go as unknown as {
     StopIgnoringUpdate(id: string): Promise<UpgradeInfo[]>;
     HealthScan(): Promise<HealthResult>;
     HealthUpdates(): Promise<HealthResult>;
+    HealthHistory(): Promise<HHView>;
+    HealthHistoryClear(): Promise<void>;
+    Battery(): Promise<BatteryInfo>;
     SaveTextFile(name: string, content: string): Promise<string>;
     OpenLink(url: string): Promise<void>;
     ResumePending(): Promise<void>;
@@ -127,7 +187,33 @@ export const api = Go as unknown as {
     StartupList(): Promise<StartupItem[]>;
     StartupSet(id: string, enabled: boolean): Promise<StartupItem[]>;
     StartupReveal(id: string): Promise<void>;
+    ServicesList(): Promise<ServiceItem[]>;
+    ServicesSetMode(id: string, mode: ServiceMode, confirmed: boolean): Promise<ServiceItem[]>;
+    ServicesRestore(id: string, confirmed: boolean): Promise<ServiceItem[]>;
+    TasksList(): Promise<TaskItem[]>;
+    TasksSetEnabled(id: string, enabled: boolean, confirmed: boolean): Promise<TaskItem[]>;
+    TasksRestore(id: string, confirmed: boolean): Promise<TaskItem[]>;
+    UninstallList(): Promise<UninstallListing>;
+    UninstallApps(ids: string[]): Promise<void>;
+    UninstallVerify(ids: string[]): Promise<UninstallVerified>;
+    LeftoversFind(appId: string): Promise<LeftoversResult>;
+    LeftoversRecycle(paths: string[]): Promise<LeftoversRecycleResult>;
     StorageCancel(): Promise<void>;
+    EnvScan(): Promise<EnvReport>;
+    EnvFix(ids: string[]): Promise<EnvFixResult>;
+    EnvBackups(): Promise<EnvBackup[]>;
+    EnvRestore(id: string): Promise<void>;
+    FeaturesList(): Promise<Feature[]>;
+    WSLInfo(): Promise<WSLInfo>;
+    HistoryList(filter: HistoryFilter): Promise<HistoryPage>;
+    HistoryRollbackPlan(id: string): Promise<Plan>;
+    HistoryRollback(id: string, skipNewer: boolean): Promise<void>;
+    AutoState(): Promise<AutoState>;
+    AutoEnable(s: AutoSettings, lang: string): Promise<AutoState>;
+    AutoDisable(): Promise<AutoState>;
+    AutoRunNow(): Promise<AutoReport>;
+    AutoSetLanguage(lang: string): Promise<void>;
+    LaunchTarget(): Promise<string>;
 };
 
 export const on = {

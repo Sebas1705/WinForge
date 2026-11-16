@@ -22,8 +22,32 @@ export function ApplyUpgrades(arg1) {
   return window['go']['main']['App']['ApplyUpgrades'](arg1);
 }
 
+export function AutoDisable() {
+  return window['go']['main']['App']['AutoDisable']();
+}
+
+export function AutoEnable(arg1, arg2) {
+  return window['go']['main']['App']['AutoEnable'](arg1, arg2);
+}
+
+export function AutoRunNow() {
+  return window['go']['main']['App']['AutoRunNow']();
+}
+
+export function AutoSetLanguage(arg1) {
+  return window['go']['main']['App']['AutoSetLanguage'](arg1);
+}
+
+export function AutoState() {
+  return window['go']['main']['App']['AutoState']();
+}
+
 export function BackupSets() {
   return window['go']['main']['App']['BackupSets']();
+}
+
+export function Battery() {
+  return window['go']['main']['App']['Battery']();
 }
 
 export function Cancel() {
@@ -54,6 +78,22 @@ export function Emulation() {
   return window['go']['main']['App']['Emulation']();
 }
 
+export function EnvBackups() {
+  return window['go']['main']['App']['EnvBackups']();
+}
+
+export function EnvFix(arg1) {
+  return window['go']['main']['App']['EnvFix'](arg1);
+}
+
+export function EnvRestore(arg1) {
+  return window['go']['main']['App']['EnvRestore'](arg1);
+}
+
+export function EnvScan() {
+  return window['go']['main']['App']['EnvScan']();
+}
+
 export function ExportConfigure(arg1) {
   return window['go']['main']['App']['ExportConfigure'](arg1);
 }
@@ -70,6 +110,10 @@ export function ExportWinget(arg1) {
   return window['go']['main']['App']['ExportWinget'](arg1);
 }
 
+export function FeaturesList() {
+  return window['go']['main']['App']['FeaturesList']();
+}
+
 export function GamesState() {
   return window['go']['main']['App']['GamesState']();
 }
@@ -78,12 +122,32 @@ export function GetState() {
   return window['go']['main']['App']['GetState']();
 }
 
+export function HealthHistory() {
+  return window['go']['main']['App']['HealthHistory']();
+}
+
+export function HealthHistoryClear() {
+  return window['go']['main']['App']['HealthHistoryClear']();
+}
+
 export function HealthScan() {
   return window['go']['main']['App']['HealthScan']();
 }
 
 export function HealthUpdates() {
   return window['go']['main']['App']['HealthUpdates']();
+}
+
+export function HistoryList(arg1) {
+  return window['go']['main']['App']['HistoryList'](arg1);
+}
+
+export function HistoryRollback(arg1, arg2) {
+  return window['go']['main']['App']['HistoryRollback'](arg1, arg2);
+}
+
+export function HistoryRollbackPlan(arg1) {
+  return window['go']['main']['App']['HistoryRollbackPlan'](arg1);
 }
 
 export function IgnoreUpdate(arg1, arg2, arg3) {
@@ -108,6 +172,18 @@ export function InstallUpdate() {
 
 export function InstallWinget() {
   return window['go']['main']['App']['InstallWinget']();
+}
+
+export function LaunchTarget() {
+  return window['go']['main']['App']['LaunchTarget']();
+}
+
+export function LeftoversFind(arg1) {
+  return window['go']['main']['App']['LeftoversFind'](arg1);
+}
+
+export function LeftoversRecycle(arg1) {
+  return window['go']['main']['App']['LeftoversRecycle'](arg1);
 }
 
 export function OpenGameFolder(arg1) {
@@ -206,6 +282,18 @@ export function SaveTextFile(arg1, arg2) {
   return window['go']['main']['App']['SaveTextFile'](arg1, arg2);
 }
 
+export function ServicesList() {
+  return window['go']['main']['App']['ServicesList']();
+}
+
+export function ServicesRestore(arg1, arg2) {
+  return window['go']['main']['App']['ServicesRestore'](arg1, arg2);
+}
+
+export function ServicesSetMode(arg1, arg2, arg3) {
+  return window['go']['main']['App']['ServicesSetMode'](arg1, arg2, arg3);
+}
+
 export function SetGamesRoot() {
   return window['go']['main']['App']['SetGamesRoot']();
 }
@@ -290,6 +378,34 @@ export function StorageVolumes() {
   return window['go']['main']['App']['StorageVolumes']();
 }
 
+export function TasksList() {
+  return window['go']['main']['App']['TasksList']();
+}
+
+export function TasksRestore(arg1, arg2) {
+  return window['go']['main']['App']['TasksRestore'](arg1, arg2);
+}
+
+export function TasksSetEnabled(arg1, arg2, arg3) {
+  return window['go']['main']['App']['TasksSetEnabled'](arg1, arg2, arg3);
+}
+
+export function UninstallApps(arg1) {
+  return window['go']['main']['App']['UninstallApps'](arg1);
+}
+
+export function UninstallList() {
+  return window['go']['main']['App']['UninstallList']();
+}
+
+export function UninstallVerify(arg1) {
+  return window['go']['main']['App']['UninstallVerify'](arg1);
+}
+
 export function Upgrades() {
   return window['go']['main']['App']['Upgrades']();
+}
+
+export function WSLInfo() {
+  return window['go']['main']['App']['WSLInfo']();
 }

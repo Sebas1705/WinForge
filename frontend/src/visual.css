@@ -307,17 +307,17 @@ img, svg { -webkit-user-drag: none; user-drag: none; }
 .fixall { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 14px; }
 
 /* storage page */
-.storagepage section { margin-bottom: 34px; }
-.storagepage section > h2 { margin-bottom: 6px; }
-.storagepage section > p.small { margin: 0 0 14px; }
-.storagepage .sectionhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
-.storagepage .sectionhead h2 { margin: 0; }
-.storagepage .toolrow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 14px; }
+.storagepage section, .developerpage section { margin-bottom: 34px; }
+.storagepage section > h2, .developerpage section > h2 { margin-bottom: 6px; }
+.storagepage section > p.small, .developerpage section > p.small { margin: 0 0 14px; }
+.storagepage .sectionhead, .developerpage .sectionhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.storagepage .sectionhead h2, .developerpage .sectionhead h2 { margin: 0; }
+.storagepage .toolrow, .developerpage .toolrow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 14px; }
 .storagepage .folderbar { margin: 0 0 12px; }
-.storagepage .resultline { margin: 0 0 14px; }
-.storagepage .resultline p { margin: 0; }
-.storagepage .resultline p + p { margin-top: 6px; }
-.storagepage .subhead { margin: 6px 0 8px; }
+.storagepage .resultline, .developerpage .resultline { margin: 0 0 14px; }
+.storagepage .resultline p, .developerpage .resultline p { margin: 0; }
+.storagepage .resultline p + p, .developerpage .resultline p + p { margin-top: 6px; }
+.storagepage .subhead, .developerpage .subhead { margin: 6px 0 8px; }
 .volumes { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .volume { padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
 .volume.low { border-color: color-mix(in srgb, var(--warn) 55%, var(--line)); }
@@ -340,8 +340,8 @@ img, svg { -webkit-user-drag: none; user-drag: none; }
 .startuplist .mono { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
 .cleanlist li:has(> .iconbtn) { display: flex; align-items: center; gap: 8px; }
 .cleanlist li:has(> .iconbtn) > label { flex: 1; min-width: 0; }
-.cleanlist .vdisk { display: flex; align-items: center; gap: 14px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); min-height: 56px; }
-.cleanlist .vdisk .mono { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cleanlist .vdisk, .cleanlist .finding { display: flex; align-items: center; gap: 14px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); min-height: 56px; }
+.cleanlist .vdisk .mono, .cleanlist .finding .mono { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .catname { display: flex; align-items: center; gap: 4px 8px; flex-wrap: wrap; }
 .chip.review { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
 .cleansize { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex: none; }
@@ -412,3 +412,34 @@ img, svg { -webkit-user-drag: none; user-drag: none; }
 .drift p { margin: 0; }
 .drift-ok { display: flex; align-items: center; gap: 6px; }
 .pill.changed { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
+
+/* developer page */
+.cleanlist .finding .mono { overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: anywhere; }
+.developerpage .backupitem { display: flex; align-items: center; gap: 12px; }
+.developerpage .envvars { margin: 0 0 14px; }
+.developerpage .envvars summary { cursor: pointer; margin-bottom: 8px; }
+.developerpage .tablewrap { margin: 0 0 14px; }
+.developerpage td, .developerpage th { text-align: left; vertical-align: top; padding: 6px 10px; }
+.developerpage td .mono { overflow-wrap: anywhere; }
+.starttabs { padding: 0 0 14px; border-bottom: none; }
+.startuppage [role=tabpanel] .pagehead { align-items: flex-start; margin-bottom: 14px; }
+.svcrow { flex-wrap: wrap; }
+.svcrow .grow { flex: 1; min-width: 0; flex-basis: 220px; }
+.svcrow select { max-width: 100%; }
+.svcrow.on { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+/* Install and update history (Updates page) */
+.history { margin-top: 28px; }
+.history .toolrow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 14px; }
+.history .histday h3 { font-size: 13px; margin: 14px 0 4px; color: var(--muted); font-weight: 600; text-transform: capitalize; }
+.history .list { flex: none; overflow: visible; padding: 0; }
+.history .histmain { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.history .histmore { margin-top: 10px; }
+.uninstpage .toolrow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 14px; }
+.uninstpage section { margin: 0 0 28px; }
+.uninstpage .leftpanel { scroll-margin-top: 12px; }
+.uninstpage .leftpanel:focus { outline: none; }
+.uninstpage .leftpanel:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 4px; border-radius: 8px; }
+.uninstpage .leftlist .mono { overflow-wrap: anywhere; white-space: normal; }
+.leftwarn { display: flex; align-items: flex-start; gap: 10px; margin: 0 0 14px; padding: 12px 16px; border: 1px solid color-mix(in srgb, var(--warn) 55%, var(--line)); border-radius: 12px; background: color-mix(in srgb, var(--warn) 12%, var(--surface)); }
+.leftwarn svg { flex: none; margin-top: 2px; color: var(--warn); }
+.leftwarn p { margin: 0; }

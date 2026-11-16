@@ -9,6 +9,7 @@ import {
     type Finding, type Group, type HealthLink, type HealthResult, type Severity,
 } from "../lib/health";
 import type {App} from "../lib/model";
+import {BatteryCard, HistorySection} from "./HealthHistory";
 
 const SEV_ICON: Record<Severity, IconName> = {ok: "check", info: "info", warn: "alert", bad: "x", unknown: "help"};
 const SEV_CELL: Record<Severity, string> = {ok: "", info: "info", warn: "warn", bad: "failed", unknown: "skipped"};
@@ -129,6 +130,9 @@ export function Health(p: {
                             </section>
                         );
                     })}
+
+                    <BatteryCard refreshKey={r.report.collectedAt}/>
+                    <HistorySection refreshKey={r.report.collectedAt}/>
 
                     <section className="patchcard">
                         <h2><Icon name="wrench" size={18}/> {t("health.maintenance.title")}</h2>
