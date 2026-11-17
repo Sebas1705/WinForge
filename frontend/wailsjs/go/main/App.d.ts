@@ -28,6 +28,10 @@ export function ApplyUninstall(arg1:Array<string>):Promise<void>;
 
 export function ApplyUpgrades(arg1:Array<string>):Promise<void>;
 
+export function AssistantInfo():Promise<main.AssistantInfoResult>;
+
+export function AssistantRevealExe():Promise<void>;
+
 export function AutoDisable():Promise<main.AutoState>;
 
 export function AutoEnable(arg1:main.AutoSettings,arg2:string):Promise<main.AutoState>;
