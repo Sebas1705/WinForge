@@ -70,6 +70,14 @@ jobs:
         run: |
           choco install nsis -y --no-progress
           Add-Content $env:GITHUB_PATH "C:\Program Files (x86)\NSIS"
+      - name: Build winforge-mcp
+        # It goes into build/bin BEFORE the installer is made: project.nsi picks it up from there and installs it
+        # next to WinForge.exe. The tag was checked in "Stamp the version".
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force build/bin | Out-Null
+          go build -trimpath -ldflags "-X main.version=${{ env.TAG }}" -o build/bin/winforge-mcp.exe ./cmd/winforge-mcp
+          if (-not (Test-Path build/bin/winforge-mcp.exe)) { throw "winforge-mcp.exe was not built" }
       - name: Build app and installer
         run: wails build -nsis -ldflags "-X main.version=${{ env.TAG }}"
       - name: Collect artifacts
@@ -77,6 +85,7 @@ jobs:
         run: |
           New-Item -ItemType Directory dist | Out-Null
           Copy-Item "build/bin/WinForge.exe" "dist/WinForge-$env:TAG-windows-amd64.exe"
+          Copy-Item "build/bin/winforge-mcp.exe" "dist/WinForge-mcp-$env:TAG-windows-amd64.exe"
           $installer = Get-ChildItem "build/bin" -Filter "*installer.exe" | Select-Object -First 1
           if (-not $installer) { throw "no installer artifact found" }
           # The in-app updater looks for exactly this suffix and verifies the

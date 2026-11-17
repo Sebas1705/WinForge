@@ -53,7 +53,8 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: "1.26"
-      - run: go test ./internal/... ./catalogdata/...
+      - run: go vet ./internal/... ./cmd/...
+      - run: go test ./internal/... ./cmd/winforge-mcp/... ./catalogdata/...
 
   catalog:
     runs-on: ubuntu-latest
@@ -94,6 +95,12 @@ jobs:
         run: |
           choco install nsis -y --no-progress
           Add-Content $env:GITHUB_PATH "C:\Program Files (x86)\NSIS"
+      - name: Build winforge-mcp
+        # Same step as in release.yml: the installer ships it next to WinForge.exe.
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force build/bin | Out-Null
+          go build -trimpath -ldflags "-X main.version=v0.0.0-ci" -o build/bin/winforge-mcp.exe ./cmd/winforge-mcp
       - name: Build app and installer
         run: wails build -nsis -ldflags "-X main.version=v0.0.0-ci"
       - name: Install silently
@@ -105,6 +112,7 @@ jobs:
           $exe = @("$env:ProgramFiles\Sebas1705\WinForge\WinForge.exe", "$env:LOCALAPPDATA\Programs\WinForge\WinForge.exe") |
             Where-Object { Test-Path $_ } | Select-Object -First 1
           if (-not $exe) { throw "installer did not put WinForge.exe anywhere expected" }
+          if (-not (Test-Path (Join-Path (Split-Path $exe) "winforge-mcp.exe"))) { throw "installer did not put winforge-mcp.exe next to WinForge.exe" }
           "WINFORGE_EXE=$exe" | Add-Content $env:GITHUB_ENV
       - name: App starts
         shell: pwsh
@@ -113,6 +121,15 @@ jobs:
           Start-Sleep -Seconds 8
           if ($p.HasExited) { throw "WinForge exited with code $($p.ExitCode) right after start" }
           Stop-Process $p -Force
+      - name: winforge-mcp starts
+        # It must answer over stdio without a network or a window: print its tools and its version.
+        shell: pwsh
+        run: |
+          $mcp = Join-Path (Split-Path $env:WINFORGE_EXE) "winforge-mcp.exe"
+          & $mcp --version
+          if ($LASTEXITCODE -ne 0) { throw "winforge-mcp --version exited with $LASTEXITCODE" }
+          $tools = & $mcp --list-tools --mode read | ConvertFrom-Json
+          if ($LASTEXITCODE -ne 0 -or $tools.mode -ne "read") { throw "winforge-mcp --list-tools failed" }
       - name: Uninstall silently
         shell: pwsh
         run: |
@@ -120,6 +137,7 @@ jobs:
           # _?= keeps the uninstaller in place so -Wait really waits.
           Start-Process "$dir\uninstall.exe" -ArgumentList "/S", "_?=$dir" -Wait
           if (Test-Path $env:WINFORGE_EXE) { throw "uninstall left WinForge.exe behind" }
+          if (Test-Path (Join-Path $dir "winforge-mcp.exe")) { throw "uninstall left winforge-mcp.exe behind" }
       - uses: actions/upload-artifact@v4
         with:
           name: installer
