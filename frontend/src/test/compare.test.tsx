@@ -346,3 +346,37 @@ describe("in Spanish", () => {
         expect(await screen.findByRole("alert")).toHaveTextContent("Eso es demasiado grande para ser un perfil.");
     });
 });
+
+describe("a comparison outlives the page", () => {
+    const nav = () => within(screen.getByRole("navigation", {name: "Main menu"}));
+    const tasks = () => within(screen.getByRole("heading", {name: "Tasks", level: 2}).closest("section") as HTMLElement);
+
+    it("stays listed as running after leaving and coming back, blocks a second one, then shows the summary", async () => {
+        let finish!: (r: CompareResult) => void;
+        api.CompareFile.mockReturnValue(new Promise<CompareResult>((res) => { finish = res; }));
+        const user = await open();
+        await chooseFile(user);
+        expect(await tasks().findByText("Comparing profiles: laptop.winforge.json")).toBeInTheDocument();
+        await user.click(nav().getByRole("button", {name: /Home/}));
+        await waitFor(() => expect(screen.queryByRole("heading", {level: 1, name: "Compare setups"})).not.toBeInTheDocument());
+        await user.click(nav().getByRole("button", {name: /Profiles/}));
+        await user.click(await screen.findByRole("button", {name: "Compare…"}));
+        expect(tasks().getByText("Comparing profiles: laptop.winforge.json")).toBeInTheDocument();
+        expect(tasks().getByText("Running")).toBeInTheDocument();
+        expect(screen.getByRole("button", {name: "Choose a file…"})).toBeDisabled();
+        expect(api.CompareFile).toHaveBeenCalledTimes(1);
+        finish(result());
+        await waitFor(() => expect(tasks().getAllByText("Done").length).toBeGreaterThan(0));
+        expect(tasks().getByText(/In both: 1./)).toBeInTheDocument();
+        expect(api.CompareFile).toHaveBeenCalledTimes(1);
+        await waitFor(() => expect(screen.getByRole("button", {name: "Choose a file…"})).toBeEnabled());
+    });
+
+    it("lists a comparison that failed", async () => {
+        api.CompareFile.mockRejectedValue(new Error("compare:not-json"));
+        const user = await open();
+        await chooseFile(user);
+        await waitFor(() => expect(tasks().getAllByText("Failed").length).toBeGreaterThan(0));
+        expect(tasks().getByText("Comparing profiles: laptop.winforge.json")).toBeInTheDocument();
+    });
+});

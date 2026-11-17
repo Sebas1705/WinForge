@@ -8,6 +8,8 @@ import {makeState} from "./fixtures";
 
 vi.mock("../api", async () => (await import("./apiMock")).moduleMock);
 
+// The Tasks list repeats what a section reports, and sits above it: the section is the last match.
+const lastText = async (x: string | RegExp) => (await screen.findAllByText(x)).at(-1) as HTMLElement;
 const MB = 1024 ** 2;
 const GB = 1024 ** 3;
 const HOME = "C:\\Users\\me";
@@ -137,7 +139,7 @@ describe("storage: old project folders", () => {
         expect(await within(sec()).findByText("No old project folders were found.")).toBeInTheDocument();
         api.StorageProjects.mockRejectedValueOnce(new Error("boom"));
         await user.click(within(sec()).getByRole("button", {name: "Scan again"}));
-        expect(await screen.findByText(/boom/)).toBeInTheDocument();
+        expect(await lastText(/boom/)).toBeInTheDocument();
     });
 
     it("shows a live search with Cancel, and ignores other tasks' progress", async () => {

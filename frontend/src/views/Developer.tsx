@@ -1,3 +1,4 @@
+import {TaskViewer} from "../components/TaskViewer";
 import {t} from "../lib/i18n";
 import {EnvDoctor} from "./developer/EnvDoctor";
 import {Features} from "./developer/Features";
@@ -19,6 +20,7 @@ export function Developer(p: {
                     <p className="muted">{t("dev.intro")}</p>
                 </div>
             </header>
+            <TaskViewer kind="developer"/>
             <EnvDoctor say={p.say}/>
             <Features admin={p.admin} say={p.say} onAdmin={p.onAdmin} onRun={p.onRun} refreshKey={p.refreshKey}/>
         </div>

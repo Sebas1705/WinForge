@@ -75,7 +75,7 @@ export function Duplicates(p: { task: TaskRunner; defaults: StorageDefaults | nu
     };
 
     const scan = async () => {
-        const out = await p.task.run("dups", () => api.StorageDuplicates(roots, minMB));
+        const out = await p.task.run("dups", () => api.StorageDuplicates(roots, minMB), (l) => t("tasks.sum.items", {n: l.length}));
         if (!out) return;
         setStopped(out.stopped);
         if (out.error !== undefined) {

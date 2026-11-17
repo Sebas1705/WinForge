@@ -474,3 +474,18 @@ input[type=search]:not(.search):focus-visible { outline: 2px solid var(--accent)
 
 /* A checkbox that is not inside a label is the whole target, so it is 24px (WCAG 2.5.8). */
 .svcrow > input[type=checkbox] { width: 24px; height: 24px; }
+
+/* Task viewer: the jobs of a page, running and finished */
+.taskviewer { margin: 18px 0 0; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.taskhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 8px; }
+.taskhead h2, .taskhead h3 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 15px; }
+.tasklist { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 8px; }
+.taskrow { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); min-width: 0; }
+.tasklist .taskrow:first-child { border-top: 0; }
+.taskmain { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.taskmain progress { width: 100%; height: 6px; accent-color: var(--accent); }
+.tasklive { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.taskerr { color: var(--bad); }
+.taskchip { flex: none; }
+.taskdur { flex: none; min-width: 52px; text-align: right; }
+@media (max-width: 720px) { .taskrow { flex-wrap: wrap; } .taskmain { flex-basis: 100%; } }

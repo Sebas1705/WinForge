@@ -196,7 +196,7 @@ func runRecipe(ctx context.Context, r *catalog.Recipe, s Step, ex Executor, emit
 			return 0, nil
 		}
 	}
-	code, err := ex.Run(ctx, "powershell", PowerShellArgs(r.PowerShell), onLine)
+	code, err := ex.Run(ctx, "powershell", PowerShellArgs(r.PowerShell), CleanCLIXML(onLine))
 	if err != nil {
 		return code, fmt.Errorf("could not run powershell: %w", err)
 	}
@@ -208,7 +208,7 @@ func runRecipe(ctx context.Context, r *catalog.Recipe, s Step, ex Executor, emit
 
 // refreshPath makes tools installed earlier in this run visible: a child
 // process inherits the environment WinForge started with, which predates them.
-const refreshPath = `$env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User'); $ErrorActionPreference = 'Stop'; $global:LASTEXITCODE = 0;`
+const refreshPath = `$env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User'); $ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue'; $global:LASTEXITCODE = 0;`
 
 // PowerShellArgs wraps a script for powershell.exe. The script is passed as
 // -EncodedCommand (UTF-16LE base64), which sidesteps every quoting problem.

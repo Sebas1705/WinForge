@@ -3,6 +3,8 @@ import {Icon, type IconName} from "../components/Icon";
 import {ScanProgress} from "../components/ScanProgress";
 import {Strip} from "../components/Strip";
 import {Ring, Tip} from "../components/Visual";
+import {TaskViewer} from "../components/TaskViewer";
+import {useTasks} from "../lib/taskStore";
 import {t, type Key} from "../lib/i18n";
 import {
     byGroup, driverDownload, filterDrivers, findingText, isThirdParty,
@@ -31,6 +33,10 @@ export function Health(p: {
     /** Runs repair recipes (by id) and then rescans. */
     onRepair: (ids: string[]) => void; onRestart: () => void;
 }) {
+    // Busy comes from the task store too, so the controls stay locked for a job that outlived this page.
+    const jobs = useTasks("health").filter((x) => x.state === "running");
+    const busy = p.busy || jobs.some((x) => x.tag === "scan");
+    const updatesBusy = p.updatesBusy || jobs.some((x) => x.tag === "updates");
     const [query, setQuery] = useState("");
     const [vendorOnly, setVendorOnly] = useState(true);
     const [old, setOld] = useState(false);
@@ -58,14 +64,16 @@ export function Health(p: {
                     <p className="muted">{t("health.readOnly")}</p>
                 </div>
                 <span className="grow"/>
-                <button className="primary" disabled={p.busy} onClick={p.onScan}><Icon name="refresh" size={15}/> {p.busy ? t("rail.scanning") : t("health.scan")}</button>
-                <button disabled={p.busy || p.updatesBusy} onClick={p.onUpdates}>{p.updatesBusy ? t("health.checkingUpdates") : t("health.checkUpdates")}</button>
+                <button className="primary" disabled={busy} onClick={p.onScan}><Icon name="refresh" size={15}/> {busy ? t("rail.scanning") : t("health.scan")}</button>
+                <button disabled={busy || updatesBusy} onClick={p.onUpdates}>{updatesBusy ? t("health.checkingUpdates") : t("health.checkUpdates")}</button>
                 <button className="ghost" disabled={!r} onClick={p.onExport}>{t("health.export")}</button>
             </header>
 
-            {!r && !p.busy && <p className="muted empty">{t("health.empty")}</p>}
-            {p.busy && <section className="scanning"><ScanProgress kind="health" current={p.step}/></section>}
-            {p.updatesBusy && <p className="muted" role="status"><Icon name="pulse" size={14}/> {t("health.checkingUpdates")}</p>}
+            <TaskViewer kind="health"/>
+
+            {!r && !busy && <p className="muted empty">{t("health.empty")}</p>}
+            {busy && <section className="scanning"><ScanProgress kind="health" current={p.step}/></section>}
+            {updatesBusy && <p className="muted" role="status"><Icon name="pulse" size={14}/> {t("health.checkingUpdates")}</p>}
 
             {r && (
                 <>

@@ -4,6 +4,7 @@ import {Icon} from "../../components/Icon";
 import {ConfirmDialog} from "../../components/Modals";
 import {formatBytes, formatDate, percent} from "../../lib/format";
 import {getLang, t} from "../../lib/i18n";
+import {getTasks, runningOf, startTask, tasksOf, useTasks, type TaskHandle, type TrackedTask} from "../../lib/taskStore";
 import {groupFingerprint, installable, kitError, kitNeedsReopen, notIncludedText, problemText, stateKey, unsupportedText} from "../../lib/kit";
 import "../../kit.css";
 
@@ -24,6 +25,29 @@ function useKitProgress(task: KitProgress["task"], active: boolean): KitProgress
     return progress;
 }
 
+/** The kit job running now, if any. The Go side runs one kit task at a time, so a second start is refused here too. */
+const kitJob = (list: TrackedTask[]) => runningOf(list.filter((x) => x.tag === "kit-create" || x.tag === "kit-open"));
+
+/**
+ * Registers a kit job in the task store and mirrors the Go side's progress events into it, so the Tasks list
+ * keeps showing it when the panel is left. Returns null (and tells the person why) when another kit job runs.
+ */
+function beginKit(tag: "kit-create" | "kit-open", title: string, say: (m: string) => void): { job: TaskHandle; off: () => void; stopped: () => boolean } | null {
+    const now = kitJob(tasksOf(getTasks(), "profiles"));
+    if (now) { say(t("tasks.busy", {task: now.title})); return null; }
+    let stop = false;
+    const job = startTask("profiles", title, {tag, cancel: () => { stop = true; api.KitCancel().catch((e) => say(kitError(e))); }});
+    const task = tag === "kit-create" ? "create" : "verify";
+    const off = on.kitProgress((p) => {
+        if (p.task !== task) return;
+        job.update({
+            live: p.name ? t("tasks.pf.kitLive", {name: p.name, done: Math.min(p.done + 1, p.total), total: p.total}) : undefined,
+            fraction: p.total > 0 ? Math.min(1, (p.done + (p.percent ?? 0) / 100) / p.total) : undefined,
+        });
+    });
+    return {job, off, stopped: () => stop};
+}
+
 const appsLine = (n: number): string => t(n === 1 ? "kit.create.apps.one" : "kit.create.apps.other", {n});
 
 /**
@@ -38,7 +62,8 @@ export function KitCreate(p: { profileName: string; appIds: string[]; say: (m: s
     const [plan, setPlan] = useState<KitCreatePlan | null>(null);
     const [checking, setChecking] = useState(false);
     const [asking, setAsking] = useState(false);
-    const [running, setRunning] = useState(false);
+    const kit = kitJob(useTasks("profiles"));
+    const running = kit?.tag === "kit-create";
     const [result, setResult] = useState<KitCreateResult | null>(null);
     const progress = useKitProgress("create", running);
 
@@ -55,16 +80,19 @@ export function KitCreate(p: { profileName: string; appIds: string[]; say: (m: s
 
     const create = async () => {
         if (!plan) return;
-        setRunning(true);
+        const started = beginKit("kit-create", t("tasks.pf.kitCreate", {name: p.profileName}), p.say);
+        if (!started) return;
         setResult(null);
         try {
             const r = await api.KitCreate(p.appIds, folder, p.profileName);
+            if (r.cancelled) started.job.cancelled();
+            else started.job.done(r.added.length > 0 ? t("kit.create.done", {n: r.totalApps, size: formatBytes(r.bytes)}) : t("kit.create.doneNone"));
             setResult(r);
             setPlan(await api.KitPrepare(p.appIds, folder).catch(() => plan));
-        } catch (e) { p.say(kitError(e)); } finally { setRunning(false); }
+        } catch (e) { if (started.stopped()) started.job.cancelled(); else started.job.fail(kitError(e)); p.say(kitError(e)); } finally { started.off(); }
     };
 
-    const canStart = !!plan && !plan.problem && plan.apps.length > 0 && !running && !checking;
+    const canStart = !!plan && !plan.problem && plan.apps.length > 0 && !kit && !checking;
     const pct = progress && progress.total > 0 ? percent(progress.done * 100 + (progress.percent ?? 0), progress.total * 100) : 0;
     const label = !progress ? t("kit.create.preparing")
         : progress.percent ? t("kit.create.runningPct", {name: progress.name ?? "", done: Math.min(progress.done + 1, progress.total), total: progress.total, pct: progress.percent})
@@ -82,7 +110,7 @@ export function KitCreate(p: { profileName: string; appIds: string[]; say: (m: s
 
             <div className="kitfolder">
                 <span className="mono"><span className="sr-only">{t("kit.create.folder")}: </span>{folder || t("kit.create.noFolder")}</span>
-                <button disabled={running || checking} onClick={() => void choose()}>
+                <button disabled={!!kit || checking} onClick={() => void choose()}>
                     <Icon name="archive" size={15}/> {folder ? t("kit.create.change") : t("kit.create.pick")}
                 </button>
             </div>
@@ -186,27 +214,33 @@ export function KitInstall(p: {
     const panel = useFocusOnOpen();
     const titleId = useId();
     const [phase, setPhase] = useState<Phase>("idle");
+    const kit = kitJob(useTasks("profiles"));
+    const verifying = phase === "checking" || kit?.tag === "kit-open";
     const [listing, setListing] = useState<KitListing | null>(null);
     const [marked, setMarked] = useState<Set<string>>(new Set());
     const [asking, setAsking] = useState(false);
-    const progress = useKitProgress("verify", phase === "checking");
+    const progress = useKitProgress("verify", verifying);
     const opening = useRef(0); // which open the screen waits for; an older answer is ignored
 
     const open = async (folder: string) => {
+        const started = beginKit("kit-open", t("tasks.pf.kitOpen", {folder}), p.say);
+        if (!started) return;
         const mine = ++opening.current;
         setPhase("checking");
         setListing(null);
         setMarked(new Set());
         try {
             const l = await api.KitOpen(folder);
+            started.job.done(t("tasks.pf.kitOpen.done", {n: l.apps.length}));
             if (mine !== opening.current) return;
             setListing(l);
             setPhase("open");
         } catch (e) {
+            if (started.stopped()) started.job.cancelled(); else started.job.fail(kitError(e));
             if (mine !== opening.current) return;
             p.say(kitError(e));
             setPhase("idle");
-        }
+        } finally { started.off(); }
     };
     const choose = async () => {
         try {
@@ -247,16 +281,16 @@ export function KitInstall(p: {
                     <h2 id={titleId}>{t("kit.open.title")}</h2>
                     <p className="muted">{t("kit.open.intro")}</p>
                 </div>
-                <button className="ghost" disabled={phase === "checking"} onClick={p.onClose}>{t("kit.open.close")}</button>
+                <button className="ghost" disabled={verifying} onClick={p.onClose}>{t("kit.open.close")}</button>
             </div>
 
             <div className="kitbar">
-                <button disabled={phase === "checking"} onClick={() => void choose()}>
+                <button disabled={verifying || !!kit} onClick={() => void choose()}>
                     <Icon name="archive" size={15}/> {listing ? t("kit.open.again") : t("kit.open.pick")}
                 </button>
             </div>
 
-            {phase === "checking" && (
+            {verifying && (
                 <div className="kitprogress" role="status" aria-live="polite">
                     <b>{checkingLabel}</b>
                     <progress value={pct} max={100} aria-label={checkingLabel}/>

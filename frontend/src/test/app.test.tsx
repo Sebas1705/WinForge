@@ -355,7 +355,7 @@ describe("PC health", () => {
         const user = await openApp();
         await go(user, /PC health/);
         await emit.scan("health", "drivers");
-        expect(await screen.findByText("Listing installed drivers (the slowest part)")).toBeInTheDocument();
+        expect((await screen.findAllByText("Listing installed drivers (the slowest part)")).length).toBeGreaterThan(0); // the stage list and the Tasks list
         expect(screen.getByText("BIOS and Secure Boot")).toBeInTheDocument();
         finish(healthResult());
         expect(await screen.findByRole("heading", {name: "Something needs fixing"})).toBeInTheDocument();

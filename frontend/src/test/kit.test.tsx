@@ -162,7 +162,7 @@ describe("offline kit: creating one from a profile", () => {
         expect(await panel.findByText(/could not read how much is free/)).toBeInTheDocument();
         await user.click(panel.getByRole("button", {name: /Create kit/}));
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Create kit"}));
-        expect(await screen.findByText("Another kit task is still running.")).toBeInTheDocument();
+        expect((await screen.findAllByText("Another kit task is still running.")).length).toBeGreaterThan(0); // the toast and the Tasks list
     });
 
     it("speaks Spanish", async () => {
@@ -311,10 +311,10 @@ describe("offline kit: installing from one", () => {
         const user = await openApp();
         const panel = within(await openInstall(user));
         await user.click(panel.getByRole("button", {name: /Choose kit folder/}));
-        expect(await screen.findByText("There is no WinForge kit in that folder.")).toBeInTheDocument();
+        expect((await screen.findAllByText("There is no WinForge kit in that folder.")).length).toBeGreaterThan(0); // the toast and the Tasks list
         api.KitOpen.mockRejectedValueOnce(new Error("kit:newer"));
         await user.click(panel.getByRole("button", {name: /Choose kit folder/}));
-        expect(await screen.findByText(/made by a newer WinForge/)).toBeInTheDocument();
+        expect((await screen.findAllByText(/made by a newer WinForge/)).length).toBeGreaterThan(0);
         api.PickFolder.mockResolvedValue("");
         await user.click(panel.getByRole("button", {name: /Choose kit folder/}));
         expect(api.KitOpen).toHaveBeenCalledTimes(2);
@@ -398,5 +398,81 @@ describe("offline kit: helpers and styles", () => {
         expect(css).toMatch(/\.kitprint\s*\{[^}]*overflow-wrap:\s*anywhere/);
         // Only the repo's colour tokens: no hard-coded colours, so six styles x light/dark keep their contrast.
         expect(css).not.toMatch(/#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(/);
+    });
+});
+
+describe("offline kit: jobs outlive the page", () => {
+    const nav = () => within(screen.getByRole("navigation", {name: "Main menu"}));
+    const tasks = () => within(screen.getByRole("heading", {name: "Tasks", level: 2}).closest("section") as HTMLElement);
+
+    async function leaveAndReturn(user: User) {
+        await user.click(nav().getByRole("button", {name: /Home/}));
+        await waitFor(() => expect(screen.queryByRole("button", {name: /Install from an offline kit/})).not.toBeInTheDocument());
+        await user.click(nav().getByRole("button", {name: /Profiles/}));
+        await screen.findByRole("button", {name: /Install from an offline kit/});
+    }
+
+    it("keeps creating a kit after leaving Profiles, blocks a second kit job, and lists how it ended", async () => {
+        api.PickFolder.mockResolvedValue("E:\kit");
+        api.KitPrepare.mockResolvedValue(plan());
+        let finish: (r: KitCreateResult) => void = () => {};
+        api.KitCreate.mockImplementation(() => new Promise<KitCreateResult>((res) => { finish = res; }));
+        const user = await openApp();
+        const panel = within(await openCreate(user));
+        await user.click(panel.getByRole("button", {name: /Choose folder/}));
+        await user.click(await panel.findByRole("button", {name: /Create kit/}));
+        await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Create kit"}));
+        await panel.findByText("Starting…");
+        await leaveAndReturn(user);
+        // Still running, in the Tasks list, with a way to stop it.
+        expect(tasks().getByText("Creating an offline kit: Mine")).toBeInTheDocument();
+        expect(tasks().getByText("Running")).toBeInTheDocument();
+        expect(tasks().getByRole("button", {name: "Stop: Creating an offline kit: Mine"})).toBeInTheDocument();
+        emit.kitProgress({task: "create", done: 0, total: 1, name: "GIMP"});
+        expect(await tasks().findByText("GIMP (1 of 1)")).toBeInTheDocument();
+        // Opening a kit now is refused: the Go side runs one kit task at a time.
+        await user.click(screen.getByRole("button", {name: /Install from an offline kit/}));
+        const install = within(await screen.findByRole("region", {name: "Install from an offline kit"}));
+        expect(install.getByRole("button", {name: /Choose kit folder/})).toBeDisabled();
+        expect(api.PickFolder).toHaveBeenCalledTimes(1);
+        expect(api.KitOpen).not.toHaveBeenCalled();
+        finish(created());
+        await waitFor(() => expect(tasks().getAllByText("Done").length).toBeGreaterThan(0));
+        expect(tasks().getByText("The kit is ready. Apps: 1, 90 MB.")).toBeInTheDocument();
+        expect(api.KitCreate).toHaveBeenCalledTimes(1);
+        await waitFor(() => expect(install.getByRole("button", {name: /Choose kit folder/})).toBeEnabled());
+    });
+
+    it("lists a failed kit creation with its error", async () => {
+        api.PickFolder.mockResolvedValue("E:\kit");
+        api.KitPrepare.mockResolvedValue(plan());
+        api.KitCreate.mockRejectedValue(new Error("kit:busy"));
+        const user = await openApp();
+        const panel = within(await openCreate(user));
+        await user.click(panel.getByRole("button", {name: /Choose folder/}));
+        await user.click(await panel.findByRole("button", {name: /Create kit/}));
+        await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Create kit"}));
+        await waitFor(() => expect(tasks().getAllByText("Failed").length).toBeGreaterThan(0));
+        expect(tasks().getByText("Another kit task is still running.")).toBeInTheDocument();
+    });
+
+    it("keeps checking a kit after leaving Profiles, and lists the result", async () => {
+        api.PickFolder.mockResolvedValue("E:\kit");
+        let finish: (l: KitListing) => void = () => {};
+        api.KitOpen.mockImplementation(() => new Promise<KitListing>((res) => { finish = res; }));
+        const user = await openApp();
+        const panel = within(await openInstall(user));
+        await user.click(panel.getByRole("button", {name: /Choose kit folder/}));
+        await panel.findByText("Reading the kit…");
+        await leaveAndReturn(user);
+        expect(tasks().getByText("Checking the offline kit in E:\kit")).toBeInTheDocument();
+        await user.click(screen.getByRole("button", {name: /Install from an offline kit/}));
+        const again = within(await screen.findByRole("region", {name: "Install from an offline kit"}));
+        expect(again.getByRole("button", {name: /Choose kit folder/})).toBeDisabled();
+        expect(await again.findByText("Reading the kit…")).toBeInTheDocument();
+        finish(listing([kapp("git", "Git"), kapp("gimp", "GIMP")]));
+        await waitFor(() => expect(tasks().getAllByText("Done").length).toBeGreaterThan(0));
+        expect(tasks().getByText("2 apps checked.")).toBeInTheDocument();
+        expect(api.KitOpen).toHaveBeenCalledTimes(1);
     });
 });

@@ -4,6 +4,7 @@ import {Icon} from "../../components/Icon";
 import {ConfirmDialog} from "../../components/Modals";
 import {t} from "../../lib/i18n";
 import {domId, svcError} from "./svcErrors";
+import {useStartupJob} from "./useStartupJob";
 
 export type TaskFilter = "all" | "on" | "off" | "changed";
 
@@ -32,7 +33,6 @@ export function resultText(code: number | null): string {
  */
 export function Tasks(p: { admin: boolean; say: (m: string) => void; onAdmin: () => void }) {
     const [items, setItems] = useState<TaskItem[] | null>(null);
-    const [busy, setBusy] = useState<string | null>(null);
     const [query, setQuery] = useState("");
     const [filter, setFilter] = useState<TaskFilter>("all");
     const [asking, setAsking] = useState<{ item: TaskItem; enabled: boolean | "restore" } | null>(null);
@@ -42,23 +42,25 @@ export function Tasks(p: { admin: boolean; say: (m: string) => void; onAdmin: ()
         try { setItems(await api.TasksList()); } catch (e) { p.say(errText(e)); setItems((v) => v ?? []); }
     }, [p.say]);
     useEffect(() => { void load(); }, [load]);
+    // One change at a time, from the task store: it still holds after leaving the page and coming back.
+    const {busy, job} = useStartupJob("tasks", p.say, () => void load());
 
     const run = async (item: TaskItem, enabled: boolean | "restore", confirmed: boolean) => {
-        setBusy(item.id);
-        try {
-            const next = enabled === "restore" ? await api.TasksRestore(item.id, confirmed) : await api.TasksSetEnabled(item.id, enabled, confirmed);
-            setItems(next);
-            if (enabled === "restore") {
-                setNote(t("svc.tasks.restored", {name: item.name, value: t(`svc.tasks.restore.value.${item.original || "enabled"}`)}));
-            } else setNote(t(enabled ? "svc.tasks.changed.on" : "svc.tasks.changed.off", {name: item.name}));
-        } catch (e) {
-            const err = svcError(e);
-            if (err.ask) setAsking({item, enabled});
-            else {
-                p.say(err.text);
-                if (err.refresh) void load();
-            }
-        } finally { setBusy(null); }
+        const done = enabled === "restore"
+            ? t("svc.tasks.restored", {name: item.name, value: t(`svc.tasks.restore.value.${item.original || "enabled"}`)})
+            : t(enabled ? "svc.tasks.changed.on" : "svc.tasks.changed.off", {name: item.name});
+        const title = enabled === "restore" ? t("tasks.startup.taskRestore", {name: item.name}) : t(enabled ? "tasks.startup.taskOn" : "tasks.startup.taskOff", {name: item.name});
+        // A request for confirmation is not a failure: the dialog opens, and the list shows the change as stopped.
+        const r = await job(title, () => (enabled === "restore" ? api.TasksRestore(item.id, confirmed) : api.TasksSetEnabled(item.id, enabled, confirmed)), () => done,
+            (e) => { const x = svcError(e); return x.ask ? null : x.text; });
+        if (!r) return;
+        if (r.ok) { setItems(r.value); setNote(done); return; }
+        const err = svcError(r.error);
+        if (err.ask) setAsking({item, enabled});
+        else {
+            p.say(err.text);
+            if (err.refresh) void load();
+        }
     };
 
     const flip = (item: TaskItem) => {
@@ -81,7 +83,7 @@ export function Tasks(p: { admin: boolean; say: (m: string) => void; onAdmin: ()
         <>
             <header className="pagehead">
                 <p className="muted grow">{t("svc.tasks.intro")}</p>
-                <button disabled={busy !== null} onClick={() => { setNote(""); void load(); }}><Icon name="refresh" size={15}/> {t("svc.refresh")}</button>
+                <button disabled={busy} onClick={() => { setNote(""); void load(); }}><Icon name="refresh" size={15}/> {t("svc.refresh")}</button>
             </header>
 
             {items === null && <p className="muted" role="status">{t("svc.loading")}</p>}
@@ -112,7 +114,7 @@ export function Tasks(p: { admin: boolean; say: (m: string) => void; onAdmin: ()
                     <ul className="cleanlist startuplist" aria-label={t("svc.tasks.list")}>
                         {shown.map((i) => {
                             const lockedRow = i.needsAdmin && !p.admin;
-                            const off = busy !== null || lockedRow;
+                            const off = busy || lockedRow;
                             const stateId = domId("taskstate", i.id);
                             return (
                                 <li key={i.id}>

@@ -1,0 +1,41 @@
+// Text of the task viewer shown on every page that runs long jobs. Spanish must have exactly the English keys.
+
+export const tasksEn = {
+    "tasks.title": "Tasks",
+    "tasks.empty": "Nothing has run here yet. Jobs you start on this page show up here, and keep going if you visit another page.",
+    "tasks.running": "Running",
+    "tasks.done": "Done",
+    "tasks.failed": "Failed",
+    "tasks.cancelled": "Stopped",
+    "tasks.cancel": "Stop",
+    "tasks.cancelLabel": "Stop: {task}",
+    "tasks.clear": "Clear finished",
+    "tasks.duration": "{time}",
+    "tasks.startedAt": "Started {time}",
+    "tasks.runningHint": "Still running. You can leave this page; it keeps going.",
+    "tasks.sum.items": "{n} found",
+    "tasks.sum.ok": "Finished without errors",
+    "tasks.sum.failed": "{n} failed",
+    "tasks.sum.interrupted": "It could not finish",
+    "tasks.busy": "This is still running: {task}. Its progress is in the Tasks list.",
+};
+
+export const tasksEs: Record<keyof typeof tasksEn, string> = {
+    "tasks.title": "Tareas",
+    "tasks.empty": "Aún no se ha ejecutado nada aquí. Lo que lances desde esta página aparece aquí y sigue aunque cambies de página.",
+    "tasks.running": "En curso",
+    "tasks.done": "Hecha",
+    "tasks.failed": "Fallida",
+    "tasks.cancelled": "Detenida",
+    "tasks.cancel": "Detener",
+    "tasks.cancelLabel": "Detener: {task}",
+    "tasks.clear": "Borrar las terminadas",
+    "tasks.duration": "{time}",
+    "tasks.startedAt": "Empezó {time}",
+    "tasks.runningHint": "Sigue en marcha. Puedes salir de esta página; continúa.",
+    "tasks.sum.items": "{n} encontrados",
+    "tasks.sum.ok": "Terminó sin errores",
+    "tasks.sum.failed": "{n} con error",
+    "tasks.sum.interrupted": "No pudo terminar",
+    "tasks.busy": "Esto sigue en marcha: {task}. Su progreso está en la lista de Tareas.",
+};

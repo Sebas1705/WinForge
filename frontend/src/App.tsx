@@ -20,6 +20,8 @@ import * as prefs from "./lib/settings";
 import {pendingUpgrades} from "./lib/updates";
 import logo from "./logo.svg";
 import {Catalog} from "./views/Catalog";
+import {startTask, type TaskHandle, type TaskKind} from "./lib/taskStore";
+import {trackHealth} from "./lib/healthTasks";
 import {Health} from "./views/Health";
 import {Backup} from "./views/Backup";
 import {Games} from "./views/Games";
@@ -41,6 +43,8 @@ interface Runner {
     /** Called once when the dialog is closed: whether it ran, and which steps failed. */
     done?: (outcome: { ran: boolean; failed: string[] }) => void;
     profile?: Profile;
+    /** Which page lists the run in its Tasks list; installs when absent. */
+    kind?: TaskKind;
     /** Runs after the plan finishes, to refresh what the screen shows. */
     after?: () => void;
 }
@@ -190,12 +194,12 @@ export default function App() {
     const scanHealth = useCallback(async () => {
         setHealthBusy(true);
         setScanStep((s) => ({...s, health: null}));
-        try { setHealth(await api.HealthScan()); } catch (e) { say(errText(e)); } finally { setHealthBusy(false); }
+        try { setHealth(await trackHealth("scan", () => api.HealthScan())); } catch (e) { say(errText(e)); } finally { setHealthBusy(false); }
     }, [say]);
 
     const healthUpdates = useCallback(async () => {
         setHealthUpdBusy(true);
-        try { setHealth(await api.HealthUpdates()); } catch (e) { say(errText(e)); } finally { setHealthUpdBusy(false); }
+        try { setHealth(await trackHealth("updates", () => api.HealthUpdates())); } catch (e) { say(errText(e)); } finally { setHealthUpdBusy(false); }
     }, [say]);
 
     const exportHealth = async () => {
@@ -230,6 +234,27 @@ export default function App() {
         mq.addEventListener("change", paint);
         return () => mq.removeEventListener("change", paint);
     }, [settings]);
+
+    // Every install run (profile, pending, kit, one app) is also kept in the task list, so its progress and
+    // how it ended can be seen from the Catalog page too, not only from the run window.
+    const runTask = useRef<TaskHandle | null>(null);
+    useEffect(() => {
+        if (run?.running && !runTask.current) runTask.current = startTask(runner?.kind ?? "install", run.title);
+        const h = runTask.current;
+        if (!h) return;
+        if (run?.running) {
+            const last = run.log.length > 0 ? run.log[run.log.length - 1] : undefined;
+            const total = run.plan.steps.length;
+            const done = Object.values(run.status).filter((v) => v === "ok" || v === "failed" || v === "skipped").length;
+            h.update({live: last, fraction: total > 0 ? Math.min(1, done / total) : undefined});
+            return;
+        }
+        runTask.current = null;
+        if (!run) h.cancelled();
+        else if (run.failed === null) h.fail(t("tasks.sum.interrupted"));
+        else if (run.failed.length > 0) h.fail(t("tasks.sum.failed", {n: run.failed.length}));
+        else h.done(t("tasks.sum.ok"));
+    }, [run]); // eslint-disable-line react-hooks/exhaustive-deps -- the runner is set together with the run
 
     // Installation events feed the open run.
     useEffect(() => {
@@ -354,7 +379,7 @@ export default function App() {
             const ids = list.map((a) => a.id);
             const plan = await api.PlanUninstall(ids);
             const title = list.length === 1 ? t("run.uninstallTitle", {name: list[0].name}) : t("uninst.runTitle", {n: list.length});
-            openRun(title, plan, {start: async () => { await api.UninstallApps(ids); verifying.current = ids; }});
+            openRun(title, plan, {kind: "uninstall", start: async () => { await api.UninstallApps(ids); verifying.current = ids; }});
         } catch (e) { say(errText(e)); } finally { starting.current = false; }
     };
 
@@ -406,6 +431,7 @@ export default function App() {
             const optimizing = ids.length > 0 && ids.every((id) => id.startsWith("optimize-"));
             const features = ids.length > 0 && ids.every((id) => id.startsWith("feature-"));
             openRun(t(optimizing ? "run.optimizeTitle" : features ? "run.featureTitle" : "run.repairTitle"), plan, {
+                kind: optimizing ? "storage" : features ? "developer" : "health",
                 start: () => api.ApplyRepairs(ids),
                 after: () => {
                     if (ids.some((id) => !id.startsWith("optimize-") && !id.startsWith("feature-"))) void scanHealth();

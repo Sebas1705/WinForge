@@ -301,7 +301,7 @@ describe("uninstall: leftovers", () => {
         api.LeftoversFind.mockRejectedValue(new Error("that app is still installed: uninstall it first, then look for what it left"));
         await open();
         await user.click(await screen.findByRole("button", {name: "Look for leftovers of VLC"}));
-        expect(await screen.findByText("That app is still installed. Uninstall it first, then look for what it left.")).toBeInTheDocument();
+        expect((await screen.findAllByText("That app is still installed. Uninstall it first, then look for what it left.")).length).toBeGreaterThan(0); // the toast and the Tasks list
         expect(screen.queryByRole("region", {name: "Leftovers of VLC"})).toBeNull();
         await waitFor(() => expect(api.UninstallList.mock.calls.length).toBeGreaterThan(1));
     });
@@ -313,7 +313,7 @@ describe("uninstall: leftovers", () => {
         await user.click(within(panel).getByRole("checkbox", {name: "Move C:\\Program Files\\VLC to the Recycle Bin"}));
         await user.click(within(panel).getByRole("button", {name: "Move selected to the Recycle Bin"}));
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Move to Recycle Bin"}));
-        expect(await screen.findByText("That item was not in the last search. Search again.")).toBeInTheDocument();
+        expect((await screen.findAllByText("That item was not in the last search. Search again.")).length).toBeGreaterThan(0); // the toast and the Tasks list
         expect(within(panel).getByRole("checkbox", {name: "Move C:\\Program Files\\VLC to the Recycle Bin"})).toBeEnabled(); // still there to retry
     });
 

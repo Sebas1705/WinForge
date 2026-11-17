@@ -4,6 +4,7 @@ import {Icon} from "../../components/Icon";
 import {ConfirmDialog} from "../../components/Modals";
 import {t, tOpt} from "../../lib/i18n";
 import {splitPath} from "../../lib/storage";
+import {useStartupJob} from "./useStartupJob";
 
 export type Filter = "all" | "on" | "off";
 
@@ -32,7 +33,6 @@ export function visibleItems(items: StartupItem[], query: string, filter: Filter
  */
 export function Programs(p: { admin: boolean; say: (m: string) => void; onAdmin: () => void }) {
     const [items, setItems] = useState<StartupItem[] | null>(null);
-    const [busy, setBusy] = useState<string | null>(null); // the id being switched
     const [query, setQuery] = useState("");
     const [filter, setFilter] = useState<Filter>("all");
     const [asking, setAsking] = useState<StartupItem | null>(null);
@@ -42,17 +42,17 @@ export function Programs(p: { admin: boolean; say: (m: string) => void; onAdmin:
         try { setItems(await api.StartupList()); } catch (e) { p.say(errText(e)); setItems((v) => v ?? []); }
     }, [p.say]);
     useEffect(() => { void load(); }, [load]);
+    // One change at a time, from the task store: it still holds after leaving the page and coming back.
+    const {busy, job} = useStartupJob("programs", p.say, () => void load());
 
     const set = async (item: StartupItem, enabled: boolean) => {
-        setBusy(item.id);
-        try {
-            setItems(await api.StartupSet(item.id, enabled));
-            setNote(t(enabled ? "startup.changed.on" : "startup.changed.off", {name: item.name}));
-        } catch (e) {
-            const err = startupError(e);
-            p.say(err.text);
-            if (err.refresh) void load();
-        } finally { setBusy(null); }
+        const done = t(enabled ? "startup.changed.on" : "startup.changed.off", {name: item.name});
+        const r = await job(t(enabled ? "tasks.startup.on" : "tasks.startup.off", {name: item.name}), () => api.StartupSet(item.id, enabled), () => done, (e) => startupError(e).text);
+        if (!r) return;
+        if (r.ok) { setItems(r.value); setNote(done); return; }
+        const err = startupError(r.error);
+        p.say(err.text);
+        if (err.refresh) void load();
     };
 
     const flip = (item: StartupItem) => {
@@ -71,7 +71,7 @@ export function Programs(p: { admin: boolean; say: (m: string) => void; onAdmin:
         <>
             <header className="pagehead">
                 <p className="muted grow">{t("startup.intro")}</p>
-                <button disabled={busy !== null} onClick={() => { setNote(""); void load(); }}><Icon name="refresh" size={15}/> {t("startup.refresh")}</button>
+                <button disabled={busy} onClick={() => { setNote(""); void load(); }}><Icon name="refresh" size={15}/> {t("startup.refresh")}</button>
             </header>
 
             {items === null && <p className="muted" role="status">{t("startup.loading")}</p>}
@@ -104,7 +104,7 @@ export function Programs(p: { admin: boolean; say: (m: string) => void; onAdmin:
                             return (
                                 <li key={i.id}>
                                     <label className={i.enabled ? "on" : ""} title={locked ? t("startup.badge.adminTip") : i.command}>
-                                        <input type="checkbox" checked={i.enabled} disabled={busy !== null || locked} onChange={() => flip(i)}
+                                        <input type="checkbox" checked={i.enabled} disabled={busy || locked} onChange={() => flip(i)}
                                                aria-label={t("startup.switch", {name: i.name})}/>
                                         <span className="grow">
                                             <span className="catname">

@@ -90,7 +90,7 @@ export function Projects(p: { task: TaskRunner; defaults: StorageDefaults | null
     };
 
     const scan = async () => {
-        const out = await p.task.run("projects", () => api.StorageProjects(roots, days));
+        const out = await p.task.run("projects", () => api.StorageProjects(roots, days), (l) => t("tasks.sum.items", {n: l.length}));
         if (!out) return;
         setStopped(out.stopped);
         if (out.error !== undefined) {
@@ -105,7 +105,7 @@ export function Projects(p: { task: TaskRunner; defaults: StorageDefaults | null
     const remove = async () => {
         const paths = items.filter((j) => marked.has(j.path)).map((j) => j.path);
         if (paths.length === 0) return;
-        const out = await p.task.run("projects-clean", () => api.StorageProjectsClean(paths));
+        const out = await p.task.run("projects-clean", () => api.StorageProjectsClean(paths), (r) => t("tasks.sum.items", {n: r.removed}));
         if (!out) return;
         if (out.error !== undefined) {
             if (!out.stopped) p.say(errText(out.error));

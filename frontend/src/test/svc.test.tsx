@@ -9,6 +9,8 @@ import {resultText, visibleTasks} from "../views/startup/Tasks";
 import {svcError} from "../views/startup/svcErrors";
 import {api, resetApi} from "./apiMock";
 import {makeState} from "./fixtures";
+// The Tasks list repeats what the page reports: look at the page's own text.
+const pageText = async (x: string | RegExp) => (await screen.findAllByText(x)).find((e) => !e.closest(".taskviewer")) as HTMLElement;
 
 vi.mock("../api", async () => (await import("./apiMock")).moduleMock);
 
@@ -165,7 +167,7 @@ describe("services tab", () => {
         const user = await open({tab: "services"});
         await user.selectOptions(await mode("Steam Client Service"), "manual");
         await waitFor(() => expect(api.ServicesSetMode).toHaveBeenCalledWith("Steam Client Service", "manual", false));
-        expect(await screen.findByText("Steam Client Service now starts: Manual.")).toBeInTheDocument();
+        expect(await pageText("Steam Client Service now starts: Manual.")).toBeInTheDocument();
         expect((await mode("Steam Client Service")).value).toBe("manual");
         expect(api.ServicesRestore).not.toHaveBeenCalled();
     });
@@ -214,7 +216,7 @@ describe("services tab", () => {
         expect(screen.getByText("Changed by WinForge", {selector: ".chip"})).toBeInTheDocument();
         await user.click(screen.getByRole("button", {name: /^Restore original: .* \(Old Agent\)$/}));
         await waitFor(() => expect(api.ServicesRestore).toHaveBeenCalledWith("Old Agent", false));
-        expect(await screen.findByText("Old Agent is back to its original setting: Automatic.")).toBeInTheDocument();
+        expect(await pageText("Old Agent is back to its original setting: Automatic.")).toBeInTheDocument();
         expect(screen.queryByRole("button", {name: /^Restore original:/})).toBeNull();
     });
 
@@ -251,7 +253,7 @@ describe("services tab", () => {
         api.ServicesSetMode.mockRejectedValue(new Error(code));
         const user = await open({tab: "services"});
         await user.selectOptions(await mode("Steam Client Service"), "manual");
-        expect(await screen.findByText(text)).toBeInTheDocument();
+        expect(await pageText(text)).toBeInTheDocument();
         expect((await mode("Steam Client Service")).value).toBe("delayed"); // nothing changed
         if (refreshes) await waitFor(() => expect(api.ServicesList).toHaveBeenCalledTimes(2));
         else expect(api.ServicesList).toHaveBeenCalledTimes(1);
@@ -286,10 +288,10 @@ describe("scheduled tasks tab", () => {
         const user = await open({tab: "tasks"});
         await user.click(await tswitch("GoogleUpdateTaskMachineCore"));
         await waitFor(() => expect(api.TasksSetEnabled).toHaveBeenCalledWith("\\GoogleUpdateTaskMachineCore", false, false));
-        expect(await screen.findByText("GoogleUpdateTaskMachineCore is off.")).toBeInTheDocument();
+        expect(await pageText("GoogleUpdateTaskMachineCore is off.")).toBeInTheDocument();
         await user.click(await tswitch("OldSync"));
         await waitFor(() => expect(api.TasksSetEnabled).toHaveBeenCalledWith("\\OldSync", true, false));
-        expect(await screen.findByText("OldSync is on.")).toBeInTheDocument();
+        expect(await pageText("OldSync is on.")).toBeInTheDocument();
     });
 
     it("asks before turning off security software, and not before turning it on", async () => {
@@ -321,7 +323,7 @@ describe("scheduled tasks tab", () => {
         expect(screen.getByRole("button", {name: /^Restore original: .* \(OldSync\)$/})).toHaveTextContent("Restore original: on");
         await user.click(screen.getByRole("button", {name: /^Restore original: .* \(OldSync\)$/}));
         await waitFor(() => expect(api.TasksRestore).toHaveBeenCalledWith("\\OldSync", false));
-        expect(await screen.findByText("OldSync is back to its original setting: on.")).toBeInTheDocument();
+        expect(await pageText("OldSync is back to its original setting: on.")).toBeInTheDocument();
         expect(screen.queryByRole("button", {name: /^Restore original:/})).toBeNull();
     });
 
@@ -339,7 +341,7 @@ describe("scheduled tasks tab", () => {
         await user.clear(panel.getByRole("searchbox", {name: "Search"}));
         api.TasksSetEnabled.mockRejectedValue(new Error("task:protected"));
         await user.click(await tswitch("MyBackup"));
-        expect(await screen.findByText(/belongs to Windows or is protected/)).toBeInTheDocument();
+        expect(await pageText(/belongs to Windows or is protected/)).toBeInTheDocument();
         await waitFor(() => expect(api.TasksList).toHaveBeenCalledTimes(2));
     });
 
@@ -397,7 +399,7 @@ describe("Spanish", () => {
         expect(screen.getByText("Editor: Valve Corporation")).toBeInTheDocument();
         expect(screen.getByText("2 de 5 en ejecución")).toBeInTheDocument();
         await user.selectOptions(select, "manual");
-        expect(await screen.findByText("Steam Client Service ahora arranca así: Manual.")).toBeInTheDocument();
+        expect(await pageText("Steam Client Service ahora arranca así: Manual.")).toBeInTheDocument();
         await user.selectOptions(await screen.findByRole("combobox", {name: "Tipo de inicio: Kaspersky Service"}), "disabled");
         expect(await screen.findByRole("alertdialog", {name: "¿Cambiar Kaspersky Service?"})).toBeInTheDocument();
         await user.click(screen.getByRole("button", {name: "Cancelar"}));
@@ -407,14 +409,14 @@ describe("Spanish", () => {
         expect(screen.getAllByText("Al iniciar sesión", {selector: ".chip"}).length).toBeGreaterThan(0);
         expect(screen.getByText(/Último resultado: código 0x80070002/)).toBeInTheDocument();
         await user.click(sw);
-        expect(await screen.findByText("MyBackup está desactivada.")).toBeInTheDocument();
+        expect(await pageText("MyBackup está desactivada.")).toBeInTheDocument();
     });
 
     it("explains a refusal in Spanish", async () => {
         api.ServicesSetMode.mockRejectedValue(new Error("svc:needs-admin"));
         const user = await open({lang: "es", tab: "services"});
         await user.selectOptions(await screen.findByRole("combobox", {name: "Tipo de inicio: Steam Client Service"}), "manual");
-        expect(await screen.findByText(/requiere permisos de administrador/)).toBeInTheDocument();
+        expect(await pageText(/requiere permisos de administrador/)).toBeInTheDocument();
     });
 
     it("has exactly the English keys, with no empty text", () => {

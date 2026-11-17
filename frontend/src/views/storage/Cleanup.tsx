@@ -57,7 +57,7 @@ export function Cleanup(p: { task: TaskRunner; admin: boolean; say: (m: string) 
     const adminOnly = chosen.filter((c) => c.needsAdmin);
 
     const scan = async (): Promise<void> => {
-        const out = await p.task.run("scan", () => api.StorageScan());
+        const out = await p.task.run("scan", () => api.StorageScan(), (l) => t("storage.clean.found", {size: formatBytes(visibleCategories(l).reduce((n, c) => n + c.bytes, 0))}));
         if (!out) return;
         setStopped(out.stopped);
         if (out.error !== undefined) {
@@ -75,7 +75,7 @@ export function Cleanup(p: { task: TaskRunner; admin: boolean; say: (m: string) 
         const ids = chosen.map((c) => c.id);
         if (ids.length === 0) return;
         refocus.current = true;
-        const out = await p.task.run("clean", () => api.StorageClean(ids));
+        const out = await p.task.run("clean", () => api.StorageClean(ids), (r) => r.freedBytes > 0 ? t("storage.clean.result", {size: formatBytes(r.freedBytes), files: fileCount(r.files)}) : t("storage.clean.resultNone"));
         if (!out) return;
         if (out.error !== undefined) {
             if (!out.stopped) p.say(errText(out.error));

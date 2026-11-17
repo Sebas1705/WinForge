@@ -1,9 +1,12 @@
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {api, errText, type PrivacyBackup, type PrivacyChange, type PrivacyTweak} from "../api";
 import {Icon} from "../components/Icon";
 import {ConfirmDialog} from "../components/Modals";
+import {TaskViewer} from "../components/TaskViewer";
 import {backupTime} from "../lib/developer";
 import {t, tOpt, type Key} from "../lib/i18n";
+import {runJob, useRefreshWhenOtherEnds} from "../lib/runJob";
+import {runningOf, useTasks} from "../lib/taskStore";
 import "../privacy.css";
 
 const AREAS = ["ads", "suggestions", "start", "web", "feedback"];
@@ -87,7 +90,10 @@ export function Privacy(p: { say: (m: string) => void }) {
     const [tweaks, setTweaks] = useState<PrivacyTweak[] | null>(null);
     const [backups, setBackups] = useState<PrivacyBackup[]>([]);
     const [error, setError] = useState("");
-    const [busy, setBusy] = useState(false);
+    // Busy comes from the task store, so it still holds after leaving the page and coming back.
+    const running = runningOf(useTasks("privacy"));
+    const busy = running !== undefined;
+    const own = useRef(false);
     const [selected, setSelected] = useState<Set<string>>(new Set());
     const [asking, setAsking] = useState(false);
     const [restoring, setRestoring] = useState<PrivacyBackup | null>(null);
@@ -119,32 +125,43 @@ export function Privacy(p: { say: (m: string) => void }) {
         return n;
     });
 
+    useRefreshWhenOtherEnds(running, own, () => { void load(); void loadBackups(); });
+
+    /** Runs fn as a registered job (it survives leaving the page); null when it did not run or failed. */
+    const job = async (tag: string, title: string, fn: () => Promise<string[]>): Promise<string[] | null> => {
+        own.current = true;
+        const r = await runJob("privacy", say, {title, tag, summarize: (v) => v.join(" ")}, fn);
+        if (!r) { own.current = false; return null; }
+        if (!r.ok) { say(errText(r.error)); return null; }
+        return r.value;
+    };
+
     const run = async (ids: string[], reset: boolean) => {
         if (ids.length === 0) return;
-        setBusy(true);
-        const out: string[] = [];
-        try {
+        const out = await job(reset ? "reset" : "apply", t(reset ? "tasks.privacy.reset" : "tasks.privacy.apply", {n: ids.length}), async () => {
             const r = await (reset ? api.PrivacyReset(ids) : api.PrivacyApply(ids));
-            out.push(r.applied > 0 ? t(reset ? "privacy.resetResult" : "privacy.result", {n: r.applied}) : t("privacy.resultNone"));
-            if (r.skipped.length > 0) out.push(t("privacy.resultSkipped", {list: listOf(r.skipped)}));
-            if (r.failed.length > 0) out.push(t("privacy.resultFailed", {list: listOf(r.failed)}));
-            if (r.applied > 0) out.push(t("privacy.restartHint"));
-        } catch (e) { say(errText(e)); setBusy(false); return; }
+            const o: string[] = [];
+            o.push(r.applied > 0 ? t(reset ? "privacy.resetResult" : "privacy.result", {n: r.applied}) : t("privacy.resultNone"));
+            if (r.skipped.length > 0) o.push(t("privacy.resultSkipped", {list: listOf(r.skipped)}));
+            if (r.failed.length > 0) o.push(t("privacy.resultFailed", {list: listOf(r.failed)}));
+            if (r.applied > 0) o.push(t("privacy.restartHint"));
+            return o;
+        });
+        if (out === null) return;
         setLines(out);
-        setBusy(false);
         await Promise.all([load(), loadBackups()]);
     };
 
     const restore = async (b: PrivacyBackup) => {
-        setBusy(true);
-        const out: string[] = [];
-        try {
+        const out = await job("restore", t("tasks.privacy.restore", {time: backupTime(b.time)}), async () => {
             const r = await api.PrivacyRestore(b.id);
-            if (r.failed.length > 0) out.push(t("privacy.undoneFailed", {list: listOf(r.failed)}));
-            if (r.restored.length > 0) out.push(r.changedSince.length > 0 ? t("privacy.undoneChanged", {list: listOf(r.changedSince)}) : t("privacy.undone"));
-        } catch (e) { say(errText(e)); setBusy(false); return; }
+            const o: string[] = [];
+            if (r.failed.length > 0) o.push(t("privacy.undoneFailed", {list: listOf(r.failed)}));
+            if (r.restored.length > 0) o.push(r.changedSince.length > 0 ? t("privacy.undoneChanged", {list: listOf(r.changedSince)}) : t("privacy.undone"));
+            return o;
+        });
+        if (out === null) return;
         setLines(out);
-        setBusy(false);
         await Promise.all([load(), loadBackups()]);
     };
 
@@ -158,6 +175,8 @@ export function Privacy(p: { say: (m: string) => void }) {
             </header>
             <p className="muted small"><Icon name="shield" size={14}/> {t("privacy.safety")}</p>
             <p className="muted small">{t("privacy.excluded")}</p>
+
+            <TaskViewer kind="privacy"/>
 
             <div className="toolrow">
                 <button disabled={busy} onClick={() => { setLines([]); void load(); void loadBackups(); }}><Icon name="refresh" size={15}/> {t("privacy.refresh")}</button>

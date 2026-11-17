@@ -4,6 +4,7 @@ import {Icon} from "../../components/Icon";
 import {ConfirmDialog} from "../../components/Modals";
 import {t} from "../../lib/i18n";
 import {domId, svcError} from "./svcErrors";
+import {useStartupJob} from "./useStartupJob";
 
 export type ServiceFilter = "all" | "running" | "stopped" | "changed";
 
@@ -35,7 +36,6 @@ export function visibleServices(items: ServiceItem[], query: string, filter: Ser
  */
 export function Services(p: { admin: boolean; say: (m: string) => void; onAdmin: () => void }) {
     const [items, setItems] = useState<ServiceItem[] | null>(null);
-    const [busy, setBusy] = useState<string | null>(null);
     const [query, setQuery] = useState("");
     const [filter, setFilter] = useState<ServiceFilter>("all");
     const [asking, setAsking] = useState<{ item: ServiceItem; mode: ServiceMode | "restore" } | null>(null);
@@ -45,23 +45,29 @@ export function Services(p: { admin: boolean; say: (m: string) => void; onAdmin:
         try { setItems(await api.ServicesList()); } catch (e) { p.say(errText(e)); setItems((v) => v ?? []); }
     }, [p.say]);
     useEffect(() => { void load(); }, [load]);
+    // One change at a time, from the task store: it still holds after leaving the page and coming back.
+    const {busy, job} = useStartupJob("services", p.say, () => void load());
 
     const run = async (item: ServiceItem, mode: ServiceMode | "restore", confirmed: boolean) => {
-        setBusy(item.id);
-        try {
-            const next = mode === "restore" ? await api.ServicesRestore(item.id, confirmed) : await api.ServicesSetMode(item.id, mode, confirmed);
-            setItems(next);
+        const noteOf = (next: ServiceItem[]) => {
             const now = next.find((x) => x.id === item.id);
             const shownMode = now ? modeLabel(now.startMode) : mode === "restore" ? modeLabel(item.original as ServiceMode) : modeLabel(mode);
-            setNote(t(mode === "restore" ? "svc.services.restored" : "svc.services.changed", {name: item.displayName, mode: shownMode}));
-        } catch (e) {
-            const err = svcError(e);
-            if (err.ask) setAsking({item, mode});
-            else {
-                p.say(err.text);
-                if (err.refresh) void load();
-            }
-        } finally { setBusy(null); }
+            return t(mode === "restore" ? "svc.services.restored" : "svc.services.changed", {name: item.displayName, mode: shownMode});
+        };
+        const title = mode === "restore"
+            ? t("tasks.startup.svcRestore", {name: item.displayName})
+            : t("tasks.startup.svcMode", {name: item.displayName, mode: modeLabel(mode)});
+        // A request for confirmation is not a failure: the dialog opens, and the list shows the change as stopped.
+        const r = await job(title, () => (mode === "restore" ? api.ServicesRestore(item.id, confirmed) : api.ServicesSetMode(item.id, mode, confirmed)), noteOf,
+            (e) => { const x = svcError(e); return x.ask ? null : x.text; });
+        if (!r) return;
+        if (r.ok) { setItems(r.value); setNote(noteOf(r.value)); return; }
+        const err = svcError(r.error);
+        if (err.ask) setAsking({item, mode});
+        else {
+            p.say(err.text);
+            if (err.refresh) void load();
+        }
     };
 
     /** Asks first for security software and for lowering a service others need; otherwise just does it. */
@@ -92,7 +98,7 @@ export function Services(p: { admin: boolean; say: (m: string) => void; onAdmin:
         <>
             <header className="pagehead">
                 <p className="muted grow">{t("svc.services.intro")}</p>
-                <button disabled={busy !== null} onClick={() => { setNote(""); void load(); }}><Icon name="refresh" size={15}/> {t("svc.refresh")}</button>
+                <button disabled={busy} onClick={() => { setNote(""); void load(); }}><Icon name="refresh" size={15}/> {t("svc.refresh")}</button>
             </header>
 
             {items === null && <p className="muted" role="status">{t("svc.loading")}</p>}
@@ -123,7 +129,7 @@ export function Services(p: { admin: boolean; say: (m: string) => void; onAdmin:
                     <ul className="cleanlist startuplist" aria-label={t("svc.services.list")}>
                         {shown.map((i) => {
                             const stateId = domId("svcstate", i.id);
-                            const off = busy !== null || !p.admin;
+                            const off = busy || !p.admin;
                             return (
                                 <li key={i.id}>
                                     <div className="vdisk svcrow">

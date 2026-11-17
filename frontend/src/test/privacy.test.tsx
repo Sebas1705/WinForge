@@ -6,6 +6,8 @@ import App from "../App";
 import {DICTS, KEYS, type Key} from "../lib/i18n";
 import {api, resetApi} from "./apiMock";
 import {makeState} from "./fixtures";
+// The Tasks list repeats what the page reports: look at the page's own text.
+const pageText = async (x: string | RegExp) => (await screen.findAllByText(x)).find((e) => !e.closest(".taskviewer")) as HTMLElement;
 
 vi.mock("../api", async () => (await import("./apiMock")).moduleMock);
 
@@ -98,7 +100,7 @@ describe("privacy: the page", () => {
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Apply"}));
         await waitFor(() => expect(api.PrivacyApply).toHaveBeenCalledWith(["advertising-id", "start-most-used"]));
         expect(await screen.findByText("Changed 2. A backup was saved.")).toBeInTheDocument();
-        expect(screen.getByText(/Some changes show up/)).toBeInTheDocument();
+        expect(await pageText(/Some changes show up/)).toBeInTheDocument();
         expect(api.PrivacyList).toHaveBeenCalledTimes(2); // read again after the change
         expect((await box("Advertising ID for apps")).checked).toBe(false);
         expect(await screen.findByRole("button", {name: "Undo last change"})).toBeInTheDocument();
@@ -135,7 +137,7 @@ describe("privacy: the page", () => {
         api.PrivacyRestore.mockResolvedValueOnce({restored: ["advertising-id", "tailored-experiences"], changedSince: ["tailored-experiences"], failed: []});
         await user.click(await screen.findByRole("button", {name: "Undo last change"}));
         await waitFor(() => expect(api.PrivacyRestore).toHaveBeenCalledWith("20261117T110000Z")); // newest not yet restored
-        expect(await screen.findByText(/Something else had changed these since.*Tips and ads based on diagnostic data/)).toBeInTheDocument();
+        expect(await pageText(/Something else had changed these since.*Tips and ads based on diagnostic data/)).toBeInTheDocument();
     });
 
     it("lists earlier backups and restores one after confirming", async () => {
@@ -150,7 +152,7 @@ describe("privacy: the page", () => {
         expect(api.PrivacyRestore).not.toHaveBeenCalled();
         await user.click(within(dlg).getByRole("button", {name: "Restore"}));
         await waitFor(() => expect(api.PrivacyRestore).toHaveBeenCalledWith("20261117T100000Z"));
-        expect(await screen.findByText("Your earlier values are back.")).toBeInTheDocument();
+        expect(await pageText("Your earlier values are back.")).toBeInTheDocument();
     });
 
     it("shows a failed read as a message and a failed change through the toast", async () => {
