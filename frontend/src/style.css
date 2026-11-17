@@ -27,6 +27,10 @@
 }
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; background: var(--bg); color: var(--text); }
+/* The app is one screen with its own scrollers. Absolutely positioned bits (screen-reader text, ring svgs) inside a page
+   must be clipped by that page, not extend the document, or the whole window scrolls and shows the view cut in two. */
+html, body { overflow: hidden; }
+main, .page, .detail { position: relative; }
 button, input, select { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 /* Scrolling a focused control into view must leave room for its 4px ring, or the ring is cut at the edge. */
