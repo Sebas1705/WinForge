@@ -11,6 +11,7 @@ import {IconsContext, loadIcons, type IconIndex} from "./lib/icons";
 import {reportMarkdown, type HealthLink, type HealthResult} from "./lib/health";
 import {getLang, resolveLang, setLang, t} from "./lib/i18n";
 import {profileText} from "./lib/profileText";
+import {kitError} from "./lib/kit";
 import {
     applyEvent, selectionProfile, uniqueProfile,
     type App as CatalogApp, type Profile, type ProfileInfo, type State, type UpgradeInfo,
@@ -357,6 +358,44 @@ export default function App() {
         } catch (e) { say(errText(e)); } finally { starting.current = false; }
     };
 
+    // Installing from an offline kit goes through the same window. The PC is scanned again when the run is over, so
+    // what the installers said is checked, and the kit panel marks what is installed now.
+    const [kitTick, setKitTick] = useState(0);
+    const kitVerifying = useRef<string[]>([]);
+    useEffect(() => on.done(() => {
+        const ids = kitVerifying.current;
+        kitVerifying.current = [];
+        if (ids.length === 0) return;
+        api.KitVerify(ids).then((v) => {
+            // One message: a second say would replace the first.
+            const said = [
+                v.installed.length > 0 ? t("kit.toast.installed", {names: v.installed.map((x) => x.name).join(", ")}) : "",
+                v.missing.length > 0 ? t("kit.toast.missing", {names: v.missing.map((x) => x.name).join(", ")}) : "",
+            ].filter(Boolean).join(" ");
+            if (said) say(said);
+            setKitTick((n) => n + 1);
+        }).catch((e) => say(kitError(e)));
+    }), [say]);
+
+    // The person already confirmed in the kit panel, so the run starts at once.
+    const startKit = async (ids: string[]) => {
+        if (starting.current || ids.length === 0) return;
+        starting.current = true;
+        try {
+            const plan = await api.KitPlan(ids);
+            if (plan.steps.length === 0) { say(t("toast.nothing")); return; }
+            const rn: Runner = {start: async () => { await api.KitInstall(ids); }};
+            setRunner(rn);
+            setRun({title: t("kit.install.runTitle", {n: plan.steps.length}), plan, status: {}, log: [], reasons: {}, percent: {}, reboot: false, running: true, failed: null, startedAt: Date.now(), canScript: false});
+            kitVerifying.current = ids;
+            try { await rn.start(); } catch (e) {
+                kitVerifying.current = [];
+                say(kitError(e));
+                setRun((r) => (r ? {...r, running: false, failed: null, startedAt: null} : r));
+            }
+        } catch (e) { say(kitError(e)); } finally { starting.current = false; }
+    };
+
     // Repairs run like an install; when they finish the health page is read again.
     // Storage maintenance ("optimize-*") goes through the same runner; the drives are measured again after.
     const startRepair = async (ids: string[]) => {
@@ -618,7 +657,8 @@ export default function App() {
                               onOpenCategory={(top) => { setCategory(top); setTab("catalog"); }}/>
                     ) : tab === "profiles" ? (
                         <Profiles state={state} focus={focusProfile} advanced={advanced} onFocusDone={() => setFocusProfile(null)} onInstall={(p) => void startProfile(p)} onChanged={refresh} say={say}
-                                  onImport={() => void importProfile()} onImportCode={() => setCodeDialog(true)} onFromPC={saveFromPC} onEdit={editProfile} onDetail={setDetail}/>
+                                  onImport={() => void importProfile()} onImportCode={() => setCodeDialog(true)} onFromPC={saveFromPC} onEdit={editProfile} onDetail={setDetail}
+                                  onKitInstall={(ids) => void startKit(ids)} onAdmin={() => void retryAdmin()} kitTick={kitTick}/>
                     ) : tab === "catalog" ? (
                         <Catalog apps={state.apps} featured={state.featured ?? []} advanced={advanced} selection={selection} setSelection={setSelection} initialCategory={category}
                                  onInstall={() => void startProfile(selectionProfile(selection))}

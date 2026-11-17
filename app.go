@@ -91,6 +91,8 @@ type App struct {
 	sched schedSession
 	// The Settings page's diagnostic report (diagbind.go).
 	diag diagSession
+	// The offline kit: the kit last opened and the task that is running (offlinekitbind.go).
+	kit kitState
 }
 
 func NewApp() *App {
@@ -344,6 +346,13 @@ func (a *App) Apply(p catalog.Profile) error {
 
 // start runs a plan in the background; only one runs at a time.
 func (a *App) start(plan install.Plan, title, baselineFor string) error {
+	return a.startRun(plan, title, baselineFor, nil)
+}
+
+// startRun is start for plans that may hold offline kit steps; kit answers them. A plan with kit steps is
+// not remembered as an unfinished run: its files may be on a stick that is gone.
+func (a *App) startRun(plan install.Plan, title, baselineFor string, kit install.KitResolver) error {
+	remember := !install.HasKitSteps(plan)
 	a.mu.Lock()
 	if a.running {
 		a.mu.Unlock()
@@ -356,19 +365,24 @@ func (a *App) start(plan install.Plan, title, baselineFor string) error {
 
 	// The whole plan is stored first and shrinks as steps finish, so whatever
 	// is left when the run ends - or when the PC restarts mid-run - can be resumed.
-	a.savePending(install.Pending{Title: title, Steps: plan.Steps})
+	if remember {
+		a.savePending(install.Pending{Title: title, Steps: plan.Steps})
+	}
 	done := map[string]bool{}
 	hist := a.historyBegin(plan, title) // read before anything runs, so "before" is true
 
 	go func() {
-		failed := install.Run(ctx, a.cat, plan, install.OSExecutor{}, func(e install.Event) {
+		failed := install.RunWith(ctx, a.cat, plan, install.OSExecutor{}, kit, func(e install.Event) {
 			hist.Observe(e)
-			if e.Status == install.StatusOK {
+			if e.Status == install.StatusOK && remember {
 				done[install.StepKey(e.Step)] = true
 				a.savePending(install.Pending{Title: title, Steps: install.Without(plan.Steps, done)})
 			}
 			runtime.EventsEmit(a.ctx, "install", e)
 		})
+		if c, ok := kit.(interface{ Close() }); ok {
+			c.Close() // the private copies of the kit's installers
+		}
 		a.historyFinish(hist)
 		a.mu.Lock()
 		a.running = false

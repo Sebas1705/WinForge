@@ -1,6 +1,6 @@
 import {act} from "@testing-library/react";
 import {vi} from "vitest";
-import type {StorageProgress} from "../api";
+import type {KitProgress, StorageProgress} from "../api";
 import type {InstallEvent, Profile, State} from "../lib/model";
 import {autoApi, resetAuto} from "./autoMock";
 import {diagApi, resetDiag} from "./diagMock";
@@ -14,6 +14,7 @@ const handlers = {
     done: new Set<Handler<string[] | null>>(),
     progress: new Set<Handler<{ done: number; total: number }>>(),
     storageProgress: new Set<Handler<StorageProgress>>(),
+    kitProgress: new Set<Handler<KitProgress>>(),
 };
 
 /** Every call the app can make into Go, as a spy. Defaults describe a quiet, healthy PC. */
@@ -35,6 +36,8 @@ export const api = {
     HistoryList: vi.fn(), HistoryRollbackPlan: vi.fn(), HistoryRollback: vi.fn(),
     UninstallList: vi.fn(), UninstallApps: vi.fn(), UninstallVerify: vi.fn(), LeftoversFind: vi.fn(), LeftoversRecycle: vi.fn(),
     ...autoApi, ...diagApi,
+    KitPrepare: vi.fn(), KitCreate: vi.fn(), KitOpen: vi.fn(), KitPlan: vi.fn(), KitInstall: vi.fn(), KitVerify: vi.fn(), KitCancel: vi.fn(),
+    ...autoApi,
 };
 
 export function resetApi(state: State = makeState()): void {
@@ -102,6 +105,11 @@ export function resetApi(state: State = makeState()): void {
     api.UninstallVerify.mockResolvedValue({removed: [], still: []});
     api.LeftoversFind.mockResolvedValue({appId: "", appName: "", candidates: [], searched: []});
     api.LeftoversRecycle.mockResolvedValue({moved: 0, freedBytes: 0, failed: []});
+    api.KitPrepare.mockResolvedValue({folder: "", apps: [], notIncluded: [], needBytes: 0, freeBytes: 0, freeKnown: false, enough: true, existingKit: false});
+    api.KitCancel.mockResolvedValue(undefined);
+    api.KitInstall.mockResolvedValue(undefined);
+    api.KitVerify.mockResolvedValue({installed: [], missing: []});
+    api.KitPlan.mockImplementation(async (ids: string[]) => ({steps: ids.map((id) => ({kind: "kit", id, name: id})), alreadyInstalled: [], needsAdmin: false}));
     api.StorageProjects.mockResolvedValue([]);
     api.StorageProjectsClean.mockResolvedValue({freedBytes: 0, removed: 0, files: 0, failed: [], reasons: []});
     api.StorageVirtualDisks.mockResolvedValue([]);
@@ -136,6 +144,7 @@ export const moduleMock = {
         done: (fn: Handler<string[] | null>) => { handlers.done.add(fn); return () => handlers.done.delete(fn); },
         progress: (fn: Handler<{ done: number; total: number }>) => { handlers.progress.add(fn); return () => handlers.progress.delete(fn); },
         storageProgress: (fn: Handler<StorageProgress>) => { handlers.storageProgress.add(fn); return () => handlers.storageProgress.delete(fn); },
+        kitProgress: (fn: Handler<KitProgress>) => { handlers.kitProgress.add(fn); return () => handlers.kitProgress.delete(fn); },
     },
 };
 
@@ -145,5 +154,6 @@ export const emit = {
     scan: (scan: "pc" | "health", step: string) => act(() => { handlers.scan.forEach((h) => h({scan, step})); }),
     install: (e: InstallEvent) => act(() => { handlers.install.forEach((h) => h(e)); }),
     storageProgress: (e: StorageProgress) => act(() => { handlers.storageProgress.forEach((h) => h(e)); }),
+    kitProgress: (e: KitProgress) => act(() => { handlers.kitProgress.forEach((h) => h(e)); }),
     done: (failed: string[] | null = []) => act(() => { handlers.done.forEach((h) => h(failed)); }),
 };

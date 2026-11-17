@@ -13,16 +13,20 @@ import {profileApps, profileTally} from "../lib/tally";
 import {withApps} from "../lib/drift";
 import {DriftPanel} from "./profiles/DriftPanel";
 import {CompareView} from "./profiles/CompareView";
+import {KitCreate, KitInstall} from "./profiles/OfflineKit";
 
 export function Profiles(p: {
     state: State; focus: string | null; advanced: boolean;
     onInstall: (p: Profile) => void; onChanged: () => Promise<void>; say: (m: string) => void;
     onImport: () => void; onImportCode: () => void; onFromPC: () => void; onEdit: (p: ProfileInfo) => void;
     onDetail: (a: App) => void; onFocusDone: () => void;
+    /** Offline kit: starts the run window for the ticked kit apps, restarts as administrator, and says when a kit run finished. */
+    onKitInstall: (ids: string[]) => void; onAdmin: () => void; kitTick: number;
 }) {
     const [sel, setSel] = useState<string | null>(p.focus);
     const [q, setQ] = useState("");
     const [comparing, setComparing] = useState(false);
+    const [kit, setKit] = useState<{ folder?: string } | null>(null);
     useEffect(() => { if (p.focus) { setSel(p.focus); p.onFocusDone(); } }, [p.focus]);
     const apps = useMemo(() => new Map(p.state.apps.map((a) => [a.id, a])), [p.state.apps]);
     const current = sel ? p.state.profiles.find((x) => x.id === sel) : undefined;
@@ -31,7 +35,7 @@ export function Profiles(p: {
     if (current) {
         return <ProfileDetail profile={current} apps={apps} advanced={p.advanced} onBack={() => setSel(null)}
                               onInstall={p.onInstall} onChanged={async () => { await p.onChanged(); setSel(null); }} onRefresh={p.onChanged} scan={p.state.apps} say={p.say}
-                              onEdit={p.onEdit} onDetail={p.onDetail}/>;
+                              onEdit={p.onEdit} onDetail={p.onDetail} onOpenKit={(folder) => { setSel(null); setKit({folder}); }}/>;
     }
 
     if (comparing) {
@@ -62,7 +66,9 @@ export function Profiles(p: {
                 <button className="ghost" onClick={p.onImport}>{t("profiles.import")}</button>
                 <button className="ghost" onClick={p.onImportCode}>{t("profiles.importCode")}</button>
                 <button className="ghost" title={t("cmp.openHint")} onClick={() => setComparing(true)}>{t("cmp.open")}</button>
+                <button className="ghost" aria-expanded={kit !== null} onClick={() => setKit(kit ? null : {})}>{t("kit.open.button")}</button>
             </header>
+            {kit && <KitInstall admin={p.state.admin} say={p.say} onAdmin={p.onAdmin} onInstall={p.onKitInstall} refreshKey={p.kitTick} initialFolder={kit.folder} onClose={() => setKit(null)}/>}
             {groups.every(([, , l]) => l.length === 0) && <p className="muted empty">{t("profiles.none")}</p>}
             {groups.map(([title, icon, list]) => list.length > 0 && (
                 <section key={title}>
@@ -97,6 +103,8 @@ function ProfileDetail(p: {
     profile: ProfileInfo; apps: Map<string, App>; advanced: boolean;
     onBack: () => void; onInstall: (p: Profile) => void; onChanged: () => Promise<void>; say: (m: string) => void;
     onEdit: (p: ProfileInfo) => void; onDetail: (a: App) => void;
+    /** Opens the install-from-kit panel on the profiles list, at a kit that was just created. */
+    onOpenKit: (folder: string) => void;
     /** Reads the profiles again without leaving the page. */
     onRefresh: () => Promise<void>;
     /** Changes when the PC is scanned again. */
@@ -107,6 +115,7 @@ function ProfileDetail(p: {
     const [skip, setSkip] = useState<Set<string>>(new Set());
     const [menu, setMenu] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
+    const [kitCreate, setKitCreate] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     useDismiss(menuRef, menu, () => setMenu(false));
     const tally = profileTally(current.resolved, p.apps);
@@ -160,11 +169,14 @@ function ProfileDetail(p: {
                             {p.advanced && <button role="menuitem" title={t("profiles.exportWingetHint")} onClick={() => run(() => api.ExportWinget(current))}>{t("profiles.exportWinget")}</button>}
                             {p.advanced && <button role="menuitem" title={t("profiles.exportConfigureHint")} onClick={() => run(() => api.ExportConfigure(current))}>{t("profiles.exportConfigure")}</button>}
                             {p.advanced && <button role="menuitem" title={t("profiles.exportScriptHint")} disabled={missingAll === 0} onClick={() => run(() => api.ExportScript(current))}>{t("profiles.exportScript")}</button>}
+                            <button role="menuitem" onClick={() => { setMenu(false); setKitCreate(true); }}>{t("kit.create.menu")}</button>
                             {!current.builtin && <button role="menuitem" className="danger" onClick={() => { setMenu(false); setConfirmDelete(true); }}>{t("profiles.delete")}</button>}
                         </div>
                     )}
                 </div>
             </div>
+
+            {kitCreate && <KitCreate profileName={text.name} appIds={current.resolved} say={p.say} onClose={() => setKitCreate(false)} onOpenKit={p.onOpenKit}/>}
 
             <DriftPanel profile={current} scan={p.scan} say={p.say}
                         onAdd={async (ids) => { await api.SaveProfile(withApps(current, ids)); await p.onRefresh(); }}/>

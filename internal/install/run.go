@@ -87,6 +87,12 @@ func WingetUpgradeArgs(app *catalog.App) []string {
 // independent apps still install, but steps depending on the failed app are
 // skipped (dependencies and recipes `after`).
 func Run(ctx context.Context, cat *catalog.Catalog, plan Plan, ex Executor, emit func(Event)) (failed []string) {
+	return RunWith(ctx, cat, plan, ex, nil, emit)
+}
+
+// RunWith is Run for plans that may hold kit steps; kit answers them (see KitResolver). A nil kit
+// fails every kit step, so a plan read from a file can never run a local installer by itself.
+func RunWith(ctx context.Context, cat *catalog.Catalog, plan Plan, ex Executor, kit KitResolver, emit func(Event)) (failed []string) {
 	broken := map[string]bool{}
 	for _, s := range plan.Steps {
 		if ctx.Err() != nil {
@@ -121,6 +127,8 @@ func Run(ctx context.Context, cat *catalog.Catalog, plan Plan, ex Executor, emit
 			code, err = runWinget(ctx, WingetUninstallArgs(cat.Apps[s.ID]), s, ex, track)
 		case StepRollback:
 			code, err = runRollback(ctx, cat.Apps[s.ID], s, ex, track)
+		case StepKit:
+			code, err = runKit(ctx, kit, s, ex, track)
 		case StepRecipe:
 			code, err = runRecipe(ctx, cat.Recipes[s.ID], s, ex, track)
 		}
@@ -131,7 +139,12 @@ func Run(ctx context.Context, cat *catalog.Catalog, plan Plan, ex Executor, emit
 		if err != nil {
 			broken[s.ID] = true
 			failed = append(failed, s.ID)
-			emit(Event{Step: s, Status: StatusFailed, Err: err.Error(), Reason: explainStep(s, code, tail)})
+			reason := explainStep(s, code, tail)
+			var ke *KitError
+			if errors.As(err, &ke) {
+				reason = ke.Reason
+			}
+			emit(Event{Step: s, Status: StatusFailed, Err: err.Error(), Reason: reason})
 			continue
 		}
 		emit(Event{Step: s, Status: StatusOK})
@@ -142,8 +155,10 @@ func Run(ctx context.Context, cat *catalog.Catalog, plan Plan, ex Executor, emit
 func brokenDependency(cat *catalog.Catalog, s Step, broken map[string]bool) string {
 	var deps []string
 	switch s.Kind {
-	case StepApp:
-		deps = cat.Apps[s.ID].Requires
+	case StepApp, StepKit:
+		if app := cat.Apps[s.ID]; app != nil { // a kit step may name an id the catalog does not have; it fails in the resolver
+			deps = app.Requires
+		}
 	case StepUpgrade:
 		deps = nil
 	case StepRecipe:

@@ -133,6 +133,27 @@ export interface AutoState extends AutoSettings {
     problem?: "runner-missing" | "task-program-missing"; runs: AutoReport[];
 }
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
+export interface KitPlanApp { id: string; name: string; winget: string }
+export interface KitNotIncluded { id: string; name: string; winget?: string; reason: string; detail?: string }
+export interface KitCreatePlan {
+    folder: string; apps: KitPlanApp[]; notIncluded: KitNotIncluded[]; needBytes: number; freeBytes: number; freeKnown: boolean;
+    enough: boolean; existingKit: boolean; problem?: string;
+}
+export interface KitCreateResult {
+    added: string[]; failed: KitNotIncluded[]; totalApps: number; bytes: number; cancelled: boolean; fingerprint: string; folder: string;
+}
+export interface KitProblem { kind: string; file?: string }
+export interface KitApp {
+    id: string; name: string; version: string; type: string; sizeBytes: number; admin?: boolean;
+    state: "ready" | "problem" | "unsupported"; problems: KitProblem[]; reason?: string; detail?: string;
+    installed?: boolean; installedVersion?: string;
+}
+export interface KitListing {
+    folder: string; fingerprint: string; created: string; updated?: string; winforge: string; profile?: string;
+    apps: KitApp[]; notIncluded: KitNotIncluded[]; unlisted: string[]; needsAdmin: boolean;
+}
+export interface KitVerified { installed: { id: string; name: string }[]; missing: { id: string; name: string }[] }
+export interface KitProgress { task: "create" | "verify"; done: number; total: number; id?: string; name?: string; percent?: number }
 
 export const api = Go as unknown as {
     GetState(): Promise<State>;
@@ -250,6 +271,13 @@ export const api = Go as unknown as {
     AutoRunNow(): Promise<AutoReport>;
     AutoSetLanguage(lang: string): Promise<void>;
     LaunchTarget(): Promise<string>;
+    KitPrepare(ids: string[], folder: string): Promise<KitCreatePlan>;
+    KitCreate(ids: string[], folder: string, profileName: string): Promise<KitCreateResult>;
+    KitOpen(folder: string): Promise<KitListing>;
+    KitPlan(ids: string[]): Promise<Plan>;
+    KitInstall(ids: string[]): Promise<void>;
+    KitVerify(ids: string[]): Promise<KitVerified>;
+    KitCancel(): Promise<void>;
 };
 
 export const on = {
@@ -258,6 +286,7 @@ export const on = {
     install: (fn: (e: InstallEvent) => void): (() => void) => EventsOn("install", fn),
     done: (fn: (failed: string[] | null) => void): (() => void) => EventsOn("install:done", fn),
     storageProgress: (fn: (p: StorageProgress) => void): (() => void) => EventsOn("storage:progress", fn),
+    kitProgress: (fn: (p: KitProgress) => void): (() => void) => EventsOn("kit:progress", fn),
     progress: (fn: (p: { done: number; total: number }) => void): (() => void) => EventsOn("update:progress", fn),
 };
 

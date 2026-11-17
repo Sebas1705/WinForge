@@ -57,7 +57,7 @@ export interface State {
 }
 
 export interface Step {
-    kind: "app" | "recipe" | "upgrade" | "uninstall" | "rollback";
+    kind: "app" | "recipe" | "upgrade" | "uninstall" | "rollback" | "kit";
     id: string;
     name: string;
     version?: string;

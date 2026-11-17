@@ -27,6 +27,7 @@ func (a *App) livePending(installed map[string]system.Installed) *install.Pendin
 		_, have := installed[s.ID]
 		switch {
 		case s.Kind == install.StepRollback: // never resumed: go back again from the history if it is still wanted
+		case s.Kind == install.StepKit: // never resumed: its files may be on a stick that is gone; open the kit again
 		case s.Kind == install.StepApp && have:
 		case s.Kind == install.StepUninstall && !have:
 		case s.Kind != install.StepRecipe && a.cat.Apps[s.ID] == nil:
