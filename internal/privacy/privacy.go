@@ -131,14 +131,17 @@ type plannedEntry struct {
 	entry backupEntry
 }
 
-func (m *Manager) change(ids []string, action string) (Result, error) {
-	res := Result{Skipped: []string{}, Failed: []string{}}
-	var chosen []Tweak
+// plan works out what Apply or Reset would write for the chosen tweaks, reading the registry only.
+// An id that is not a tweak refuses the whole request. res carries Skipped (already as asked) and
+// Failed (a value could not be read); chosen holds the tweaks asked for and planned the ones that
+// will be changed.
+func (m *Manager) plan(ids []string, action string) (chosen []Tweak, plan []plannedEntry, planned map[string]bool, res Result, err error) {
+	res = Result{Skipped: []string{}, Failed: []string{}}
 	seen := map[string]bool{}
 	for _, id := range ids {
 		t, ok := tweakByID(id)
 		if !ok {
-			return res, ErrUnknownTweak
+			return nil, nil, nil, res, ErrUnknownTweak
 		}
 		if !seen[id] {
 			seen[id] = true
@@ -146,8 +149,7 @@ func (m *Manager) change(ids []string, action string) (Result, error) {
 		}
 	}
 
-	var plan []plannedEntry
-	planned := map[string]bool{}
+	planned = map[string]bool{}
 	for _, t := range chosen {
 		var entries []plannedEntry
 		failed := false
@@ -181,6 +183,55 @@ func (m *Manager) change(ids []string, action string) (Result, error) {
 			plan = append(plan, entries...)
 			planned[t.ID] = true
 		}
+	}
+	return chosen, plan, planned, res, nil
+}
+
+// PlannedChange is one registry value Apply would write or Reset would delete (Remove true).
+type PlannedChange struct {
+	Tweak   string `json:"tweak"`
+	Path    string `json:"path"` // starts with HKEY_CURRENT_USER
+	Name    string `json:"name"`
+	Existed bool   `json:"existed"`
+	OldType string `json:"oldType"` // "" when the value does not exist
+	Old     string `json:"old"`
+	Remove  bool   `json:"remove"`
+	NewType string `json:"newType"` // "" when the value is removed
+	New     string `json:"new"`
+}
+
+// Preview says exactly what Apply (or Reset, with action ActionReset) would change for the chosen
+// ids, without writing anything: the same plan, read from the registry now. Skipped lists the ids
+// already as asked and Failed the ones whose values cannot be read.
+func (m *Manager) Preview(ids []string, action string) ([]PlannedChange, Result, error) {
+	if action != ActionApply && action != ActionReset {
+		return nil, Result{Skipped: []string{}, Failed: []string{}}, errors.New("unknown action")
+	}
+	_, plan, _, res, err := m.plan(ids, action)
+	if err != nil {
+		return nil, res, err
+	}
+	out := make([]PlannedChange, 0, len(plan))
+	for _, p := range plan {
+		e := p.entry
+		pc := PlannedChange{Tweak: e.Tweak, Path: "HKEY_CURRENT_USER\\" + e.Path, Name: e.Name, Existed: e.Before.Exists, Remove: action == ActionReset}
+		if e.Before.Exists {
+			pc.OldType = TypeName(e.Before.Type)
+			pc.Old = Display(Value{Exists: true, Type: e.Before.Type, Data: e.Before.Data})
+		}
+		if action == ActionApply {
+			pc.NewType = TypeName(e.After.Type)
+			pc.New = Display(Value{Exists: true, Type: e.After.Type, Data: e.After.Data})
+		}
+		out = append(out, pc)
+	}
+	return out, res, nil
+}
+
+func (m *Manager) change(ids []string, action string) (Result, error) {
+	chosen, plan, planned, res, err := m.plan(ids, action)
+	if err != nil {
+		return res, err
 	}
 	if len(plan) == 0 {
 		return res, nil
