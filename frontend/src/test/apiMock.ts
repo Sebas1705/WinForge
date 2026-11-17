@@ -29,6 +29,7 @@ export const api = {
     StorageVolumes: vi.fn(), StorageDefaults: vi.fn(), StorageScan: vi.fn(), StorageClean: vi.fn(), StorageBigFiles: vi.fn(),
     StorageFolders: vi.fn(), StorageDuplicates: vi.fn(), StorageRecycle: vi.fn(), StorageReveal: vi.fn(), StartupList: vi.fn(), StartupSet: vi.fn(), StartupReveal: vi.fn(), StorageProjects: vi.fn(), StorageProjectsClean: vi.fn(), StorageVirtualDisks: vi.fn(), StorageCancel: vi.fn(),
     EnvScan: vi.fn(), EnvFix: vi.fn(), EnvBackups: vi.fn(), EnvRestore: vi.fn(), FeaturesList: vi.fn(), WSLInfo: vi.fn(),
+    PrivacyList: vi.fn(), PrivacyApply: vi.fn(), PrivacyReset: vi.fn(), PrivacyBackups: vi.fn(), PrivacyRestore: vi.fn(),
     ServicesList: vi.fn(), ServicesSetMode: vi.fn(), ServicesRestore: vi.fn(), TasksList: vi.fn(), TasksSetEnabled: vi.fn(), TasksRestore: vi.fn(),
     HistoryList: vi.fn(), HistoryRollbackPlan: vi.fn(), HistoryRollback: vi.fn(),
     UninstallList: vi.fn(), UninstallApps: vi.fn(), UninstallVerify: vi.fn(), LeftoversFind: vi.fn(), LeftoversRecycle: vi.fn(),
@@ -106,6 +107,11 @@ export function resetApi(state: State = makeState()): void {
     api.EnvFix.mockResolvedValue({applied: 0, failed: [], backupId: ""});
     api.EnvBackups.mockResolvedValue([]);
     api.EnvRestore.mockResolvedValue(undefined);
+    api.PrivacyList.mockResolvedValue([]);
+    api.PrivacyApply.mockResolvedValue({applied: 0, skipped: [], failed: [], backupId: ""});
+    api.PrivacyReset.mockResolvedValue({applied: 0, skipped: [], failed: [], backupId: ""});
+    api.PrivacyBackups.mockResolvedValue([]);
+    api.PrivacyRestore.mockResolvedValue({restored: [], changedSince: [], failed: []});
     api.FeaturesList.mockResolvedValue([]);
     api.WSLInfo.mockResolvedValue({installed: false, defaultVersion: 0, distros: []});
     api.HistoryList.mockResolvedValue({entries: [], total: 0, apps: []});

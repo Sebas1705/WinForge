@@ -63,6 +63,16 @@ export interface EnvVar { name: string; scope: "user" | "machine"; value: string
 export interface EnvReport { findings: EnvFinding[]; userPath: string[]; machinePath: string[]; tools: EnvTool[]; vars: EnvVar[] }
 export interface EnvFixResult { applied: number; failed: string[]; backupId: string }
 export interface EnvBackup { id: string; time: string; changed: string[] }
+export type PrivacyState = "private" | "default" | "custom" | "unknown";
+export interface PrivacyChange {
+    path: string; name: string; existed: boolean; oldType: string; old: string;
+    /** The type and data applying writes. */
+    type: string; private: number; error: boolean;
+}
+export interface PrivacyTweak { id: string; area: string; nameKey: string; whyKey: string; state: PrivacyState; changes: PrivacyChange[] }
+export interface PrivacyResult { applied: number; skipped: string[]; failed: string[]; backupId: string }
+export interface PrivacyBackup { id: string; time: string; action: "apply" | "reset"; tweaks: string[]; restored: string | null }
+export interface PrivacyRestoreResult { restored: string[]; changedSince: string[]; failed: string[] }
 export type FeatureId = "wsl" | "vmp" | "hyperv" | "sandbox" | "netfx3";
 export interface Feature {
     id: FeatureId; state: "on" | "off" | "unavailable" | "unknown"; restartPending: boolean; enable: string; disable: string; needsAdmin: boolean;
@@ -203,6 +213,11 @@ export const api = Go as unknown as {
     EnvFix(ids: string[]): Promise<EnvFixResult>;
     EnvBackups(): Promise<EnvBackup[]>;
     EnvRestore(id: string): Promise<void>;
+    PrivacyList(): Promise<PrivacyTweak[]>;
+    PrivacyApply(ids: string[]): Promise<PrivacyResult>;
+    PrivacyReset(ids: string[]): Promise<PrivacyResult>;
+    PrivacyBackups(): Promise<PrivacyBackup[]>;
+    PrivacyRestore(id: string): Promise<PrivacyRestoreResult>;
     FeaturesList(): Promise<Feature[]>;
     WSLInfo(): Promise<WSLInfo>;
     HistoryList(filter: HistoryFilter): Promise<HistoryPage>;

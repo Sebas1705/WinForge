@@ -23,6 +23,7 @@ import {Health} from "./views/Health";
 import {Backup} from "./views/Backup";
 import {Games} from "./views/Games";
 import {Developer} from "./views/Developer";
+import {Privacy} from "./views/Privacy";
 import {Startup} from "./views/Startup";
 import {Uninstall} from "./views/Uninstall";
 import {Storage} from "./views/Storage";
@@ -31,7 +32,7 @@ import {Profiles} from "./views/Profiles";
 import {historyError} from "./views/History";
 import {Updates} from "./views/Updates";
 
-type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games" | "storage" | "startup" | "developer" | "uninstall";
+type Tab = "home" | "profiles" | "catalog" | "updates" | "health" | "backup" | "games" | "storage" | "startup" | "developer" | "privacy" | "uninstall";
 
 interface Runner {
     /** Called when the person confirms the plan. */
@@ -46,7 +47,7 @@ interface Runner {
 // Go names runs that have no profile by what they do; show that in the person's language.
 const pendingTitle = (title: string) => (title === "updates" ? t("run.updateTitle") : title === "uninstall" ? t("detail.uninstall") : title);
 
-const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive", games: "gamepad", storage: "disk", startup: "rocket", developer: "code", uninstall: "trash"};
+const NAV_ICON: Record<Tab, IconName> = {home: "home", profiles: "layers", catalog: "grid", updates: "download", health: "pulse", backup: "archive", games: "gamepad", storage: "disk", startup: "rocket", developer: "code", privacy: "lock", uninstall: "trash"};
 
 function tourSeen(): boolean {
     try { return localStorage.getItem("winforge.tour") === "1"; } catch { return true; }
@@ -501,6 +502,7 @@ export default function App() {
         ["storage", t("nav.storage"), null],
         ["startup", t("nav.startup"), null],
         ["developer", t("nav.developer"), null],
+        ["privacy", t("nav.privacy"), null],
         ["uninstall", t("nav.uninstall"), null],
         ["games", t("nav.games"), null],
         ["backup", t("nav.backup"), null],
@@ -636,6 +638,8 @@ export default function App() {
                     ) : tab === "developer" ? (
                         <Developer admin={state.admin} say={say} refreshKey={developerTick} onRun={(ids) => void startRepair(ids)}
                                    onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>
+                    ) : tab === "privacy" ? (
+                        <Privacy say={say}/>
                     ) : tab === "uninstall" ? (
                         <Uninstall apps={state.apps} admin={state.admin} say={say} refreshKey={uninstallTick} onUninstall={(list) => void startUninstallMany(list)}
                                    onAdmin={() => void api.RestartAsAdmin().catch((e) => say(errText(e)))}/>

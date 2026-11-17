@@ -1,0 +1,35 @@
+/* Privacy page. Colours come from the shared tokens only (--text / --muted for text, --line for borders), so every
+   style x theme keeps its contrast. Rows wrap and never widen the page: every flex/grid child has min-width: 0 and
+   registry paths break anywhere. */
+.privacypage > p.small { margin: 0 0 8px; }
+.privacypage .toolrow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 14px 0; }
+.privacypage .resultline { margin: 0 0 14px; }
+.privacypage .resultline p { margin: 0; }
+.privacypage .resultline p + p { margin-top: 6px; }
+.privacypage .subhead { margin: 18px 0 8px; }
+
+.privacylist { grid-template-columns: minmax(0, 1fr); }
+.privacylist > li { min-width: 0; padding: 12px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.privacylist > li.on { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.privacylist .prow { display: flex; align-items: flex-start; gap: 12px 14px; flex-wrap: wrap; }
+.privacylist .prow > label { flex: 1 1 280px; min-width: 0; display: flex; align-items: flex-start; gap: 14px; padding: 0; border: 0; background: none; min-height: 0; cursor: pointer; }
+.privacylist .prow > label input { margin-top: 3px; flex: none; }
+.privacylist .prow > label .grow { display: flex; flex-direction: column; gap: 3px; min-width: 0; overflow-wrap: anywhere; }
+.privacylist .prow > button { flex: none; }
+
+.ppreview { margin-top: 8px; padding-left: 28px; min-width: 0; }
+.ppreview summary { cursor: pointer; }
+.ppreview ul { margin: 8px 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.ppreview li { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ppreview .mono, .pvconfirm .mono { white-space: normal; overflow-wrap: anywhere; }
+.ppreview .pvpath { color: var(--muted); }
+.ppreview .pvline { overflow-wrap: anywhere; }
+.ppreview p { margin: 0; }
+
+.pvconfirm { max-height: 40vh; overflow: auto; display: grid; gap: 10px; padding: 0; list-style: none; }
+.pvconfirm ul { padding: 0 0 0 12px; list-style: none; display: grid; gap: 4px; margin: 4px 0 0; }
+.pvconfirm li { min-width: 0; }
+
+.privacybackups { list-style: none; padding: 0; display: grid; gap: 8px; }
+.privacybackups .backupitem { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.privacybackups .backupitem .grow { flex: 1 1 240px; min-width: 0; overflow-wrap: anywhere; }

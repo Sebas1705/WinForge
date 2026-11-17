@@ -20,6 +20,7 @@ import (
 	"github.com/Sebas1705/WinForge/internal/health"
 	"github.com/Sebas1705/WinForge/internal/history"
 	"github.com/Sebas1705/WinForge/internal/install"
+	"github.com/Sebas1705/WinForge/internal/privacy"
 	"github.com/Sebas1705/WinForge/internal/profile"
 	"github.com/Sebas1705/WinForge/internal/startup"
 	"github.com/Sebas1705/WinForge/internal/storage"
@@ -76,6 +77,9 @@ type App struct {
 	// replaced by tests; nil means the real registry).
 	envState envSession
 	envSys   envdoctor.System
+	// The Privacy page (privacybind.go): what it listed, and the registry behind it (replaced by tests).
+	privacyState privacySession
+	privacySys   privacy.System
 	// The Windows features page reads through featuresSys (nil means this PC); tests replace it.
 	featuresSys winfeatures.System
 	// The Services and Scheduled tasks tabs of the Startup page (servicesbind.go, tasksbind.go).
