@@ -30,7 +30,7 @@ beforeEach(() => {
 /** Runs Firefox and fails it with the given reason, leaving the finished dialog open. */
 async function failFirefox(user: ReturnType<typeof userEvent.setup>, reason: string, state = makeState()) {
     await go(user, /Catalog/);
-    const card = screen.getByRole("button", {name: "Firefox"}).closest("article") as HTMLElement;
+    const card = screen.getByRole("button", {name: /^Firefox /}).closest("article") as HTMLElement;
     await user.click(within(card).getByRole("button", {name: "Install Firefox"}));
     await user.click(await screen.findByRole("button", {name: "Run 1 step"}));
     await emit.install({step: step("firefox", "Firefox"), status: "start"});
@@ -70,7 +70,7 @@ describe("when a step fails", () => {
     it("shows download progress on the step that is running", async () => {
         const user = await openApp();
         await go(user, /Catalog/);
-        const card = screen.getByRole("button", {name: "Firefox"}).closest("article") as HTMLElement;
+        const card = screen.getByRole("button", {name: /^Firefox /}).closest("article") as HTMLElement;
         await user.click(within(card).getByRole("button", {name: "Install Firefox"}));
         await user.click(await screen.findByRole("button", {name: "Run 1 step"}));
         await emit.install({step: step("firefox", "Firefox"), status: "start"});
@@ -83,7 +83,7 @@ describe("when a step fails", () => {
     it("tells the person to restart Windows when a step needs it", async () => {
         const user = await openApp();
         await go(user, /Catalog/);
-        const card = screen.getByRole("button", {name: "Firefox"}).closest("article") as HTMLElement;
+        const card = screen.getByRole("button", {name: /^Firefox /}).closest("article") as HTMLElement;
         await user.click(within(card).getByRole("button", {name: "Install Firefox"}));
         await user.click(await screen.findByRole("button", {name: "Run 1 step"}));
         await emit.install({step: step("firefox", "Firefox"), status: "ok", reason: "reboot"});
@@ -124,7 +124,7 @@ describe("uninstalling", () => {
     it("asks first, then plans and runs the removal", async () => {
         const user = await openApp();
         await go(user, /Catalog/);
-        await user.click(screen.getByRole("button", {name: "VLC"})); // installed in the fixture
+        await user.click(screen.getByRole("button", {name: /^VLC /})); // installed in the fixture
         const panel = await screen.findByRole("dialog");
         await user.click(within(panel).getByRole("button", {name: "Uninstall"}));
         const sure = await screen.findByRole("alertdialog", {name: "Uninstall “VLC”?"});
@@ -138,7 +138,7 @@ describe("uninstalling", () => {
     it("keeps the app if the person says no", async () => {
         const user = await openApp();
         await go(user, /Catalog/);
-        await user.click(screen.getByRole("button", {name: "VLC"}));
+        await user.click(screen.getByRole("button", {name: /^VLC /}));
         await user.click(within(await screen.findByRole("dialog")).getByRole("button", {name: "Uninstall"}));
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Cancel"}));
         expect(api.PlanUninstall).not.toHaveBeenCalled();
@@ -209,7 +209,7 @@ describe("keyboard", () => {
     it("Ctrl+K does nothing behind an open dialog", async () => {
         const user = await openApp();
         await go(user, /Catalog/);
-        const card = screen.getByRole("button", {name: "Firefox"}).closest("article") as HTMLElement;
+        const card = screen.getByRole("button", {name: /^Firefox /}).closest("article") as HTMLElement;
         await user.click(within(card).getByRole("button", {name: "Install Firefox"}));
         await screen.findByRole("dialog");
         await user.keyboard("{Control>}k{/Control}");
@@ -239,7 +239,7 @@ describe("the / shortcut", () => {
     it("does not pull focus out of an open dialog", async () => {
         const user = await openApp();
         await go(user, /Catalog/);
-        const card = screen.getByRole("button", {name: "Firefox"}).closest("article") as HTMLElement;
+        const card = screen.getByRole("button", {name: /^Firefox /}).closest("article") as HTMLElement;
         await user.click(within(card).getByRole("button", {name: "Install Firefox"}));
         const dialog = await screen.findByRole("dialog");
         const before = document.activeElement;

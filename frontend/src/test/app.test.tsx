@@ -21,7 +21,7 @@ async function go(user: ReturnType<typeof userEvent.setup>, tab: RegExp) {
     await user.click(within(nav).getByRole("button", {name: tab}));
 }
 
-const cardOf = (name: string) => screen.getByRole("button", {name}).closest("article") as HTMLElement;
+const cardOf = (name: string) => screen.getByRole("button", {name: new RegExp(`^${name} `)}).closest("article") as HTMLElement;
 
 beforeEach(() => {
     localStorage.setItem("winforge.tour", "1");
@@ -430,12 +430,12 @@ describe("settings and language", () => {
     it("advanced mode reveals technical details the simple mode hides", async () => {
         const user = await openApp();
         await go(user, /Catalog/);
-        await user.click(within(cardOf("Firefox")).getByRole("button", {name: "Firefox"}));
+        await user.click(within(cardOf("Firefox")).getByRole("button", {name: /^Firefox /}));
         const drawer = await screen.findByRole("dialog", {name: "Firefox"});
         expect(within(drawer).queryByText("Vendor.firefox")).not.toBeInTheDocument();
         await user.click(within(drawer).getByRole("button", {name: "Close"}));
         await user.click(screen.getByRole("button", {name: "Advanced"}));
-        await user.click(within(cardOf("Firefox")).getByRole("button", {name: "Firefox"}));
+        await user.click(within(cardOf("Firefox")).getByRole("button", {name: /^Firefox /}));
         expect(within(await screen.findByRole("dialog", {name: "Firefox"})).getByText("Vendor.firefox")).toBeInTheDocument();
     });
 });
@@ -444,7 +444,7 @@ describe("app detail panel", () => {
     it("closes with Escape without closing anything else, and returns focus", async () => {
         const user = await openApp();
         await go(user, /Catalog/);
-        const open = within(cardOf("Firefox")).getByRole("button", {name: "Firefox"});
+        const open = within(cardOf("Firefox")).getByRole("button", {name: /^Firefox /});
         await user.click(open);
         expect(await screen.findByRole("dialog", {name: "Firefox"})).toBeInTheDocument();
         await user.keyboard("{Escape}");
@@ -456,7 +456,7 @@ describe("app detail panel", () => {
     it("opens the website through the app, not the webview", async () => {
         const user = await openApp();
         await go(user, /Catalog/);
-        await user.click(within(cardOf("Firefox")).getByRole("button", {name: "Firefox"}));
+        await user.click(within(cardOf("Firefox")).getByRole("button", {name: /^Firefox /}));
         await user.click(await screen.findByRole("button", {name: /Website/}));
         expect(api.OpenURL).toHaveBeenCalledWith("https://example.com");
     });

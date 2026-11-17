@@ -24,9 +24,9 @@ export const AppCard = memo(function AppCard(p: {
                     <input type="checkbox" checked={!!p.selected} onChange={() => p.onToggle?.(a.id)} aria-label={t("catalog.select", {name: a.name})}/>
                 </label>
             )}
-            <button className="cardbody" onClick={() => p.onOpen(a)} aria-label={a.name}>
+            <button className="cardbody" onClick={() => p.onOpen(a)} aria-label={`${a.name} ${taglineFor(a, p.lang)}`}>
                 <AppIcon id={a.id} name={a.name} category={a.category} size={p.compact ? 48 : 56}/>
-                <b>{a.name}</b>
+                <b>{a.name}</b>{" "}
                 <span className="line">{taglineFor(a, p.lang)}</span>
             </button>
             <footer>

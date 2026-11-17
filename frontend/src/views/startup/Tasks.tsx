@@ -132,7 +132,7 @@ export function Tasks(p: { admin: boolean; say: (m: string) => void; onAdmin: ()
                                             <small className="mono muted" title={i.action}>{i.action}</small>
                                         </span>
                                         {i.changed && i.original && (
-                                            <button className="sm" disabled={off} aria-label={t("svc.restore.label", {name: i.name})} onClick={() => restore(i)}>
+                                            <button className="sm" disabled={off} aria-label={t("svc.restore.label", {name: i.name, value: t(`svc.tasks.restore.value.${i.original}`)})} onClick={() => restore(i)}>
                                                 {t("svc.restore", {value: t(`svc.tasks.restore.value.${i.original}`)})}
                                             </button>
                                         )}

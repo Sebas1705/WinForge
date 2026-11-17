@@ -54,7 +54,7 @@ describe("the catalog", () => {
         await user.click(within(screen.getByRole("navigation", {name: "Main menu"})).getByRole("button", {name: /Catalog/}));
         return user;
     }
-    const cards = () => screen.getAllByRole("article").map((c) => c.querySelector(".cardbody")?.getAttribute("aria-label"));
+    const cards = () => screen.getAllByRole("article").map((c) => c.querySelector(".cardbody")?.querySelector("b")?.textContent);
 
     it("shows sub-category chips for a big category and narrows to one", async () => {
         const user = await open();

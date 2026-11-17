@@ -210,24 +210,24 @@ describe("services tab", () => {
         api.ServicesRestore.mockImplementation(async () => services().map((i) => (i.id === "Old Agent" ? {...i, startMode: "auto" as const, changed: false, original: "" as const} : i)));
         const user = await open({tab: "services"});
         await mode("Old Agent");
-        expect(screen.getAllByRole("button", {name: /^Restore the original setting of/})).toHaveLength(1);
+        expect(screen.getAllByRole("button", {name: /^Restore original:/})).toHaveLength(1);
         expect(screen.getByText("Changed by WinForge", {selector: ".chip"})).toBeInTheDocument();
-        await user.click(screen.getByRole("button", {name: "Restore the original setting of Old Agent"}));
+        await user.click(screen.getByRole("button", {name: /^Restore original: .* \(Old Agent\)$/}));
         await waitFor(() => expect(api.ServicesRestore).toHaveBeenCalledWith("Old Agent", false));
         expect(await screen.findByText("Old Agent is back to its original setting: Automatic.")).toBeInTheDocument();
-        expect(screen.queryByRole("button", {name: /^Restore the original setting of/})).toBeNull();
+        expect(screen.queryByRole("button", {name: /^Restore original:/})).toBeNull();
     });
 
     it("shows the original mode on the restore button", async () => {
         await open({tab: "services"});
         await mode("Old Agent");
-        expect(screen.getByRole("button", {name: "Restore the original setting of Old Agent"})).toHaveTextContent("Restore original: Automatic");
+        expect(screen.getByRole("button", {name: /^Restore original: .* \(Old Agent\)$/})).toHaveTextContent("Restore original: Automatic");
     });
 
     it("locks every service without administrator rights and offers to restart", async () => {
         const user = await open({admin: false, tab: "services"});
         expect(await mode("Steam Client Service")).toBeDisabled();
-        expect(screen.getByRole("button", {name: "Restore the original setting of Old Agent"})).toBeDisabled();
+        expect(screen.getByRole("button", {name: /^Restore original: .* \(Old Agent\)$/})).toBeDisabled();
         expect(screen.getByText("Changing any of these needs administrator rights (5 locked).")).toBeInTheDocument();
         await user.click(screen.getAllByRole("button", {name: "Restart as administrator"})[0]);
         expect(api.RestartAsAdmin).toHaveBeenCalled();
@@ -317,12 +317,12 @@ describe("scheduled tasks tab", () => {
         api.TasksRestore.mockImplementation(async () => tasks().map((i) => (i.id === "\\OldSync" ? {...i, enabled: true, state: "ready" as const, changed: false, original: "" as const} : i)));
         const user = await open({tab: "tasks"});
         await tswitch("OldSync");
-        expect(screen.getAllByRole("button", {name: /^Restore the original setting of/})).toHaveLength(1);
-        expect(screen.getByRole("button", {name: "Restore the original setting of OldSync"})).toHaveTextContent("Restore original: on");
-        await user.click(screen.getByRole("button", {name: "Restore the original setting of OldSync"}));
+        expect(screen.getAllByRole("button", {name: /^Restore original:/})).toHaveLength(1);
+        expect(screen.getByRole("button", {name: /^Restore original: .* \(OldSync\)$/})).toHaveTextContent("Restore original: on");
+        await user.click(screen.getByRole("button", {name: /^Restore original: .* \(OldSync\)$/}));
         await waitFor(() => expect(api.TasksRestore).toHaveBeenCalledWith("\\OldSync", false));
         expect(await screen.findByText("OldSync is back to its original setting: on.")).toBeInTheDocument();
-        expect(screen.queryByRole("button", {name: /^Restore the original setting of/})).toBeNull();
+        expect(screen.queryByRole("button", {name: /^Restore original:/})).toBeNull();
     });
 
     it("filters by text and state, says when nothing starts and explains refusals", async () => {

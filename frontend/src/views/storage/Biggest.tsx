@@ -132,7 +132,7 @@ export function Biggest(p: { task: TaskRunner; home: string; say: (m: string) =>
             {!root && <p className="muted">{t("storage.big.choose.first")}</p>}
 
             {list && tab === "files" && (files[root].length === 0 ? <p className="muted" role="status">{t("storage.big.emptyFiles")}</p> : (
-                <div className="tablewrap bigfiles">
+                <div className="tablewrap bigfiles" tabIndex={0} role="region" aria-label={t("storage.big.files")}>
                     <table>
                         <thead>
                             <tr>
