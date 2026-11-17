@@ -5,11 +5,14 @@ import {main} from '../models';
 import {sched} from '../models';
 import {settings} from '../models';
 import {battery} from '../models';
+import {eol} from '../models';
 import {envdoctor} from '../models';
 import {winfeatures} from '../models';
 import {healthhistory} from '../models';
 import {history} from '../models';
 import {install} from '../models';
+import {offlinekit} from '../models';
+import {privacy} from '../models';
 import {services} from '../models';
 import {startup} from '../models';
 import {storage} from '../models';
@@ -41,15 +44,15 @@ export function Battery():Promise<battery.Report>;
 
 export function Cancel():Promise<void>;
 
+export function CancelRestart():Promise<void>;
+
+export function CheckUpdate():Promise<main.UpdateInfo>;
+
 export function CompareCode(arg1:string):Promise<main.CompareResult>;
 
 export function CompareFile(arg1:string):Promise<main.CompareResult>;
 
 export function CompareFiles(arg1:string,arg2:string):Promise<main.CompareResult>;
-
-export function CancelRestart():Promise<void>;
-
-export function CheckUpdate():Promise<main.UpdateInfo>;
 
 export function CreateBackup(arg1:main.BackupRequest):Promise<main.BackupResult>;
 
@@ -60,6 +63,8 @@ export function DiagPreview():Promise<string>;
 export function DiagSave(arg1:string):Promise<string>;
 
 export function DiscardPending():Promise<void>;
+
+export function EOLReport():Promise<eol.Report>;
 
 export function Emulation():Promise<catalog.Emulation>;
 
@@ -111,6 +116,20 @@ export function InstallUpdate():Promise<void>;
 
 export function InstallWinget():Promise<void>;
 
+export function KitCancel():Promise<void>;
+
+export function KitCreate(arg1:Array<string>,arg2:string,arg3:string):Promise<main.KitCreateResult>;
+
+export function KitInstall(arg1:Array<string>):Promise<void>;
+
+export function KitOpen(arg1:string):Promise<main.KitListing>;
+
+export function KitPlan(arg1:Array<string>):Promise<install.Plan>;
+
+export function KitPrepare(arg1:Array<string>,arg2:string):Promise<offlinekit.CreatePlan>;
+
+export function KitVerify(arg1:Array<string>):Promise<main.KitVerified>;
+
 export function LaunchTarget():Promise<string>;
 
 export function LeftoversFind(arg1:string):Promise<main.LeftoversResult>;
@@ -142,6 +161,16 @@ export function PlanUninstall(arg1:Array<string>):Promise<install.Plan>;
 export function PlanUpgrades(arg1:Array<string>):Promise<install.Plan>;
 
 export function PlayGame(arg1:string,arg2:string):Promise<void>;
+
+export function PrivacyApply(arg1:Array<string>):Promise<privacy.Result>;
+
+export function PrivacyBackups():Promise<Array<privacy.Backup>>;
+
+export function PrivacyList():Promise<Array<privacy.TweakView>>;
+
+export function PrivacyReset(arg1:Array<string>):Promise<privacy.Result>;
+
+export function PrivacyRestore(arg1:string):Promise<privacy.RestoreResult>;
 
 export function ProfileDrift(arg1:string):Promise<main.DriftInfo>;
 
