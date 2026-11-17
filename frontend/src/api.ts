@@ -154,6 +154,14 @@ export interface KitListing {
 }
 export interface KitVerified { installed: { id: string; name: string }[]; missing: { id: string; name: string }[] }
 export interface KitProgress { task: "create" | "verify"; done: number; total: number; id?: string; name?: string; percent?: number }
+export type AssistantMode = "read" | "plan" | "full";
+export interface AssistantModeText { read: string; plan: string; full: string }
+/** Where winforge-mcp.exe is and what to paste to connect it. Commands are code, never prose. */
+export interface AssistantInfo {
+    exePath: string; exists: boolean; version?: string; installedNextToApp: boolean;
+    commands: { claudeCode: AssistantModeText; claudeDesktopJson: string; claudeDesktop: AssistantModeText };
+    modes: AssistantMode[];
+}
 
 export const api = Go as unknown as {
     GetState(): Promise<State>;
@@ -180,6 +188,10 @@ export const api = Go as unknown as {
     DiagPreview(): Promise<string>;
     /** Saves the last preview. An empty path asks where; "" comes back when cancelled. */
     DiagSave(path: string): Promise<string>;
+    /** Looks for winforge-mcp.exe next to WinForge.exe and builds the commands to paste. Runs and writes nothing. */
+    AssistantInfo(): Promise<AssistantInfo>;
+    /** Shows winforge-mcp.exe in Explorer. */
+    AssistantRevealExe(): Promise<void>;
     CheckUpdate(): Promise<UpdateInfo>;
     InstallUpdate(): Promise<void>;
     Upgrades(): Promise<UpgradeInfo[]>;

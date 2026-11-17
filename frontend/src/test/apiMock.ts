@@ -3,6 +3,7 @@ import {vi} from "vitest";
 import type {KitProgress, StorageProgress} from "../api";
 import type {InstallEvent, Profile, State} from "../lib/model";
 import {autoApi, resetAuto} from "./autoMock";
+import {assistantApi, resetAssistant} from "./assistantMock";
 import {diagApi, resetDiag} from "./diagMock";
 import {makeState, planFor} from "./fixtures";
 
@@ -35,7 +36,7 @@ export const api = {
     ServicesList: vi.fn(), ServicesSetMode: vi.fn(), ServicesRestore: vi.fn(), TasksList: vi.fn(), TasksSetEnabled: vi.fn(), TasksRestore: vi.fn(),
     HistoryList: vi.fn(), HistoryRollbackPlan: vi.fn(), HistoryRollback: vi.fn(),
     UninstallList: vi.fn(), UninstallApps: vi.fn(), UninstallVerify: vi.fn(), LeftoversFind: vi.fn(), LeftoversRecycle: vi.fn(),
-    ...autoApi, ...diagApi,
+    ...autoApi, ...diagApi, ...assistantApi,
     KitPrepare: vi.fn(), KitCreate: vi.fn(), KitOpen: vi.fn(), KitPlan: vi.fn(), KitInstall: vi.fn(), KitVerify: vi.fn(), KitCancel: vi.fn(),
     ...autoApi,
 };
@@ -45,6 +46,7 @@ export function resetApi(state: State = makeState()): void {
     for (const fn of Object.values(api)) fn.mockReset();
     resetAuto();
     resetDiag();
+    resetAssistant();
     api.GetState.mockImplementation(async () => structuredClone(state));
     api.Plan.mockImplementation(async (p: Profile) => planFor(p));
     api.Apply.mockResolvedValue(undefined);
