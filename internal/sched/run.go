@@ -8,20 +8,23 @@ import (
 	"time"
 
 	"github.com/Sebas1705/WinForge/internal/catalog"
+	"github.com/Sebas1705/WinForge/internal/exitcode"
 	"github.com/Sebas1705/WinForge/internal/install"
 	"github.com/Sebas1705/WinForge/internal/system"
 	"github.com/Sebas1705/WinForge/internal/updates"
 )
 
-// Exit codes of `winforge-cli updates`, documented in its --help.
+// Exit codes of `winforge-cli updates`, documented in its --help. The numbers are shared by every
+// subcommand and defined in internal/exitcode.
 const (
-	ExitOK       = 0 // checked (and updated what it may); nothing went wrong
-	ExitFailures = 1 // some updates were tried and failed
-	ExitUsage    = 2 // the command line was not understood
-	ExitBusy     = 3 // another run is in progress: nothing was done
-	ExitCheck    = 4 // winget is missing or could not list the updates
-	ExitSettings = 5 // the ignore list is unreadable: nothing was done
-	ExitTimeout  = 6 // the run hit its time limit
+	ExitOK       = exitcode.OK       // checked (and updated what it may); nothing went wrong
+	ExitFailures = exitcode.Failures // some updates were tried and failed
+	ExitUsage    = exitcode.Usage    // the command line was not understood
+	ExitBusy     = exitcode.Busy     // another run is in progress: nothing was done
+	ExitCheck    = exitcode.Prereq   // winget is missing or could not list the updates
+	ExitSettings = exitcode.Data     // the ignore list is unreadable: nothing was done
+	ExitTimeout  = exitcode.Timeout  // the run hit its time limit
+	ExitReboot   = exitcode.Reboot   // updated fine, but an app asks for a restart
 )
 
 // Env is what a run needs from the machine; tests fill it with fakes.
@@ -162,6 +165,9 @@ func (r Report) ExitCode() int {
 	}
 	if r.Count(ResultFailed) > 0 {
 		return ExitFailures
+	}
+	if r.Restart() {
+		return ExitReboot
 	}
 	return ExitOK
 }

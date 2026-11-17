@@ -96,7 +96,7 @@ describe("what changed since a profile was applied", () => {
         expect(saved.id).toBe("mine");
         expect(saved.apps).toEqual([{id: "gimp"}, {id: "firefox"}, {id: "git"}]); // what was there, then the new ones sorted
         expect(Object.keys(saved)).not.toContain("resolved"); // a profile, not what the interface built from it
-        expect(await screen.findByText("2 apps added to “Mine”.")).toBeInTheDocument();
+        expect(await screen.findByText("Added to “Mine”: 2.")).toBeInTheDocument();
         await waitFor(() => expect(api.GetState.mock.calls.length).toBeGreaterThan(getStates)); // profiles read again
         expect(screen.getByRole("heading", {name: "Mine"})).toBeInTheDocument(); // still on the profile
     });
@@ -121,7 +121,7 @@ describe("what changed since a profile was applied", () => {
         const user = await open();
         await user.click(await screen.findByRole("button", {name: "Add 2 to this profile"}));
         expect(await screen.findByText("disk is full")).toBeInTheDocument();
-        expect(screen.queryByText(/apps added to/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Added to “Mine”/)).not.toBeInTheDocument();
     });
 
     it("reads the report again when the PC is scanned again", async () => {

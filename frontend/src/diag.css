@@ -1,0 +1,22 @@
+/* Diagnostic report dialog and the "Suggest this app" link. Only the repo's colour tokens are used, so the
+   six styles and both themes keep their contrast: text is --text or --muted on --surface, the edges that
+   must be seen (the preview box) use --control, and nothing is wider than the dialog. */
+.modal.diagdlg { overflow: auto; gap: 10px; min-width: 0; }
+.diagdlg > * { min-width: 0; }
+.diagpromise { margin: 0; padding: 10px 12px; border: 1px solid var(--control); border-radius: 10px; background: var(--surface2); color: var(--text); }
+.diaglabel { font-weight: 600; margin-top: 4px; }
+.diagpreview { display: block; width: 100%; max-width: 100%; box-sizing: border-box; min-height: 160px; resize: vertical; overflow: auto; white-space: pre;
+    background: var(--bg); color: var(--text); border: 1px solid var(--control); border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.5; }
+.diagerror { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; border: 1px solid var(--control); border-left: 3px solid var(--bad); border-radius: 8px; padding: 10px 12px; color: var(--text); }
+.diagnote { min-height: 1.4em; overflow-wrap: anywhere; color: var(--text); }
+.diagnote[data-kind="error"] { border-left: 3px solid var(--bad); padding-left: 8px; }
+.diagnote[data-kind="ok"] { border-left: 3px solid var(--ok); padding-left: 8px; }
+.diagfield .actions { justify-content: flex-start; }
+.suggest { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 6px 8px 18px; min-width: 0; }
+.suggest .suggestlink { min-height: 32px; padding: 4px 6px; font-weight: 600; }
+.suggest .suggesthint { max-width: 60ch; overflow-wrap: anywhere; }
+.cardgrid > .suggest { grid-column: 1 / -1; }
+@media (max-width: 520px) {
+    .modal.diagdlg { padding: 16px; }
+    .diagpreview { min-height: 120px; }
+}

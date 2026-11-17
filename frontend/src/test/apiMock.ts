@@ -1,8 +1,9 @@
 import {act} from "@testing-library/react";
 import {vi} from "vitest";
-import type {StorageProgress} from "../api";
+import type {KitProgress, StorageProgress} from "../api";
 import type {InstallEvent, Profile, State} from "../lib/model";
 import {autoApi, resetAuto} from "./autoMock";
+import {diagApi, resetDiag} from "./diagMock";
 import {makeState, planFor} from "./fixtures";
 
 type Handler<T> = (e: T) => void;
@@ -13,14 +14,15 @@ const handlers = {
     done: new Set<Handler<string[] | null>>(),
     progress: new Set<Handler<{ done: number; total: number }>>(),
     storageProgress: new Set<Handler<StorageProgress>>(),
+    kitProgress: new Set<Handler<KitProgress>>(),
 };
 
 /** Every call the app can make into Go, as a spy. Defaults describe a quiet, healthy PC. */
 export const api = {
     GetState: vi.fn(), Plan: vi.fn(), Apply: vi.fn(), Cancel: vi.fn(), SaveProfile: vi.fn(), DeleteProfile: vi.fn(),
-    ProfileFromPC: vi.fn(), ExportProfile: vi.fn(), ExportWinget: vi.fn(), ExportConfigure: vi.fn(), ProfileDrift: vi.fn(), AcceptProfileState: vi.fn(), ExportScript: vi.fn(), ImportProfile: vi.fn(),
+    ProfileFromPC: vi.fn(), ExportProfile: vi.fn(), ExportWinget: vi.fn(), ExportConfigure: vi.fn(), ProfileDrift: vi.fn(), AcceptProfileState: vi.fn(), PickProfileFile: vi.fn(), CompareFile: vi.fn(), CompareCode: vi.fn(), CompareFiles: vi.fn(), ExportScript: vi.fn(), ImportProfile: vi.fn(),
     RestartAsAdmin: vi.fn(), OpenURL: vi.fn(), CheckUpdate: vi.fn(), InstallUpdate: vi.fn(), Upgrades: vi.fn(), PlanUpgrades: vi.fn(),
-    ApplyUpgrades: vi.fn(), IgnoreUpdate: vi.fn(), ProfilesFolder: vi.fn(), SetProfilesFolder: vi.fn(), ResetProfilesFolder: vi.fn(), StopIgnoringUpdate: vi.fn(), HealthScan: vi.fn(), HealthUpdates: vi.fn(), HealthHistory: vi.fn(), HealthHistoryClear: vi.fn(), Battery: vi.fn(), SaveTextFile: vi.fn(), OpenLink: vi.fn(),
+    ApplyUpgrades: vi.fn(), IgnoreUpdate: vi.fn(), ProfilesFolder: vi.fn(), SetProfilesFolder: vi.fn(), ResetProfilesFolder: vi.fn(), StopIgnoringUpdate: vi.fn(), HealthScan: vi.fn(), HealthUpdates: vi.fn(), HealthHistory: vi.fn(), HealthHistoryClear: vi.fn(), Battery: vi.fn(), EOLReport: vi.fn(), SaveTextFile: vi.fn(), OpenLink: vi.fn(),
     ResumePending: vi.fn(), PlanPending: vi.fn(), DiscardPending: vi.fn(), PlanUninstall: vi.fn(), ApplyUninstall: vi.fn(),
     InstallWinget: vi.fn(), ShareCode: vi.fn(), ImportCode: vi.fn(), BackupSets: vi.fn(), PickFolder: vi.fn(), CreateBackup: vi.fn(),
     PickBackup: vi.fn(), RestoreSettings: vi.fn(), RestoreFolders: vi.fn(), Emulation: vi.fn(), PatchROM: vi.fn(),
@@ -29,9 +31,12 @@ export const api = {
     StorageVolumes: vi.fn(), StorageDefaults: vi.fn(), StorageScan: vi.fn(), StorageClean: vi.fn(), StorageBigFiles: vi.fn(),
     StorageFolders: vi.fn(), StorageDuplicates: vi.fn(), StorageRecycle: vi.fn(), StorageReveal: vi.fn(), StartupList: vi.fn(), StartupSet: vi.fn(), StartupReveal: vi.fn(), StorageProjects: vi.fn(), StorageProjectsClean: vi.fn(), StorageVirtualDisks: vi.fn(), StorageCancel: vi.fn(),
     EnvScan: vi.fn(), EnvFix: vi.fn(), EnvBackups: vi.fn(), EnvRestore: vi.fn(), FeaturesList: vi.fn(), WSLInfo: vi.fn(),
+    PrivacyList: vi.fn(), PrivacyApply: vi.fn(), PrivacyReset: vi.fn(), PrivacyBackups: vi.fn(), PrivacyRestore: vi.fn(),
     ServicesList: vi.fn(), ServicesSetMode: vi.fn(), ServicesRestore: vi.fn(), TasksList: vi.fn(), TasksSetEnabled: vi.fn(), TasksRestore: vi.fn(),
     HistoryList: vi.fn(), HistoryRollbackPlan: vi.fn(), HistoryRollback: vi.fn(),
     UninstallList: vi.fn(), UninstallApps: vi.fn(), UninstallVerify: vi.fn(), LeftoversFind: vi.fn(), LeftoversRecycle: vi.fn(),
+    ...autoApi, ...diagApi,
+    KitPrepare: vi.fn(), KitCreate: vi.fn(), KitOpen: vi.fn(), KitPlan: vi.fn(), KitInstall: vi.fn(), KitVerify: vi.fn(), KitCancel: vi.fn(),
     ...autoApi,
 };
 
@@ -39,6 +44,7 @@ export function resetApi(state: State = makeState()): void {
     for (const h of Object.values(handlers)) h.clear();
     for (const fn of Object.values(api)) fn.mockReset();
     resetAuto();
+    resetDiag();
     api.GetState.mockImplementation(async () => structuredClone(state));
     api.Plan.mockImplementation(async (p: Profile) => planFor(p));
     api.Apply.mockResolvedValue(undefined);
@@ -84,6 +90,7 @@ export function resetApi(state: State = makeState()): void {
     api.StartupList.mockResolvedValue([]);
     api.HealthHistory.mockResolvedValue({snapshots: [], statements: [], enough: false});
     api.HealthHistoryClear.mockResolvedValue(undefined);
+    api.EOLReport.mockResolvedValue({asOf: "2026-11-17", ageDays: 0, stale: false, findings: []});
     api.Battery.mockResolvedValue({present: false, batteries: [], designMWh: 0, fullMWh: 0, healthPct: 0, cycles: null, verdict: "unknown", history: [], goodMinPct: 80, replaceBelowPct: 60});
     api.StartupSet.mockResolvedValue([]);
     api.StartupReveal.mockResolvedValue(undefined);
@@ -98,6 +105,11 @@ export function resetApi(state: State = makeState()): void {
     api.UninstallVerify.mockResolvedValue({removed: [], still: []});
     api.LeftoversFind.mockResolvedValue({appId: "", appName: "", candidates: [], searched: []});
     api.LeftoversRecycle.mockResolvedValue({moved: 0, freedBytes: 0, failed: []});
+    api.KitPrepare.mockResolvedValue({folder: "", apps: [], notIncluded: [], needBytes: 0, freeBytes: 0, freeKnown: false, enough: true, existingKit: false});
+    api.KitCancel.mockResolvedValue(undefined);
+    api.KitInstall.mockResolvedValue(undefined);
+    api.KitVerify.mockResolvedValue({installed: [], missing: []});
+    api.KitPlan.mockImplementation(async (ids: string[]) => ({steps: ids.map((id) => ({kind: "kit", id, name: id})), alreadyInstalled: [], needsAdmin: false}));
     api.StorageProjects.mockResolvedValue([]);
     api.StorageProjectsClean.mockResolvedValue({freedBytes: 0, removed: 0, files: 0, failed: [], reasons: []});
     api.StorageVirtualDisks.mockResolvedValue([]);
@@ -106,6 +118,11 @@ export function resetApi(state: State = makeState()): void {
     api.EnvFix.mockResolvedValue({applied: 0, failed: [], backupId: ""});
     api.EnvBackups.mockResolvedValue([]);
     api.EnvRestore.mockResolvedValue(undefined);
+    api.PrivacyList.mockResolvedValue([]);
+    api.PrivacyApply.mockResolvedValue({applied: 0, skipped: [], failed: [], backupId: ""});
+    api.PrivacyReset.mockResolvedValue({applied: 0, skipped: [], failed: [], backupId: ""});
+    api.PrivacyBackups.mockResolvedValue([]);
+    api.PrivacyRestore.mockResolvedValue({restored: [], changedSince: [], failed: []});
     api.FeaturesList.mockResolvedValue([]);
     api.WSLInfo.mockResolvedValue({installed: false, defaultVersion: 0, distros: []});
     api.HistoryList.mockResolvedValue({entries: [], total: 0, apps: []});
@@ -127,6 +144,7 @@ export const moduleMock = {
         done: (fn: Handler<string[] | null>) => { handlers.done.add(fn); return () => handlers.done.delete(fn); },
         progress: (fn: Handler<{ done: number; total: number }>) => { handlers.progress.add(fn); return () => handlers.progress.delete(fn); },
         storageProgress: (fn: Handler<StorageProgress>) => { handlers.storageProgress.add(fn); return () => handlers.storageProgress.delete(fn); },
+        kitProgress: (fn: Handler<KitProgress>) => { handlers.kitProgress.add(fn); return () => handlers.kitProgress.delete(fn); },
     },
 };
 
@@ -136,5 +154,6 @@ export const emit = {
     scan: (scan: "pc" | "health", step: string) => act(() => { handlers.scan.forEach((h) => h({scan, step})); }),
     install: (e: InstallEvent) => act(() => { handlers.install.forEach((h) => h(e)); }),
     storageProgress: (e: StorageProgress) => act(() => { handlers.storageProgress.forEach((h) => h(e)); }),
+    kitProgress: (e: KitProgress) => act(() => { handlers.kitProgress.forEach((h) => h(e)); }),
     done: (failed: string[] | null = []) => act(() => { handlers.done.forEach((h) => h(failed)); }),
 };

@@ -3,6 +3,7 @@
 import * as Go from "../wailsjs/go/main/App";
 import {EventsOn} from "../wailsjs/runtime/runtime";
 import type {HealthResult} from "./lib/health";
+import type {EOLReport} from "./lib/eol";
 import type {BatteryInfo, HHView} from "./lib/hhist";
 import type {InstallEvent, Plan, Profile, State, UpgradeInfo} from "./lib/model";
 
@@ -11,6 +12,17 @@ export interface ProfilesFolderChange { copied: number; skipped: number; info: P
 export interface DriftApp { id: string; name: string }
 export interface DriftChange { id: string; name: string; from: string; to: string }
 export interface DriftInfo { hasBaseline: boolean; at?: string; removed: DriftApp[]; added: DriftApp[]; updated: DriftChange[]; count: number }
+export interface CompareApp { id: string; name: string }
+export interface CompareVersion { id: string; name: string; a: string; b: string }
+export interface CompareUnknown { id: string; in: "a" | "b" | "both" }
+export interface CompareSide {
+    kind: "pc" | "file" | "code"; name: string; file: string; apps: number; versioned: boolean;
+    unknownRecipes: string[]; unknownProfiles: string[]; profile: Profile | null;
+}
+export interface CompareResult {
+    a: CompareSide; b: CompareSide; onlyA: CompareApp[]; onlyB: CompareApp[]; both: CompareApp[];
+    differ: CompareVersion[]; unknown: CompareUnknown[];
+}
 export interface UpdateInfo { current: string; latest: string; available: boolean; url: string; notes: string }
 export interface BackupSet { id: string; files: number; bytes: number }
 export interface BackupRequest { sets: string[]; apps: boolean; folders: string[] }
@@ -63,6 +75,16 @@ export interface EnvVar { name: string; scope: "user" | "machine"; value: string
 export interface EnvReport { findings: EnvFinding[]; userPath: string[]; machinePath: string[]; tools: EnvTool[]; vars: EnvVar[] }
 export interface EnvFixResult { applied: number; failed: string[]; backupId: string }
 export interface EnvBackup { id: string; time: string; changed: string[] }
+export type PrivacyState = "private" | "default" | "custom" | "unknown";
+export interface PrivacyChange {
+    path: string; name: string; existed: boolean; oldType: string; old: string;
+    /** The type and data applying writes. */
+    type: string; private: number; error: boolean;
+}
+export interface PrivacyTweak { id: string; area: string; nameKey: string; whyKey: string; state: PrivacyState; changes: PrivacyChange[] }
+export interface PrivacyResult { applied: number; skipped: string[]; failed: string[]; backupId: string }
+export interface PrivacyBackup { id: string; time: string; action: "apply" | "reset"; tweaks: string[]; restored: string | null }
+export interface PrivacyRestoreResult { restored: string[]; changedSince: string[]; failed: string[] }
 export type FeatureId = "wsl" | "vmp" | "hyperv" | "sandbox" | "netfx3";
 export interface Feature {
     id: FeatureId; state: "on" | "off" | "unavailable" | "unknown"; restartPending: boolean; enable: string; disable: string; needsAdmin: boolean;
@@ -111,6 +133,27 @@ export interface AutoState extends AutoSettings {
     problem?: "runner-missing" | "task-program-missing"; runs: AutoReport[];
 }
 export interface ImportResult { profile: Profile; unknownApps: string[]; unknownRecipes: string[] }
+export interface KitPlanApp { id: string; name: string; winget: string }
+export interface KitNotIncluded { id: string; name: string; winget?: string; reason: string; detail?: string }
+export interface KitCreatePlan {
+    folder: string; apps: KitPlanApp[]; notIncluded: KitNotIncluded[]; needBytes: number; freeBytes: number; freeKnown: boolean;
+    enough: boolean; existingKit: boolean; problem?: string;
+}
+export interface KitCreateResult {
+    added: string[]; failed: KitNotIncluded[]; totalApps: number; bytes: number; cancelled: boolean; fingerprint: string; folder: string;
+}
+export interface KitProblem { kind: string; file?: string }
+export interface KitApp {
+    id: string; name: string; version: string; type: string; sizeBytes: number; admin?: boolean;
+    state: "ready" | "problem" | "unsupported"; problems: KitProblem[]; reason?: string; detail?: string;
+    installed?: boolean; installedVersion?: string;
+}
+export interface KitListing {
+    folder: string; fingerprint: string; created: string; updated?: string; winforge: string; profile?: string;
+    apps: KitApp[]; notIncluded: KitNotIncluded[]; unlisted: string[]; needsAdmin: boolean;
+}
+export interface KitVerified { installed: { id: string; name: string }[]; missing: { id: string; name: string }[] }
+export interface KitProgress { task: "create" | "verify"; done: number; total: number; id?: string; name?: string; percent?: number }
 
 export const api = Go as unknown as {
     GetState(): Promise<State>;
@@ -125,10 +168,18 @@ export const api = Go as unknown as {
     ExportConfigure(p: Profile): Promise<string>;
     ProfileDrift(id: string): Promise<DriftInfo>;
     AcceptProfileState(id: string): Promise<void>;
+    PickProfileFile(): Promise<string>;
+    CompareFile(path: string): Promise<CompareResult>;
+    CompareCode(code: string): Promise<CompareResult>;
+    CompareFiles(pathA: string, pathB: string): Promise<CompareResult>;
     ExportScript(p: Profile): Promise<string>;
     ImportProfile(): Promise<ImportResult | null>;
     RestartAsAdmin(): Promise<void>;
     OpenURL(u: string): Promise<void>;
+    /** The exact text of the diagnostic report (nothing is written or sent). */
+    DiagPreview(): Promise<string>;
+    /** Saves the last preview. An empty path asks where; "" comes back when cancelled. */
+    DiagSave(path: string): Promise<string>;
     CheckUpdate(): Promise<UpdateInfo>;
     InstallUpdate(): Promise<void>;
     Upgrades(): Promise<UpgradeInfo[]>;
@@ -144,6 +195,7 @@ export const api = Go as unknown as {
     HealthHistory(): Promise<HHView>;
     HealthHistoryClear(): Promise<void>;
     Battery(): Promise<BatteryInfo>;
+    EOLReport(): Promise<EOLReport>;
     SaveTextFile(name: string, content: string): Promise<string>;
     OpenLink(url: string): Promise<void>;
     ResumePending(): Promise<void>;
@@ -203,6 +255,11 @@ export const api = Go as unknown as {
     EnvFix(ids: string[]): Promise<EnvFixResult>;
     EnvBackups(): Promise<EnvBackup[]>;
     EnvRestore(id: string): Promise<void>;
+    PrivacyList(): Promise<PrivacyTweak[]>;
+    PrivacyApply(ids: string[]): Promise<PrivacyResult>;
+    PrivacyReset(ids: string[]): Promise<PrivacyResult>;
+    PrivacyBackups(): Promise<PrivacyBackup[]>;
+    PrivacyRestore(id: string): Promise<PrivacyRestoreResult>;
     FeaturesList(): Promise<Feature[]>;
     WSLInfo(): Promise<WSLInfo>;
     HistoryList(filter: HistoryFilter): Promise<HistoryPage>;
@@ -214,6 +271,13 @@ export const api = Go as unknown as {
     AutoRunNow(): Promise<AutoReport>;
     AutoSetLanguage(lang: string): Promise<void>;
     LaunchTarget(): Promise<string>;
+    KitPrepare(ids: string[], folder: string): Promise<KitCreatePlan>;
+    KitCreate(ids: string[], folder: string, profileName: string): Promise<KitCreateResult>;
+    KitOpen(folder: string): Promise<KitListing>;
+    KitPlan(ids: string[]): Promise<Plan>;
+    KitInstall(ids: string[]): Promise<void>;
+    KitVerify(ids: string[]): Promise<KitVerified>;
+    KitCancel(): Promise<void>;
 };
 
 export const on = {
@@ -222,6 +286,7 @@ export const on = {
     install: (fn: (e: InstallEvent) => void): (() => void) => EventsOn("install", fn),
     done: (fn: (failed: string[] | null) => void): (() => void) => EventsOn("install:done", fn),
     storageProgress: (fn: (p: StorageProgress) => void): (() => void) => EventsOn("storage:progress", fn),
+    kitProgress: (fn: (p: KitProgress) => void): (() => void) => EventsOn("kit:progress", fn),
     progress: (fn: (p: { done: number; total: number }) => void): (() => void) => EventsOn("update:progress", fn),
 };
 

@@ -1,17 +1,23 @@
+import {diagEn, diagEs} from "./i18n.diag";
 import {autoEn, autoEs} from "./i18n.auto";
 import {backupEn, backupEs} from "./i18n.backup";
 import {gamesEn, gamesEs} from "./i18n.games";
 import {repairEn, repairEs} from "./i18n.repair";
 import {startupEn, startupEs} from "./i18n.startup";
 import {developerEn, developerEs} from "./i18n.developer";
+import {privacyEn, privacyEs} from "./i18n.privacy";
 import {svcEn, svcEs} from "./i18n.svc";
 import {uninstallEn, uninstallEs} from "./i18n.uninstall";
 import {storageEn, storageEs} from "./i18n.storage";
 import {subEn, subEs} from "./i18n.sub";
 import {healthEn, healthEs} from "./i18n.health";
 import {historyEn, historyEs} from "./i18n.history";
+import {eolEn, eolEs} from "./i18n.eol";
 import {hhistEn, hhistEs} from "./i18n.hhist";
+import {tmapEn, tmapEs} from "./i18n.tmap";
 import {uiEn, uiEs} from "./i18n.ui";
+import {compareEn, compareEs} from "./i18n.compare";
+import {kitEn, kitEs} from "./i18n.kit";
 
 // Interface strings in English and Spanish. Catalog content (app names,
 // descriptions, profile names) comes from the catalog and stays as written
@@ -83,7 +89,7 @@ const baseEn = {
     "drift.accept": "Accept these changes",
     "drift.acceptHint": "Use this PC as it is now as the reference. Nothing on the PC changes.",
     "drift.accepted": "“{name}” now matches this PC.",
-    "drift.addedToast": "{n} apps added to “{name}”.",
+    "drift.addedToast": "Added to “{name}”: {n}.",
     "drift.error": "Could not check for changes: {e}",
     "profiles.exportConfigure": "Export for winget configure",
     "profiles.exportConfigureHint": "A .winget file for `winget configure`. Apps only: recipes run scripts, so they are left out.",
@@ -268,7 +274,7 @@ const baseEn = {
     "cat.utilities": "Utilities",
 } as const;
 
-const en = {...baseEn, ...healthEn, ...uiEn, ...backupEn, ...subEn, ...gamesEn, ...repairEn, ...storageEn, ...startupEn, ...developerEn, ...svcEn, ...historyEn, ...hhistEn, ...uninstallEn, ...autoEn} as const;
+const en = {...baseEn, ...healthEn, ...uiEn, ...backupEn, ...subEn, ...gamesEn, ...repairEn, ...storageEn, ...startupEn, ...developerEn, ...svcEn, ...historyEn, ...hhistEn, ...tmapEn,...uninstallEn, ...autoEn, ...privacyEn, ...eolEn, ...compareEn, ...diagEn, ...kitEn} as const;
 
 export type Key = keyof typeof en;
 
@@ -338,7 +344,7 @@ const baseEs: Record<keyof typeof baseEn, string> = {
     "drift.accept": "Aceptar estos cambios",
     "drift.acceptHint": "Usa este PC tal como está ahora como referencia. No se toca nada del PC.",
     "drift.accepted": "«{name}» ahora coincide con este PC.",
-    "drift.addedToast": "{n} apps añadidas a «{name}».",
+    "drift.addedToast": "Añadidas a «{name}»: {n}.",
     "drift.error": "No se pudieron comprobar los cambios: {e}",
     "profiles.exportConfigure": "Exportar para winget configure",
     "profiles.exportConfigureHint": "Un archivo .winget para `winget configure`. Solo apps: las recetas ejecutan scripts y se dejan fuera.",
@@ -523,7 +529,7 @@ const baseEs: Record<keyof typeof baseEn, string> = {
     "cat.utilities": "Utilidades",
 };
 
-const es: Record<Key, string> = {...baseEs, ...healthEs, ...uiEs, ...backupEs, ...subEs, ...gamesEs, ...repairEs, ...storageEs, ...startupEs, ...developerEs, ...svcEs, ...historyEs, ...hhistEs, ...uninstallEs, ...autoEs};
+const es: Record<Key, string> = {...baseEs, ...healthEs, ...uiEs, ...backupEs, ...subEs, ...gamesEs, ...repairEs, ...storageEs, ...startupEs, ...developerEs, ...svcEs, ...historyEs, ...hhistEs, ...tmapEs,...uninstallEs, ...autoEs, ...privacyEs, ...eolEs, ...compareEs, ...diagEs, ...kitEs};
 
 export type Lang = "en" | "es";
 export type LangSetting = Lang | "auto";

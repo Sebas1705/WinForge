@@ -1,0 +1,44 @@
+/* Offline kit panels (profiles page). Only the repo's colour tokens are used, so the six styles and both
+   themes keep their contrast: text is --text or --muted on --surface, edges that must be seen use --control.
+   Everything can shrink (min-width: 0, minmax(0, 1fr)) and wraps, so a narrow window never scrolls sideways. */
+.kitcard { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 16px 18px; margin: 0 0 18px; min-width: 0; display: grid; gap: 12px; }
+.kitcard:focus { outline: none; }
+.kitcard:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.kitcard h2 { font-size: 18px; margin: 0; font-family: var(--font-display); }
+.kitcard h3 { font-size: 14px; margin: 0 0 6px; }
+.kitcard p { margin: 0; overflow-wrap: anywhere; }
+.kithead { display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.kithead > div { flex: 1 1 260px; min-width: 0; display: grid; gap: 4px; }
+.kitfolder { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 0; }
+.kitfolder .mono { flex: 1 1 200px; min-width: 0; overflow-wrap: anywhere; border: 1px solid var(--control); border-radius: 7px; padding: 6px 10px; background: var(--surface); }
+.kitnote { display: flex; gap: 8px; align-items: flex-start; border-left: 3px solid var(--control); padding: 4px 0 4px 10px; color: var(--text); min-width: 0; }
+.kitnote.warn { border-left-color: var(--warn); }
+.kitnote.bad { border-left-color: var(--bad); }
+.kitnote svg { flex: none; margin-top: 2px; }
+.kitnote > span { min-width: 0; overflow-wrap: anywhere; }
+.kitbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.kitbar .grow { min-width: 0; }
+.kitlist { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.kitlist li { min-width: 0; }
+.kitrow { display: flex; align-items: flex-start; gap: 12px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); min-width: 0; }
+label.kitrow { cursor: pointer; }
+label.kitrow:hover { border-color: var(--accent); }
+.kitrow.on { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.kitrow input[type=checkbox] { margin-top: 3px; flex: none; accent-color: var(--accent); }
+.kitrow .body { flex: 1 1 0; min-width: 0; display: grid; gap: 3px; }
+.kitrow .name { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+.kitrow .name b { overflow-wrap: anywhere; }
+.kitrow small { overflow-wrap: anywhere; }
+.kitproblems { margin: 4px 0 0; padding-left: 18px; display: grid; gap: 2px; color: var(--text); }
+.kitproblems li { overflow-wrap: anywhere; }
+.kitstate.bad { color: var(--bad); border-color: var(--bad); }
+.kitstate.ok { color: var(--ok); border-color: var(--ok); }
+.kitprint { font-family: var(--font-mono); font-size: 12px; overflow-wrap: anywhere; word-break: break-all; }
+.kitprogress { display: grid; gap: 6px; }
+.kitprogress progress { width: 100%; height: 6px; accent-color: var(--accent); }
+@media (max-width: 760px) {
+    .kitcard { padding: 14px; }
+    .kitrow { padding: 10px; }
+}
+.kitstack { display: grid; gap: 8px; min-width: 0; }
+.kitstack.tight { gap: 4px; }

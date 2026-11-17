@@ -5,12 +5,15 @@ import {ConfirmDialog, Segmented} from "../../components/Modals";
 import {formatBytes, formatDate} from "../../lib/format";
 import {getLang, t} from "../../lib/i18n";
 import {fileCount, folderName, splitPath} from "../../lib/storage";
+import {SpaceMap} from "./SpaceMap";
 import {TaskStatus, type TaskRunner} from "./useTask";
 
 /** How many of the biggest files are asked for. */
 export const BIG_LIMIT = 50;
 
-type Tab = "files" | "folders";
+type Tab = "files" | "folders" | "map";
+/** What is read: the Map tab draws the same folder sizes as the Folders tab. */
+type Kind = "files" | "folders";
 type Note = "stopped" | "error";
 
 /**
@@ -29,11 +32,12 @@ export function Biggest(p: { task: TaskRunner; home: string; say: (m: string) =>
     const [moving, setMoving] = useState(false);
 
     const root = trail.length > 0 ? trail[trail.length - 1] : p.home;
-    const key = `${tab}|${root}`;
-    const have = tab === "files" ? root in files : root in folders;
+    const kind: Kind = tab === "map" ? "folders" : tab;
+    const key = `${kind}|${root}`;
+    const have = kind === "files" ? root in files : root in folders;
     const locked = p.task.busy !== null || moving;
 
-    const load = async (which: Tab, dir: string) => {
+    const load = async (which: Kind, dir: string) => {
         const k = `${which}|${dir}`;
         const out = which === "files"
             ? await p.task.run("big", () => api.StorageBigFiles(dir, BIG_LIMIT))
@@ -52,14 +56,14 @@ export function Biggest(p: { task: TaskRunner; home: string; say: (m: string) =>
     // After the first scan, moving into a folder or changing tab reads what is not known yet.
     // A failed or stopped read leaves a note, so it is not retried until the person asks.
     useEffect(() => {
-        if (started && root && !have && !(key in notes) && p.task.busy === null) void load(tab, root);
-    }, [started, root, tab, have, p.task.busy]);
+        if (started && root && !have && !(key in notes) && p.task.busy === null) void load(kind, root);
+    }, [started, root, kind, have, p.task.busy]);
 
     const scanNow = () => {
         if (!root) return;
         setNotes((n) => { const c = {...n}; delete c[key]; return c; });
         setStarted(true);
-        void load(tab, root);
+        void load(kind, root);
     };
 
     const choose = async () => {
@@ -84,10 +88,12 @@ export function Biggest(p: { task: TaskRunner; home: string; say: (m: string) =>
         } catch (e) { p.say(errText(e)); } finally { setMoving(false); }
     };
 
+    const revealPath = (path: string) => { api.StorageReveal(path).catch((e) => p.say(errText(e))); };
+    const openFolder = (path: string) => setTrail([...(trail.length > 0 ? trail : [root]), path]);
     const reveal = (f: BigFile) => { api.StorageReveal(f.path).catch((e) => p.say(errText(e))); };
 
-    const list = tab === "files" ? files[root] : folders[root];
-    const biggest = tab === "folders" ? Math.max(1, ...(folders[root] ?? []).map((f) => f.sizeBytes)) : 1;
+    const list = kind === "files" ? files[root] : folders[root];
+    const biggest = kind === "folders" ? Math.max(1, ...(folders[root] ?? []).map((f) => f.sizeBytes)) : 1;
 
     return (
         <section aria-labelledby="storage-big">
@@ -116,7 +122,7 @@ export function Biggest(p: { task: TaskRunner; home: string; say: (m: string) =>
             )}
 
             <div className="toolrow">
-                <Segmented<Tab> value={tab} onChange={setTab} options={[["files", t("storage.big.files")], ["folders", t("storage.big.folders")]]}/>
+                <Segmented<Tab> value={tab} onChange={setTab} options={[["files", t("storage.big.files")], ["folders", t("storage.big.folders")], ["map", t("tmap.tab")]]}/>
                 <button className="primary" disabled={locked || !root} onClick={scanNow}>
                     <Icon name="search" size={15}/> {have ? t("storage.big.rescan") : t("storage.big.scan")}
                 </button>
@@ -164,7 +170,7 @@ export function Biggest(p: { task: TaskRunner; home: string; say: (m: string) =>
                     {folders[root].map((f) => (
                         <li key={f.path}>
                             <button className="folderitem" disabled={locked} title={f.path} aria-label={t("storage.big.openFolder", {name: f.name})}
-                                    onClick={() => setTrail([...(trail.length > 0 ? trail : [root]), f.path])}>
+                                    onClick={() => openFolder(f.path)}>
                                 <span className="fname">{f.name}</span>
                                 <span className="mono fsize">{formatBytes(f.sizeBytes)}</span>
                                 <span className="muted small fcount">{fileCount(f.files)}</span>
@@ -174,6 +180,8 @@ export function Biggest(p: { task: TaskRunner; home: string; say: (m: string) =>
                     ))}
                 </ul>
             ))}
+
+            {list && tab === "map" && <SpaceMap key={root} folders={folders[root]} root={root} locked={locked} onOpen={openFolder} onReveal={revealPath}/>}
 
             {recycling && (
                 <ConfirmDialog title={t("storage.recycle.title")} confirm={t("storage.recycle.confirm")} danger

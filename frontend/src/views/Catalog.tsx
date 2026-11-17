@@ -1,6 +1,7 @@
 import {useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent} from "react";
 import {AppCard} from "../components/AppCard";
 import {AppIcon} from "../components/AppIcon";
+import {SuggestApp} from "../components/SuggestApp";
 import {Icon, categoryIcon} from "../components/Icon";
 import {categoryLabel, getLang, subLabel, t} from "../lib/i18n";
 import {filterApps, subCategories, type App, type Filter} from "../lib/model";
@@ -146,6 +147,7 @@ export function Catalog(p: {
                                  onOpen={p.onDetail} onInstall={p.onInstallOne}/>
                     ))}
                     {list.length === 0 && <p className="empty muted">{t("catalog.empty")}</p>}
+                    {list.length === 0 && <SuggestApp query={query} openURL={p.openURL}/>}
                 </div>
             ) : (
                 <ul className="list">
@@ -170,6 +172,7 @@ export function Catalog(p: {
                         </li>
                     ))}
                     {list.length === 0 && <li className="empty muted">{t("catalog.empty")}</li>}
+                    {list.length === 0 && <SuggestApp as="li" query={query} openURL={p.openURL}/>}
                 </ul>
             )}
 

@@ -1,0 +1,35 @@
+name: App request
+description: Ask for an app to be added to the WinForge catalog
+title: "App request: "
+labels: ["app-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an app. The catalog only lists apps that winget can install, so a winget id makes this much faster.
+        The "Not here? Suggest this app" link in WinForge opens this form with the name you searched for already filled in.
+        Please do not add personal information to this request.
+  - type: input
+    id: app-name
+    attributes:
+      label: App name
+      description: The name of the app, as you would search for it.
+    validations:
+      required: true
+  - type: input
+    id: winget-id
+    attributes:
+      label: winget id (if you know it)
+      description: For example `Publisher.AppName`. Running `winget search <name>` finds it.
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would it be a good fit for the catalog?
+      description: What it does, and why you would like WinForge to offer it.
+    validations:
+      required: true
+  - type: textarea
+    id: more
+    attributes:
+      label: Anything else
+      description: A website, whether it is free or open source, or a similar app that is already in the catalog.

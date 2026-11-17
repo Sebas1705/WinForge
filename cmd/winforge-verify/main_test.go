@@ -5,8 +5,20 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/Sebas1705/WinForge/catalogdata"
+	"github.com/Sebas1705/WinForge/internal/catalog"
 	"github.com/Sebas1705/WinForge/internal/wingetpkgs"
 )
+
+func TestCheckEOLAcceptsTheCommittedTable(t *testing.T) {
+	cat, err := catalog.Load(catalogdata.FS)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := checkEOL(cat); err != nil {
+		t.Fatal(err)
+	}
+}
 
 func TestClassify(t *testing.T) {
 	limited := fmt.Errorf("lookup: %w", &wingetpkgs.RateLimitError{URL: "u", Status: 429})

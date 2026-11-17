@@ -62,6 +62,18 @@ export function CheckUpdate() {
   return window['go']['main']['App']['CheckUpdate']();
 }
 
+export function CompareCode(arg1) {
+  return window['go']['main']['App']['CompareCode'](arg1);
+}
+
+export function CompareFile(arg1) {
+  return window['go']['main']['App']['CompareFile'](arg1);
+}
+
+export function CompareFiles(arg1, arg2) {
+  return window['go']['main']['App']['CompareFiles'](arg1, arg2);
+}
+
 export function CreateBackup(arg1) {
   return window['go']['main']['App']['CreateBackup'](arg1);
 }
@@ -70,8 +82,20 @@ export function DeleteProfile(arg1) {
   return window['go']['main']['App']['DeleteProfile'](arg1);
 }
 
+export function DiagPreview() {
+  return window['go']['main']['App']['DiagPreview']();
+}
+
+export function DiagSave(arg1) {
+  return window['go']['main']['App']['DiagSave'](arg1);
+}
+
 export function DiscardPending() {
   return window['go']['main']['App']['DiscardPending']();
+}
+
+export function EOLReport() {
+  return window['go']['main']['App']['EOLReport']();
 }
 
 export function Emulation() {
@@ -174,6 +198,34 @@ export function InstallWinget() {
   return window['go']['main']['App']['InstallWinget']();
 }
 
+export function KitCancel() {
+  return window['go']['main']['App']['KitCancel']();
+}
+
+export function KitCreate(arg1, arg2, arg3) {
+  return window['go']['main']['App']['KitCreate'](arg1, arg2, arg3);
+}
+
+export function KitInstall(arg1) {
+  return window['go']['main']['App']['KitInstall'](arg1);
+}
+
+export function KitOpen(arg1) {
+  return window['go']['main']['App']['KitOpen'](arg1);
+}
+
+export function KitPlan(arg1) {
+  return window['go']['main']['App']['KitPlan'](arg1);
+}
+
+export function KitPrepare(arg1, arg2) {
+  return window['go']['main']['App']['KitPrepare'](arg1, arg2);
+}
+
+export function KitVerify(arg1) {
+  return window['go']['main']['App']['KitVerify'](arg1);
+}
+
 export function LaunchTarget() {
   return window['go']['main']['App']['LaunchTarget']();
 }
@@ -210,6 +262,10 @@ export function PickFolder() {
   return window['go']['main']['App']['PickFolder']();
 }
 
+export function PickProfileFile() {
+  return window['go']['main']['App']['PickProfileFile']();
+}
+
 export function Plan(arg1) {
   return window['go']['main']['App']['Plan'](arg1);
 }
@@ -232,6 +288,26 @@ export function PlanUpgrades(arg1) {
 
 export function PlayGame(arg1, arg2) {
   return window['go']['main']['App']['PlayGame'](arg1, arg2);
+}
+
+export function PrivacyApply(arg1) {
+  return window['go']['main']['App']['PrivacyApply'](arg1);
+}
+
+export function PrivacyBackups() {
+  return window['go']['main']['App']['PrivacyBackups']();
+}
+
+export function PrivacyList() {
+  return window['go']['main']['App']['PrivacyList']();
+}
+
+export function PrivacyReset(arg1) {
+  return window['go']['main']['App']['PrivacyReset'](arg1);
+}
+
+export function PrivacyRestore(arg1) {
+  return window['go']['main']['App']['PrivacyRestore'](arg1);
 }
 
 export function ProfileDrift(arg1) {

@@ -25,7 +25,7 @@ func SourceOf(plan install.Plan, title string) Source {
 	}
 	apps := 0
 	for _, s := range plan.Steps {
-		if s.Kind == install.StepApp || s.Kind == install.StepUpgrade || s.Kind == install.StepRollback {
+		if s.Kind == install.StepApp || s.Kind == install.StepKit || s.Kind == install.StepUpgrade || s.Kind == install.StepRollback {
 			apps++
 		}
 	}
@@ -57,7 +57,7 @@ func (r *Recorder) Begin(plan install.Plan, title string, before map[string]stri
 
 func actionOf(k install.StepKind) (Action, bool) {
 	switch k {
-	case install.StepApp:
+	case install.StepApp, install.StepKit: // an offline kit install is an install
 		return Install, true
 	case install.StepUpgrade:
 		return Update, true
