@@ -155,6 +155,10 @@ export const api = Go as unknown as {
     ImportProfile(): Promise<ImportResult | null>;
     RestartAsAdmin(): Promise<void>;
     OpenURL(u: string): Promise<void>;
+    /** The exact text of the diagnostic report (nothing is written or sent). */
+    DiagPreview(): Promise<string>;
+    /** Saves the last preview. An empty path asks where; "" comes back when cancelled. */
+    DiagSave(path: string): Promise<string>;
     CheckUpdate(): Promise<UpdateInfo>;
     InstallUpdate(): Promise<void>;
     Upgrades(): Promise<UpgradeInfo[]>;

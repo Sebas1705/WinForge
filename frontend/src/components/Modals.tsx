@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState, type ReactNode} from "react";
 import {AppIcon} from "./AppIcon";
+import {DiagDialog} from "./DiagDialog";
 import {Icon} from "./Icon";
 import {Strip} from "./Strip";
 import {useModal} from "./useModal";
@@ -259,8 +260,10 @@ export function SettingsDialog(p: {
 }) {
     const set = (patch: Partial<prefs.Settings>) => p.onChange({...p.value, ...patch});
     const dialog = useRef<HTMLDivElement>(null);
+    const [diag, setDiag] = useState(false);
     useModal(dialog, p.onClose);
     return (
+        <>
         <div className="overlay" onClick={p.onClose}>
             <div className="modal small" ref={dialog} role="dialog" aria-modal="true" aria-label={t("settings.title")} onClick={(e) => e.stopPropagation()}>
                 <h3>{t("settings.title")}</h3>
@@ -323,9 +326,15 @@ export function SettingsDialog(p: {
                 <div className="field"><span className="muted mono">{t("settings.version", {v: p.version})}</span>
                     <button onClick={p.onCheck}>{t("settings.checkNow")}</button>
                 </div>
+                <div className="field stacked diagfield"><span>{t("diag.section")}</span>
+                    <span className="muted small">{t("diag.sectionHint")}</span>
+                    <div className="actions tight"><button onClick={() => setDiag(true)}>{t("diag.open")}</button></div>
+                </div>
                 <div className="actions end"><button className="primary" onClick={p.onClose}>{t("common.done")}</button></div>
             </div>
         </div>
+        {diag && <DiagDialog onClose={() => setDiag(false)}/>}
+        </>
     );
 }
 

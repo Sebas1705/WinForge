@@ -55,6 +55,10 @@ export function CreateBackup(arg1:main.BackupRequest):Promise<main.BackupResult>
 
 export function DeleteProfile(arg1:string):Promise<void>;
 
+export function DiagPreview():Promise<string>;
+
+export function DiagSave(arg1:string):Promise<string>;
+
 export function DiscardPending():Promise<void>;
 
 export function Emulation():Promise<catalog.Emulation>;

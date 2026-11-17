@@ -89,6 +89,8 @@ type App struct {
 	uninst uninstallState
 	// The Updates page's automatic updates (the scheduled task); replaced by tests.
 	sched schedSession
+	// The Settings page's diagnostic report (diagbind.go).
+	diag diagSession
 }
 
 func NewApp() *App {

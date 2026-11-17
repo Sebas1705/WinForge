@@ -3,6 +3,7 @@ import {vi} from "vitest";
 import type {StorageProgress} from "../api";
 import type {InstallEvent, Profile, State} from "../lib/model";
 import {autoApi, resetAuto} from "./autoMock";
+import {diagApi, resetDiag} from "./diagMock";
 import {makeState, planFor} from "./fixtures";
 
 type Handler<T> = (e: T) => void;
@@ -33,13 +34,14 @@ export const api = {
     ServicesList: vi.fn(), ServicesSetMode: vi.fn(), ServicesRestore: vi.fn(), TasksList: vi.fn(), TasksSetEnabled: vi.fn(), TasksRestore: vi.fn(),
     HistoryList: vi.fn(), HistoryRollbackPlan: vi.fn(), HistoryRollback: vi.fn(),
     UninstallList: vi.fn(), UninstallApps: vi.fn(), UninstallVerify: vi.fn(), LeftoversFind: vi.fn(), LeftoversRecycle: vi.fn(),
-    ...autoApi,
+    ...autoApi, ...diagApi,
 };
 
 export function resetApi(state: State = makeState()): void {
     for (const h of Object.values(handlers)) h.clear();
     for (const fn of Object.values(api)) fn.mockReset();
     resetAuto();
+    resetDiag();
     api.GetState.mockImplementation(async () => structuredClone(state));
     api.Plan.mockImplementation(async (p: Profile) => planFor(p));
     api.Apply.mockResolvedValue(undefined);

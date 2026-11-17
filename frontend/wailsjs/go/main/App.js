@@ -82,6 +82,14 @@ export function DeleteProfile(arg1) {
   return window['go']['main']['App']['DeleteProfile'](arg1);
 }
 
+export function DiagPreview() {
+  return window['go']['main']['App']['DiagPreview']();
+}
+
+export function DiagSave(arg1) {
+  return window['go']['main']['App']['DiagSave'](arg1);
+}
+
 export function DiscardPending() {
   return window['go']['main']['App']['DiscardPending']();
 }

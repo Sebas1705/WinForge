@@ -1,3 +1,4 @@
+import {diagEn, diagEs} from "./i18n.diag";
 import {autoEn, autoEs} from "./i18n.auto";
 import {backupEn, backupEs} from "./i18n.backup";
 import {gamesEn, gamesEs} from "./i18n.games";
@@ -272,7 +273,7 @@ const baseEn = {
     "cat.utilities": "Utilities",
 } as const;
 
-const en = {...baseEn, ...healthEn, ...uiEn, ...backupEn, ...subEn, ...gamesEn, ...repairEn, ...storageEn, ...startupEn, ...developerEn, ...svcEn, ...historyEn, ...hhistEn, ...tmapEn,...uninstallEn, ...autoEn, ...privacyEn, ...eolEn, ...compareEn} as const;
+const en = {...baseEn, ...healthEn, ...uiEn, ...backupEn, ...subEn, ...gamesEn, ...repairEn, ...storageEn, ...startupEn, ...developerEn, ...svcEn, ...historyEn, ...hhistEn, ...tmapEn,...uninstallEn, ...autoEn, ...privacyEn, ...eolEn, ...compareEn, ...diagEn} as const;
 
 export type Key = keyof typeof en;
 
@@ -527,7 +528,7 @@ const baseEs: Record<keyof typeof baseEn, string> = {
     "cat.utilities": "Utilidades",
 };
 
-const es: Record<Key, string> = {...baseEs, ...healthEs, ...uiEs, ...backupEs, ...subEs, ...gamesEs, ...repairEs, ...storageEs, ...startupEs, ...developerEs, ...svcEs, ...historyEs, ...hhistEs, ...tmapEs,...uninstallEs, ...autoEs, ...privacyEs, ...eolEs, ...compareEs};
+const es: Record<Key, string> = {...baseEs, ...healthEs, ...uiEs, ...backupEs, ...subEs, ...gamesEs, ...repairEs, ...storageEs, ...startupEs, ...developerEs, ...svcEs, ...historyEs, ...hhistEs, ...tmapEs,...uninstallEs, ...autoEs, ...privacyEs, ...eolEs, ...compareEs, ...diagEs};
 
 export type Lang = "en" | "es";
 export type LangSetting = Lang | "auto";
