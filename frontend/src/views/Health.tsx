@@ -9,6 +9,7 @@ import {
     type Finding, type Group, type HealthLink, type HealthResult, type Severity,
 } from "../lib/health";
 import type {App} from "../lib/model";
+import {EOLSection} from "./EOLReport";
 import {BatteryCard, HistorySection} from "./HealthHistory";
 
 const SEV_ICON: Record<Severity, IconName> = {ok: "check", info: "info", warn: "alert", bad: "x", unknown: "help"};
@@ -196,6 +197,8 @@ export function Health(p: {
                     </section>
                 </>
             )}
+
+            <EOLSection byId={p.byId} onDetail={p.onDetail} onLink={p.onLink} refreshKey={r?.report.collectedAt ?? ""}/>
         </div>
     );
 }

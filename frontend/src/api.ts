@@ -3,6 +3,7 @@
 import * as Go from "../wailsjs/go/main/App";
 import {EventsOn} from "../wailsjs/runtime/runtime";
 import type {HealthResult} from "./lib/health";
+import type {EOLReport} from "./lib/eol";
 import type {BatteryInfo, HHView} from "./lib/hhist";
 import type {InstallEvent, Plan, Profile, State, UpgradeInfo} from "./lib/model";
 
@@ -154,6 +155,7 @@ export const api = Go as unknown as {
     HealthHistory(): Promise<HHView>;
     HealthHistoryClear(): Promise<void>;
     Battery(): Promise<BatteryInfo>;
+    EOLReport(): Promise<EOLReport>;
     SaveTextFile(name: string, content: string): Promise<string>;
     OpenLink(url: string): Promise<void>;
     ResumePending(): Promise<void>;
