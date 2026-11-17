@@ -78,6 +78,7 @@ jobs:
   # the same artifact, so a broken installer is found here, not on a tag.
   installer:
     runs-on: windows-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -98,6 +99,7 @@ jobs:
         run: wails build -nsis -ldflags "-X main.version=v0.0.0-ci"
       - name: Install silently
         shell: pwsh
+        timeout-minutes: 10
         run: |
           $installer = Get-ChildItem build/bin -Filter "*installer.exe" | Select-Object -First 1
           if (-not $installer) { throw "no installer built" }
@@ -108,13 +110,18 @@ jobs:
           "WINFORGE_EXE=$exe" | Add-Content $env:GITHUB_ENV
       - name: App starts
         shell: pwsh
+        timeout-minutes: 3
         run: |
           $p = Start-Process $env:WINFORGE_EXE -PassThru
           Start-Sleep -Seconds 8
           if ($p.HasExited) { throw "WinForge exited with code $($p.ExitCode) right after start" }
           Stop-Process $p -Force
+          # Stop-Process returns before the process is gone; an image still
+          # mapped by it keeps the uninstaller from deleting WinForge.exe.
+          if (-not $p.WaitForExit(30000)) { throw "WinForge did not exit within 30s after Stop-Process" }
       - name: Uninstall silently
         shell: pwsh
+        timeout-minutes: 5
         run: |
           $dir = Split-Path $env:WINFORGE_EXE
           # _?= keeps the uninstaller in place so -Wait really waits.

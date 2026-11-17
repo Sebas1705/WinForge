@@ -163,10 +163,10 @@ func (u *Updater) Download(ctx context.Context, rel *Release, dir string, progre
 		return "", err
 	}
 
-	if err := os.MkdirAll(dir, 0o755); err != nil {
+	if err := os.MkdirAll(dir, 0o700); err != nil {
 		return "", err
 	}
-	path := filepath.Join(dir, name)
+	path := filepath.Join(dir, filepath.Base(name))
 	got, err := u.downloadTo(ctx, url, path, progress)
 	if err != nil {
 		os.Remove(path)
@@ -208,7 +208,7 @@ func (u *Updater) downloadTo(ctx context.Context, url, path string, progress Pro
 	if resp.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("download: %s", resp.Status)
 	}
-	f, err := os.Create(path)
+	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o600)
 	if err != nil {
 		return "", err
 	}
