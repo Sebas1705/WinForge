@@ -1,0 +1,41 @@
+/* Compare view on the Profiles page. Colours come from the shared tokens only (text --text / --muted,
+   lines --line, controls --control), so every style x theme keeps its contrast. Nothing relies on colour:
+   each group has an icon and a title with its count, each row has an icon and text. Rows wrap and shrink
+   (min-width: 0, minmax(0, 1fr)) so a long name or version never widens the page. */
+/* The Profiles header gained a fourth button: let the header wrap at narrow widths instead of overflowing. */
+.pagehead { flex-wrap: wrap; }
+.cmp { max-width: 980px; }
+.cmp header p { margin: 4px 0; }
+.cmp-modes { border: 0; margin: 18px 0 8px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; min-width: 0; }
+.cmp-modes legend { font-weight: 600; padding: 0; margin-bottom: 8px; }
+.cmp-mode { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.cmp-mode input { accent-color: var(--accent); width: 16px; height: 16px; flex: none; }
+.cmp-source { margin: 6px 0 14px; padding: 14px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; min-width: 0; }
+.cmp-source p { margin: 0 0 6px; }
+.cmp-code { border-color: var(--control); margin-top: 4px; }
+.cmp-file { min-width: 0; overflow-wrap: anywhere; }
+.cmp-error { display: flex; gap: 10px; align-items: flex-start; margin: 12px 0; padding: 10px 14px; background: var(--surface); border: 1px solid var(--control); border-left: 4px solid var(--warn); border-radius: 10px; min-width: 0; }
+.cmp-error span { min-width: 0; overflow-wrap: anywhere; }
+.cmp-error svg { flex: none; margin-top: 2px; }
+.cmp-result { margin-top: 10px; min-width: 0; }
+.cmp-result > p { margin: 0 0 8px; overflow-wrap: anywhere; }
+.cmp-summary { display: flex; gap: 10px; align-items: flex-start; padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; font-weight: 500; }
+.cmp-summary svg { flex: none; margin-top: 2px; }
+.cmp-group { margin: 18px 0; min-width: 0; }
+.cmp-group h2 { display: flex; align-items: center; gap: 8px; font-size: 17px; margin: 0 0 8px; overflow-wrap: anywhere; }
+.cmp-group h2 svg { flex: none; }
+.cmp-group > p { margin: 0 0 8px; }
+.cmp-group > button { margin: 2px 8px 8px 0; }
+.cmp-list { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 6px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
+.cmp-list.wide { grid-template-columns: minmax(0, 1fr); }
+.cmp-row { display: flex; align-items: center; gap: 10px; min-width: 0; flex-wrap: wrap; padding: 6px 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.cmp-name { min-width: 0; flex: 1 1 8ch; overflow-wrap: anywhere; }
+.cmp-extra { min-width: 0; overflow-wrap: anywhere; }
+.cmp-unknown-icon { flex: none; display: inline-grid; place-items: center; width: 30px; height: 30px; color: var(--muted); }
+.cmp-actions { margin-top: 24px; padding: 14px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; min-width: 0; }
+.cmp-actions h2 { font-size: 17px; margin: 0 0 4px; }
+.cmp-add { margin-top: 10px; }
+.cmp-add select { min-width: 0; max-width: 100%; }
+@media (max-width: 560px) {
+    .cmp-source, .cmp-actions { padding: 12px; }
+}

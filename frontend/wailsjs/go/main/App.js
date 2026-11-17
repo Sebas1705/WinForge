@@ -54,6 +54,18 @@ export function Cancel() {
   return window['go']['main']['App']['Cancel']();
 }
 
+export function CompareCode(arg1) {
+  return window['go']['main']['App']['CompareCode'](arg1);
+}
+
+export function CompareFile(arg1) {
+  return window['go']['main']['App']['CompareFile'](arg1);
+}
+
+export function CompareFiles(arg1, arg2) {
+  return window['go']['main']['App']['CompareFiles'](arg1, arg2);
+}
+
 export function CancelRestart() {
   return window['go']['main']['App']['CancelRestart']();
 }
@@ -204,6 +216,10 @@ export function PatchROM() {
 
 export function PickBackup() {
   return window['go']['main']['App']['PickBackup']();
+}
+
+export function PickProfileFile() {
+  return window['go']['main']['App']['PickProfileFile']();
 }
 
 export function PickFolder() {

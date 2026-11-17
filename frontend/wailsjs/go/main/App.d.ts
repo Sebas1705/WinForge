@@ -41,6 +41,12 @@ export function Battery():Promise<battery.Report>;
 
 export function Cancel():Promise<void>;
 
+export function CompareCode(arg1:string):Promise<main.CompareResult>;
+
+export function CompareFile(arg1:string):Promise<main.CompareResult>;
+
+export function CompareFiles(arg1:string,arg2:string):Promise<main.CompareResult>;
+
 export function CancelRestart():Promise<void>;
 
 export function CheckUpdate():Promise<main.UpdateInfo>;
@@ -118,6 +124,8 @@ export function PatchROM():Promise<main.PatchResult>;
 export function PickBackup():Promise<main.BackupPreview>;
 
 export function PickFolder():Promise<string>;
+
+export function PickProfileFile():Promise<string>;
 
 export function Plan(arg1:catalog.Profile):Promise<install.Plan>;
 

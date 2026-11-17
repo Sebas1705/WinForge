@@ -1597,6 +1597,138 @@ export namespace main {
 	        this.problems = source["problems"];
 	    }
 	}
+	export class CompareApp {
+	    id: string;
+	    name: string;
+
+	    static createFrom(source: any = {}) {
+	        return new CompareApp(source);
+	    }
+
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	    }
+	}
+	export class CompareVersion {
+	    id: string;
+	    name: string;
+	    a: string;
+	    b: string;
+
+	    static createFrom(source: any = {}) {
+	        return new CompareVersion(source);
+	    }
+
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.a = source["a"];
+	        this.b = source["b"];
+	    }
+	}
+	export class CompareUnknown {
+	    id: string;
+	    in: string;
+
+	    static createFrom(source: any = {}) {
+	        return new CompareUnknown(source);
+	    }
+
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.in = source["in"];
+	    }
+	}
+	export class CompareSide {
+	    kind: string;
+	    name: string;
+	    file: string;
+	    apps: number;
+	    versioned: boolean;
+	    unknownRecipes: string[];
+	    unknownProfiles: string[];
+	    profile: catalog.Profile;
+
+	    static createFrom(source: any = {}) {
+	        return new CompareSide(source);
+	    }
+
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.kind = source["kind"];
+	        this.name = source["name"];
+	        this.file = source["file"];
+	        this.apps = source["apps"];
+	        this.versioned = source["versioned"];
+	        this.unknownRecipes = source["unknownRecipes"];
+	        this.unknownProfiles = source["unknownProfiles"];
+	        this.profile = this.convertValues(source["profile"], catalog.Profile);
+	    }
+
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class CompareResult {
+	    a: CompareSide;
+	    b: CompareSide;
+	    onlyA: CompareApp[];
+	    onlyB: CompareApp[];
+	    both: CompareApp[];
+	    differ: CompareVersion[];
+	    unknown: CompareUnknown[];
+
+	    static createFrom(source: any = {}) {
+	        return new CompareResult(source);
+	    }
+
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.a = this.convertValues(source["a"], CompareSide);
+	        this.b = this.convertValues(source["b"], CompareSide);
+	        this.onlyA = this.convertValues(source["onlyA"], CompareApp);
+	        this.onlyB = this.convertValues(source["onlyB"], CompareApp);
+	        this.both = this.convertValues(source["both"], CompareApp);
+	        this.differ = this.convertValues(source["differ"], CompareVersion);
+	        this.unknown = this.convertValues(source["unknown"], CompareUnknown);
+	    }
+
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class DriftApp {
 	    id: string;
 	    name: string;

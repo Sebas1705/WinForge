@@ -12,6 +12,7 @@ import {selectionProfile} from "../lib/model";
 import {profileApps, profileTally} from "../lib/tally";
 import {withApps} from "../lib/drift";
 import {DriftPanel} from "./profiles/DriftPanel";
+import {CompareView} from "./profiles/CompareView";
 
 export function Profiles(p: {
     state: State; focus: string | null; advanced: boolean;
@@ -21,6 +22,7 @@ export function Profiles(p: {
 }) {
     const [sel, setSel] = useState<string | null>(p.focus);
     const [q, setQ] = useState("");
+    const [comparing, setComparing] = useState(false);
     useEffect(() => { if (p.focus) { setSel(p.focus); p.onFocusDone(); } }, [p.focus]);
     const apps = useMemo(() => new Map(p.state.apps.map((a) => [a.id, a])), [p.state.apps]);
     const current = sel ? p.state.profiles.find((x) => x.id === sel) : undefined;
@@ -30,6 +32,11 @@ export function Profiles(p: {
         return <ProfileDetail profile={current} apps={apps} advanced={p.advanced} onBack={() => setSel(null)}
                               onInstall={p.onInstall} onChanged={async () => { await p.onChanged(); setSel(null); }} onRefresh={p.onChanged} scan={p.state.apps} say={p.say}
                               onEdit={p.onEdit} onDetail={p.onDetail}/>;
+    }
+
+    if (comparing) {
+        return <CompareView apps={apps} profiles={p.state.profiles} scan={p.state.apps} onBack={() => setComparing(false)}
+                            onInstall={p.onInstall} onChanged={p.onChanged} say={p.say}/>;
     }
 
     const needle = q.trim().toLowerCase();
@@ -54,6 +61,7 @@ export function Profiles(p: {
                 <button onClick={p.onFromPC}><Icon name="plus" size={14}/> {t("profiles.fromPC")}</button>
                 <button className="ghost" onClick={p.onImport}>{t("profiles.import")}</button>
                 <button className="ghost" onClick={p.onImportCode}>{t("profiles.importCode")}</button>
+                <button className="ghost" title={t("cmp.openHint")} onClick={() => setComparing(true)}>{t("cmp.open")}</button>
             </header>
             {groups.every(([, , l]) => l.length === 0) && <p className="muted empty">{t("profiles.none")}</p>}
             {groups.map(([title, icon, list]) => list.length > 0 && (

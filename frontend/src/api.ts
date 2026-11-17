@@ -12,6 +12,17 @@ export interface ProfilesFolderChange { copied: number; skipped: number; info: P
 export interface DriftApp { id: string; name: string }
 export interface DriftChange { id: string; name: string; from: string; to: string }
 export interface DriftInfo { hasBaseline: boolean; at?: string; removed: DriftApp[]; added: DriftApp[]; updated: DriftChange[]; count: number }
+export interface CompareApp { id: string; name: string }
+export interface CompareVersion { id: string; name: string; a: string; b: string }
+export interface CompareUnknown { id: string; in: "a" | "b" | "both" }
+export interface CompareSide {
+    kind: "pc" | "file" | "code"; name: string; file: string; apps: number; versioned: boolean;
+    unknownRecipes: string[]; unknownProfiles: string[]; profile: Profile | null;
+}
+export interface CompareResult {
+    a: CompareSide; b: CompareSide; onlyA: CompareApp[]; onlyB: CompareApp[]; both: CompareApp[];
+    differ: CompareVersion[]; unknown: CompareUnknown[];
+}
 export interface UpdateInfo { current: string; latest: string; available: boolean; url: string; notes: string }
 export interface BackupSet { id: string; files: number; bytes: number }
 export interface BackupRequest { sets: string[]; apps: boolean; folders: string[] }
@@ -136,6 +147,10 @@ export const api = Go as unknown as {
     ExportConfigure(p: Profile): Promise<string>;
     ProfileDrift(id: string): Promise<DriftInfo>;
     AcceptProfileState(id: string): Promise<void>;
+    PickProfileFile(): Promise<string>;
+    CompareFile(path: string): Promise<CompareResult>;
+    CompareCode(code: string): Promise<CompareResult>;
+    CompareFiles(pathA: string, pathB: string): Promise<CompareResult>;
     ExportScript(p: Profile): Promise<string>;
     ImportProfile(): Promise<ImportResult | null>;
     RestartAsAdmin(): Promise<void>;
