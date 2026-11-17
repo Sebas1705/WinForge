@@ -138,7 +138,7 @@ export function SpaceMap(p: {
                                     onKeyDown={(e) => onKey(e, i)}
                                     onClick={() => { if (!other && !p.locked) p.onOpen(c.id); }}
                                 >
-                                    {(two || one) && <span className="tm-name" aria-hidden="true">{label(c)}</span>}
+                                    {(two || one) && <span className="tm-name" aria-hidden="true">{label(c)}</span>}{" "}
                                     {two && <span className="tm-size mono" aria-hidden="true">{formatBytes(c.size)}</span>}
                                 </button>
                             );
@@ -164,7 +164,7 @@ export function SpaceMap(p: {
                 {table ? t("tmap.table.hide") : t("tmap.table.show")}
             </button>
             {table && (
-                <div className="tablewrap tm-table" id={`${id}-table`}>
+                <div className="tablewrap tm-table" id={`${id}-table`} tabIndex={0} role="region" aria-label={t("tmap.table.caption", {folder: folderName(p.root)})}>
                     <table>
                         <caption className="sr-only">{t("tmap.table.caption", {folder: folderName(p.root)})}</caption>
                         <thead>

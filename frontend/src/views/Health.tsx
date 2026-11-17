@@ -90,9 +90,9 @@ export function Health(p: {
                             const tn = tone(list);
                             const issues = list.filter((f) => f.severity === "bad" || f.severity === "warn").length;
                             return (
-                                <button key={g} className={`area ${tn}`} aria-label={`${t(`group.${g}` as Key)}: ${issues ? t("health.areaIssues", {n: issues}) : t("health.areaOk")}`} onClick={() => (sections.current[g] ?? sections.current.attention)?.scrollIntoView({behavior: "smooth", block: "start"})}>
+                                <button key={g} className={`area ${tn}`} aria-label={issues ? `${t(`group.${g}` as Key)} ${issues}: ${t("health.areaIssues", {n: issues})}` : `${t(`group.${g}` as Key)}: ${t("health.areaOk")}`} onClick={() => (sections.current[g] ?? sections.current.attention)?.scrollIntoView({behavior: "smooth", block: "start"})}>
                                     <span className="bubble"><Icon name={GROUP_ICON[g]} size={22}/></span>
-                                    <b>{t(`group.${g}` as Key)}</b>
+                                    <b>{t(`group.${g}` as Key)}</b>{" "}
                                     <span className="status"><Icon name={issues ? "alert" : "check"} size={14}/>{issues ? issues : ""}</span>
                                 </button>
                             );
@@ -169,7 +169,7 @@ export function Health(p: {
                                     <label className="check"><input type="checkbox" checked={old} onChange={(e) => setOld(e.target.checked)}/> {t("health.oldOnly")}</label>
                                 </div>
                                 <p className="mono muted small">{t("health.driverCount", {shown: drivers.length, total: r.report.drivers.length})}</p>
-                                <div className="tablewrap">
+                                <div className="tablewrap" tabIndex={0} role="region" aria-label={t("health.drivers")}>
                                     <table>
                                         <thead><tr>
                                             <th>{t("health.col.device")}</th><th>{t("health.col.class")}</th><th>{t("health.col.maker")}</th>

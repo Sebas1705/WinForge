@@ -127,14 +127,14 @@ describe("history: going back", () => {
         await openUpdates();
         const buttons = await screen.findAllByRole("button", {name: /Go back/});
         expect(buttons).toHaveLength(1);
-        expect(buttons[0]).toHaveAccessibleName("Go back Git to version 1.0");
+        expect(buttons[0]).toHaveAccessibleName("Go back to 1.0: Git");
         expect(buttons[0]).toHaveTextContent("Go back to 1.0");
     });
 
     it("asks first, says what can go wrong, and does nothing on Cancel", async () => {
         withUndo();
         const user = await openUpdates();
-        await user.click(await screen.findByRole("button", {name: "Go back Git to version 1.0"}));
+        await user.click(await screen.findByRole("button", {name: "Go back to 1.0: Git"}));
         const dialog = await screen.findByRole("alertdialog", {name: "Go back to Git 1.0?"});
         expect(within(dialog).getByText(/install version 1.0 of Git over the current 2.0/)).toBeInTheDocument();
         expect(within(dialog).getByText(/refuse to install an older version over a newer one/)).toBeInTheDocument();
@@ -149,7 +149,7 @@ describe("history: going back", () => {
     it("previews the plan, then rolls back by entry id only, without skipping unless asked", async () => {
         withUndo();
         const user = await openUpdates();
-        await user.click(await screen.findByRole("button", {name: "Go back Git to version 1.0"}));
+        await user.click(await screen.findByRole("button", {name: "Go back to 1.0: Git"}));
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Go back"}));
         const run = await screen.findByRole("dialog", {name: "Go back Git to 1.0"});
         expect(api.HistoryRollbackPlan).toHaveBeenCalledWith("u1");
@@ -162,7 +162,7 @@ describe("history: going back", () => {
     it("passes the choice to also skip the newer version", async () => {
         withUndo();
         const user = await openUpdates();
-        await user.click(await screen.findByRole("button", {name: "Go back Git to version 1.0"}));
+        await user.click(await screen.findByRole("button", {name: "Go back to 1.0: Git"}));
         const dialog = await screen.findByRole("alertdialog");
         await user.click(within(dialog).getByRole("checkbox", {name: /Also skip version 2.0/}));
         await user.click(within(dialog).getByRole("button", {name: "Go back"}));
@@ -173,7 +173,7 @@ describe("history: going back", () => {
     it("shows the plain reason when the downgrade is refused, and reads the history again", async () => {
         withUndo();
         const user = await openUpdates();
-        await user.click(await screen.findByRole("button", {name: "Go back Git to version 1.0"}));
+        await user.click(await screen.findByRole("button", {name: "Go back to 1.0: Git"}));
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Go back"}));
         const run = await screen.findByRole("dialog", {name: "Go back Git to 1.0"});
         await user.click(within(run).getByRole("button", {name: "Run 1 step"}));
@@ -188,7 +188,7 @@ describe("history: going back", () => {
     it("shows the reason when winget has no such version", async () => {
         withUndo();
         const user = await openUpdates();
-        await user.click(await screen.findByRole("button", {name: "Go back Git to version 1.0"}));
+        await user.click(await screen.findByRole("button", {name: "Go back to 1.0: Git"}));
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Go back"}));
         const run = await screen.findByRole("dialog", {name: "Go back Git to 1.0"});
         await user.click(within(run).getByRole("button", {name: "Run 1 step"}));
@@ -201,7 +201,7 @@ describe("history: going back", () => {
         withUndo();
         api.HistoryRollbackPlan.mockRejectedValue(new Error("history.moved"));
         const user = await openUpdates();
-        await user.click(await screen.findByRole("button", {name: "Go back Git to version 1.0"}));
+        await user.click(await screen.findByRole("button", {name: "Go back to 1.0: Git"}));
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Go back"}));
         expect(await screen.findByText(/Git is not at the version that update installed any more/)).toBeInTheDocument();
         expect(screen.queryByRole("dialog", {name: /Go back Git/})).toBeNull();
@@ -210,7 +210,7 @@ describe("history: going back", () => {
     it("works in Spanish", async () => {
         withUndo();
         const user = await openUpdates("es");
-        await user.click(await screen.findByRole("button", {name: "Volver Git a la versión 1.0"}));
+        await user.click(await screen.findByRole("button", {name: "Volver a 1.0: Git"}));
         const dialog = await screen.findByRole("alertdialog", {name: "¿Volver a Git 1.0?"});
         expect(within(dialog).getByText(/Algunos instaladores se niegan/)).toBeInTheDocument();
         expect(within(dialog).getByRole("checkbox", {name: /Saltar también la versión 2.0/})).toBeInTheDocument();
@@ -223,7 +223,7 @@ describe("history: going back", () => {
     it("can be reached and operated with the keyboard", async () => {
         withUndo();
         const user = await openUpdates();
-        const go = await screen.findByRole("button", {name: "Go back Git to version 1.0"});
+        const go = await screen.findByRole("button", {name: "Go back to 1.0: Git"});
         go.focus();
         await user.keyboard("{Enter}");
         const dialog = await screen.findByRole("alertdialog");

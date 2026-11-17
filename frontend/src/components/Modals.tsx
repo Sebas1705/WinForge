@@ -106,7 +106,7 @@ export function RunModal(p: {
                             {finished ? <Icon name={failedCount ? "alert" : "check"} size={30}/> : <span className="ringnum">{done}<small>/{cells.length}</small></span>}
                         </Ring>
                         <div className="grow">
-                            <h3 tabIndex={-1} ref={headingRef}>{heading}</h3>
+                            <h2 tabIndex={-1} ref={headingRef}>{heading}</h2>
                             {current && (
                                 <p className="now">
                                     {currentApp ? <AppIcon id={currentApp.id} name={currentApp.name} category={currentApp.category} size={28}/> : null}
@@ -118,7 +118,7 @@ export function RunModal(p: {
                             <span className="mono muted small">{t("run.stepOf", {done, total: cells.length})}{elapsed && ` · ${elapsed}`}</span>
                         </div>
                     </div>
-                ) : <h3 tabIndex={-1} ref={headingRef}>{heading}</h3>}
+                ) : <h2 tabIndex={-1} ref={headingRef}>{heading}</h2>}
                 <p className="sr-only" aria-live="polite" aria-atomic="true">{announce}</p>
 
                 {!started && run.plan.needsAdmin && !p.admin && (
@@ -185,7 +185,7 @@ export function NameDialog(p: { title: string; initial: string; onOk: (n: string
     return (
         <div className="overlay" onClick={p.onClose}>
             <div className="modal small" ref={dialog} role="dialog" aria-modal="true" aria-label={p.title} onClick={(e) => e.stopPropagation()}>
-                <h3>{p.title}</h3>
+                <h2>{p.title}</h2>
                 <input data-autofocus value={v} maxLength={60} placeholder={t("dlg.name")} aria-label={t("dlg.name")} onChange={(e) => setV(e.target.value)}
                        onKeyDown={(e) => { if (e.key === "Enter") submit(); }}/>
                 <div className="actions end">
@@ -206,7 +206,7 @@ export function CodeDialog(p: { title: string; placeholder: string; ok: string; 
     return (
         <div className="overlay" onClick={p.onClose}>
             <div className="modal small" ref={dialog} role="dialog" aria-modal="true" aria-label={p.title} onClick={(e) => e.stopPropagation()}>
-                <h3>{p.title}</h3>
+                <h2>{p.title}</h2>
                 <textarea data-autofocus className="codebox mono" rows={4} value={v} placeholder={p.placeholder} aria-label={p.title}
                           spellCheck={false} onChange={(e) => setV(e.target.value)}
                           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); } }}/>
@@ -226,7 +226,7 @@ export function ConfirmDialog(p: { title: string; body: string; confirm: string;
     return (
         <div className="overlay" onClick={p.onClose}>
             <div className="modal small" ref={dialog} role="alertdialog" aria-modal="true" aria-label={p.title} onClick={(e) => e.stopPropagation()}>
-                <h3>{p.title}</h3>
+                <h2>{p.title}</h2>
                 <p className="muted">{p.body}</p>
                 {p.children}
                 <div className="actions end">
@@ -266,7 +266,7 @@ export function SettingsDialog(p: {
         <>
         <div className="overlay" onClick={p.onClose}>
             <div className="modal small" ref={dialog} role="dialog" aria-modal="true" aria-label={t("settings.title")} onClick={(e) => e.stopPropagation()}>
-                <h3>{t("settings.title")}</h3>
+                <h2>{t("settings.title")}</h2>
                 <div className="field"><span>{t("settings.detail")}</span>
                     <Segmented value={p.value.detail} onChange={(detail) => set({detail})}
                                options={[["simple", t("mode.simple")], ["advanced", t("mode.advanced")]]}/>
@@ -354,7 +354,7 @@ export function Tour(p: { onClose: () => void }) {
         <div className="overlay">
             <div className="modal tour" ref={dialog} role="dialog" aria-modal="true" aria-label={s.title}>
                 <span className="bubble hero"><Icon name={s.icon} size={44}/></span>
-                <h3>{s.title}</h3>
+                <h2>{s.title}</h2>
                 <p>{s.body}</p>
                 <div className="dots" aria-hidden>{slides.map((_, n) => <i key={n} className={n === i ? "on" : ""}/>)}</div>
                 <div className="actions end">

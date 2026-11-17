@@ -13,7 +13,7 @@ export function AppDetail(p: {
     onClose: () => void; onInstall: (a: App) => void; onUninstall: (a: App) => void; openURL: (u: string) => void; onCopy: (text: string) => void;
 }) {
     const {app: a, advanced} = p;
-    const panel = useRef<HTMLElement>(null);
+    const panel = useRef<HTMLDivElement>(null);
     const [confirmRemove, setConfirmRemove] = useState(false);
     useModal(panel, p.onClose);
     const command = `winget install --id ${a.winget} --exact`;
@@ -21,7 +21,7 @@ export function AppDetail(p: {
 
     return (
         <div className="drawer-overlay" onClick={p.onClose}>
-            <aside className="drawer" ref={panel} role="dialog" aria-modal="true" aria-label={a.name} onClick={(e) => e.stopPropagation()}>
+            <div className="drawer" ref={panel} role="dialog" aria-modal="true" aria-label={a.name} onClick={(e) => e.stopPropagation()}>
                 <button className="icon close" aria-label={t("common.close")} onClick={p.onClose}><Icon name="x" size={18}/></button>
                 <header>
                     <AppIcon id={a.id} name={a.name} category={a.category} size={64}/>
@@ -58,7 +58,7 @@ export function AppDetail(p: {
                     <dd><button type="button" className="linkbtn mono" onClick={() => p.openURL(a.homepage)}>{a.homepage}</button></dd></>}
                 </dl>
                 {advanced && <button className="ghost" onClick={() => p.onCopy(command)}><Icon name="copy" size={14}/> {t("detail.copyCommand")}</button>}
-            </aside>
+            </div>
             {confirmRemove && (
                 <ConfirmDialog title={t("confirm.uninstallTitle", {name: a.name})} body={t("confirm.uninstallBody")} confirm={t("detail.uninstall")} danger
                                onConfirm={() => p.onUninstall(a)} onClose={() => setConfirmRemove(false)}/>

@@ -99,7 +99,7 @@ export function LineChart(p: {
                 {table ? t("hh.table.hide") : t("hh.table.show")}
             </button>
             {table && (
-                <div className="tablewrap hh-table" id={`${id}-table`}>
+                <div className="tablewrap hh-table" id={`${id}-table`} tabIndex={0} role="region" aria-label={t("hh.table.caption", {name: p.name})}>
                     <table>
                         <caption className="sr-only">{t("hh.table.caption", {name: p.name})}</caption>
                         <thead><tr><th scope="col">{t("hh.table.date")}</th>{series.map((s) => <th scope="col" key={s.id}>{s.name}</th>)}</tr></thead>
@@ -127,7 +127,7 @@ function DriveReadings({snap}: { snap: HHSnapshot }) {
     return (
         <div className="hh-drives">
             <h3>{t("hh.drives.title")}</h3>
-            <div className="tablewrap">
+            <div className="tablewrap" tabIndex={0} role="region" aria-label={t("hh.drives.title")}>
                 <table>
                     <thead><tr>
                         <th scope="col">{t("hh.drives.drive")}</th><th scope="col">{t("hh.drives.health")}</th><th scope="col">{t("hh.drives.wear")}</th>
@@ -248,7 +248,7 @@ export function BatteryCard(p: { refreshKey: string }) {
             {info.history.length > 0 && (
                 <>
                     <h3>{t("hh.battery.history")}</h3>
-                    <div className="tablewrap">
+                    <div className="tablewrap" tabIndex={0} role="region" aria-label={t("hh.battery.history")}>
                         <table>
                             <thead><tr><th scope="col">{t("hh.battery.col.date")}</th><th scope="col">{t("hh.battery.col.full")}</th><th scope="col">{t("hh.battery.col.health")}</th></tr></thead>
                             <tbody>

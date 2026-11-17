@@ -30,3 +30,15 @@ describe("page containers", () => {
         expect(offenders).toEqual([]);
     });
 });
+
+describe("the window never scrolls as a whole", () => {
+    // Screen-reader text and ring svgs are absolutely positioned. Inside a page that is not positioned they
+    // belong to the document and push its height past the window, so the whole app scrolled and showed the
+    // view cut in two (on Home). The document must not scroll, and pages must contain what is positioned in them.
+    it("hides the document's own overflow", () => {
+        expect(css).toMatch(/html,\s*body\s*\{\s*overflow:\s*hidden;?\s*\}/);
+    });
+    it("makes the page scrollers the containing block of what is positioned inside them", () => {
+        expect(css).toMatch(/main,\s*\.page,\s*\.detail\s*\{\s*position:\s*relative;?\s*\}/);
+    });
+});

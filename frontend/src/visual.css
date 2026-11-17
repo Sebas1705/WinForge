@@ -471,3 +471,6 @@ input[type=search]:not(.search) {
 }
 input[type=search]:not(.search)::placeholder { color: var(--muted); opacity: 1; }
 input[type=search]:not(.search):focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* A checkbox that is not inside a label is the whole target, so it is 24px (WCAG 2.5.8). */
+.svcrow > input[type=checkbox] { width: 24px; height: 24px; }

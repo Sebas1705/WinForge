@@ -24,7 +24,7 @@ export const svcEn = {
     "svc.confirmCaution": "{name} looks like security software. Changing it may reduce your protection. You can restore the original setting here at any time.",
     "svc.confirmDependents": "Other services need {name}: {list}. Making it start less often may stop them from working.",
     "svc.restore": "Restore original: {value}",
-    "svc.restore.label": "Restore the original setting of {name}",
+    "svc.restore.label": "Restore original: {value} ({name})",
     "svc.loading": "Reading the list…",
 
     "svc.services.intro": "Third-party Windows services. The only change offered is when a service starts: WinForge never stops, deletes or edits a service, and leaves its recovery options and dependencies alone. Windows, Microsoft, driver and security-critical services are not listed. Changes need administrator rights and take effect the next time the service would start.",
@@ -114,7 +114,7 @@ export const svcEs: Record<keyof typeof svcEn, string> = {
     "svc.confirmCaution": "{name} parece software de seguridad. Cambiarlo puede reducir tu protección. Puedes restaurar el ajuste original aquí cuando quieras.",
     "svc.confirmDependents": "Otros servicios necesitan {name}: {list}. Hacer que arranque con menos frecuencia puede impedir que funcionen.",
     "svc.restore": "Restaurar original: {value}",
-    "svc.restore.label": "Restaurar el ajuste original de {name}",
+    "svc.restore.label": "Restaurar original: {value} ({name})",
     "svc.loading": "Leyendo la lista…",
 
     "svc.services.intro": "Servicios de Windows de terceros. El único cambio que se ofrece es cuándo arranca un servicio: WinForge nunca detiene, borra ni edita un servicio, y no toca sus opciones de recuperación ni sus dependencias. No se listan los servicios de Windows, de Microsoft, los controladores ni los críticos para la seguridad. Los cambios requieren permisos de administrador y surten efecto la próxima vez que el servicio arranque.",

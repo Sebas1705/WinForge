@@ -146,7 +146,7 @@ export function Services(p: { admin: boolean; say: (m: string) => void; onAdmin:
                                             {SERVICE_MODES.map((m) => <option key={m} value={m}>{modeLabel(m)}</option>)}
                                         </select>
                                         {i.changed && i.original && (
-                                            <button className="sm" disabled={off} aria-label={t("svc.restore.label", {name: i.displayName})} onClick={() => change(i, "restore")}>
+                                            <button className="sm" disabled={off} aria-label={t("svc.restore.label", {name: i.displayName, value: modeLabel(i.original)})} onClick={() => change(i, "restore")}>
                                                 {t("svc.restore", {value: modeLabel(i.original)})}
                                             </button>
                                         )}

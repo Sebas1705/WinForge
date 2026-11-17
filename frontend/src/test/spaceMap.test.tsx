@@ -45,18 +45,18 @@ describe("space map: blocks", () => {
     it("draws one real button per folder with a name that carries size and share, and merges the tail into Other", () => {
         mount(sample());
         const names = blocks().map((b) => b.getAttribute("aria-label"));
-        expect(names).toContain("Videos, 8 GB, 72% of the folders shown");
-        expect(names).toContain("Documents, 2 GB, 18% of the folders shown");
-        expect(names).toContain("Music, 1 GB, 9% of the folders shown");
+        expect(names).toContain("Videos 8 GB, 72% of the folders shown");
+        expect(names).toContain("Documents 2 GB, 18% of the folders shown");
+        expect(names).toContain("Music 1 GB, 9% of the folders shown");
         const other = blocks().find((b) => b.classList.contains("tm-other"))!;
         expect(other).toHaveAttribute("aria-disabled", "true");
-        expect(other.getAttribute("aria-label")).toMatch(/^Other: 1 smaller folders together, 40 MB, less than 1% of the folders shown/);
+        expect(other.getAttribute("aria-label")).toMatch(/^Other \(1\) 40 MB, less than 1% of the folders shown/);
         expect(other).toHaveAttribute("title", "1 smaller folders together: 40 MB");
     });
 
     it("gives a tooltip with the full path and size, and a group label and summary", () => {
         mount(sample());
-        expect(screen.getByRole("button", {name: /^Videos,/})).toHaveAttribute("title", `${HOME}\\Videos\n8 GB`);
+        expect(screen.getByRole("button", {name: /^Videos /})).toHaveAttribute("title", `${HOME}\\Videos\n8 GB`);
         const group = screen.getByRole("group", {name: "Space map of me"});
         const desc = document.getElementById(group.getAttribute("aria-describedby")!)!;
         expect(desc).toHaveTextContent("The biggest is Videos, 8 GB, 72% of the folders shown.");
@@ -86,10 +86,10 @@ describe("space map: blocks", () => {
         width = 320;
         const small = Array.from({length: 12}, (_, i) => folder(`s${String(i).padStart(2, "0")}`, 286));
         mount([folder("Big", 6560), ...small]);
-        const big = screen.getByRole("button", {name: /^Big,/});
+        const big = screen.getByRole("button", {name: /^Big /});
         expect(within(big).getByText("Big")).toBeInTheDocument();
         expect(big).toHaveTextContent("6.4 KB");
-        const smalls = blocks().filter((b) => /^s\d\d,/.test(b.getAttribute("aria-label") ?? ""));
+        const smalls = blocks().filter((b) => /^s\d\d /.test(b.getAttribute("aria-label") ?? ""));
         expect(smalls.length).toBeGreaterThan(0);
         expect(smalls.some((b) => b.querySelector(".tm-name") === null)).toBe(true); // too small for a label, still a button with a name
         for (const b of smalls) expect(b.getAttribute("aria-label")).toMatch(/KB|B,/);
@@ -148,7 +148,7 @@ describe("space map: blocks", () => {
         mount([folder("Only", 5 * GB)]);
         const [b] = blocks();
         expect(px(b, "width")).toBe(798);
-        expect(b).toHaveAccessibleName("Only, 5 GB, 100% of the folders shown");
+        expect(b).toHaveAccessibleName("Only 5 GB, 100% of the folders shown");
     });
 
     it("tints by size rank with data attributes, not by name", () => {
@@ -163,7 +163,7 @@ describe("space map: blocks", () => {
 describe("space map: using it", () => {
     it("goes into a folder on click, but not into Other", async () => {
         const {user, onOpen} = mount(sample());
-        await user.click(screen.getByRole("button", {name: /^Documents,/}));
+        await user.click(screen.getByRole("button", {name: /^Documents /}));
         expect(onOpen).toHaveBeenCalledWith(`${HOME}\\Documents`);
         onOpen.mockClear();
         await user.click(blocks().find((b) => b.classList.contains("tm-other"))!);
@@ -269,9 +269,9 @@ describe("space map: using it", () => {
     it("reads in Spanish", async () => {
         setLang("es");
         const {user} = mount(sample());
-        expect(screen.getByRole("button", {name: "Videos, 8 GB, 72 % de las carpetas mostradas"})).toBeInTheDocument();
+        expect(screen.getByRole("button", {name: "Videos 8 GB, 72 % de las carpetas mostradas"})).toBeInTheDocument();
         expect(screen.getByRole("group", {name: "Mapa de espacio de me"})).toBeInTheDocument();
-        expect(blocks().find((b) => b.classList.contains("tm-other"))!.getAttribute("aria-label")).toMatch(/^Otras: 1 carpetas más pequeñas juntas, 40 MB, menos del 1 %/);
+        expect(blocks().find((b) => b.classList.contains("tm-other"))!.getAttribute("aria-label")).toMatch(/^Otras \(1\) 40 MB, menos del 1 %/);
         await user.tab();
         expect(screen.getByRole("button", {name: "Ver dentro"})).toBeInTheDocument();
         expect(screen.getByRole("button", {name: "Mostrar en el Explorador"})).toBeInTheDocument();
@@ -311,11 +311,11 @@ describe("space map in Biggest things", () => {
         await user.click(within(sec).getByRole("button", {name: "Find the biggest"}));
         expect(api.StorageFolders).toHaveBeenCalledWith(HOME);
         expect(api.StorageBigFiles).not.toHaveBeenCalled();
-        const videos = await within(sec).findByRole("button", {name: /^Videos, 8 GB, 73%/});
+        const videos = await within(sec).findByRole("button", {name: /^Videos 8 GB, 73%/});
 
         await user.click(videos);
         expect(api.StorageFolders).toHaveBeenLastCalledWith(`${HOME}\\Videos`);
-        expect(await within(sec).findByRole("button", {name: /^Holidays, 4 GB, 100%/})).toBeInTheDocument();
+        expect(await within(sec).findByRole("button", {name: /^Holidays 4 GB, 100%/})).toBeInTheDocument();
         const crumbs = within(sec).getByRole("navigation", {name: "Folder path"});
         expect(within(crumbs).getByText("Videos")).toHaveAttribute("aria-current", "location");
 
@@ -326,7 +326,7 @@ describe("space map in Biggest things", () => {
 
         await user.click(within(sec).getByRole("button", {name: "Map"}));
         await user.click(within(crumbs).getByRole("button", {name: HOME}));
-        expect(await within(sec).findByRole("button", {name: /^Documents, 2 GB/})).toBeInTheDocument();
+        expect(await within(sec).findByRole("button", {name: /^Documents 2 GB/})).toBeInTheDocument();
         expect(within(sec).queryByRole("navigation", {name: "Folder path"})).not.toBeInTheDocument();
         expect(api.StorageFolders).toHaveBeenCalledTimes(2); // the root was remembered
     });
@@ -336,7 +336,7 @@ describe("space map in Biggest things", () => {
         await waitFor(() => expect(within(sec).getByRole("button", {name: "Map"})).toBeEnabled());
         await user.click(within(sec).getByRole("button", {name: "Map"}));
         await user.click(within(sec).getByRole("button", {name: "Find the biggest"}));
-        const block = await within(sec).findByRole("button", {name: /^Music,/});
+        const block = await within(sec).findByRole("button", {name: /^Music /});
         await act(async () => block.focus());
         await user.click(within(sec).getByRole("button", {name: "Show in Explorer"}));
         expect(api.StorageReveal).toHaveBeenCalledWith(`${HOME}\\Music`);
