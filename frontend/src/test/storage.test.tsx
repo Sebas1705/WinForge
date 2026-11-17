@@ -48,6 +48,8 @@ async function open(opts: { admin?: boolean; lang?: "es" } = {}) {
     return user;
 }
 
+// The Tasks list repeats what a section reports, and sits above it: the section is the last match.
+const lastText = async (x: string | RegExp) => (await screen.findAllByText(x)).at(-1) as HTMLElement;
 const section = (name: string) => screen.getByRole("heading", {name, level: 2}).closest("section") as HTMLElement;
 const checkbox = (name: string) => screen.getByRole("checkbox", {name}) as HTMLInputElement;
 
@@ -262,12 +264,12 @@ describe("storage: free up space", () => {
 
         expect(api.StorageClean).toHaveBeenCalledTimes(1);
         expect(api.StorageClean).toHaveBeenCalledWith(["temp-user", "thumbnails", "recycle-bin", "shader-cache"]);
-        expect(await screen.findByText("Freed 1.5 GB (120 files).")).toBeInTheDocument();
+        expect(await lastText("Freed 1.5 GB (120 files).")).toBeInTheDocument();
         await waitFor(() => expect(api.StorageScan).toHaveBeenCalledTimes(2));
         expect(api.StorageVolumes.mock.calls.length).toBeGreaterThan(volumeReads);
         // the result stays while the list now shows what is left
         await waitFor(() => expect(screen.queryByText("Your temporary files")).not.toBeInTheDocument());
-        expect(screen.getByText("Freed 1.5 GB (120 files).")).toBeInTheDocument();
+        expect(screen.getAllByText("Freed 1.5 GB (120 files).").length).toBeGreaterThan(0);
         expect(screen.getByRole("checkbox", {name: "Select for cleaning: Picture preview cache"})).toBeChecked();
     });
 
@@ -277,7 +279,7 @@ describe("storage: free up space", () => {
         await scanJunk(user);
         await user.click(screen.getByRole("button", {name: /Clean selected/}));
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Clean"}));
-        const status = (await screen.findByText("Freed 1.5 GB (120 files).")).closest("[role=status]") as HTMLElement;
+        const status = (await lastText("Freed 1.5 GB (120 files).")).closest("[role=status]") as HTMLElement;
         await waitFor(() => expect(document.activeElement).toBe(status));
     });
 
@@ -299,7 +301,7 @@ describe("storage: free up space", () => {
         await scanJunk(user);
         await user.click(screen.getByRole("button", {name: /Clean selected/}));
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Clean"}));
-        expect(await screen.findByText("Freed 10 MB (3 files).")).toBeInTheDocument();
+        expect(await lastText("Freed 10 MB (3 files).")).toBeInTheDocument();
         expect(screen.getByText(/7 items could not be removed\. Files that are in use are skipped/)).toBeInTheDocument();
         expect(screen.getByText("Downloaded update files: access denied")).toBeInTheDocument();
     });
@@ -324,7 +326,7 @@ describe("storage: free up space", () => {
         await scanJunk(user);
         await user.click(screen.getByRole("button", {name: /Clean selected/}));
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Clean"}));
-        expect(await screen.findByText("Nothing was freed.")).toBeInTheDocument();
+        expect(await lastText("Nothing was freed.")).toBeInTheDocument();
     });
 
     it("shows a call that fails as a message and keeps the list", async () => {
@@ -333,7 +335,7 @@ describe("storage: free up space", () => {
         await scanJunk(user);
         await user.click(screen.getByRole("button", {name: /Clean selected/}));
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Clean"}));
-        expect(await screen.findByText("clean exploded")).toBeInTheDocument();
+        expect(await lastText("clean exploded")).toBeInTheDocument();
         expect(screen.getByRole("checkbox", {name: "Select for cleaning: Recycle Bin"})).toBeInTheDocument();
         expect(api.StorageScan).toHaveBeenCalledTimes(1); // no rescan after a failure
     });
@@ -342,7 +344,7 @@ describe("storage: free up space", () => {
         api.StorageScan.mockRejectedValue(new Error("scan exploded"));
         const user = await open();
         await user.click(screen.getByRole("button", {name: /Scan for junk/}));
-        expect(await screen.findByText("scan exploded")).toBeInTheDocument();
+        expect(await lastText("scan exploded")).toBeInTheDocument();
         expect(screen.getByRole("button", {name: /Scan for junk/})).toBeEnabled();
     });
 });
@@ -361,11 +363,11 @@ describe("storage: live progress and cancel", () => {
         const user = await open();
         await user.click(screen.getByRole("button", {name: /Scan for junk/}));
 
-        const status = await screen.findByText("Looking for files to clean…");
+        const status = await lastText("Looking for files to clean…");
         expect(status.closest("[role=status]")).toBeInTheDocument();
         await emit.storageProgress({task: "scan", files: 1234, bytes: 5 * MB, current: "C:\\Windows\\Temp\\a.tmp"});
         expect(await screen.findByText("1234 files · 5 MB so far")).toBeInTheDocument();
-        expect(screen.getByText("C:\\Windows\\Temp\\a.tmp")).toBeInTheDocument();
+        expect(screen.getAllByText("C:\\Windows\\Temp\\a.tmp").length).toBeGreaterThan(0);
         await emit.storageProgress({task: "dups", files: 99, bytes: 1, current: "D:\\other"});
         expect(screen.queryByText("D:\\other")).not.toBeInTheDocument();
         expect(screen.getByText("1234 files · 5 MB so far")).toBeInTheDocument();
@@ -379,7 +381,7 @@ describe("storage: live progress and cancel", () => {
         expect(api.StorageCancel).toHaveBeenCalledTimes(1);
 
         scan.reject(new Error("scan cancelled"));
-        await waitFor(() => expect(screen.queryByText("Looking for files to clean…")).not.toBeInTheDocument());
+        await waitFor(() => expect(screen.queryByRole("button", {name: "Cancel: Looking for files to clean…"})).not.toBeInTheDocument());
         expect(screen.queryByText("scan cancelled")).not.toBeInTheDocument(); // a stop is not an error
         expect(screen.getByRole("button", {name: /Scan for junk/})).toBeEnabled();
         expect(screen.getByRole("button", {name: "Find the biggest"})).toBeEnabled();
@@ -403,14 +405,42 @@ describe("storage: live progress and cancel", () => {
         await scanJunk(user);
         await user.click(screen.getByRole("button", {name: /Clean selected/}));
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Clean"}));
-        expect(await screen.findByText("Cleaning…")).toBeInTheDocument();
+        expect(await lastText("Cleaning…")).toBeInTheDocument();
         await emit.storageProgress({task: "clean", files: 7, bytes: 2048});
-        expect(await screen.findByText("7 files · 2 KB so far")).toBeInTheDocument();
+        expect((await screen.findAllByText("7 files · 2 KB so far")).length).toBeGreaterThan(0);
         expect(screen.getByRole("checkbox", {name: "Select for cleaning: Recycle Bin"})).toBeDisabled();
         await user.click(screen.getByRole("button", {name: "Cancel: Cleaning…"}));
         expect(api.StorageCancel).toHaveBeenCalled();
         clean.resolve({freedBytes: 0, files: 0, failed: 0, outcomes: []});
-        await waitFor(() => expect(screen.queryByText("Cleaning…")).not.toBeInTheDocument());
+        // Once it ends the status goes; the Tasks list keeps it as stopped.
+        await waitFor(() => expect(screen.queryByRole("button", {name: "Cancel: Cleaning…"})).not.toBeInTheDocument());
+    });
+
+    it("keeps a running clean in view after leaving the page and coming back, and lists how it ended", async () => {
+        const clean = pending<{ freedBytes: number; files: number; failed: number; outcomes: [] }>();
+        api.StorageClean.mockReturnValue(clean.promise);
+        const user = await open();
+        await scanJunk(user);
+        await user.click(screen.getByRole("button", {name: /Clean selected/}));
+        await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Clean"}));
+        await lastText("Cleaning…");
+        const nav = () => within(screen.getByRole("navigation", {name: "Main menu"}));
+        await user.click(nav().getByRole("button", {name: /Home/}));
+        await waitFor(() => expect(screen.queryByRole("heading", {name: "Storage", level: 1})).not.toBeInTheDocument());
+        await user.click(nav().getByRole("button", {name: /Storage/}));
+        await screen.findByRole("heading", {name: "Storage", level: 1});
+        // The job is still there: in the Tasks list, in its section, and the page does not start a second one.
+        const tasks = screen.getByRole("heading", {name: "Tasks", level: 2}).closest("section") as HTMLElement;
+        expect(within(tasks).getByText("Cleaning…")).toBeInTheDocument();
+        expect(within(tasks).getByText("Running")).toBeInTheDocument();
+        expect(screen.getAllByRole("button", {name: "Cancel: Cleaning…"}).length).toBeGreaterThan(0);
+        expect(screen.getByRole("button", {name: /Scan for junk/})).toBeDisabled();
+        await emit.storageProgress({task: "clean", files: 9, bytes: 4096});
+        expect((await screen.findAllByText("9 files · 4 KB so far")).length).toBeGreaterThan(0);
+        clean.resolve({freedBytes: 3 * MB, files: 5, failed: 0, outcomes: []});
+        await waitFor(() => expect(within(tasks).getAllByText("Done").length).toBeGreaterThan(0));
+        expect(within(tasks).getByText("Freed 3 MB (5 files).")).toBeInTheDocument();
+        expect(api.StorageClean).toHaveBeenCalledTimes(1);
     });
 
     it("reports a Cancel that could not be sent", async () => {
@@ -616,7 +646,7 @@ describe("storage: biggest things", () => {
         const sec = section("Biggest things");
         await waitFor(() => expect(within(sec).getByRole("button", {name: "Find the biggest"})).toBeEnabled());
         await user.click(within(sec).getByRole("button", {name: "Find the biggest"}));
-        expect(await screen.findByText("folder unreadable")).toBeInTheDocument();
+        expect(await lastText("folder unreadable")).toBeInTheDocument();
         await new Promise((r) => setTimeout(r, 50));
         expect(api.StorageBigFiles).toHaveBeenCalledTimes(1);
         expect(within(sec).getByRole("button", {name: "Find the biggest"})).toBeEnabled();

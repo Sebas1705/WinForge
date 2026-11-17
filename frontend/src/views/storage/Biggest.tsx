@@ -40,8 +40,8 @@ export function Biggest(p: { task: TaskRunner; home: string; say: (m: string) =>
     const load = async (which: Kind, dir: string) => {
         const k = `${which}|${dir}`;
         const out = which === "files"
-            ? await p.task.run("big", () => api.StorageBigFiles(dir, BIG_LIMIT))
-            : await p.task.run("folders", () => api.StorageFolders(dir));
+            ? await p.task.run("big", () => api.StorageBigFiles(dir, BIG_LIMIT), (l) => t("tasks.sum.items", {n: l.length}))
+            : await p.task.run("folders", () => api.StorageFolders(dir), (l) => t("tasks.sum.items", {n: l.length}));
         if (!out) return;
         if (out.error !== undefined) {
             setNotes((n) => ({...n, [k]: out.stopped ? "stopped" : "error"}));

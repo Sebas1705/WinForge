@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom/vitest";
 import {cleanup} from "@testing-library/react";
 import {afterEach, vi} from "vitest";
+import {resetTasks} from "../lib/taskStore";
 
 // jsdom lacks a few browser APIs the app uses; stub them the way a browser answers.
 Object.defineProperty(window, "matchMedia", {
@@ -17,6 +18,7 @@ Object.defineProperty(HTMLElement.prototype, "offsetParent", {get() { return thi
 
 afterEach(() => {
     cleanup();
+    resetTasks(); // jobs live outside React, so one test must not leave a running job for the next
     try { localStorage.clear(); } catch { /* ignore */ }
     vi.clearAllMocks();
 });

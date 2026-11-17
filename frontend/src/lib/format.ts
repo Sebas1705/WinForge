@@ -33,3 +33,11 @@ export function percent(part: number, whole: number): number {
     if (!(whole > 0) || !Number.isFinite(part)) return 0;
     return Math.min(100, Math.max(0, Math.round((part / whole) * 100)));
 }
+
+/** "12 s", "3 min 05 s": how long a job ran, short enough for a list row. */
+export function formatElapsed(ms: number): string {
+    const s = Math.max(0, Math.round(ms / 1000));
+    if (s < 60) return `${s} s`;
+    const m = Math.floor(s / 60);
+    return `${m} min ${String(s % 60).padStart(2, "0")} s`;
+}
