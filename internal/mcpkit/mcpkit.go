@@ -122,7 +122,9 @@ func JSON(v any) *Result {
 }
 
 // Fail is an error answer the model can read and act on.
-func Fail(format string, a ...any) *Result { return &Result{Text: fmt.Sprintf(format, a...), IsError: true} }
+func Fail(format string, a ...any) *Result {
+	return &Result{Text: fmt.Sprintf(format, a...), IsError: true}
+}
 
 // Decode reads tool arguments strictly: unknown fields and trailing data are errors, and an empty argument
 // object is fine for tools that take none.
