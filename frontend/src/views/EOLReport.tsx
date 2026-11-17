@@ -6,6 +6,8 @@ import {
     type EOLFinding, type EOLReport as Report, type EOLStatus,
 } from "../lib/eol";
 import {t} from "../lib/i18n";
+import {usePageState} from "../lib/pageState";
+import {usePageStateLive} from "../lib/pageStateLive";
 import type {HealthLink} from "../lib/health";
 import type {App} from "../lib/model";
 import "../eol.css";
@@ -60,12 +62,16 @@ function Row(p: { f: EOLFinding; byId: Map<string, App>; onDetail: (a: App) => v
 export function EOLSection(p: {
     byId: Map<string, App>; onDetail: (a: App) => void; onLink: (l: HealthLink) => void; refreshKey: string;
 }) {
-    const [report, setReport] = useState<Report | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    // Kept while the app runs, with the key it was read for, so coming back shows it at once.
+    const [report, setReport] = usePageStateLive<Report | null>("eol:report", null);
+    const [error, setError] = usePageStateLive<string | null>("eol:error", null);
+    const [readFor, setReadFor] = usePageState<string | null>("eol:readFor", null);
     const [showRest, setShowRest] = useState(false);
     const restId = useId();
 
     useEffect(() => {
+        if (readFor === p.refreshKey && (report || error)) return;
+        setReadFor(p.refreshKey);
         let live = true;
         Promise.resolve().then(() => api.EOLReport()).then((r) => { if (live) { setReport(r); setError(null); } }, (e) => { if (live) setError(errText(e)); });
         return () => { live = false; };

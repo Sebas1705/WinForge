@@ -8,6 +8,8 @@ import {
     type BatteryInfo, type ChartSeries, type HHSnapshot, type HHView,
 } from "../lib/hhist";
 import {getLang, t} from "../lib/i18n";
+import {usePageState} from "../lib/pageState";
+import {usePageStateLive} from "../lib/pageStateLive";
 import "../hhist.css";
 
 const W = 640, H = 220, LEFT = 56, RIGHT = 52, TOP = 12, BOTTOM = 30;
@@ -150,13 +152,17 @@ function DriveReadings({snap}: { snap: HHSnapshot }) {
 
 /** The History section: score over time, free space per drive, battery capacity and plain statements, with a way to clear it. */
 export function HistorySection(p: { refreshKey: string }) {
-    const [view, setView] = useState<HHView | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    // The history is kept while the app runs, with the key and clear count it was read for.
+    const [view, setView] = usePageStateLive<HHView | null>("hh:view", null);
+    const [error, setError] = usePageStateLive<string | null>("hh:error", null);
+    const [readFor, setReadFor] = usePageState<string | null>("hh:readFor", null);
     const [ask, setAsk] = useState(false);
-    const [version, setVersion] = useState(0);
+    const [version, setVersion] = usePageState("hh:version", 0);
     const [notice, setNotice] = useState("");
 
     useEffect(() => {
+        if (readFor === p.refreshKey + "|" + version && (view || error)) return;
+        setReadFor(p.refreshKey + "|" + version);
         let live = true;
         api.HealthHistory().then((v) => { if (live) { setView(v); setError(null); } }, (e) => { if (live) setError(errText(e)); });
         return () => { live = false; };
@@ -208,9 +214,12 @@ const VERDICT_ICON: Record<BatteryInfo["verdict"], IconName> = {good: "check", w
 
 /** The battery card: nothing at all while loading, a short note on a desktop, a plain verdict on a laptop. */
 export function BatteryCard(p: { refreshKey: string }) {
-    const [info, setInfo] = useState<BatteryInfo | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    const [info, setInfo] = usePageStateLive<BatteryInfo | null>("hh:battery", null);
+    const [error, setError] = usePageStateLive<string | null>("hh:batteryError", null);
+    const [readFor, setReadFor] = usePageState<string | null>("hh:batteryFor", null);
     useEffect(() => {
+        if (readFor === p.refreshKey && (info || error)) return;
+        setReadFor(p.refreshKey);
         let live = true;
         setInfo(null); setError(null);
         api.Battery().then((b) => { if (live) setInfo(b); }, (e) => { if (live) setError(errText(e)); });

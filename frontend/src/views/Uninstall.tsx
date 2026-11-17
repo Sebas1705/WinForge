@@ -5,6 +5,8 @@ import {ConfirmDialog} from "../components/Modals";
 import {TaskViewer} from "../components/TaskViewer";
 import {getTasks, runningOf, startTask, tasksOf, useTasks} from "../lib/taskStore";
 import {formatBytes, formatDate} from "../lib/format";
+import {usePageState} from "../lib/pageState";
+import {usePageStateLive} from "../lib/pageStateLive";
 import type {App} from "../lib/model";
 import {getLang, t} from "../lib/i18n";
 import {markedBytes, nameList, notInstalledMatches, placeName, reasonText, uninstallError, visibleApps, whyText} from "../lib/uninstall";
@@ -22,6 +24,9 @@ interface Leftovers {
     busy: boolean;
 }
 
+/** Which leftovers search the screen is waiting for; an older answer is ignored. Module level, so it survives leaving the page. */
+let searchSeq = 0;
+
 const fileCount = (n: number): string => t(n === 1 ? "uninst.left.files.one" : "uninst.left.files.other", {n});
 
 /**
@@ -35,14 +40,15 @@ export function Uninstall(p: {
     refreshKey: number;
     onUninstall: (apps: UninstallApp[]) => void;
 }) {
-    const [listing, setListing] = useState<UninstallListing | null>(null);
-    const [query, setQuery] = useState("");
-    const [marked, setMarked] = useState<Set<string>>(new Set());
+    // The list, what is ticked and the leftovers panel are kept while the app runs; the dialogs are not.
+    const [listing, setListing] = usePageStateLive<UninstallListing | null>("uninstall:listing", null);
+    const [listedAt, setListedAt] = usePageState<number | null>("uninstall:listedAt", null);
+    const [query, setQuery] = usePageState("uninstall:query", "");
+    const [marked, setMarked] = usePageStateLive<Set<string>>("uninstall:marked", () => new Set());
     const [asking, setAsking] = useState(false);
-    const [manual, setManual] = useState("");
-    const [left, setLeft] = useState<Leftovers | null>(null);
+    const [manual, setManual] = usePageState("uninstall:manual", "");
+    const [left, setLeft] = usePageStateLive<Leftovers | null>("uninstall:left", null);
     const panel = useRef<HTMLElement>(null);
-    const search = useRef(0); // which search the screen is waiting for; an older answer is ignored
 
     const load = useCallback(async () => {
         try {
@@ -51,7 +57,20 @@ export function Uninstall(p: {
             setMarked((m) => new Set([...m].filter((id) => l.apps.some((a) => a.id === id))));
         } catch (e) { p.say(errText(e)); setListing((v) => v ?? {apps: [], removed: []}); }
     }, [p.say]);
-    useEffect(() => { void load(); }, [load, p.refreshKey]);
+    // Shown again with the list already read for this run count: keep it (the Refresh button reads it anew).
+    useEffect(() => { if (listing !== null && listedAt === p.refreshKey) return; setListedAt(p.refreshKey); void load(); }, [load, p.refreshKey]);
+
+    // Back on the page with a kept leftovers panel: nothing waits for an answer now unless a job is really running,
+    // the last question is not asked again, and only paths the search listed can still be ticked.
+    useEffect(() => {
+        const active = runningOf(tasksOf(getTasks(), "uninstall"));
+        setLeft((l) => {
+            if (!l) return l;
+            if (l.result === null && !active) return null;
+            const listed = new Set(l.candidates.map((c) => c.path));
+            return {...l, confirming: false, busy: l.busy && !!active, marked: new Set([...l.marked].filter((x) => listed.has(x)))};
+        });
+    }, []);
 
     const apps = listing?.apps ?? [];
     const shown = useMemo(() => visibleApps(apps, query), [apps, query]);
@@ -72,23 +91,28 @@ export function Uninstall(p: {
     const find = async (appId: string, name: string) => {
         const handle = begin(t("tasks.uninstall.find", {name}), "find");
         if (!handle) return;
-        const mine = ++search.current;
+        const mine = ++searchSeq;
         setLeft({appId, name, result: null, candidates: [], marked: new Set(), recycled: null, confirming: false, busy: true});
         try {
             const r = await api.LeftoversFind(appId);
             handle.done(t("tasks.sum.items", {n: r.candidates.length}));
-            if (mine !== search.current) return;
+            if (mine !== searchSeq) return;
             setLeft({appId, name: r.appName || name, result: r, candidates: r.candidates, marked: new Set(), recycled: null, confirming: false, busy: false});
         } catch (e) {
             const err = uninstallError(e);
             handle.fail(err.text);
-            if (mine !== search.current) return;
+            if (mine !== searchSeq) return;
             p.say(err.text);
             setLeft(null);
             if (err.refresh) void load();
         }
     };
-    useEffect(() => { if (left) panel.current?.focus(); }, [left?.appId, left?.result != null]);
+    const focused = useRef(left ? `${left.appId}|${left.result != null}` : "");
+    useEffect(() => {
+        const now = left ? `${left.appId}|${left.result != null}` : "";
+        if (left && now !== focused.current) panel.current?.focus(); // not when the page is only shown again
+        focused.current = now;
+    }, [left?.appId, left?.result != null]);
 
     const toggleLeft = (path: string) => setLeft((l) => {
         if (!l) return l;
@@ -280,7 +304,7 @@ export function Uninstall(p: {
                             {left.candidates.length > 0 && (leftCount > 0 ? t("uninst.left.summary", {n: leftCount, size: formatBytes(markedBytes(left.candidates, left.marked))}) : t("uninst.left.summaryNone"))}
                         </span>
                         <button disabled={left.busy} onClick={() => void find(left.appId, left.name)}><Icon name="refresh" size={15}/> {t("uninst.left.again")}</button>
-                        <button disabled={left.busy} onClick={() => { search.current++; setLeft(null); }}>{t("uninst.left.close")}</button>
+                        <button disabled={left.busy} onClick={() => { searchSeq++; setLeft(null); }}>{t("uninst.left.close")}</button>
                         <button className="danger" disabled={left.busy || leftCount === 0} onClick={() => setLeft({...left, confirming: true})}>
                             <Icon name="trash" size={15}/> {t("uninst.left.recycle")}
                         </button>

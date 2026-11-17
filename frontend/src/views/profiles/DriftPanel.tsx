@@ -3,6 +3,8 @@ import {api, errText, type DriftInfo} from "../../api";
 import {Icon} from "../../components/Icon";
 import {dayOf} from "../../lib/drift";
 import {getLang, t} from "../../lib/i18n";
+import {usePageState} from "../../lib/pageState";
+import {usePageStateLive} from "../../lib/pageStateLive";
 import type {ProfileInfo} from "../../lib/model";
 
 /**
@@ -17,15 +19,20 @@ export function DriftPanel(p: {
     onAdd: (ids: string[]) => Promise<void>;
     say: (m: string) => void;
 }) {
-    const [info, setInfo] = useState<DriftInfo | null>(null);
-    const [error, setError] = useState("");
-    const [busy, setBusy] = useState(false);
-    const [version, setVersion] = useState(0); // bumped to read the report again after a button
-    const titleId = useId();
     const id = p.profile.id;
     const name = p.profile.name;
+    // The report is kept per profile while the app runs, with the scan and read count it was read for.
+    const [info, setInfo] = usePageStateLive<DriftInfo | null>(`drift:${id}:info`, null);
+    const [error, setError] = usePageStateLive(`drift:${id}:error`, "");
+    const [read, setRead] = usePageState<{ scan: unknown; version: number } | null>(`drift:${id}:read`, null);
+    const [busy, setBusy] = useState(false);
+    const [version, setVersion] = usePageState(`drift:${id}:version`, 0); // bumped to read the report again after a button
+    const titleId = useId();
 
     useEffect(() => {
+        // Shown again with this scan already read: keep the report instead of reading it again.
+        if (read && read.scan === p.scan && read.version === version && (info || error)) return;
+        setRead({scan: p.scan, version});
         let live = true;
         setError("");
         api.ProfileDrift(id).then((r) => { if (live) setInfo(r); }).catch((e) => { if (live) { setInfo(null); setError(errText(e)); } });

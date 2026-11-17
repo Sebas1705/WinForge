@@ -5,6 +5,8 @@ import {Icon, type IconName} from "../../components/Icon";
 import {TaskViewer} from "../../components/TaskViewer";
 import {compareError, kindOf, LIST_LIMIT, saveName, sideLabel, summary, type CompareKind} from "../../lib/compare";
 import {withApps} from "../../lib/drift";
+import {clearPageState, usePageState} from "../../lib/pageState";
+import {usePageStateLive} from "../../lib/pageStateLive";
 import {t} from "../../lib/i18n";
 import type {App, Profile, ProfileInfo} from "../../lib/model";
 import {selectionProfile, uniqueProfile} from "../../lib/model";
@@ -14,7 +16,10 @@ import "../../compare.css";
 type Mode = "file" | "code" | "files";
 type Request = { mode: "file"; path: string } | { mode: "code"; code: string } | { mode: "files"; a: string; b: string };
 
-const fileName = (path: string) => path.split(/[\\/]/).pop() || path;
+/** Which comparison the screen waits for; an older answer is ignored. Module level, so a page left and shown again keeps counting. */
+let compareSeq = 0;
+
+const fileName =(path: string) => path.split(/[\\/]/).pop() || path;
 
 /**
  * Sets this PC against a profile file or a share code, or two profile files against each other. Reading is
@@ -31,13 +36,15 @@ export function CompareView(p: {
     onChanged: () => Promise<void>;
     say: (m: string) => void;
 }) {
-    const [mode, setMode] = useState<Mode>("file");
-    const [pathA, setPathA] = useState("");
-    const [pathB, setPathB] = useState("");
-    const [code, setCode] = useState("");
-    const [req, setReq] = useState<Request | null>(null);
-    const [result, setResult] = useState<CompareResult | null>(null);
-    const [error, setError] = useState("");
+    // What was compared and what came out is kept while the app runs, so leaving the page does not lose it.
+    const [mode, setMode] = usePageState<Mode>("compare:mode", "file");
+    const [pathA, setPathA] = usePageState("compare:pathA", "");
+    const [pathB, setPathB] = usePageState("compare:pathB", "");
+    const [code, setCode] = usePageState("compare:code", "");
+    const [req, setReq] = usePageState<Request | null>("compare:req", null);
+    const [ran, setRan] = usePageState<{ req: Request; scan: unknown } | null>("compare:ran", null);
+    const [result, setResult] = usePageStateLive<CompareResult | null>("compare:result", null);
+    const [error, setError] = usePageStateLive("compare:error", "");
     const [reading, setBusy] = useState(false);
     // A comparison running in the background (started before leaving this page) keeps the controls locked too.
     const compareJob = runningOf(useTasks("profiles").filter((x) => x.tag === "compare"));
@@ -47,18 +54,23 @@ export function CompareView(p: {
 
     useEffect(() => {
         if (!req) return;
-        let live = true;
+        // Shown again with the answer for this very request and scan already kept (or still on its way): do not ask again.
+        if (ran && ran.req === req && ran.scan === p.scan) return;
+        const id = ++compareSeq;
+        setRan({req, scan: p.scan});
         setBusy(true);
         const what = req.mode === "file" ? fileName(req.path) : req.mode === "code" ? t("tasks.pf.compare.code") : t("tasks.pf.compare.files", {a: fileName(req.a), b: fileName(req.b)});
         const job = startTask("profiles", t("tasks.pf.compare", {what}), {tag: "compare"});
         const call = req.mode === "file" ? api.CompareFile(req.path) : req.mode === "code" ? api.CompareCode(req.code) : api.CompareFiles(req.a, req.b);
-        call.then((r) => { job.done(summary(r)); if (live) { setResult(r); setError(""); } })
-            .catch((e) => { job.fail(compareError(e)); if (live) { setResult(null); setError(compareError(e)); } })
-            .finally(() => { if (live) setBusy(false); });
-        return () => { live = false; };
+        call.then((r) => { job.done(summary(r)); if (id === compareSeq) { setResult(r); setError(""); } })
+            .catch((e) => { job.fail(compareError(e)); if (id === compareSeq) { setResult(null); setError(compareError(e)); } })
+            .finally(() => { if (id === compareSeq) setBusy(false); });
     }, [req, p.scan]);
 
-    const choose = (mode: Mode) => { setMode(mode); setReq(null); setResult(null); setError(""); };
+    /** Drops the comparison on screen, and any answer still on its way. */
+    const forget = () => { compareSeq++; setReq(null); setRan(null); setResult(null); setError(""); };
+    const choose = (mode: Mode) => { setMode(mode); forget(); };
+    const leave = () => { clearPageState("compare:"); p.onBack(); };
     const pick = async (then: (path: string) => void) => {
         try {
             const path = await api.PickProfileFile();
@@ -68,7 +80,7 @@ export function CompareView(p: {
 
     return (
         <div className="page detail-page cmp">
-            <button className="ghost back" onClick={p.onBack}><Icon name="back" size={16}/> {t("cmp.back")}</button>
+            <button className="ghost back" onClick={leave}><Icon name="back" size={16}/> {t("cmp.back")}</button>
             <header>
                 <h1>{t("cmp.title")}</h1>
                 <p className="muted">{t("cmp.intro")}</p>
@@ -111,11 +123,11 @@ export function CompareView(p: {
                     <>
                         <p className="muted small">{t("cmp.filesHint")}</p>
                         <div className="actions tight">
-                            <button disabled={busy} onClick={() => void pick((path) => { setPathA(path); setReq(null); setResult(null); })}>{t("cmp.chooseA")}</button>
+                            <button disabled={busy} onClick={() => void pick((path) => { setPathA(path); forget(); })}>{t("cmp.chooseA")}</button>
                             <span className="mono small cmp-file">{pathA ? t("cmp.chosenA", {file: fileName(pathA)}) : t("cmp.noneA")}</span>
                         </div>
                         <div className="actions tight">
-                            <button disabled={busy} onClick={() => void pick((path) => { setPathB(path); setReq(null); setResult(null); })}>{t("cmp.chooseB")}</button>
+                            <button disabled={busy} onClick={() => void pick((path) => { setPathB(path); forget(); })}>{t("cmp.chooseB")}</button>
                             <span className="mono small cmp-file">{pathB ? t("cmp.chosenB", {file: fileName(pathB)}) : t("cmp.noneB")}</span>
                         </div>
                         <div className="actions tight">

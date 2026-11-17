@@ -3,6 +3,7 @@ import {api, errText, type CleanCategory, type CleanResult} from "../../api";
 import {Icon} from "../../components/Icon";
 import {ConfirmDialog} from "../../components/Modals";
 import {formatBytes} from "../../lib/format";
+import {usePageState} from "../../lib/pageState";
 import {t} from "../../lib/i18n";
 import {categoryHint, categoryName, fileCount, initialSelection, showsFileCount, visibleCategories} from "../../lib/storage";
 import {TaskStatus, type TaskRunner} from "./useTask";
@@ -32,10 +33,11 @@ function Result(p: { r: CleanResult; ref?: Ref<HTMLDivElement> }) {
  * cleans and shows what was freed. Safe categories start ticked, "review" ones do not.
  */
 export function Cleanup(p: { task: TaskRunner; admin: boolean; say: (m: string) => void; onAdmin: () => void; onCleaned: () => void }) {
-    const [cats, setCats] = useState<CleanCategory[] | null>(null);
-    const [selected, setSelected] = useState<Set<string>>(new Set());
-    const [result, setResult] = useState<CleanResult | null>(null);
-    const [stopped, setStopped] = useState(false);
+    // Kept while the page is away, so the list, the ticks and the result survive leaving and coming back.
+    const [cats, setCats] = usePageState<CleanCategory[] | null>("storage:cleanup:cats", null);
+    const [selected, setSelected] = usePageState<Set<string>>("storage:cleanup:selected", () => new Set());
+    const [result, setResult] = usePageState<CleanResult | null>("storage:cleanup:result", null);
+    const [stopped, setStopped] = usePageState("storage:cleanup:stopped", false);
     const [confirming, setConfirming] = useState(false);
     const locked = p.task.busy !== null;
     // The button that opened the confirmation is disabled while cleaning, so focus would fall to the page

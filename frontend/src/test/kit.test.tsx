@@ -405,10 +405,12 @@ describe("offline kit: jobs outlive the page", () => {
     const nav = () => within(screen.getByRole("navigation", {name: "Main menu"}));
     const tasks = () => within(screen.getByRole("heading", {name: "Tasks", level: 2}).closest("section") as HTMLElement);
 
-    async function leaveAndReturn(user: User) {
+    /** Leaves for Home and comes back; the page is shown as it was left (an open profile stays open), so the list is reached with the back button when asked. */
+    async function leaveAndReturn(user: User, toList = true) {
         await user.click(nav().getByRole("button", {name: /Home/}));
-        await waitFor(() => expect(screen.queryByRole("button", {name: /Install from an offline kit/})).not.toBeInTheDocument());
+        await waitFor(() => expect(screen.queryByRole("heading", {level: 1, name: /Mine|Profiles/})).not.toBeInTheDocument());
         await user.click(nav().getByRole("button", {name: /Profiles/}));
+        if (toList && !screen.queryByRole("button", {name: /Install from an offline kit/})) await user.click(await screen.findByRole("button", {name: /All profiles/}));
         await screen.findByRole("button", {name: /Install from an offline kit/});
     }
 
@@ -466,11 +468,12 @@ describe("offline kit: jobs outlive the page", () => {
         await panel.findByText("Reading the kit…");
         await leaveAndReturn(user);
         expect(tasks().getByText("Checking the offline kit in E:\kit")).toBeInTheDocument();
-        await user.click(screen.getByRole("button", {name: /Install from an offline kit/}));
+        // The panel is still open where it was left, still reading, and fills in when the check ends.
         const again = within(await screen.findByRole("region", {name: "Install from an offline kit"}));
         expect(again.getByRole("button", {name: /Choose kit folder/})).toBeDisabled();
         expect(await again.findByText("Reading the kit…")).toBeInTheDocument();
         finish(listing([kapp("git", "Git"), kapp("gimp", "GIMP")]));
+        expect(await again.findByRole("checkbox", {name: "Select Git to install from the kit"})).toBeInTheDocument();
         await waitFor(() => expect(tasks().getAllByText("Done").length).toBeGreaterThan(0));
         expect(tasks().getByText("2 apps checked.")).toBeInTheDocument();
         expect(api.KitOpen).toHaveBeenCalledTimes(1);

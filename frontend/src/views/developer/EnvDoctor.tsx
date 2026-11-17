@@ -4,16 +4,12 @@ import {Icon} from "../../components/Icon";
 import {ConfirmDialog} from "../../components/Modals";
 import {backupTime, findingText, fixText, groupFindings, groupTitle, selectable, type KindGroup} from "../../lib/developer";
 import {t, tOpt} from "../../lib/i18n";
+import {usePageState} from "../../lib/pageState";
+import {usePageStateLive} from "../../lib/pageStateLive";
 import {runJob, useRefreshWhenOtherEnds} from "../../lib/runJob";
 import {getTasks, runningOf, tasksOf, useTasks} from "../../lib/taskStore";
 
 const PAGE = 15;
-
-/**
- * The last scan, kept outside the component so a scan that ends while the page is not shown is not lost.
- * It is dropped when the Tasks list is empty (nothing has run since the store was reset or cleared).
- */
-let lastReport: EnvReport | null = null;
 
 function Finding(p: { f: EnvFinding; checked: boolean; busy: boolean; onToggle: () => void }) {
     const {f} = p;
@@ -86,20 +82,18 @@ function Tools(p: { report: EnvReport }) {
  */
 export function EnvDoctor(p: { say: (m: string) => void }) {
     const {say} = p;
-    const [report, setReport] = useState<EnvReport | null>(() => {
-        if (tasksOf(getTasks(), "developer").length === 0) lastReport = null;
-        return lastReport;
-    });
+    // The last scan, what is ticked and the last fix are kept while the app runs; a scan or fix that ends while the page is away still lands in them.
+    const [report, setReport] = usePageStateLive<EnvReport | null>("dev:env:report", null);
     // Busy comes from the task store, so it still holds after leaving the page and coming back.
     const running = runningOf(useTasks("developer"));
     const busy = running !== undefined;
     const own = useRef(false);
-    const [error, setError] = useState("");
-    const [selected, setSelected] = useState<Set<string>>(new Set());
+    const [error, setError] = usePageStateLive("dev:env:error", "");
+    const [selected, setSelected] = usePageStateLive<Set<string>>("dev:env:selected", () => new Set());
     const [asking, setAsking] = useState(false);
     const [restoring, setRestoring] = useState<EnvBackup | null>(null);
-    const [result, setResult] = useState<EnvFixResult | null>(null);
-    const [undone, setUndone] = useState(false);
+    const [result, setResult] = usePageStateLive<EnvFixResult | null>("dev:env:result", null);
+    const [undone, setUndone] = usePageStateLive("dev:env:undone", false);
     const [backups, setBackups] = useState<EnvBackup[]>([]);
     const [shown, setShown] = useState<Record<string, number>>({});
 
@@ -120,7 +114,6 @@ export function EnvDoctor(p: { say: (m: string) => void }) {
         }, () => api.EnvScan());
         if (!r) { own.current = false; return; }
         if (!r.ok) { setError(errText(r.error)); return; }
-        lastReport = r.value;
         setReport(r.value);
         setSelected(new Set());
         setShown({});
@@ -128,7 +121,7 @@ export function EnvDoctor(p: { say: (m: string) => void }) {
 
     // A job that ended while this page was away: read its outcome (the report, the backups) again.
     useRefreshWhenOtherEnds(running, own, (tag) => {
-        if (tag === "scan") { setReport(lastReport); setSelected(new Set()); setShown({}); return; }
+        if (tag === "scan") return; // its outcome reached the kept report by itself
         void loadBackups();
         if (report !== null) void scan();
     });
