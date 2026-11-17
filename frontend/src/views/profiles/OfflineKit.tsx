@@ -3,6 +3,8 @@ import {api, on, type KitCreatePlan, type KitCreateResult, type KitListing, type
 import {Icon} from "../../components/Icon";
 import {ConfirmDialog} from "../../components/Modals";
 import {formatBytes, formatDate, percent} from "../../lib/format";
+import {usePageState} from "../../lib/pageState";
+import {usePageStateLive} from "../../lib/pageStateLive";
 import {getLang, t} from "../../lib/i18n";
 import {getTasks, runningOf, startTask, tasksOf, useTasks, type TaskHandle, type TrackedTask} from "../../lib/taskStore";
 import {groupFingerprint, installable, kitError, kitNeedsReopen, notIncludedText, problemText, stateKey, unsupportedText} from "../../lib/kit";
@@ -48,6 +50,9 @@ function beginKit(tag: "kit-create" | "kit-open", title: string, say: (m: string
     return {job, off, stopped: () => stop};
 }
 
+/** Which kit open the screen waits for; an older answer is ignored. Module level, so it survives leaving the page. */
+let openSeq = 0;
+
 const appsLine = (n: number): string => t(n === 1 ? "kit.create.apps.one" : "kit.create.apps.other", {n});
 
 /**
@@ -58,13 +63,15 @@ const appsLine = (n: number): string => t(n === 1 ? "kit.create.apps.one" : "kit
 export function KitCreate(p: { profileName: string; appIds: string[]; say: (m: string) => void; onClose: () => void; onOpenKit: (folder: string) => void }) {
     const panel = useFocusOnOpen();
     const titleId = useId();
-    const [folder, setFolder] = useState("");
-    const [plan, setPlan] = useState<KitCreatePlan | null>(null);
+    // The folder, the plan and the created kit are kept while the app runs (per profile and its apps), so leaving the page does not lose them.
+    const kept = `kit:create:${p.profileName}:${p.appIds.join(",")}`;
+    const [folder, setFolder] = usePageState(kept + ":folder", "");
+    const [plan, setPlan] = usePageStateLive<KitCreatePlan | null>(kept + ":plan", null);
     const [checking, setChecking] = useState(false);
     const [asking, setAsking] = useState(false);
     const kit = kitJob(useTasks("profiles"));
     const running = kit?.tag === "kit-create";
-    const [result, setResult] = useState<KitCreateResult | null>(null);
+    const [result, setResult] = usePageStateLive<KitCreateResult | null>(kept + ":result", null);
     const progress = useKitProgress("create", running);
 
     const choose = async () => {
@@ -213,31 +220,31 @@ export function KitInstall(p: {
 }) {
     const panel = useFocusOnOpen();
     const titleId = useId();
-    const [phase, setPhase] = useState<Phase>("idle");
+    // The opened kit, its check results and the ticks are kept while the app runs; a check still on its way fills them in.
+    const [phase, setPhase] = usePageStateLive<Phase>("kit:open:phase", "idle");
     const kit = kitJob(useTasks("profiles"));
     const verifying = phase === "checking" || kit?.tag === "kit-open";
-    const [listing, setListing] = useState<KitListing | null>(null);
-    const [marked, setMarked] = useState<Set<string>>(new Set());
+    const [listing, setListing] = usePageStateLive<KitListing | null>("kit:open:listing", null);
+    const [marked, setMarked] = usePageStateLive<Set<string>>("kit:open:marked", () => new Set());
     const [asking, setAsking] = useState(false);
     const progress = useKitProgress("verify", verifying);
-    const opening = useRef(0); // which open the screen waits for; an older answer is ignored
 
     const open = async (folder: string) => {
         const started = beginKit("kit-open", t("tasks.pf.kitOpen", {folder}), p.say);
         if (!started) return;
-        const mine = ++opening.current;
+        const mine = ++openSeq;
         setPhase("checking");
         setListing(null);
         setMarked(new Set());
         try {
             const l = await api.KitOpen(folder);
             started.job.done(t("tasks.pf.kitOpen.done", {n: l.apps.length}));
-            if (mine !== opening.current) return;
+            if (mine !== openSeq) return;
             setListing(l);
             setPhase("open");
         } catch (e) {
             if (started.stopped()) started.job.cancelled(); else started.job.fail(kitError(e));
-            if (mine !== opening.current) return;
+            if (mine !== openSeq) return;
             p.say(kitError(e));
             setPhase("idle");
         } finally { started.off(); }
@@ -248,7 +255,11 @@ export function KitInstall(p: {
             if (dir) await open(dir);
         } catch (e) { p.say(kitError(e)); }
     };
-    useEffect(() => { if (p.initialFolder) void open(p.initialFolder); }, [p.initialFolder]);
+    useEffect(() => {
+        // A check that is gone (nothing runs) leaves no "checking" behind; a kit already kept for this folder is not read again.
+        if (phase === "checking" && kit?.tag !== "kit-open") setPhase(listing ? "open" : "idle");
+        if (p.initialFolder && !(listing && listing.folder === p.initialFolder) && !(phase === "checking" && kit?.tag === "kit-open")) void open(p.initialFolder);
+    }, [p.initialFolder]);
 
     // After a run: which apps are installed now.
     useEffect(() => {

@@ -12,6 +12,7 @@ import type {App, Profile, ProfileInfo, State} from "../lib/model";
 import {selectionProfile} from "../lib/model";
 import {profileApps, profileTally} from "../lib/tally";
 import {withApps} from "../lib/drift";
+import {clearPageState, usePageState} from "../lib/pageState";
 import {DriftPanel} from "./profiles/DriftPanel";
 import {CompareView} from "./profiles/CompareView";
 import {KitCreate, KitInstall} from "./profiles/OfflineKit";
@@ -24,10 +25,12 @@ export function Profiles(p: {
     /** Offline kit: starts the run window for the ticked kit apps, restarts as administrator, and says when a kit run finished. */
     onKitInstall: (ids: string[]) => void; onAdmin: () => void; kitTick: number;
 }) {
-    const [sel, setSel] = useState<string | null>(p.focus);
+    // Which profile, compare view or kit panel is open outlives the page, so what they hold is still there when you come back.
+    const [sel, setSel] = usePageState<string | null>("profiles:sel", p.focus);
     const [q, setQ] = useState("");
-    const [comparing, setComparing] = useState(false);
-    const [kit, setKit] = useState<{ folder?: string } | null>(null);
+    const [comparing, setComparing] = usePageState("profiles:comparing", false);
+    const [kit, setKit] = usePageState<{ folder?: string } | null>("profiles:kit", null);
+    const closeKit = () => { clearPageState("kit:open:"); setKit(null); };
     useEffect(() => { if (p.focus) { setSel(p.focus); p.onFocusDone(); } }, [p.focus]);
     const apps = useMemo(() => new Map(p.state.apps.map((a) => [a.id, a])), [p.state.apps]);
     const current = sel ? p.state.profiles.find((x) => x.id === sel) : undefined;
@@ -36,7 +39,7 @@ export function Profiles(p: {
     if (current) {
         return <ProfileDetail profile={current} apps={apps} advanced={p.advanced} onBack={() => setSel(null)}
                               onInstall={p.onInstall} onChanged={async () => { await p.onChanged(); setSel(null); }} onRefresh={p.onChanged} scan={p.state.apps} say={p.say}
-                              onEdit={p.onEdit} onDetail={p.onDetail} onOpenKit={(folder) => { setSel(null); setKit({folder}); }}/>;
+                              onEdit={p.onEdit} onDetail={p.onDetail} onOpenKit={(folder) => { setSel(null); clearPageState("kit:open:"); setKit({folder}); }}/>;
     }
 
     if (comparing) {
@@ -67,10 +70,10 @@ export function Profiles(p: {
                 <button className="ghost" onClick={p.onImport}>{t("profiles.import")}</button>
                 <button className="ghost" onClick={p.onImportCode}>{t("profiles.importCode")}</button>
                 <button className="ghost" title={t("cmp.openHint")} onClick={() => setComparing(true)}>{t("cmp.open")}</button>
-                <button className="ghost" aria-expanded={kit !== null} onClick={() => setKit(kit ? null : {})}>{t("kit.open.button")}</button>
+                <button className="ghost" aria-expanded={kit !== null} onClick={() => (kit ? closeKit() : setKit({}))}>{t("kit.open.button")}</button>
             </header>
             <TaskViewer kind="profiles"/>
-            {kit && <KitInstall admin={p.state.admin} say={p.say} onAdmin={p.onAdmin} onInstall={p.onKitInstall} refreshKey={p.kitTick} initialFolder={kit.folder} onClose={() => setKit(null)}/>}
+            {kit && <KitInstall admin={p.state.admin} say={p.say} onAdmin={p.onAdmin} onInstall={p.onKitInstall} refreshKey={p.kitTick} initialFolder={kit.folder} onClose={closeKit}/>}
             {groups.every(([, , l]) => l.length === 0) && <p className="muted empty">{t("profiles.none")}</p>}
             {groups.map(([title, icon, list]) => list.length > 0 && (
                 <section key={title}>
@@ -117,7 +120,7 @@ function ProfileDetail(p: {
     const [skip, setSkip] = useState<Set<string>>(new Set());
     const [menu, setMenu] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
-    const [kitCreate, setKitCreate] = useState(false);
+    const [kitCreate, setKitCreate] = usePageState(`profiles:kitCreate:${current.id}`, false);
     const menuRef = useRef<HTMLDivElement>(null);
     useDismiss(menuRef, menu, () => setMenu(false));
     const tally = profileTally(current.resolved, p.apps);
@@ -179,7 +182,7 @@ function ProfileDetail(p: {
             </div>
 
             <TaskViewer kind="profiles"/>
-            {kitCreate && <KitCreate profileName={text.name} appIds={current.resolved} say={p.say} onClose={() => setKitCreate(false)} onOpenKit={p.onOpenKit}/>}
+            {kitCreate && <KitCreate profileName={text.name} appIds={current.resolved} say={p.say} onClose={() => { clearPageState("kit:create:"); setKitCreate(false); }} onOpenKit={p.onOpenKit}/>}
 
             <DriftPanel profile={current} scan={p.scan} say={p.say}
                         onAdd={async (ids) => { await api.SaveProfile(withApps(current, ids)); await p.onRefresh(); }}/>

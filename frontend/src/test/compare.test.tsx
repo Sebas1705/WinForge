@@ -360,7 +360,8 @@ describe("a comparison outlives the page", () => {
         await user.click(nav().getByRole("button", {name: /Home/}));
         await waitFor(() => expect(screen.queryByRole("heading", {level: 1, name: "Compare setups"})).not.toBeInTheDocument());
         await user.click(nav().getByRole("button", {name: /Profiles/}));
-        await user.click(await screen.findByRole("button", {name: "Compare…"}));
+        // The compare view is still open where it was left.
+        expect(await screen.findByRole("heading", {level: 1, name: "Compare setups"})).toBeInTheDocument();
         expect(tasks().getByText("Comparing profiles: laptop.winforge.json")).toBeInTheDocument();
         expect(tasks().getByText("Running")).toBeInTheDocument();
         expect(screen.getByRole("button", {name: "Choose a file…"})).toBeDisabled();
@@ -370,6 +371,8 @@ describe("a comparison outlives the page", () => {
         expect(tasks().getByText(/In both: 1./)).toBeInTheDocument();
         expect(api.CompareFile).toHaveBeenCalledTimes(1);
         await waitFor(() => expect(screen.getByRole("button", {name: "Choose a file…"})).toBeEnabled());
+        // The answer that came in after coming back is on the page too.
+        expect(await screen.findByRole("heading", {name: "Only on this PC (1)"})).toBeInTheDocument();
     });
 
     it("lists a comparison that failed", async () => {

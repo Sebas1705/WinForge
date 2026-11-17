@@ -4,6 +4,8 @@ import {Icon, type IconName} from "../components/Icon";
 import {Segmented} from "../components/Modals";
 import {TaskViewer} from "../components/TaskViewer";
 import {t, type Key} from "../lib/i18n";
+import {usePageState} from "../lib/pageState";
+import {usePageStateLive} from "../lib/pageStateLive";
 import {getTasks, runningOf, startTask, tasksOf, useTasks} from "../lib/taskStore";
 import type {Profile} from "../lib/model";
 
@@ -50,7 +52,7 @@ export function Backup(p: {
     /** Runs the install flow for a profile; `done` is called when its dialog closes. */
     onInstallProfile: (profile: Profile, done: (o: { ran: boolean; failed: string[] }) => void) => void;
 }) {
-    const [mode, setMode] = useState<"create" | "rebuild">("create");
+    const [mode, setMode] = usePageState<"create" | "rebuild">("backup:mode", "create");
     return (
         <div className="page backup">
             <header className="pagehead">
@@ -83,14 +85,15 @@ function useBackupJob(say: (m: string) => void) {
 }
 
 function Create(p: { say: (m: string) => void; advanced: boolean; appCount: number }) {
-    const [sets, setSets] = useState<BackupSet[] | null>(null);
-    const [picked, setPicked] = useState<Set<string>>(new Set());
-    const [withApps, setWithApps] = useState(true);
-    const [folders, setFolders] = useState<string[]>([]);
+    // What was picked and how the last backup ended are kept while the app runs, so leaving the page does not lose them.
+    const [sets, setSets] = usePageState<BackupSet[] | null>("backup:create:sets", null);
+    const [picked, setPicked] = usePageState<Set<string>>("backup:create:picked", () => new Set());
+    const [withApps, setWithApps] = usePageState("backup:create:withApps", true);
+    const [folders, setFolders] = usePageState<string[]>("backup:create:folders", []);
     const [working, setBusy] = useState(false);
     const job = useBackupJob(p.say);
     const busy = working || job.busy;
-    const [result, setResult] = useState<string | null>(null);
+    const [result, setResult] = usePageStateLive<string | null>("backup:create:result", null);
 
     const load = useCallback(async () => {
         try {
@@ -99,7 +102,7 @@ function Create(p: { say: (m: string) => void; advanced: boolean; appCount: numb
             setPicked(new Set(found.map((s) => s.id)));
         } catch (e) { p.say(errText(e)); setSets([]); }
     }, [p.say]);
-    useEffect(() => { void load(); }, [load]);
+    useEffect(() => { if (sets === null) void load(); }, [load]);
 
     const addFolder = async () => {
         try {
@@ -189,16 +192,17 @@ function Rebuild(p: {
     say: (m: string) => void; advanced: boolean;
     onInstallProfile: (profile: Profile, done: (o: { ran: boolean; failed: string[] }) => void) => void;
 }) {
-    const [prev, setPrev] = useState<BackupPreview | null>(null);
-    const [doApps, setDoApps] = useState(false);
-    const [pickedSets, setPickedSets] = useState<Set<string>>(new Set());
-    const [pickedFolders, setPickedFolders] = useState<Set<string>>(new Set());
-    const [dest, setDest] = useState("");
+    // The chosen backup, its preview, the ticks and the outcome of each stage are kept while the app runs.
+    const [prev, setPrev] = usePageState<BackupPreview | null>("backup:rebuild:prev", null);
+    const [doApps, setDoApps] = usePageState("backup:rebuild:doApps", false);
+    const [pickedSets, setPickedSets] = usePageState<Set<string>>("backup:rebuild:sets", () => new Set());
+    const [pickedFolders, setPickedFolders] = usePageState<Set<string>>("backup:rebuild:folders", () => new Set());
+    const [dest, setDest] = usePageState("backup:rebuild:dest", "");
     const [working, setBusy] = useState(false);
     const job = useBackupJob(p.say);
     const busy = working || job.busy;
-    const [stages, setStages] = useState<Record<"apps" | "settings" | "folders", Stage>>({apps: "off", settings: "off", folders: "off"});
-    const [notes, setNotes] = useState<string[]>([]);
+    const [stages, setStages] = usePageStateLive<Record<"apps" | "settings" | "folders", Stage>>("backup:rebuild:stages", {apps: "off", settings: "off", folders: "off"});
+    const [notes, setNotes] = usePageStateLive<string[]>("backup:rebuild:notes", []);
 
     const choose = async () => {
         try {

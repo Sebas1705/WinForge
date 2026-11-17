@@ -4,6 +4,7 @@ import {Icon} from "../../components/Icon";
 import {ConfirmDialog} from "../../components/Modals";
 import {formatBytes, formatDate} from "../../lib/format";
 import {getLang, t, tOpt} from "../../lib/i18n";
+import {usePageState} from "../../lib/pageState";
 import {splitPath} from "../../lib/storage";
 import {TaskStatus, type TaskRunner} from "./useTask";
 
@@ -24,7 +25,7 @@ export const markedBytes = (list: ProjectJunk[], marked: ReadonlySet<string>): n
     list.reduce((n, j) => (marked.has(j.path) ? n + j.sizeBytes : n), 0);
 
 function VirtualDisks(p: { busy: boolean; say: (m: string) => void }) {
-    const [disks, setDisks] = useState<VirtualDisk[] | null>(null);
+    const [disks, setDisks] = usePageState<VirtualDisk[] | null>("storage:proj:disks", null);
     const find = async () => {
         try { setDisks(await api.StorageVirtualDisks()); } catch (e) { p.say(errText(e)); }
     };
@@ -68,18 +69,24 @@ function VirtualDisks(p: { busy: boolean; say: (m: string) => void }) {
  * each folder again at the moment it deletes it.
  */
 export function Projects(p: { task: TaskRunner; defaults: StorageDefaults | null; say: (m: string) => void; onCleaned: () => void }) {
-    const [custom, setCustom] = useState<string[] | null>(null); // null: still the default folder
-    const [days, setDays] = useState<number>(90);
-    const [list, setList] = useState<ProjectJunk[] | null>(null);
-    const [marked, setMarked] = useState<Set<string>>(new Set());
-    const [stopped, setStopped] = useState(false);
-    const [shown, setShown] = useState(PAGE);
+    // Kept while the page is away: the folders, the age, the list and which folders are ticked.
+    const [custom, setCustom] = usePageState<string[] | null>("storage:proj:custom", null); // null: still the default folder
+    const [days, setDays] = usePageState<number>("storage:proj:days", 90);
+    const [list, setList] = usePageState<ProjectJunk[] | null>("storage:proj:list", null);
+    const [ticked, setMarked] = usePageState<Set<string>>("storage:proj:marked", () => new Set());
+    const [stopped, setStopped] = usePageState("storage:proj:stopped", false);
+    const [shown, setShown] = usePageState("storage:proj:shown", PAGE);
     const [confirming, setConfirming] = useState(false);
-    const [result, setResult] = useState<ProjectResult | null>(null);
+    const [result, setResult] = usePageState<ProjectResult | null>("storage:proj:result", null);
     const locked = p.task.busy !== null;
 
     const roots = custom ?? projectRoots(p.defaults);
     const items = list ?? [];
+    // A kept tick that points at a folder no longer in the kept list is dropped, never acted on.
+    const marked = useMemo(() => {
+        const known = new Set(items.map((j) => j.path));
+        return new Set([...ticked].filter((x) => known.has(x)));
+    }, [items, ticked]);
     const bytes = useMemo(() => markedBytes(items, marked), [items, marked]);
 
     const addFolder = async () => {

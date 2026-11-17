@@ -188,6 +188,10 @@ describe("backup: jobs survive leaving the page", () => {
         const tasks = await leaveAndReturn(user, /Settings backup/, "Settings backup");
         expect(within(tasks).getByText("Rebuilding this PC from a backup…")).toBeInTheDocument();
         expect(within(tasks).getByText("Restoring settings…")).toBeInTheDocument();
+        // The page comes back on the rebuild tab with the preview kept, and the buttons stay locked while the job runs.
+        expect(screen.getByText(/From PC-VIEJO/)).toBeInTheDocument();
+        expect(screen.getByRole("button", {name: /Rebuilding/})).toBeDisabled();
+        await user.click(screen.getByRole("button", {name: "Create a backup"}));
         expect(screen.getByRole("button", {name: "Create backup…"})).toBeDisabled();
         restore.resolve({restored: 1, unchanged: 0, backedUp: 0, extensions: 0, skipped: []});
         await waitFor(() => expect(within(tasks).getByText("Done")).toBeInTheDocument());

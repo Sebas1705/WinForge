@@ -4,6 +4,7 @@ import {Icon} from "../../components/Icon";
 import {ConfirmDialog, Segmented} from "../../components/Modals";
 import {formatBytes, formatDate} from "../../lib/format";
 import {getLang, t} from "../../lib/i18n";
+import {usePageState} from "../../lib/pageState";
 import {fileCount, folderName, splitPath} from "../../lib/storage";
 import {SpaceMap} from "./SpaceMap";
 import {TaskStatus, type TaskRunner} from "./useTask";
@@ -22,12 +23,13 @@ type Note = "stopped" | "error";
  * to the Recycle Bin after a confirmation.
  */
 export function Biggest(p: { task: TaskRunner; home: string; say: (m: string) => void }) {
-    const [trail, setTrail] = useState<string[]>([]);
-    const [tab, setTab] = useState<Tab>("files");
-    const [started, setStarted] = useState(false);
-    const [files, setFiles] = useState<Record<string, BigFile[]>>({});
-    const [folders, setFolders] = useState<Record<string, FolderSize[]>>({});
-    const [notes, setNotes] = useState<Record<string, Note>>({});
+    // Kept while the page is away: the folder, the tab and what was read come back as they were.
+    const [trail, setTrail] = usePageState<string[]>("storage:biggest:trail", []);
+    const [tab, setTab] = usePageState<Tab>("storage:biggest:tab", "files");
+    const [started, setStarted] = usePageState("storage:biggest:started", false);
+    const [files, setFiles] = usePageState<Record<string, BigFile[]>>("storage:biggest:files", {});
+    const [folders, setFolders] = usePageState<Record<string, FolderSize[]>>("storage:biggest:folders", {});
+    const [notes, setNotes] = usePageState<Record<string, Note>>("storage:biggest:notes", {});
     const [recycling, setRecycling] = useState<BigFile | null>(null);
     const [moving, setMoving] = useState(false);
 

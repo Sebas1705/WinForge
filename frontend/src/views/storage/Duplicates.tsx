@@ -4,6 +4,7 @@ import {Icon} from "../../components/Icon";
 import {ConfirmDialog} from "../../components/Modals";
 import {formatBytes, formatDate} from "../../lib/format";
 import {getLang, t} from "../../lib/i18n";
+import {usePageState} from "../../lib/pageState";
 import {defaultRemovals, fileCount, groupWaste, keptIn, removalTotals, sortGroups, splitPath, toggleRemoval} from "../../lib/storage";
 import {TaskStatus, type TaskRunner} from "./useTask";
 
@@ -54,16 +55,22 @@ function Group(p: { g: DupGroup; removed: ReadonlySet<string>; disabled: boolean
  * by default, and the person can pick another, but never all of them.
  */
 export function Duplicates(p: { task: TaskRunner; defaults: StorageDefaults | null; say: (m: string) => void }) {
-    const [custom, setCustom] = useState<string[] | null>(null); // null: still the default folders
-    const [minMB, setMinMB] = useState<number>(10);
-    const [groups, setGroups] = useState<DupGroup[] | null>(null);
-    const [removed, setRemoved] = useState<Set<string>>(new Set());
-    const [stopped, setStopped] = useState(false);
-    const [shown, setShown] = useState(PAGE);
+    // Kept while the page is away: the folders, the size, the groups and which copies are marked.
+    const [custom, setCustom] = usePageState<string[] | null>("storage:dups:custom", null); // null: still the default folders
+    const [minMB, setMinMB] = usePageState<number>("storage:dups:minMB", 10);
+    const [groups, setGroups] = usePageState<DupGroup[] | null>("storage:dups:groups", null);
+    const [marked, setRemoved] = usePageState<Set<string>>("storage:dups:removed", () => new Set());
+    const [stopped, setStopped] = usePageState("storage:dups:stopped", false);
+    const [shown, setShown] = usePageState("storage:dups:shown", PAGE);
     const [confirming, setConfirming] = useState(false);
     const [moving, setMoving] = useState(false);
     const locked = p.task.busy !== null || moving;
 
+    // A kept mark that points at a file no longer in the kept list is dropped, never acted on.
+    const removed = useMemo(() => {
+        const known = new Set((groups ?? []).flatMap((g) => g.files.map((f) => f.path)));
+        return new Set([...marked].filter((x) => known.has(x)));
+    }, [groups, marked]);
     const roots = custom ?? defaultRoots(p.defaults);
     const totals = useMemo(() => removalTotals(groups ?? [], removed), [groups, removed]);
 

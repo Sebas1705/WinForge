@@ -434,7 +434,7 @@ describe("storage: live progress and cancel", () => {
         expect(within(tasks).getByText("Cleaning…")).toBeInTheDocument();
         expect(within(tasks).getByText("Running")).toBeInTheDocument();
         expect(screen.getAllByRole("button", {name: "Cancel: Cleaning…"}).length).toBeGreaterThan(0);
-        expect(screen.getByRole("button", {name: /Scan for junk/})).toBeDisabled();
+        expect(screen.getByRole("button", {name: /Scan again/})).toBeDisabled(); // the list scanned before leaving is still kept
         await emit.storageProgress({task: "clean", files: 9, bytes: 4096});
         expect((await screen.findAllByText("9 files · 4 KB so far")).length).toBeGreaterThan(0);
         clean.resolve({freedBytes: 3 * MB, files: 5, failed: 0, outcomes: []});
@@ -993,5 +993,127 @@ describe("storage: Spanish", () => {
         expect(api.PlanRepairs).toHaveBeenCalledWith(["optimize-hibernate-off"]);
         const run = await screen.findByRole("dialog", {name: "Optimizar el almacenamiento"});
         expect(within(run).getByText("Desactivar la hibernación")).toBeInTheDocument();
+    });
+});
+
+describe("storage: results survive leaving the page", () => {
+    const nav = () => within(screen.getByRole("navigation", {name: "Main menu"}));
+    async function away(user: ReturnType<typeof userEvent.setup>) {
+        await user.click(nav().getByRole("button", {name: /Home/}));
+        await waitFor(() => expect(screen.queryByRole("heading", {name: "Storage", level: 1})).not.toBeInTheDocument());
+    }
+    async function back(user: ReturnType<typeof userEvent.setup>) {
+        await user.click(nav().getByRole("button", {name: /Storage/}));
+        await screen.findByRole("heading", {name: "Storage", level: 1});
+    }
+
+    it("keeps the junk list and the ticks, and does not scan again", async () => {
+        const user = await open();
+        await scanJunk(user);
+        await user.click(checkbox("Select for cleaning: Recycle Bin")); // untick a safe one
+        await user.click(checkbox("Select for cleaning: Previous Windows version")); // tick a review one
+        await away(user);
+        await back(user);
+        expect(checkbox("Select for cleaning: Recycle Bin").checked).toBe(false);
+        expect(checkbox("Select for cleaning: Previous Windows version").checked).toBe(true);
+        expect(checkbox("Select for cleaning: Your temporary files").checked).toBe(true);
+        expect(screen.getByText(/^4 selected · /)).toBeInTheDocument();
+        expect(screen.getByRole("button", {name: /Scan again/})).toBeInTheDocument();
+        expect(api.StorageScan).toHaveBeenCalledTimes(1);
+    });
+
+    it("shows the result of a clean that finished while the page was away", async () => {
+        let done!: (v: { freedBytes: number; files: number; failed: number; outcomes: [] }) => void;
+        api.StorageClean.mockReturnValue(new Promise((r) => { done = r; }));
+        const user = await open();
+        await scanJunk(user);
+        await user.click(screen.getByRole("button", {name: /Clean selected/}));
+        await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Clean"}));
+        await lastText("Cleaning…");
+        await away(user);
+        api.StorageScan.mockImplementation(async () => [cat("thumbnails", 100 * MB)]);
+        done({freedBytes: 2 * GB, files: 77, failed: 0, outcomes: []});
+        await waitFor(() => expect(api.StorageScan).toHaveBeenCalledTimes(2)); // the rescan after the clean also ran
+        await back(user);
+        expect(await lastText("Freed 2 GB (77 files).")).toBeInTheDocument();
+        expect(screen.getByRole("checkbox", {name: "Select for cleaning: Picture preview cache"})).toBeInTheDocument();
+        expect(screen.queryByRole("checkbox", {name: "Select for cleaning: Recycle Bin"})).not.toBeInTheDocument();
+        expect(api.StorageClean).toHaveBeenCalledTimes(1);
+    });
+
+    it("keeps the folder, the breadcrumb and the list of Biggest things without reading again", async () => {
+        api.StorageFolders.mockImplementation(async (root: string) =>
+            root === HOME ? [folder("Videos", 8192), folder("Music", 1)] : [folder("Holidays", 4096, 3, `${HOME}\\Videos`)]);
+        const user = await open();
+        let sec = section("Biggest things");
+        await waitFor(() => expect(within(sec).getByRole("button", {name: "Folders"})).toBeEnabled());
+        await user.click(within(sec).getByRole("button", {name: "Folders"}));
+        await user.click(within(sec).getByRole("button", {name: "Find the biggest"}));
+        await user.click(await within(sec).findByRole("button", {name: "Look inside Videos"}));
+        await within(sec).findByRole("button", {name: "Look inside Holidays"});
+        expect(api.StorageFolders).toHaveBeenCalledTimes(2);
+
+        await away(user);
+        await back(user);
+        sec = section("Biggest things");
+        expect(await within(sec).findByRole("button", {name: "Look inside Holidays"})).toBeInTheDocument();
+        const crumbs = within(sec).getByRole("navigation", {name: "Folder path"});
+        expect(within(crumbs).getByText("Videos")).toHaveAttribute("aria-current", "location");
+        await new Promise((r) => setTimeout(r, 50));
+        expect(api.StorageFolders).toHaveBeenCalledTimes(2);
+        expect(api.StorageBigFiles).not.toHaveBeenCalled();
+        // the way back up still works, from the remembered root
+        await user.click(within(crumbs).getByRole("button", {name: HOME}));
+        expect(await within(sec).findByRole("button", {name: "Look inside Music"})).toBeInTheDocument();
+        expect(api.StorageFolders).toHaveBeenCalledTimes(2);
+    });
+
+    it("keeps the Biggest things file list too", async () => {
+        api.StorageBigFiles.mockResolvedValue([file("movie.mkv", 4096)]);
+        const user = await open();
+        let sec = section("Biggest things");
+        await waitFor(() => expect(within(sec).getByRole("button", {name: "Find the biggest"})).toBeEnabled());
+        await user.click(within(sec).getByRole("button", {name: "Find the biggest"}));
+        await within(sec).findByText("movie.mkv");
+        await away(user);
+        await back(user);
+        sec = section("Biggest things");
+        expect(within(sec).getByText("movie.mkv")).toBeInTheDocument();
+        expect(within(sec).getByRole("button", {name: "Scan again"})).toBeInTheDocument();
+        expect(api.StorageBigFiles).toHaveBeenCalledTimes(1);
+    });
+
+    it("keeps the duplicates found, the marks, the folders and the minimum size", async () => {
+        const {user, sec: first} = await scanDups();
+        await user.selectOptions(within(first).getByRole("combobox", {name: /Ignore files smaller than/}), "100");
+        await user.click(within(first).getByRole("button", {name: "Remove folder: " + HOME + "\\Pictures"}));
+        await user.click(within(first).getByRole("checkbox", {name: "Move to Recycle Bin: C:\\c\\big-copy.iso"})); // let it stay
+        await away(user);
+        await back(user);
+        const sec = dupSection();
+        expect(within(sec).getAllByText(/identical copies of/)).toHaveLength(3);
+        expect((within(sec).getByRole("checkbox", {name: "Move to Recycle Bin: C:\\c\\big-copy.iso"}) as HTMLInputElement).checked).toBe(false);
+        expect(within(sec).getByText("4 files, 25 MB can be freed")).toBeInTheDocument();
+        expect((within(sec).getByRole("combobox", {name: /Ignore files smaller than/}) as HTMLSelectElement).value).toBe("100");
+        expect(within(sec).getAllByRole("button", {name: /^Remove folder/})).toHaveLength(3);
+        expect(within(sec).getByRole("button", {name: "Scan again"})).toBeInTheDocument();
+        expect(api.StorageDuplicates).toHaveBeenCalledTimes(1);
+    });
+
+    it("keeps the old project folders found and which are ticked", async () => {
+        const proj = (name: string, mb: number) => ({path: `${HOME}\\code\\${name}\\node_modules`, project: name, projectPath: `${HOME}\\code\\${name}`, kind: "node_modules", sizeBytes: mb * MB, files: 5, lastTouched: "2024-01-01T00:00:00Z"});
+        api.StorageProjects.mockResolvedValue([proj("alpha", 300), proj("beta", 200)]);
+        const user = await open();
+        const sec = section("Old project folders");
+        await waitFor(() => expect(within(sec).getByRole("button", {name: "Find old project folders"})).toBeEnabled());
+        await user.click(within(sec).getByRole("button", {name: "Find old project folders"}));
+        await user.click(await within(sec).findByRole("checkbox", {name: `Delete ${HOME}\\code\\alpha\\node_modules`}));
+        await away(user);
+        await back(user);
+        const again = section("Old project folders");
+        expect((within(again).getByRole("checkbox", {name: `Delete ${HOME}\\code\\alpha\\node_modules`}) as HTMLInputElement).checked).toBe(true);
+        expect((within(again).getByRole("checkbox", {name: `Delete ${HOME}\\code\\beta\\node_modules`}) as HTMLInputElement).checked).toBe(false);
+        expect(within(again).getByText(/300 MB can be freed/)).toBeInTheDocument();
+        expect(api.StorageProjects).toHaveBeenCalledTimes(1);
     });
 });
