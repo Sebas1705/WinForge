@@ -8,6 +8,8 @@ import {DICTS, KEYS, setLang} from "../lib/i18n";
 import {Developer} from "../views/Developer";
 import {api, resetApi} from "./apiMock";
 import {makeState} from "./fixtures";
+// The Tasks list repeats what the page reports: look at the page's own text.
+const pageText = async (x: string | RegExp) => (await screen.findAllByText(x)).find((e) => !e.closest(".taskviewer")) as HTMLElement;
 
 vi.mock("../api", async () => (await import("./apiMock")).moduleMock);
 
@@ -106,7 +108,7 @@ describe("developer: environment doctor", () => {
         api.EnvScan.mockResolvedValue(report({findings: everyKind(), userPath: ["a", "b"], machinePath: ["c"]}));
         const {user} = page();
         await scan(user);
-        expect(screen.getByText("9 to fix, 4 to know about")).toBeInTheDocument();
+        expect(await pageText("9 to fix, 4 to know about")).toBeInTheDocument();
         expect(screen.getByText("User PATH: 2 entries. System PATH: 1 entries.")).toBeInTheDocument();
         for (const text of [
             "The folder C:\\gone is in your user PATH but does not exist.",
@@ -141,7 +143,7 @@ describe("developer: environment doctor", () => {
     it("says all is good when there are no findings", async () => {
         const {user} = page();
         await scan(user);
-        expect(screen.getByText(/All good\. Nothing is wrong/)).toBeInTheDocument();
+        expect(await pageText(/All good\. Nothing is wrong/)).toBeInTheDocument();
         expect(screen.queryByRole("button", {name: /Fix selected/})).toBeNull();
     });
 
@@ -151,7 +153,7 @@ describe("developer: environment doctor", () => {
         await user.click(screen.getByRole("button", {name: "Scan"}));
         expect(await screen.findByRole("alert")).toHaveTextContent("The scan failed: registry unreadable");
         await user.click(screen.getByRole("button", {name: "Scan"}));
-        expect(await screen.findByText(/All good/)).toBeInTheDocument();
+        expect(await pageText(/All good/)).toBeInTheDocument();
     });
 
     it("lists tools with the winner and the hidden installs, and explains a Store alias", async () => {
@@ -225,7 +227,7 @@ describe("developer: environment doctor", () => {
         await user.click(within(dialog).getByRole("button", {name: "Fix"}));
         await waitFor(() => expect(api.EnvFix).toHaveBeenCalledTimes(1));
         expect(api.EnvFix).toHaveBeenCalledWith(["u1", "u7"]);
-        expect(await screen.findByText("Fixed 2. A backup was saved.")).toBeInTheDocument();
+        expect(await pageText("Fixed 2. A backup was saved.")).toBeInTheDocument();
         await waitFor(() => expect(api.EnvScan).toHaveBeenCalledTimes(2)); // read again after the fix
     });
 
@@ -253,7 +255,7 @@ describe("developer: environment doctor", () => {
         await user.click(screen.getByRole("checkbox"));
         await user.click(screen.getByRole("button", {name: "Fix selected (1)"}));
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Fix"}));
-        expect(await screen.findByText("Nothing was changed.")).toBeInTheDocument();
+        expect(await pageText("Nothing was changed.")).toBeInTheDocument();
         expect(screen.getByText("Could not change: u1")).toBeInTheDocument();
         expect(screen.queryByRole("button", {name: "Undo"})).toBeNull();
     });
@@ -268,7 +270,7 @@ describe("developer: environment doctor", () => {
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Fix"}));
         await user.click(await screen.findByRole("button", {name: "Undo"}));
         await waitFor(() => expect(api.EnvRestore).toHaveBeenCalledWith("b9"));
-        expect(await screen.findByText(/Your earlier values are back/)).toBeInTheDocument();
+        expect(await pageText(/Your earlier values are back/)).toBeInTheDocument();
         expect(screen.queryByRole("button", {name: "Undo"})).toBeNull();
         await waitFor(() => expect(api.EnvScan).toHaveBeenCalledTimes(3));
     });

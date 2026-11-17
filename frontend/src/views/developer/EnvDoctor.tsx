@@ -1,11 +1,19 @@
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {api, errText, type EnvBackup, type EnvFinding, type EnvFixResult, type EnvReport} from "../../api";
 import {Icon} from "../../components/Icon";
 import {ConfirmDialog} from "../../components/Modals";
 import {backupTime, findingText, fixText, groupFindings, groupTitle, selectable, type KindGroup} from "../../lib/developer";
 import {t, tOpt} from "../../lib/i18n";
+import {runJob, useRefreshWhenOtherEnds} from "../../lib/runJob";
+import {getTasks, runningOf, tasksOf, useTasks} from "../../lib/taskStore";
 
 const PAGE = 15;
+
+/**
+ * The last scan, kept outside the component so a scan that ends while the page is not shown is not lost.
+ * It is dropped when the Tasks list is empty (nothing has run since the store was reset or cleared).
+ */
+let lastReport: EnvReport | null = null;
 
 function Finding(p: { f: EnvFinding; checked: boolean; busy: boolean; onToggle: () => void }) {
     const {f} = p;
@@ -78,8 +86,14 @@ function Tools(p: { report: EnvReport }) {
  */
 export function EnvDoctor(p: { say: (m: string) => void }) {
     const {say} = p;
-    const [report, setReport] = useState<EnvReport | null>(null);
-    const [busy, setBusy] = useState(false);
+    const [report, setReport] = useState<EnvReport | null>(() => {
+        if (tasksOf(getTasks(), "developer").length === 0) lastReport = null;
+        return lastReport;
+    });
+    // Busy comes from the task store, so it still holds after leaving the page and coming back.
+    const running = runningOf(useTasks("developer"));
+    const busy = running !== undefined;
+    const own = useRef(false);
     const [error, setError] = useState("");
     const [selected, setSelected] = useState<Set<string>>(new Set());
     const [asking, setAsking] = useState(false);
@@ -95,14 +109,29 @@ export function EnvDoctor(p: { say: (m: string) => void }) {
     useEffect(() => { void loadBackups(); }, [loadBackups]);
 
     const scan = useCallback(async () => {
-        setBusy(true);
         setError("");
-        try {
-            setReport(await api.EnvScan());
-            setSelected(new Set());
-            setShown({});
-        } catch (e) { setError(errText(e)); } finally { setBusy(false); }
-    }, []);
+        own.current = true;
+        const r = await runJob("developer", say, {
+            title: t("tasks.dev.scan"), tag: "scan",
+            summarize: (v: EnvReport) => {
+                const problems = v.findings.filter((f) => f.severity === "problem").length;
+                return v.findings.length === 0 ? t("dev.env.good") : t("dev.env.summary", {problems, notes: v.findings.length - problems});
+            },
+        }, () => api.EnvScan());
+        if (!r) { own.current = false; return; }
+        if (!r.ok) { setError(errText(r.error)); return; }
+        lastReport = r.value;
+        setReport(r.value);
+        setSelected(new Set());
+        setShown({});
+    }, [say]);
+
+    // A job that ended while this page was away: read its outcome (the report, the backups) again.
+    useRefreshWhenOtherEnds(running, own, (tag) => {
+        if (tag === "scan") { setReport(lastReport); setSelected(new Set()); setShown({}); return; }
+        void loadBackups();
+        if (report !== null) void scan();
+    });
 
     const findings = report?.findings ?? [];
     const groups = useMemo(() => groupFindings(findings), [findings]);
@@ -118,24 +147,26 @@ export function EnvDoctor(p: { say: (m: string) => void }) {
     const fix = async () => {
         const ids = chosen.map((f) => f.id);
         if (ids.length === 0) return;
-        setBusy(true);
         setUndone(false);
-        try {
-            setResult(await api.EnvFix(ids));
-        } catch (e) { say(errText(e)); setBusy(false); return; }
-        setBusy(false);
+        own.current = true;
+        const r = await runJob("developer", say, {
+            title: t("tasks.dev.fix", {n: ids.length}), tag: "fix",
+            summarize: (v: EnvFixResult) => (v.applied > 0 ? t("dev.env.result", {n: v.applied}) : t("dev.env.resultNone")),
+        }, () => api.EnvFix(ids));
+        if (!r) { own.current = false; return; }
+        if (!r.ok) { say(errText(r.error)); return; }
+        setResult(r.value);
         await loadBackups();
         await scan();
     };
 
     const restore = async (id: string, fromResult: boolean) => {
-        setBusy(true);
-        try {
-            await api.EnvRestore(id);
-            setUndone(true);
-            if (fromResult) setResult(null);
-        } catch (e) { say(errText(e)); setBusy(false); return; }
-        setBusy(false);
+        own.current = true;
+        const r = await runJob("developer", say, {title: t("tasks.dev.restore"), tag: "restore", summarize: () => t("dev.env.undone")}, () => api.EnvRestore(id));
+        if (!r) { own.current = false; return; }
+        if (!r.ok) { say(errText(r.error)); return; }
+        setUndone(true);
+        if (fromResult) setResult(null);
         await loadBackups();
         await scan();
     };

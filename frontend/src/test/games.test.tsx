@@ -87,33 +87,35 @@ describe("games for your emulators", () => {
     });
 });
 
+const patchCard = () => screen.getByRole("heading", {name: "Apply a patch to your game"}).closest("section") as HTMLElement;
+
 describe("the patch tool", () => {
     it("reports where the patched game went and whether the version was confirmed", async () => {
         api.PatchROM.mockResolvedValue({path: "C:\\roms\\Game (patched).gba", format: "BPS", checked: true, headerless: false});
         const user = await open();
         await user.click(screen.getByRole("button", {name: "Patch a game…"}));
-        expect(await screen.findByText(/Patched game saved as C:\\roms\\Game \(patched\)\.gba\. The patch confirmed this is the right version/)).toBeInTheDocument();
+        expect(await within(patchCard()).findByText(/Patched game saved as C:\\roms\\Game \(patched\)\.gba\. The patch confirmed this is the right version/)).toBeInTheDocument();
     });
 
     it("warns that an IPS patch cannot confirm the version", async () => {
         api.PatchROM.mockResolvedValue({path: "C:\\g (patched).sfc", format: "IPS", checked: false, headerless: false});
         const user = await open();
         await user.click(screen.getByRole("button", {name: "Patch a game…"}));
-        expect(await screen.findByText(/cannot confirm the game version/)).toBeInTheDocument();
+        expect(await within(patchCard()).findByText(/cannot confirm the game version/)).toBeInTheDocument();
     });
 
     it("mentions a removed copier header", async () => {
         api.PatchROM.mockResolvedValue({path: "C:\\g (patched).sfc", format: "UPS", checked: true, headerless: true});
         const user = await open();
         await user.click(screen.getByRole("button", {name: "Patch a game…"}));
-        expect(await screen.findByText(/512-byte header was removed/)).toBeInTheDocument();
+        expect(await within(patchCard()).findByText(/512-byte header was removed/)).toBeInTheDocument();
     });
 
     it("shows the reason when the patch does not fit the game, and says nothing when cancelled", async () => {
         api.PatchROM.mockRejectedValueOnce(new Error("this patch is for a different version of the game"));
         const user = await open();
         await user.click(screen.getByRole("button", {name: "Patch a game…"}));
-        expect(await screen.findByText("this patch is for a different version of the game")).toBeInTheDocument();
+        expect((await screen.findAllByText("this patch is for a different version of the game")).length).toBeGreaterThan(0); // the toast and the Tasks list
         api.PatchROM.mockResolvedValueOnce({path: "", format: "", checked: false, headerless: false});
         await user.click(screen.getByRole("button", {name: "Patch a game…"}));
         await waitFor(() => expect(api.PatchROM).toHaveBeenCalledTimes(2));
@@ -161,13 +163,13 @@ describe("installing games", () => {
         await user.click(screen.getByRole("button", {name: "Install: Libbet and the Magic Fish"}));
         expect(api.InstallGame).toHaveBeenCalledWith("libbet");
         await emit.gameProgress("libbet", 16384, 32768);
-        expect(await screen.findByText("Installing… 50%")).toBeInTheDocument();
+        expect((await screen.findAllByText("Installing… 50%")).length).toBeGreaterThan(0); // the row and the Tasks list
         expect(screen.getByRole("progressbar", {name: "Libbet and the Magic Fish"})).toHaveValue(50);
         // The page refreshes after the install, which now reports it as installed.
         api.GamesState.mockResolvedValue(view({installed: {libbet: {id: "libbet"}}}) as never);
         finish({receipt: {id: "libbet"}, registered: []});
         expect(await screen.findByRole("button", {name: "Play with mGBA: Libbet and the Magic Fish"})).toBeInTheDocument();
-        expect(screen.getByText((c) => c.startsWith("Libbet and the Magic Fish installed in ") && c.endsWith("WinForge Games\\gba\\libbet."))).toBeInTheDocument();
+        expect(screen.getAllByText((c) => c.startsWith("Libbet and the Magic Fish installed in ") && c.endsWith("WinForge Games\\gba\\libbet.")).length).toBeGreaterThan(0); // the toast and the Tasks list
         expect(screen.queryByRole("button", {name: "Install: Libbet and the Magic Fish"})).not.toBeInTheDocument();
     });
 
@@ -190,17 +192,17 @@ describe("installing games", () => {
         api.InstallGame.mockResolvedValueOnce({receipt: {id: "bass"}, registered: ["scummvm"]});
         const user = await openWith();
         await user.click(screen.getByRole("button", {name: "Install: Beneath a Steel Sky"}));
-        expect(await screen.findByText(/It was added to ScummVM\./)).toBeInTheDocument();
+        expect((await screen.findAllByText(/It was added to ScummVM\./)).length).toBeGreaterThan(0); // the toast and the Tasks list
         api.InstallGame.mockResolvedValueOnce({receipt: {id: "bass"}, registered: [], registerError: "scummvm: bad option"});
         await user.click(screen.getByRole("button", {name: "Install: Beneath a Steel Sky"}));
-        expect(await screen.findByText(/ScummVM could not be told about it \(bad option\)/)).toBeInTheDocument();
+        expect((await screen.findAllByText(/ScummVM could not be told about it \(bad option\)/)).length).toBeGreaterThan(0);
     });
 
     it("shows why an install failed and lets the person try again", async () => {
         api.InstallGame.mockRejectedValueOnce(new Error("Libbet does not match its published checksum, so it was discarded"));
         const user = await openWith();
         await user.click(screen.getByRole("button", {name: "Install: Libbet and the Magic Fish"}));
-        expect(await screen.findByText(/does not match its published checksum/)).toBeInTheDocument();
+        expect((await screen.findAllByText(/does not match its published checksum/)).length).toBeGreaterThan(0); // the toast and the Tasks list
         expect(screen.getByRole("button", {name: "Install: Libbet and the Magic Fish"})).toBeEnabled();
         expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
     });
@@ -230,5 +232,70 @@ describe("installing games", () => {
         api.GamesState.mockResolvedValue(view() as never);
         await open(makeState({apps})); // ScummVM is not installed here
         expect(await screen.findByText("1 free games are waiting for an emulator (Point-and-click adventures).")).toBeInTheDocument();
+    });
+});
+
+describe("game jobs outlive the page", () => {
+    const nav = () => within(screen.getByRole("navigation", {name: "Main menu"}));
+    const tasks = () => within(screen.getByRole("heading", {name: "Tasks", level: 2}).closest("section") as HTMLElement);
+    const gba = {
+        id: "libbet", name: "Libbet and the Magic Fish", system: "gba", en: "A free puzzle game.", es: "Un juego de puzles.", license: "zlib",
+        homepage: "https://github.com/pinobatch/libbet", url: "https://github.com/x/libbet.gb", sha256: "a".repeat(64), size: 32768, kind: "file" as const, file: "libbet.gb", entry: "libbet.gb",
+    };
+    const view = (o: Record<string, unknown> = {}) => ({root: "C:\WinForge Games", games: [gba], installed: {}, launchers: {}, ...o});
+    const emu: Emulation = {...emulation, run: {mgba: {exes: ["mGBA.exe"], hints: ["mgba"], args: ["{file}"]}}};
+
+    async function leaveAndReturn(user: Awaited<ReturnType<typeof open>>) {
+        await user.click(nav().getByRole("button", {name: /Home/}));
+        await waitFor(() => expect(screen.queryByRole("heading", {name: "Games for your emulators"})).not.toBeInTheDocument());
+        await user.click(nav().getByRole("button", {name: /Games for emulators/}));
+        await screen.findByRole("heading", {name: "Games for your emulators"});
+    }
+
+    it("keeps a download running after leaving the page, with its progress, and never starts it twice", async () => {
+        api.Emulation.mockResolvedValue(emu);
+        api.GamesState.mockResolvedValue(view() as never);
+        let finish!: (r: unknown) => void;
+        api.InstallGame.mockReturnValue(new Promise((res) => { finish = res; }));
+        const user = await open(makeState({apps}));
+        await user.click(await screen.findByRole("button", {name: "Install: Libbet and the Magic Fish"}));
+        await leaveAndReturn(user);
+        expect(tasks().getByText("Installing the game Libbet and the Magic Fish")).toBeInTheDocument();
+        expect(tasks().getByText("Running")).toBeInTheDocument();
+        // The row shows progress, not an Install button.
+        expect(screen.queryByRole("button", {name: "Install: Libbet and the Magic Fish"})).not.toBeInTheDocument();
+        await emit.gameProgress("libbet", 16384, 32768);
+        expect((await screen.findAllByText("Installing… 50%")).length).toBeGreaterThan(1); // the row and the Tasks list
+        api.GamesState.mockResolvedValue(view({installed: {libbet: {id: "libbet"}}}) as never);
+        finish({receipt: {id: "libbet"}, registered: []});
+        await waitFor(() => expect(tasks().getAllByText("Done").length).toBeGreaterThan(0));
+        expect(tasks().getByText((c) => c.startsWith("Libbet and the Magic Fish installed in "))).toBeInTheDocument();
+        expect(api.InstallGame).toHaveBeenCalledTimes(1);
+    });
+
+    it("lists a failed install with its reason", async () => {
+        api.Emulation.mockResolvedValue(emu);
+        api.GamesState.mockResolvedValue(view() as never);
+        api.InstallGame.mockRejectedValue(new Error("the checksum does not match"));
+        const user = await open(makeState({apps}));
+        await user.click(await screen.findByRole("button", {name: "Install: Libbet and the Magic Fish"}));
+        await waitFor(() => expect(tasks().getAllByText("Failed").length).toBeGreaterThan(0));
+        expect(tasks().getByText("the checksum does not match")).toBeInTheDocument();
+    });
+
+    it("keeps the patch tool locked while it runs, after leaving the page too", async () => {
+        api.Emulation.mockResolvedValue(emu);
+        api.GamesState.mockResolvedValue(view() as never);
+        let finish!: (r: unknown) => void;
+        api.PatchROM.mockReturnValue(new Promise((res) => { finish = res; }));
+        const user = await open(makeState({apps}));
+        await user.click(screen.getByRole("button", {name: "Patch a game…"}));
+        await leaveAndReturn(user);
+        expect(tasks().getByText("Patching a ROM")).toBeInTheDocument();
+        expect(screen.getByRole("button", {name: "Patch a game…"})).toBeDisabled();
+        finish({path: "C:\g (patched).gba", format: "BPS", checked: true, headerless: false});
+        await waitFor(() => expect(tasks().getAllByText("Done").length).toBeGreaterThan(0));
+        expect(api.PatchROM).toHaveBeenCalledTimes(1);
+        await waitFor(() => expect(screen.getByRole("button", {name: "Patch a game…"})).toBeEnabled());
     });
 });

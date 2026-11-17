@@ -6,6 +6,8 @@ import App from "../App";
 import {visibleItems} from "../views/Startup";
 import {api, resetApi} from "./apiMock";
 import {makeState} from "./fixtures";
+// The Tasks list repeats what the page reports: look at the page's own text.
+const pageText = async (x: string | RegExp) => (await screen.findAllByText(x)).find((e) => !e.closest(".taskviewer")) as HTMLElement;
 
 vi.mock("../api", async () => (await import("./apiMock")).moduleMock);
 
@@ -93,7 +95,7 @@ describe("startup: switching", () => {
         await user.click(await sw("Discord"));
         await waitFor(() => expect(api.StartupSet).toHaveBeenCalledWith("hkcu-run|Discord", false));
         await waitFor(async () => expect((await sw("Discord")).checked).toBe(false));
-        expect(screen.getByText("Discord will no longer start with Windows.")).toBeInTheDocument();
+        expect(await pageText("Discord will no longer start with Windows.")).toBeInTheDocument();
         expect(screen.getByText(/2 of 5/)).toBeInTheDocument();
     });
 
@@ -102,7 +104,7 @@ describe("startup: switching", () => {
         const user = await open();
         await user.click(await sw("OldTool"));
         await waitFor(() => expect(api.StartupSet).toHaveBeenCalledWith("hkcu-run|OldTool", true));
-        expect(await screen.findByText("OldTool will start with Windows.")).toBeInTheDocument();
+        expect(await pageText("OldTool will start with Windows.")).toBeInTheDocument();
     });
 
     it("asks before switching off something that looks like Windows or security, and does nothing on Cancel", async () => {
@@ -149,7 +151,7 @@ describe("startup: switching", () => {
         api.StartupSet.mockRejectedValue(new Error("needs administrator"));
         const user = await open();
         await user.click(await sw("Discord"));
-        expect(await screen.findByText(/needs administrator rights\. Restart WinForge as administrator/i)).toBeInTheDocument();
+        expect(await pageText(/needs administrator rights\. Restart WinForge as administrator/i)).toBeInTheDocument();
         expect((await sw("Discord")).checked).toBe(true); // nothing changed
     });
 
@@ -157,7 +159,7 @@ describe("startup: switching", () => {
         api.StartupSet.mockRejectedValue(new Error("that startup item no longer exists"));
         const user = await open();
         await user.click(await sw("Discord"));
-        expect(await screen.findByText("That item is no longer there. The list was refreshed.")).toBeInTheDocument();
+        expect(await pageText("That item is no longer there. The list was refreshed.")).toBeInTheDocument();
         await waitFor(() => expect(api.StartupList).toHaveBeenCalledTimes(2));
     });
 
@@ -178,6 +180,6 @@ describe("startup: Spanish", () => {
         expect(screen.getByText("Carpeta Inicio")).toBeInTheDocument();
         expect(screen.getByText("Programa no encontrado")).toBeInTheDocument();
         await user.click(screen.getByRole("checkbox", {name: "Arrancar con Windows: Discord"}));
-        expect(await screen.findByText("Discord ya no arrancará con Windows.")).toBeInTheDocument();
+        expect(await pageText("Discord ya no arrancará con Windows.")).toBeInTheDocument();
     });
 });

@@ -414,3 +414,45 @@ describe("automatic updates: helpers", () => {
         expect(upToDate(autoRun({error: "timeout"}))).toBe(false);
     });
 });
+
+describe("automatic updates: jobs outlive the page", () => {
+    const nav = () => within(screen.getByRole("navigation", {name: "Main menu"}));
+    const tasks = () => within(screen.getByRole("heading", {name: "Tasks", level: 3}).closest("section") as HTMLElement);
+
+    it("keeps a running check in the Tasks list after leaving and coming back, blocks a second one, then shows the result", async () => {
+        let done: (r: ReturnType<typeof autoRun>) => void = () => {};
+        api.AutoRunNow.mockImplementation(() => new Promise((res) => { done = res; }));
+        const user = await openUpdates();
+        await user.click(await card().findByRole("button", {name: "Check now"}));
+        await user.click(nav().getByRole("button", {name: /Home/}));
+        await waitFor(() => expect(screen.queryByRole("heading", {name: "Automatic updates"})).not.toBeInTheDocument());
+        await user.click(nav().getByRole("button", {name: /Updates/}));
+        await screen.findByRole("heading", {name: "Automatic updates"});
+        expect(tasks().getByText("Checking for updates now")).toBeInTheDocument();
+        expect(tasks().getByText("Running")).toBeInTheDocument();
+        expect(tasks().queryByRole("button", {name: /^Stop/})).not.toBeInTheDocument(); // the check cannot be stopped from here
+        expect(await card().findByRole("button", {name: "Check now"})).toBeDisabled();
+        expect(api.AutoRunNow).toHaveBeenCalledTimes(1);
+        done(autoRun({scheduled: false}));
+        await waitFor(() => expect(tasks().getAllByText("Done").length).toBeGreaterThan(0));
+        expect(tasks().getByText("Everything is up to date.")).toBeInTheDocument();
+        expect(api.AutoRunNow).toHaveBeenCalledTimes(1);
+        await waitFor(() => expect(card().getByRole("button", {name: "Check now"})).toBeEnabled());
+    });
+
+    it("locks saving while a check runs and lists a failed check", async () => {
+        api.AutoRunNow.mockRejectedValue(new Error("auto:busy"));
+        const user = await openUpdates();
+        await user.click(await card().findByRole("button", {name: "Check now"}));
+        await waitFor(() => expect(tasks().getAllByText("Failed").length).toBeGreaterThan(0));
+        expect(tasks().getByText("Another check is running right now. Try again in a moment.")).toBeInTheDocument();
+    });
+
+    it("lists saving the schedule as a task", async () => {
+        const user = await openUpdates();
+        await user.click(await card().findByRole("button", {name: "Set up…"}));
+        await user.click(card().getByRole("button", {name: "Turn on"}));
+        await waitFor(() => expect(tasks().getAllByText("Done").length).toBeGreaterThan(0));
+        expect(tasks().getByText("Saving the update schedule")).toBeInTheDocument();
+    });
+});

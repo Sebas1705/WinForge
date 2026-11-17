@@ -2,11 +2,13 @@ import {useEffect, useId, useMemo, useState, type ReactNode} from "react";
 import {api, type CompareApp, type CompareResult, type CompareSide} from "../../api";
 import {AppIcon} from "../../components/AppIcon";
 import {Icon, type IconName} from "../../components/Icon";
+import {TaskViewer} from "../../components/TaskViewer";
 import {compareError, kindOf, LIST_LIMIT, saveName, sideLabel, summary, type CompareKind} from "../../lib/compare";
 import {withApps} from "../../lib/drift";
 import {t} from "../../lib/i18n";
 import type {App, Profile, ProfileInfo} from "../../lib/model";
 import {selectionProfile, uniqueProfile} from "../../lib/model";
+import {runningOf, startTask, useTasks} from "../../lib/taskStore";
 import "../../compare.css";
 
 type Mode = "file" | "code" | "files";
@@ -36,7 +38,10 @@ export function CompareView(p: {
     const [req, setReq] = useState<Request | null>(null);
     const [result, setResult] = useState<CompareResult | null>(null);
     const [error, setError] = useState("");
-    const [busy, setBusy] = useState(false);
+    const [reading, setBusy] = useState(false);
+    // A comparison running in the background (started before leaving this page) keeps the controls locked too.
+    const compareJob = runningOf(useTasks("profiles").filter((x) => x.tag === "compare"));
+    const busy = reading || !!compareJob;
     const modeId = useId();
     const codeId = useId();
 
@@ -44,9 +49,11 @@ export function CompareView(p: {
         if (!req) return;
         let live = true;
         setBusy(true);
+        const what = req.mode === "file" ? fileName(req.path) : req.mode === "code" ? t("tasks.pf.compare.code") : t("tasks.pf.compare.files", {a: fileName(req.a), b: fileName(req.b)});
+        const job = startTask("profiles", t("tasks.pf.compare", {what}), {tag: "compare"});
         const call = req.mode === "file" ? api.CompareFile(req.path) : req.mode === "code" ? api.CompareCode(req.code) : api.CompareFiles(req.a, req.b);
-        call.then((r) => { if (live) { setResult(r); setError(""); } })
-            .catch((e) => { if (live) { setResult(null); setError(compareError(e)); } })
+        call.then((r) => { job.done(summary(r)); if (live) { setResult(r); setError(""); } })
+            .catch((e) => { job.fail(compareError(e)); if (live) { setResult(null); setError(compareError(e)); } })
             .finally(() => { if (live) setBusy(false); });
         return () => { live = false; };
     }, [req, p.scan]);
@@ -67,6 +74,8 @@ export function CompareView(p: {
                 <p className="muted">{t("cmp.intro")}</p>
                 <p className="muted small">{t("cmp.savedLink")}</p>
             </header>
+
+            <TaskViewer kind="profiles"/>
 
             <fieldset className="cmp-modes">
                 <legend id={modeId}>{t("cmp.mode")}</legend>

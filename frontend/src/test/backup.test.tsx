@@ -45,7 +45,11 @@ describe("creating a backup", () => {
         await user.click(screen.getByRole("checkbox", {name: "Git"}));
         await user.click(screen.getByRole("button", {name: "Create backup…"}));
         await waitFor(() => expect(api.CreateBackup).toHaveBeenCalledWith({sets: ["vscode"], apps: true, folders: []}));
-        expect(await screen.findByText(/Backup saved to C:\\b.zip: 5 files, 2 KB\. Read back and checked/)).toBeInTheDocument();
+        // The result line, the toast and the Tasks list all say it.
+        const saved = await screen.findAllByText(/Backup saved to C:\\b.zip: 5 files, 2 KB\. Read back and checked/);
+        expect(saved.some((el) => el.classList.contains("resultline"))).toBe(true);
+        const tasks = screen.getByRole("heading", {name: "Tasks", level: 2}).closest("section") as HTMLElement;
+        expect(within(tasks).getByText("Done")).toBeInTheDocument();
     });
 
     it("says so when the saved file does not pass its own check", async () => {
@@ -55,7 +59,7 @@ describe("creating a backup", () => {
         await go(user, /Settings backup/);
         await screen.findByText("Git");
         await user.click(screen.getByRole("button", {name: "Create backup…"}));
-        expect(await screen.findByText(/did not pass its own check \(2 problems\)/)).toBeInTheDocument();
+        expect((await screen.findAllByText(/did not pass its own check \(2 problems\)/)).length).toBeGreaterThan(0);
     });
 
     it("adds and removes the folders of the user", async () => {

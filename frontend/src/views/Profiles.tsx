@@ -4,6 +4,7 @@ import {AppIcon} from "../components/AppIcon";
 import {ConfirmDialog} from "../components/Modals";
 import {useDismiss} from "../components/useModal";
 import {Icon, type IconName} from "../components/Icon";
+import {TaskViewer} from "../components/TaskViewer";
 import {IconStack, Ring, Tip} from "../components/Visual";
 import {getLang, t} from "../lib/i18n";
 import {profileText} from "../lib/profileText";
@@ -68,6 +69,7 @@ export function Profiles(p: {
                 <button className="ghost" title={t("cmp.openHint")} onClick={() => setComparing(true)}>{t("cmp.open")}</button>
                 <button className="ghost" aria-expanded={kit !== null} onClick={() => setKit(kit ? null : {})}>{t("kit.open.button")}</button>
             </header>
+            <TaskViewer kind="profiles"/>
             {kit && <KitInstall admin={p.state.admin} say={p.say} onAdmin={p.onAdmin} onInstall={p.onKitInstall} refreshKey={p.kitTick} initialFolder={kit.folder} onClose={() => setKit(null)}/>}
             {groups.every(([, , l]) => l.length === 0) && <p className="muted empty">{t("profiles.none")}</p>}
             {groups.map(([title, icon, list]) => list.length > 0 && (
@@ -176,6 +178,7 @@ function ProfileDetail(p: {
                 </div>
             </div>
 
+            <TaskViewer kind="profiles"/>
             {kitCreate && <KitCreate profileName={text.name} appIds={current.resolved} say={p.say} onClose={() => setKitCreate(false)} onOpenKit={p.onOpenKit}/>}
 
             <DriftPanel profile={current} scan={p.scan} say={p.say}

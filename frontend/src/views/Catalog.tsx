@@ -2,6 +2,7 @@ import {useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, typ
 import {AppCard} from "../components/AppCard";
 import {AppIcon} from "../components/AppIcon";
 import {SuggestApp} from "../components/SuggestApp";
+import {TaskViewer} from "../components/TaskViewer";
 import {Icon, categoryIcon} from "../components/Icon";
 import {categoryLabel, getLang, subLabel, t} from "../lib/i18n";
 import {filterApps, subCategories, type App, type Filter} from "../lib/model";
@@ -123,6 +124,7 @@ export function Catalog(p: {
                     <button className={view === "list" ? "on" : ""} aria-pressed={view === "list"} title={t("catalog.view.list")} aria-label={t("catalog.view.list")} onClick={() => setView("list")}><Icon name="list" size={15}/></button>
                 </div>
             </div>
+            <TaskViewer kind="install" quiet/>
             <div className="chips" role="tablist" aria-label={t("nav.catalog")} onKeyDown={tabKeys}>
                 {chip("", "layers", t("catalog.all"), p.apps.length)}
                 {p.featured.length > 0 && chip(POPULAR, "star", t("catalog.popular"), p.featured.length)}

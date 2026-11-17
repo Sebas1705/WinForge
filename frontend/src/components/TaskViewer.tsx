@@ -44,12 +44,13 @@ function Row(p: { task: TrackedTask; now: number }) {
  * last few that finished, with what they did. It lives outside the page's own state, so leaving a
  * page and coming back shows the same job still running, or how it ended.
  */
-export function TaskViewer(p: { kind: TaskKind; heading?: "h2" | "h3" }) {
+export function TaskViewer(p: { kind: TaskKind; heading?: "h2" | "h3"; /** Show nothing until there is a job to show (for pages where the list would be clutter). */ quiet?: boolean }) {
     const list = useTasks(p.kind);
     const running = list.filter((x) => x.state === "running");
     const now = useNow(running.length > 0);
     const finished = list.filter((x) => x.state !== "running").reverse();
     const H = p.heading ?? "h2";
+    if (p.quiet && list.length === 0) return null;
     return (
         <section className="taskviewer" aria-labelledby={`tasks-${p.kind}`}>
             <div className="taskhead">

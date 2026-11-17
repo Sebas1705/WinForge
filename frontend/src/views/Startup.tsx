@@ -1,4 +1,5 @@
 import {useState} from "react";
+import {TaskViewer} from "../components/TaskViewer";
 import {t} from "../lib/i18n";
 import {Programs} from "./startup/Programs";
 import {Services} from "./startup/Services";
@@ -31,6 +32,7 @@ export function Startup(p: { admin: boolean; say: (m: string) => void; onAdmin: 
             <header className="pagehead">
                 <h1>{t("startup.title")}</h1>
             </header>
+            <TaskViewer kind="startup"/>
             <TabList label={t("svc.tabs")} tabs={tabs} value={tab} onChange={open}/>
             <Panel id="programs" active={tab === "programs"}><Programs admin={p.admin} say={p.say} onAdmin={p.onAdmin}/></Panel>
             {opened.includes("services") && <Panel id="services" active={tab === "services"}><Services admin={p.admin} say={p.say} onAdmin={p.onAdmin}/></Panel>}

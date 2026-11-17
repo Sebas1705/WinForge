@@ -14,6 +14,9 @@ export const tasksEn = {
     "tasks.startedAt": "Started {time}",
     "tasks.runningHint": "Still running. You can leave this page; it keeps going.",
     "tasks.sum.items": "{n} found",
+    "tasks.sum.ok": "Finished without errors",
+    "tasks.sum.failed": "{n} failed",
+    "tasks.sum.interrupted": "It could not finish",
     "tasks.busy": "This is still running: {task}. Its progress is in the Tasks list.",
 };
 
@@ -31,5 +34,8 @@ export const tasksEs: Record<keyof typeof tasksEn, string> = {
     "tasks.startedAt": "Empezó {time}",
     "tasks.runningHint": "Sigue en marcha. Puedes salir de esta página; continúa.",
     "tasks.sum.items": "{n} encontrados",
+    "tasks.sum.ok": "Terminó sin errores",
+    "tasks.sum.failed": "{n} con error",
+    "tasks.sum.interrupted": "No pudo terminar",
     "tasks.busy": "Esto sigue en marcha: {task}. Su progreso está en la lista de Tareas.",
 };

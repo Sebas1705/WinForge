@@ -2,7 +2,9 @@ import {useCallback, useEffect, useState} from "react";
 import {api, errText, type BackupPreview, type BackupSet} from "../api";
 import {Icon, type IconName} from "../components/Icon";
 import {Segmented} from "../components/Modals";
+import {TaskViewer} from "../components/TaskViewer";
 import {t, type Key} from "../lib/i18n";
+import {getTasks, runningOf, startTask, tasksOf, useTasks} from "../lib/taskStore";
 import type {Profile} from "../lib/model";
 
 const SET_ICON: Record<string, IconName> = {
@@ -60,9 +62,24 @@ export function Backup(p: {
                 <Segmented value={mode} onChange={setMode} options={[["create", t("backup.tab.create")], ["rebuild", t("backup.tab.rebuild")]]}/>
             </header>
             <p className="muted small hint"><Icon name="shield" size={14}/> {t("backup.safe")}</p>
+            <TaskViewer kind="backup"/>
             {mode === "create" ? <Create {...p}/> : <Rebuild {...p}/>}
         </div>
     );
+}
+
+/**
+ * One backup job at a time (creating or rebuilding), kept in the task store so it survives leaving the page.
+ * `begin` returns null, with a toast, when one is already running.
+ */
+function useBackupJob(say: (m: string) => void) {
+    const busy = !!runningOf(useTasks("backup"));
+    const begin = (title: string, tag: string) => {
+        const active = runningOf(tasksOf(getTasks(), "backup"));
+        if (active) { say(t("tasks.busy", {task: active.title})); return null; }
+        return startTask("backup", title, {tag});
+    };
+    return {busy, begin};
 }
 
 function Create(p: { say: (m: string) => void; advanced: boolean; appCount: number }) {
@@ -70,7 +87,9 @@ function Create(p: { say: (m: string) => void; advanced: boolean; appCount: numb
     const [picked, setPicked] = useState<Set<string>>(new Set());
     const [withApps, setWithApps] = useState(true);
     const [folders, setFolders] = useState<string[]>([]);
-    const [busy, setBusy] = useState(false);
+    const [working, setBusy] = useState(false);
+    const job = useBackupJob(p.say);
+    const busy = working || job.busy;
     const [result, setResult] = useState<string | null>(null);
 
     const load = useCallback(async () => {
@@ -92,16 +111,20 @@ function Create(p: { say: (m: string) => void; advanced: boolean; appCount: numb
     const create = async () => {
         const apps = withApps && p.appCount > 0;
         if (picked.size === 0 && !apps && folders.length === 0) return p.say(t("backup.nothing"));
+        const handle = job.begin(t("tasks.backup.create"), "create");
+        if (!handle) return;
         setBusy(true);
         setResult(null);
         try {
             const r = await api.CreateBackup({sets: [...picked], apps, folders});
             if (r.path) {
                 const verdict = r.verified ? t("backup.verified") : t("backup.notVerified", {n: r.problems});
-                setResult(`${t("backup.made", {path: r.path, files: r.files, size: size(r.bytes)})} ${verdict}`);
-                p.say(t("backup.made", {path: r.path, files: r.files, size: size(r.bytes)}));
-            }
-        } catch (e) { p.say(errText(e)); } finally { setBusy(false); }
+                const made = t("backup.made", {path: r.path, files: r.files, size: size(r.bytes)});
+                setResult(`${made} ${verdict}`);
+                p.say(made);
+                handle.done(`${made} ${verdict}`);
+            } else handle.cancelled(); // the save dialog was closed
+        } catch (e) { handle.fail(errText(e)); p.say(errText(e)); } finally { setBusy(false); }
     };
 
     const folderName = (d: string) => d.split(/[\\/]/).filter(Boolean).pop() ?? d;
@@ -171,7 +194,9 @@ function Rebuild(p: {
     const [pickedSets, setPickedSets] = useState<Set<string>>(new Set());
     const [pickedFolders, setPickedFolders] = useState<Set<string>>(new Set());
     const [dest, setDest] = useState("");
-    const [busy, setBusy] = useState(false);
+    const [working, setBusy] = useState(false);
+    const job = useBackupJob(p.say);
+    const busy = working || job.busy;
     const [stages, setStages] = useState<Record<"apps" | "settings" | "folders", Stage>>({apps: "off", settings: "off", folders: "off"});
     const [notes, setNotes] = useState<string[]>([]);
 
@@ -197,10 +222,16 @@ function Rebuild(p: {
         if (!prev) return;
         const wantFolders = pickedFolders.size > 0;
         if (wantFolders && !dest) return p.say(t("backup.needDest"));
+        const handle = job.begin(t("tasks.backup.rebuild"), "rebuild");
+        if (!handle) return;
         setBusy(true);
         setNotes([]);
-        const log = (m: string) => setNotes((n) => [...n, m]);
-        const stage = (k: "apps" | "settings" | "folders", v: Stage) => setStages((s) => ({...s, [k]: v}));
+        const lines: string[] = [];
+        const log = (m: string) => { lines.push(m); setNotes((n) => [...n, m]); };
+        const stage = (k: "apps" | "settings" | "folders", v: Stage) => {
+            setStages((s) => ({...s, [k]: v}));
+            if (v === "run") handle.update({live: t(`tasks.backup.stage.${k}` as Key)});
+        };
         setStages({apps: doApps ? "wait" : "off", settings: pickedSets.size > 0 ? "wait" : "off", folders: wantFolders ? "wait" : "off"});
         try {
             // 1. Apps first: settings only make sense once the apps are there.
@@ -228,6 +259,10 @@ function Rebuild(p: {
                 } catch (e) { stage("folders", "fail"); log(errText(e)); }
             }
             p.say(t("backup.rebuilt"));
+            handle.done(lines.join(" "));
+        } catch (e) {
+            handle.fail(errText(e));
+            p.say(errText(e));
         } finally { setBusy(false); }
     };
 

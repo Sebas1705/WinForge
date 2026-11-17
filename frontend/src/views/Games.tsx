@@ -2,9 +2,11 @@ import {useCallback, useEffect, useMemo, useState} from "react";
 import {api, errText, on, type EmuSource, type Emulation, type GamesView, type InstallableGame} from "../api";
 import {AppIcon} from "../components/AppIcon";
 import {Icon} from "../components/Icon";
+import {TaskViewer} from "../components/TaskViewer";
 import {ConfirmDialog} from "../components/Modals";
 import {getLang, t, type Key} from "../lib/i18n";
 import type {App} from "../lib/model";
+import {getTasks, runningOf, startTask, tasksOf, useTasks} from "../lib/taskStore";
 
 const text = (o: { en: string; es: string }) => (getLang() === "es" ? o.es : o.en);
 
@@ -83,9 +85,12 @@ export function Games(p: {
 }) {
     const [data, setData] = useState<Emulation | null>(null);
     const [view, setView] = useState<GamesView | null>(null);
-    const [busy, setBusy] = useState(false);
+    // What is downloading or being patched comes from the task store: it survives leaving this page and coming back.
+    const jobs = useTasks("games").filter((x) => x.state === "running");
+    const busy = jobs.some((x) => x.tag === "patch");
     const [note, setNote] = useState<string | null>(null);
     const [pct, setPct] = useState<Record<string, number>>({});
+    const installing = (id: string) => jobs.some((x) => x.tag === id);
     const [removing, setRemoving] = useState<InstallableGame | null>(null);
 
     const refresh = useCallback(async () => {
@@ -98,7 +103,7 @@ export function Games(p: {
         void refresh();
         return () => { live = false; };
     }, [p.say, refresh]);
-    useEffect(() => on.gameProgress((e) => setPct((x) => (e.id in x ? {...x, [e.id]: e.total ? Math.floor((e.done * 100) / e.total) : 0} : x))), []);
+    useEffect(() => on.gameProgress((e) => setPct((x) => ({...x, [e.id]: e.total ? Math.floor((e.done * 100) / e.total) : 0}))), []);
 
     const mine = useMemo(() => (data ? p.apps.filter((a) => a.installed && data.emulators[a.id]) : []), [p.apps, data]);
     const byId = useMemo(() => new Map(p.apps.map((a) => [a.id, a])), [p.apps]);
@@ -125,6 +130,13 @@ export function Games(p: {
         !g.entry || !data || !view ? [] : mine.filter((a) => data.emulators[a.id].includes(g.system) && (data.run?.[a.id]?.args?.length ?? 0) > 0 && !!view.launchers[a.id]);
 
     const install = async (g: InstallableGame) => {
+        if (runningOf(tasksOf(getTasks(), "games").filter((x) => x.tag === g.id))) return; // the Go side refuses a second install of the same game
+        const job = startTask("games", t("tasks.games.install", {name: g.name}), {tag: g.id});
+        const off = on.gameProgress((e) => {
+            if (e.id !== g.id) return;
+            const n = e.total ? Math.floor((e.done * 100) / e.total) : 0;
+            job.update({live: t("games.installing", {pct: n}), fraction: e.total ? e.done / e.total : undefined});
+        });
         setPct((x) => ({...x, [g.id]: 0}));
         try {
             const r = await api.InstallGame(g.id);
@@ -134,8 +146,10 @@ export function Games(p: {
             if (r.registered.length > 0) m += t("games.doneRegistered", {emulators: names(r.registered)});
             if (r.registerError) m += t("games.registerFailed", {emulators: names([r.registerError.split(":")[0]]), reason: r.registerError.split(":").slice(1).join(":").trim()});
             p.say(m);
+            job.done(m);
             await refresh();
-        } catch (e) { p.say(errText(e)); } finally {
+        } catch (e) { job.fail(errText(e)); p.say(errText(e)); } finally {
+            off();
             setPct((x) => { const n = {...x}; delete n[g.id]; return n; });
         }
     };
@@ -147,15 +161,18 @@ export function Games(p: {
     };
 
     const patch = async () => {
-        setBusy(true);
+        if (runningOf(tasksOf(getTasks(), "games").filter((x) => x.tag === "patch"))) return;
+        const job = startTask("games", t("tasks.games.patch"), {tag: "patch"});
         setNote(null);
         try {
             const r = await api.PatchROM();
             if (r.path) {
                 const how = r.headerless ? ` ${t("games.patch.headerless")}` : "";
-                setNote(`${t("games.patch.done", {path: r.path})} ${r.checked ? t("games.patch.checked") : t("games.patch.unchecked")}${how}`);
-            }
-        } catch (e) { p.say(errText(e)); } finally { setBusy(false); }
+                const line = `${t("games.patch.done", {path: r.path})} ${r.checked ? t("games.patch.checked") : t("games.patch.unchecked")}${how}`;
+                setNote(line);
+                job.done(line);
+            } else job.cancelled(); // the file dialog was closed without choosing
+        } catch (e) { job.fail(errText(e)); p.say(errText(e)); }
     };
 
     return (
@@ -167,6 +184,7 @@ export function Games(p: {
                 </div>
             </header>
             <p className="notice" role="note"><Icon name="shield" size={15}/> {t("games.legal")}</p>
+            <TaskViewer kind="games"/>
 
             <section>
                 <h2>{t("games.yours")}</h2>
@@ -216,7 +234,7 @@ export function Games(p: {
                                 <h3 className="subhead">{t("games.install.title")}</h3>
                                 <ul className="gamelist">
                                     {mineGames.map((g) => (
-                                        <GameRow key={g.id} g={g} root={view.root} installed={g.id in view.installed} pct={g.id in pct ? pct[g.id] : null}
+                                        <GameRow key={g.id} g={g} root={view.root} installed={g.id in view.installed} pct={installing(g.id) ? pct[g.id] ?? 0 : null}
                                                  players={startable(g)} openFrom={players.map((a) => a.name)} onOpen={p.onOpen}
                                                  onInstall={() => void install(g)} onPlay={(a) => play(g, a)}
                                                  onFolder={() => { api.OpenGameFolder(g.id).catch((e) => p.say(errText(e))); }}

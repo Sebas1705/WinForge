@@ -1,9 +1,11 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import {api, type AutoItem, type AutoReport, type AutoSettings, type AutoState} from "../api";
 import {Icon} from "../components/Icon";
+import {TaskViewer} from "../components/TaskViewer";
 import {ConfirmDialog} from "../components/Modals";
 import {autoError, dateText, dayLabel, itemNote, modeText, runErrorText, summaryParts, upToDate, whenText} from "../lib/auto";
 import {getLang, t} from "../lib/i18n";
+import {getTasks, runningOf, startTask, tasksOf, useTasks, type TrackedTask} from "../lib/taskStore";
 import "../auto.css";
 
 const DEFAULTS: AutoSettings = {mode: "notify", frequency: "daily", weekday: 1, time: "09:00"};
@@ -69,7 +71,9 @@ export function AutoUpdates() {
     const [st, setSt] = useState<AutoState | null>(null);
     const [form, setForm] = useState<AutoSettings>(DEFAULTS);
     const [open, setOpen] = useState(false);
-    const [busy, setBusy] = useState<"save" | "off" | "check" | null>(null);
+    // Which job runs comes from the task store, so it is still known after leaving this page and coming back.
+    const running: TrackedTask | undefined = runningOf(useTasks("updates"));
+    const busy = (running?.tag as "save" | "off" | "check" | undefined) ?? null;
     const [msg, setMsg] = useState("");
     const [err, setErr] = useState("");
     const [check, setCheck] = useState<AutoReport | null>(null);
@@ -86,19 +90,30 @@ export function AutoUpdates() {
     }, []);
     useEffect(() => { void load(); }, [load]);
 
+    /** Starts the job `tag` unless one is already running (they share one scheduled task). Returns its handle, or null. */
+    const begin = (tag: "save" | "off" | "check", title: string) => {
+        const now = runningOf(tasksOf(getTasks(), "updates"));
+        if (now) { setErr(""); setMsg(t("tasks.busy", {task: now.title})); return null; }
+        return startTask("updates", title, {tag});
+    };
+
     const valid = /^([01]\d|2[0-3]):[0-5]\d$/.test(form.time);
     const unchangedApply = st?.on === true && st.mode === "apply";
 
     const save = async () => {
-        setBusy("save"); setErr(""); setMsg("");
+        const job = begin("save", t("tasks.au.save"));
+        if (!job) return;
+        setErr(""); setMsg("");
         try {
             const next = await api.AutoEnable({...form, weekday: form.frequency === "weekly" ? form.weekday : 0}, lang());
             setSt(next);
             setForm(formOf(next));
             setOpen(false);
-            setMsg(t("auto.done.on", {mode: modeText(next.mode), when: whenText(next)}));
+            const done = t("auto.done.on", {mode: modeText(next.mode), when: whenText(next)});
+            setMsg(done);
+            job.done(done);
             setTimeout(() => opener.current?.focus(), 0);
-        } catch (e) { setErr(autoError(e)); } finally { setBusy(null); }
+        } catch (e) { setErr(autoError(e)); job.fail(autoError(e)); }
     };
     const submit = () => {
         if (!valid) return;
@@ -106,22 +121,30 @@ export function AutoUpdates() {
         else void save();
     };
     const turnOff = async () => {
-        setBusy("off"); setErr(""); setMsg("");
+        const job = begin("off", t("tasks.au.off"));
+        if (!job) return;
+        setErr(""); setMsg("");
         try {
             const next = await api.AutoDisable();
             setSt(next);
             setForm(DEFAULTS);
             setOpen(false);
             setMsg(t("auto.done.off"));
-        } catch (e) { setErr(autoError(e)); } finally { setBusy(null); }
+            job.done(t("auto.done.off"));
+        } catch (e) { setErr(autoError(e)); job.fail(autoError(e)); }
     };
     const checkNow = async () => {
-        setBusy("check"); setErr(""); setMsg(t("auto.status.checking")); setCheck(null);
+        const job = begin("check", t("tasks.au.check"));
+        if (!job) return;
+        setErr(""); setMsg(t("auto.status.checking")); setCheck(null);
+        job.update({live: t("auto.status.checking")});
         try {
             const r = await api.AutoRunNow();
             setCheck(r);
-            setMsg(r.error ? runErrorText(r.error) : upToDate(r) ? t("auto.run.none") : summaryParts(r.items).join(", "));
-        } catch (e) { setMsg(""); setErr(autoError(e)); } finally { setBusy(null); }
+            const line = r.error ? runErrorText(r.error) : upToDate(r) ? t("auto.run.none") : summaryParts(r.items).join(", ");
+            setMsg(line);
+            if (r.error) job.fail(line); else job.done(line);
+        } catch (e) { setMsg(""); setErr(autoError(e)); job.fail(autoError(e)); }
     };
 
     const problem = st?.problem ? t(`auto.problem.${st.problem}`) : "";
@@ -133,6 +156,7 @@ export function AutoUpdates() {
         <section className="autocard" aria-labelledby="auto-title">
             <h2 id="auto-title">{t("auto.title")}</h2>
             <p className="muted small">{t("auto.intro")}</p>
+            <TaskViewer kind="updates" heading="h3"/>
 
             {st && (
                 <>

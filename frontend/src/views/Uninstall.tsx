@@ -2,6 +2,8 @@ import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {api, errText, type LeftoverCandidate, type LeftoversRecycleResult, type LeftoversResult, type UninstallApp, type UninstallListing} from "../api";
 import {Icon} from "../components/Icon";
 import {ConfirmDialog} from "../components/Modals";
+import {TaskViewer} from "../components/TaskViewer";
+import {getTasks, runningOf, startTask, tasksOf, useTasks} from "../lib/taskStore";
 import {formatBytes, formatDate} from "../lib/format";
 import type {App} from "../lib/model";
 import {getLang, t} from "../lib/i18n";
@@ -58,16 +60,29 @@ export function Uninstall(p: {
 
     const toggle = (id: string) => setMarked((m) => { const n = new Set(m); if (n.has(id)) n.delete(id); else n.add(id); return n; });
 
+    // The jobs live in the task store, so leaving the page and coming back still shows one running and keeps the buttons locked.
+    const running = runningOf(useTasks("uninstall"));
+    /** Registers a job, or says one is already running (the Go side works on one at a time). */
+    const begin = (title: string, tag: string) => {
+        const active = runningOf(tasksOf(getTasks(), "uninstall"));
+        if (active) { p.say(t("tasks.busy", {task: active.title})); return null; }
+        return startTask("uninstall", title, {tag});
+    };
+
     const find = async (appId: string, name: string) => {
+        const handle = begin(t("tasks.uninstall.find", {name}), "find");
+        if (!handle) return;
         const mine = ++search.current;
         setLeft({appId, name, result: null, candidates: [], marked: new Set(), recycled: null, confirming: false, busy: true});
         try {
             const r = await api.LeftoversFind(appId);
+            handle.done(t("tasks.sum.items", {n: r.candidates.length}));
             if (mine !== search.current) return;
             setLeft({appId, name: r.appName || name, result: r, candidates: r.candidates, marked: new Set(), recycled: null, confirming: false, busy: false});
         } catch (e) {
-            if (mine !== search.current) return;
             const err = uninstallError(e);
+            handle.fail(err.text);
+            if (mine !== search.current) return;
             p.say(err.text);
             setLeft(null);
             if (err.refresh) void load();
@@ -86,9 +101,12 @@ export function Uninstall(p: {
         if (!left) return;
         const paths = left.candidates.filter((c) => left.marked.has(c.path)).map((c) => c.path);
         if (paths.length === 0) return;
+        const handle = begin(t("tasks.uninstall.recycle", {name: left.name}), "recycle");
+        if (!handle) return;
         setLeft({...left, busy: true});
         try {
             const r = await api.LeftoversRecycle(paths);
+            handle.done(t(r.moved === 1 ? "uninst.left.result.one" : "uninst.left.result.other", {n: r.moved, size: formatBytes(r.freedBytes)}));
             const stay = new Set(r.failed.filter((f) => f.reason !== "missing").map((f) => f.path));
             setLeft((l) => (l ? {
                 ...l, busy: false, recycled: r,
@@ -97,6 +115,7 @@ export function Uninstall(p: {
             } : l));
         } catch (e) {
             const err = uninstallError(e);
+            handle.fail(err.text);
             p.say(err.text);
             setLeft((l) => (l ? {...l, busy: false} : l));
             if (err.refresh) void load();
@@ -108,6 +127,7 @@ export function Uninstall(p: {
     const matches = useMemo(() => notInstalledMatches(p.apps, hidden, manual), [p.apps, hidden, manual]);
     const leftCount = left ? left.candidates.filter((c) => left.marked.has(c.path)).length : 0;
     const searching = left !== null && left.result === null;
+    const locked = searching || !!running; // a leftovers job is on, here or before the page was left
 
     return (
         <div className="page uninstpage">
@@ -118,6 +138,8 @@ export function Uninstall(p: {
                 </div>
                 <button disabled={listing === null} onClick={() => void load()}><Icon name="refresh" size={15}/> {t("uninst.refresh")}</button>
             </header>
+
+            <TaskViewer kind="uninstall"/>
 
             {listing === null && <p className="muted" role="status">{t("uninst.loading")}</p>}
             {listing !== null && apps.length === 0 && <p className="muted" role="status">{t("uninst.empty")}</p>}
@@ -172,7 +194,7 @@ export function Uninstall(p: {
                         {removed.map((r) => (
                             <li key={r.id} className="toolrow">
                                 <b>{r.name}</b>
-                                <button className="sm" disabled={searching || left?.busy} aria-label={t("uninst.leftovers.lookFor", {name: r.name})} onClick={() => void find(r.id, r.name)}>
+                                <button className="sm" disabled={locked || left?.busy} aria-label={t("uninst.leftovers.lookFor", {name: r.name})} onClick={() => void find(r.id, r.name)}>
                                     <Icon name="search" size={14}/> {t("uninst.leftovers.look")}
                                 </button>
                             </li>
@@ -195,7 +217,7 @@ export function Uninstall(p: {
                         {matches.map((a) => (
                             <li key={a.id} className="toolrow">
                                 <b>{a.name}</b>
-                                <button className="sm" disabled={searching || left?.busy} aria-label={t("uninst.leftovers.lookFor", {name: a.name})} onClick={() => void find(a.id, a.name)}>
+                                <button className="sm" disabled={locked || left?.busy} aria-label={t("uninst.leftovers.lookFor", {name: a.name})} onClick={() => void find(a.id, a.name)}>
                                     <Icon name="search" size={14}/> {t("uninst.leftovers.look")}
                                 </button>
                             </li>
