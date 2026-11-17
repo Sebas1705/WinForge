@@ -78,7 +78,7 @@ describe("offline kit: creating one from a profile", () => {
         await user.click(panel.getByRole("button", {name: /Create kit/}));
         await user.click(within(await screen.findByRole("alertdialog")).getByRole("button", {name: "Create kit"}));
         expect(api.KitCreate).toHaveBeenCalledWith(["gimp"], "E:\\kit", "Mine");
-        expect(await panel.findByText("The kit is ready: 1 apps, 90 MB.")).toBeInTheDocument();
+        expect(await panel.findByText("The kit is ready. Apps: 1, 90 MB.")).toBeInTheDocument();
         expect(panel.getByText("01234567 89abcdef 01234567 89abcdef 01234567 89abcdef 01234567 89abcdef")).toBeInTheDocument();
     });
 
@@ -179,7 +179,7 @@ describe("offline kit: creating one from a profile", () => {
         const dialog = await screen.findByRole("alertdialog");
         expect(dialog).toHaveTextContent("No se instala nada en este PC");
         await user.click(within(dialog).getByRole("button", {name: "Crear kit"}));
-        expect(await panel.findByText(/El kit está listo: 1 apps, 90 MB/)).toBeInTheDocument();
+        expect(await panel.findByText(/El kit está listo. Apps: 1, 90 MB/)).toBeInTheDocument();
     });
 });
 

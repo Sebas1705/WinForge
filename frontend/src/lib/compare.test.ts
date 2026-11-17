@@ -56,7 +56,7 @@ describe("summary", () => {
         expect(s).toContain("Not in this catalog: 1.");
     });
     it("says the sides match, or that there is nothing to compare", () => {
-        expect(summary(res({both: apps("a", "b")}))).toBe("Both sides have the same 2 apps.");
+        expect(summary(res({both: apps("a", "b")}))).toBe("Both sides have the same apps (2).");
         expect(summary(res())).toBe("Neither side has any catalog apps, so there is nothing to compare.");
     });
 });

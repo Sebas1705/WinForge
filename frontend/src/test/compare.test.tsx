@@ -130,7 +130,7 @@ describe("comparing this PC with a profile file", () => {
         api.CompareFile.mockResolvedValue(result({onlyA: [], onlyB: [], unknown: [], both: [{id: "vlc", name: "VLC"}, {id: "git", name: "Git"}]}));
         const user = await open();
         await chooseFile(user);
-        expect(await screen.findByRole("status")).toHaveTextContent("Both sides have the same 2 apps.");
+        expect(await screen.findByRole("status")).toHaveTextContent("Both sides have the same apps (2).");
         expect(screen.getAllByText("None.")).toHaveLength(2);
     });
 
@@ -168,17 +168,17 @@ describe("what the result lets you do", () => {
         await chooseFile(user);
         const select = await screen.findByRole("combobox", {name: "Profile"});
         expect(within(select).getAllByRole("option").map((o) => o.textContent)).toEqual(["Mine"]); // built-ins are not offered
-        await user.click(screen.getByRole("button", {name: "Add 1 apps to the profile"}));
+        await user.click(screen.getByRole("button", {name: "Add to the profile (1)"}));
         await waitFor(() => expect(api.SaveProfile).toHaveBeenCalledOnce());
         expect(api.SaveProfile.mock.calls[0][0]).toMatchObject({id: "mine", name: "Mine", apps: [{id: "gimp"}]});
-        expect(await screen.findByText("Added 1 apps to “Mine”.")).toBeInTheDocument();
+        expect(await screen.findByText("Added to “Mine”: 1.")).toBeInTheDocument();
     });
 
     it("adds new apps next to the ones the profile already lists", async () => {
         api.CompareFile.mockResolvedValue(result({onlyA: [{id: "vlc", name: "VLC"}, {id: "gimp", name: "GIMP"}]}));
         const user = await open();
         await chooseFile(user);
-        await user.click(await screen.findByRole("button", {name: "Add 2 apps to the profile"}));
+        await user.click(await screen.findByRole("button", {name: "Add to the profile (2)"}));
         await waitFor(() => expect(api.SaveProfile).toHaveBeenCalledOnce());
         expect(api.SaveProfile.mock.calls[0][0].apps).toEqual([{id: "gimp"}, {id: "vlc"}]);
     });
@@ -340,7 +340,7 @@ describe("in Spanish", () => {
         expect(screen.getByRole("status")).toHaveTextContent("En ambos: 1. Solo con este PC: 1. Solo con el archivo «Laptop»: 2. Fuera de este catálogo: 1.");
         expect(screen.getByRole("button", {name: /Instalar las apps que faltan \(2\)/})).toBeInTheDocument();
         expect(screen.getByRole("button", {name: "Guardar el archivo como perfil"})).toBeInTheDocument();
-        expect(screen.getByRole("button", {name: "Añadir 1 apps al perfil"})).toBeInTheDocument();
+        expect(screen.getByRole("button", {name: "Añadir al perfil (1)"})).toBeInTheDocument();
         api.CompareFile.mockRejectedValue(new Error("compare:too-big"));
         await user.click(screen.getByRole("button", {name: "Elegir un archivo…"}));
         expect(await screen.findByRole("alert")).toHaveTextContent("Eso es demasiado grande para ser un perfil.");
