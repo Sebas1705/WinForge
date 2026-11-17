@@ -10,8 +10,8 @@
   powershell: |
     try {
         Enable-ComputerRestore -Drive "$env:SystemDrive\" -ErrorAction SilentlyContinue
-        Checkpoint-Computer -Description 'WinForge: before repair' -RestorePointType MODIFY_SETTINGS -ErrorAction Stop
-        'Restore point created.'
+        Checkpoint-Computer -Description 'WinForge: before repair' -RestorePointType MODIFY_SETTINGS -ErrorAction Stop -WarningVariable skipped -WarningAction SilentlyContinue
+        if ($skipped) { 'No new restore point: Windows allows one every 24 hours, so the one from today stays. The repair goes on.' } else { 'Restore point created.' }
     } catch {
         'No restore point was made: ' + $_.Exception.Message + ' (Windows allows one every 24 hours; the repair goes on.)'
     }
