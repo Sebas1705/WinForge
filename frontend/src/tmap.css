@@ -1,0 +1,68 @@
+/* Space map ("Map" tab of Biggest things). The map keeps its own solid colour tokens so label contrast does
+   not depend on the design style (some styles use translucent surfaces) or on the accent: a block is the
+   accent mixed into a solid base, at a few strengths ordered by size rank, and its label is the solid ink
+   of the theme. test/tmapContrast.test.ts computes the contrast of every ink/fill pair for all accents.
+   Size is encoded by AREA and written in the label, tooltip, accessible name and the table; the tint only
+   orders by rank. Neighbours are told apart by a gap and a border, "other" by a hatch pattern. */
+.tmap {
+    --tm-base: #12161b; --tm-ink: #e7ebf0;
+    --tm-t0: 30%; --tm-t1: 24%; --tm-t2: 18%; --tm-t3: 12%; --tm-t4: 6%;
+    --tm-other: 10%; --tm-hatch: 22%;
+    margin: 0 0 14px; min-width: 0; max-width: 100%;
+}
+:root[data-theme=light] .tmap { --tm-base: #ffffff; --tm-ink: #18202a; }
+
+.tmap .tm-stats { margin: 0 0 8px; }
+.tm-wrap { width: 100%; min-width: 0; }
+.tm-grid { position: relative; width: 100%; min-height: 240px; overflow: hidden; border-radius: 8px; background: var(--tm-base); border: 1px solid var(--control); }
+
+/* The selectors are long on purpose: they must win over the per-style rules that restyle every button
+   (pills, hard shadows, translucent fills), whatever the style. */
+:root .tmap .tm-grid button.tm-block:not(:disabled), :root .tmap .tm-grid button.tm-block:disabled {
+    position: absolute; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 2px;
+    margin: 0; padding: 6px 8px; min-width: 0; overflow: hidden; text-align: left; cursor: pointer;
+    color: var(--tm-ink); background: var(--tm-fill); border: 1px solid color-mix(in srgb, var(--tm-ink) 60%, var(--tm-base));
+    border-radius: 4px; box-shadow: none; transform: none; filter: none; backdrop-filter: none;
+    font-weight: 400; text-transform: none; opacity: 1;
+}
+.tmap .tm-grid button.tm-block { --tm-fill: color-mix(in srgb, var(--accent) var(--tm-t2), var(--tm-base)); }
+.tmap .tm-grid button.tm-block[data-tint="0"] { --tm-fill: color-mix(in srgb, var(--accent) var(--tm-t0), var(--tm-base)); }
+.tmap .tm-grid button.tm-block[data-tint="1"] { --tm-fill: color-mix(in srgb, var(--accent) var(--tm-t1), var(--tm-base)); }
+.tmap .tm-grid button.tm-block[data-tint="2"] { --tm-fill: color-mix(in srgb, var(--accent) var(--tm-t2), var(--tm-base)); }
+.tmap .tm-grid button.tm-block[data-tint="3"] { --tm-fill: color-mix(in srgb, var(--accent) var(--tm-t3), var(--tm-base)); }
+.tmap .tm-grid button.tm-block[data-tint="4"] { --tm-fill: color-mix(in srgb, var(--accent) var(--tm-t4), var(--tm-base)); }
+/* "Other": a hatch, not a colour, says it is not one folder. */
+:root .tmap .tm-grid button.tm-block.tm-other:not(:disabled) {
+    cursor: default; border-style: dashed;
+    background: repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in srgb, var(--tm-ink) var(--tm-hatch), var(--tm-base)) 6px 8px),
+                color-mix(in srgb, var(--tm-ink) var(--tm-other), var(--tm-base));
+}
+:root .tmap .tm-grid button.tm-block:not(:disabled):hover { border-color: var(--tm-ink); }
+:root .tmap .tm-grid button.tm-block:disabled { cursor: default; opacity: 1; }
+:root .tmap .tm-grid button.tm-block.tm-sel { border-width: 2px; border-color: var(--tm-ink); padding: 5px 7px; }
+:root .tmap .tm-grid button.tm-block:focus-visible {
+    outline: 3px solid var(--tm-ink); outline-offset: -5px; border-color: var(--tm-ink);
+}
+.tm-name { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; font-size: 13px; line-height: 16px; }
+.tm-size { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; line-height: 16px; }
+
+.tm-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin: 10px 0 6px; min-height: 30px; min-width: 0; }
+.tm-selected { font-weight: 600; min-width: 0; overflow-wrap: anywhere; }
+.tm-toggle { margin-top: 2px; }
+.tm-table { margin-top: 8px; max-height: 320px; }
+.tm-table th[scope=row] { font-weight: 500; text-align: left; overflow-wrap: anywhere; }
+.tm-table .num { text-align: right; white-space: nowrap; }
+
+@media (prefers-reduced-motion: no-preference) {
+    .tmap .tm-grid button.tm-block { animation: tm-in .18s ease-out; }
+}
+@keyframes tm-in { from { opacity: 0; } to { opacity: 1; } }
+
+:root[data-density=compact] .tmap .tm-grid button.tm-block:not(:disabled) { padding: 3px 6px; gap: 0; }
+:root[data-density=compact] .tm-name { font-size: 12px; }
+:root[data-density=compact] .tm-size { font-size: 11px; }
+:root[data-density=compact] .tm-actions { margin: 6px 0 4px; }
+
+@media (max-width: 560px) {
+    .tm-grid { min-height: 220px; }
+}

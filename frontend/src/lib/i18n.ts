@@ -11,6 +11,7 @@ import {subEn, subEs} from "./i18n.sub";
 import {healthEn, healthEs} from "./i18n.health";
 import {historyEn, historyEs} from "./i18n.history";
 import {hhistEn, hhistEs} from "./i18n.hhist";
+import {tmapEn, tmapEs} from "./i18n.tmap";
 import {uiEn, uiEs} from "./i18n.ui";
 
 // Interface strings in English and Spanish. Catalog content (app names,
@@ -268,7 +269,7 @@ const baseEn = {
     "cat.utilities": "Utilities",
 } as const;
 
-const en = {...baseEn, ...healthEn, ...uiEn, ...backupEn, ...subEn, ...gamesEn, ...repairEn, ...storageEn, ...startupEn, ...developerEn, ...svcEn, ...historyEn, ...hhistEn, ...uninstallEn, ...autoEn} as const;
+const en = {...baseEn, ...healthEn, ...uiEn, ...backupEn, ...subEn, ...gamesEn, ...repairEn, ...storageEn, ...startupEn, ...developerEn, ...svcEn, ...historyEn, ...hhistEn, ...tmapEn,...uninstallEn, ...autoEn} as const;
 
 export type Key = keyof typeof en;
 
@@ -523,7 +524,7 @@ const baseEs: Record<keyof typeof baseEn, string> = {
     "cat.utilities": "Utilidades",
 };
 
-const es: Record<Key, string> = {...baseEs, ...healthEs, ...uiEs, ...backupEs, ...subEs, ...gamesEs, ...repairEs, ...storageEs, ...startupEs, ...developerEs, ...svcEs, ...historyEs, ...hhistEs, ...uninstallEs, ...autoEs};
+const es: Record<Key, string> = {...baseEs, ...healthEs, ...uiEs, ...backupEs, ...subEs, ...gamesEs, ...repairEs, ...storageEs, ...startupEs, ...developerEs, ...svcEs, ...historyEs, ...hhistEs, ...tmapEs,...uninstallEs, ...autoEs};
 
 export type Lang = "en" | "es";
 export type LangSetting = Lang | "auto";
