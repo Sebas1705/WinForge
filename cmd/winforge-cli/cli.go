@@ -16,6 +16,7 @@ import (
 	"github.com/Sebas1705/WinForge/internal/cliout"
 	"github.com/Sebas1705/WinForge/internal/exitcode"
 	"github.com/Sebas1705/WinForge/internal/install"
+	"github.com/Sebas1705/WinForge/internal/planrun"
 	"github.com/Sebas1705/WinForge/internal/profile"
 	"github.com/Sebas1705/WinForge/internal/sched"
 	"github.com/Sebas1705/WinForge/internal/system"
@@ -409,18 +410,7 @@ type applyDoc struct {
 	Steps            []stepJSON     `json:"steps"`
 }
 
-type stepJSON struct {
-	ID      string `json:"id"`
-	Kind    string `json:"kind"`
-	Name    string `json:"name"`
-	Result  string `json:"result"`
-	Reason  string `json:"reason"`
-	Message string `json:"message"`
-	From    string `json:"from"`
-	To      string `json:"to"`
-	Reboot  bool   `json:"reboot"`
-	Admin   bool   `json:"admin"`
-}
+type stepJSON = planrun.Step
 
 func (c *cmdCtx) profileCmd(args []string) int {
 	if len(args) != 1 {
@@ -490,97 +480,56 @@ func adminMark(a bool) string {
 	return ""
 }
 
-func stepKey(s install.Step) string { return string(s.Kind) + "/" + s.ID }
-
 func (c *cmdCtx) apply(id string, plan install.Plan, installed map[string]system.Installed, serr error) int {
 	doc := &applyDoc{Profile: id, AlreadyInstalled: nz(plan.AlreadyInstalled), SkippedRecipes: nz(plan.SkippedRecipes),
 		NeedsAdmin: plan.NeedsAdmin, Counts: map[string]int{"ok": 0, "failed": 0, "skipped": 0}, Steps: []stepJSON{}}
-	at := map[string]int{}
-	needsWinget := false
-	for _, s := range plan.Steps {
-		at[stepKey(s)] = len(doc.Steps)
-		from := ""
-		if s.Kind != install.StepApp && s.Kind != install.StepRecipe {
-			from = installed[s.ID].Version
-		}
-		doc.Steps = append(doc.Steps, stepJSON{ID: s.ID, Kind: string(s.Kind), Name: s.Name, Result: "skipped", From: from, To: from, Admin: s.Admin})
-		needsWinget = needsWinget || s.Kind != install.StepRecipe
-	}
-	count := func() {
-		doc.Counts = map[string]int{"ok": 0, "failed": 0, "skipped": 0}
-		for _, st := range doc.Steps {
-			doc.Counts[st.Result]++
-		}
-	}
-	refuse := func(code int, reason, msg string) int {
-		for i := range doc.Steps {
-			doc.Steps[i].Reason = reason
-		}
-		count()
-		return c.done(code, reason, msg, &doc.Envelope, doc)
-	}
-
-	if errors.Is(serr, system.ErrNoWinget) && needsWinget {
-		return refuse(exitcode.Prereq, "prerequisite", serr.Error()+"; nothing was done")
-	}
-	if c.o.NonInteractive && plan.NeedsAdmin && !(c.d.elevated != nil && c.d.elevated()) {
-		return refuse(exitcode.Admin, "admin", "this plan needs administrator rights and this run has none; nothing was done (start winforge-cli from an elevated terminal)")
-	}
-	if c.d.lockPath != nil {
-		if p, err := c.d.lockPath(); err == nil {
-			release, lerr := sched.Lock{Path: p}.Acquire()
-			if errors.Is(lerr, sched.ErrBusy) {
-				return refuse(exitcode.Busy, "busy", "another WinForge run is already in progress; nothing was done")
+	opts := planrun.Options{
+		Exec:          c.d.exec,
+		Elevated:      c.d.elevated,
+		RequireAdmin:  c.o.NonInteractive,
+		LockPath:      c.d.lockPath,
+		Installed:     installed,
+		WingetMissing: errors.Is(serr, system.ErrNoWinget),
+		OnWarn:        func(m string) { c.warnf("warning: %s\n", m) },
+		OnStart: func() {
+			c.logf("%d already installed, %d steps\n", len(plan.AlreadyInstalled), len(plan.Steps))
+			for _, s := range plan.Steps {
+				c.logf("  %-7s %-28s %s\n", s.Kind, s.ID, adminMark(s.Admin))
 			}
-			if lerr == nil {
-				defer release()
-			} else {
-				c.warnf("warning: could not take the run lock: %v\n", lerr)
+			for _, r := range plan.SkippedRecipes {
+				c.logf("  skipped recipe %s (its app is not part of this plan)\n", r)
 			}
-		}
-	}
-
-	c.logf("%d already installed, %d steps\n", len(plan.AlreadyInstalled), len(plan.Steps))
-	for _, s := range plan.Steps {
-		c.logf("  %-7s %-28s %s\n", s.Kind, s.ID, adminMark(s.Admin))
-	}
-	for _, r := range plan.SkippedRecipes {
-		c.logf("  skipped recipe %s (its app is not part of this plan)\n", r)
-	}
-	failed := install.Run(c.ctx, c.cat, plan, c.d.exec, func(e install.Event) {
-		i, ok := at[stepKey(e.Step)]
-		if !ok {
-			return
-		}
-		st := &doc.Steps[i]
-		switch e.Status {
-		case install.StatusStart:
-			c.logf("-> %s %s\n", e.Step.Kind, e.Step.ID)
-		case install.StatusOutput:
-			c.logf("   %s\n", e.Line)
-		case install.StatusOK:
-			st.Result, st.Reboot = "ok", e.Reason == install.ReasonReboot
-		case install.StatusFailed:
-			st.Result, st.Reason, st.Message = "failed", e.Reason, e.Err
-			c.problemf("   %s: %s\n", e.Status, e.Err)
-		case install.StatusSkipped:
-			st.Result, st.Message = "skipped", e.Err
-			st.Reason = "dependency"
-			if e.Err == "cancelled" {
-				st.Reason = "cancelled"
+		},
+		OnEvent: func(e install.Event) {
+			switch e.Status {
+			case install.StatusStart:
+				c.logf("-> %s %s\n", e.Step.Kind, e.Step.ID)
+			case install.StatusOutput:
+				c.logf("   %s\n", e.Line)
+			case install.StatusFailed, install.StatusSkipped:
+				c.problemf("   %s: %s\n", e.Status, e.Err)
 			}
-			c.problemf("   %s: %s\n", e.Status, e.Err)
-		}
-	})
+		},
+	}
+	if serr != nil {
+		opts.WingetMessage = serr.Error()
+	}
+	if c.o.JSON { // the document reports the version each step ended on, which takes one rescan
+		opts.Detect = c.detect
+	}
+	rep := planrun.Run(c.ctx, c.cat, plan, opts)
+	doc.Steps, doc.Counts, doc.RebootRequired = rep.Steps, rep.Counts, rep.RebootRequired
+	switch rep.Refused {
+	case planrun.RefusedPrerequisite:
+		return c.done(exitcode.Prereq, rep.Refused, rep.RefusedMessage, &doc.Envelope, doc)
+	case planrun.RefusedAdmin:
+		return c.done(exitcode.Admin, rep.Refused, rep.RefusedMessage, &doc.Envelope, doc)
+	case planrun.RefusedBusy:
+		return c.done(exitcode.Busy, rep.Refused, rep.RefusedMessage, &doc.Envelope, doc)
+	}
+	failed := rep.Failed
 	if len(failed) > 0 {
 		c.problemf("failed: %v\n", failed)
-	}
-	if c.o.JSON && c.ctx.Err() == nil {
-		c.fillAfter(doc, plan, at)
-	}
-	count()
-	for _, st := range doc.Steps {
-		doc.RebootRequired = doc.RebootRequired || st.Reboot
 	}
 	switch {
 	case c.timedOut():
@@ -593,39 +542,6 @@ func (c *cmdCtx) apply(id string, plan install.Plan, installed map[string]system
 		return c.done(exitcode.Reboot, "", "", &doc.Envelope, doc)
 	}
 	return c.done(exitcode.OK, "", "", &doc.Envelope, doc)
-}
-
-// fillAfter rescans once to report the version each step ended with. A failed scan only leaves the
-// "to" of an app step empty.
-func (c *cmdCtx) fillAfter(doc *applyDoc, plan install.Plan, at map[string]int) {
-	done := false
-	for _, st := range doc.Steps {
-		done = done || st.Result == "ok"
-	}
-	if !done {
-		return
-	}
-	after, err := c.detect()
-	if err != nil && len(after) == 0 {
-		return
-	}
-	for _, s := range plan.Steps {
-		st := &doc.Steps[at[stepKey(s)]]
-		if st.Result != "ok" {
-			continue
-		}
-		switch s.Kind {
-		case install.StepUninstall:
-			st.To = ""
-		case install.StepRecipe:
-			st.To = ""
-		default:
-			st.To = after[s.ID].Version
-			if st.To == "" {
-				st.To = s.Version
-			}
-		}
-	}
 }
 
 // ---------------------------------------------------------------------------------------------

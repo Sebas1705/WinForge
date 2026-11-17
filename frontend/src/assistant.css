@@ -1,0 +1,38 @@
+/* Assistant (MCP) dialog. Only the repo's colour tokens are used, so the six styles and both themes keep their
+   contrast: text is --text or --muted on --surface or --surface2, the edges that must be seen use --control,
+   and nothing is wider than the dialog (code wraps inside its box, long paths break). */
+.modal.assistdlg { overflow: auto; gap: 12px; min-width: 0; width: min(640px, 100%); padding: 20px 22px; }
+.assistdlg > * { min-width: 0; }
+.assistdlg h4 { margin: 0 0 4px; font-size: 14px; }
+.assistdlg h5 { margin: 10px 0 0; font-size: 13px; }
+.assistmodes { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.assistmodes legend { font-weight: 600; padding: 0; margin-bottom: 6px; }
+.assistmode { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--control); border-radius: 10px;
+    background: var(--surface); color: var(--text); cursor: pointer; min-width: 0; }
+.assistmode.on { border-color: var(--accent-ink); box-shadow: inset 3px 0 0 var(--accent-ink); } /* background stays --surface: the muted text on it is the repo-checked pair */
+.assistmode:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+.assistmode input { margin-top: 3px; flex: none; accent-color: var(--accent); }
+.assistmode input:focus-visible { outline: none; }
+.assistmodetext { display: flex; flex-direction: column; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+.assistsection { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.assistpath { display: block; padding: 8px 10px; border: 1px solid var(--control); border-radius: 8px; background: var(--bg); color: var(--text); overflow-wrap: anywhere; }
+.assistblock { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.assistcode { margin: 0; max-width: 100%; box-sizing: border-box; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word;
+    background: var(--bg); color: var(--text); border: 1px solid var(--control); border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.5; max-height: 220px; }
+.assistcopyrow { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.assistcopied { min-height: 1.4em; color: var(--text); overflow-wrap: anywhere; }
+.assistcopied[data-kind="ok"] { border-left: 3px solid var(--ok); padding-left: 8px; }
+.assistcopied[data-kind="fail"] { border-left: 3px solid var(--bad); padding-left: 8px; }
+.assisterror, .assistmissing { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; border: 1px solid var(--control); border-radius: 8px; padding: 10px 12px; color: var(--text); }
+.assisterror { border-left: 3px solid var(--bad); }
+.assistmissing { border-left: 3px solid var(--warn); flex-direction: column; align-items: flex-start; }
+.assistmissing .actions { margin: 0; }
+.assistnote { overflow-wrap: anywhere; color: var(--text); }
+.assistnote[data-kind="error"] { border-left: 3px solid var(--bad); padding-left: 8px; }
+.assistprivacy { padding: 12px 14px; border: 1px solid var(--control); border-radius: 10px; background: var(--surface2); color: var(--text); }
+.assistprivacy ul { margin: 6px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; overflow-wrap: anywhere; }
+.assistfield .actions { justify-content: flex-start; }
+@media (max-width: 520px) {
+    .modal.assistdlg { padding: 16px; }
+    .assistcode { max-height: 160px; }
+}

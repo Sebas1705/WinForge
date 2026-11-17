@@ -96,6 +96,12 @@ Section
 
     !insertmacro wails.files
 
+    # The MCP server for assistants (cmd/winforge-mcp). The workflows build it into build/bin before the
+    # installer; a local `wails build -nsis` without it still works, and CI checks that the file got installed.
+    !if /FileExists "..\..\bin\winforge-mcp.exe"
+        File "..\..\bin\winforge-mcp.exe"
+    !endif
+
     CreateShortcut "$SMPROGRAMS\${INFO_PRODUCTNAME}.lnk" "$INSTDIR\${PRODUCT_EXECUTABLE}"
     CreateShortCut "$DESKTOP\${INFO_PRODUCTNAME}.lnk" "$INSTDIR\${PRODUCT_EXECUTABLE}"
 
@@ -110,6 +116,7 @@ Section "uninstall"
 
     RMDir /r "$AppData\${PRODUCT_EXECUTABLE}" # Remove the WebView2 DataPath
 
+    # Removes the whole install folder, so winforge-mcp.exe goes too; no separate Delete is needed.
     RMDir /r $INSTDIR
 
     Delete "$SMPROGRAMS\${INFO_PRODUCTNAME}.lnk"

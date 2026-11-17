@@ -22,6 +22,14 @@ export function ApplyUpgrades(arg1) {
   return window['go']['main']['App']['ApplyUpgrades'](arg1);
 }
 
+export function AssistantInfo() {
+  return window['go']['main']['App']['AssistantInfo']();
+}
+
+export function AssistantRevealExe() {
+  return window['go']['main']['App']['AssistantRevealExe']();
+}
+
 export function AutoDisable() {
   return window['go']['main']['App']['AutoDisable']();
 }

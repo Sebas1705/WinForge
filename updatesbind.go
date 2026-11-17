@@ -58,21 +58,13 @@ func (a *App) Upgrades() ([]UpgradeInfo, error) {
 
 // upgradeInfos is the list the Updates page shows, with the person's choices applied.
 func (a *App) upgradeInfos(ups []system.Upgrade, rules map[string]updates.Rule) []UpgradeInfo {
-	now := a.clock()
 	out := []UpgradeInfo{}
-	for _, s := range install.UpgradePlan(a.cat, ups, nil).Steps {
-		app := a.cat.Apps[s.ID]
-		cur := ""
-		for _, u := range ups {
-			if u.ID == app.Winget {
-				cur = u.Current
-			}
-		}
-		info := UpgradeInfo{ID: s.ID, Name: app.Name, Publisher: app.Publisher, Current: cur, Available: s.Version}
-		if r, ok := rules[s.ID]; ok && r.Hides(s.Version, now) {
-			info.Ignore, info.IgnoreVersion = string(r.Mode), r.Version
-			if r.Mode == updates.Until {
-				info.IgnoreUntil = r.Until.Format(time.RFC3339)
+	for _, e := range updates.Classify(a.cat, ups, rules, a.clock()) {
+		info := UpgradeInfo{ID: e.ID, Name: e.Name, Publisher: e.Publisher, Current: e.Current, Available: e.Available}
+		if e.Rule != nil {
+			info.Ignore, info.IgnoreVersion = string(e.Rule.Mode), e.Rule.Version
+			if e.Rule.Mode == updates.Until {
+				info.IgnoreUntil = e.Rule.Until.Format(time.RFC3339)
 			}
 		}
 		out = append(out, info)
@@ -102,19 +94,7 @@ func (a *App) PlanUpgrades(ids []string) (install.Plan, error) {
 	if err != nil {
 		return install.Plan{}, err
 	}
-	plan := install.UpgradePlan(a.cat, ups, ids)
-	now := a.clock()
-	kept := make([]install.Step, 0, len(plan.Steps))
-	plan.NeedsAdmin = false
-	for _, s := range plan.Steps {
-		if r, ok := rules[s.ID]; ok && r.Hides(s.Version, now) {
-			continue
-		}
-		kept = append(kept, s)
-		plan.NeedsAdmin = plan.NeedsAdmin || s.Admin
-	}
-	plan.Steps = kept
-	return plan, nil
+	return updates.PlanUpgrades(a.cat, ups, ids, rules, a.clock()), nil
 }
 
 var errNoIgnoreStore = errors.New("WinForge could not open its settings folder, so ignored updates cannot be saved")

@@ -36,6 +36,7 @@ WinForge scans the PC, shows which apps of a **curated catalog** are installed, 
 - **Offline kit**: from a profile's More menu, *Create offline kit…* downloads each app's installer with `winget download` into a folder (for example a USB stick) and writes a `kit.json` with the SHA-256 of every file and the installer facts from the winget manifest. On a PC with no network or a slow one, *Install from an offline kit…* (Profiles page) opens the folder, checks every file against `kit.json` and the manifest's hash, lists the apps (nothing runs yet) and, after you confirm, installs the ticked ones through the same run window, silently. Only catalog apps and only what `kit.json` lists; a changed file, an unlisted file, a link or a path leaving the kit folder makes that app unusable and it is never run. Installers run from a private copy that is checked again, with the manifest's silent switches and never through a shell string. msi and exe installers are supported; Store apps, portable or zip packages, msix and installers with no known silent switches are listed as not included or as "cannot install offline". `kit.json` is not signed: compare the fingerprint shown when the kit is created with the one shown when it is opened.
 - **Compare setups**: on the Profiles page, *Compare…* sets this PC against an exported profile file or a pasted share code, or two profile files against each other, and lists the apps only on one side, in both, with different versions (when both files pin versions) and unknown to this catalog. Comparing only reads: files are size-capped and validated, unknown apps and setup steps are reported and never run, and from the result you can install the missing apps through the usual plan, add the apps only on this PC to one of your profiles, or save the file as a profile. To compare this PC with a saved profile, use that profile's drift panel.
 - **Diagnostic report and suggestions**: Settings has a *Diagnostics* section that shows exactly what a small report would contain and saves it only where you choose; WinForge never sends it, you attach it to a bug report yourself. It holds WinForge's version and build, the Windows version, edition and architecture, the language, administrator state, the winget version, the catalog size, the names, sizes and dates of WinForge's own files, the tail of its own log and counts from the last scans, with your user name and user folder removed; never your installed software list, paths outside WinForge's folder, environment variables, registry contents or profile contents. When a Catalog search finds nothing, *Not here? Suggest this app* opens your browser on a pre-filled GitHub issue; only the text you typed in the search box is included.
+- **Assistant access (MCP)**: `winforge-mcp.exe`, shipped next to `WinForge.exe`, is a local MCP server over stdio (no port, no network) so an assistant such as Claude can ask this installation about the PC and, only if you allow it, act. Its default mode only looks; plans can be prepared in `--mode plan`; `--mode full` adds `winforge_apply_plan`, which runs a plan the assistant showed you, once, with the same run lock and administrator rules as the CLI. Everything a tool returns goes to the assistant's model, with your user name and folder removed. *Settings > Assistant (MCP)* shows the exact command to register it; the full tool list, the privacy notes and what is not covered are in [docs/mcp.md](docs/mcp.md).
 - **Made to be scanned, not read**: a store-style catalog of icon cards (grid or list), profiles as cards with their apps' icons and a progress ring, quick-start tiles and a "popular" shelf on the home screen, a health score with one card per area, short plain-language descriptions in Spanish and English for ~100 popular apps and every built-in profile, "?" help bubbles, and a three-screen first-run guide.
 - **Simple or advanced**: simple (the default) hides ids, versions, publishers' links, logs and script/winget exports; advanced shows them. Switch in the sidebar.
 
@@ -71,6 +72,10 @@ internal/
   diag/          the diagnostic report and its scrubbing
   exitcode/      the exit codes every winforge-cli command shares
   cliout/        the --json envelope and global flags of winforge-cli
+  mcpkit/        the contract between the MCP server and its tools
+  mcpserver/     the MCP protocol, safety modes, plan store and redaction
+  mcptools/      the MCP tools: sysapps (apps), pcread (PC state), actions (plans)
+  planrun/       running an install plan and reporting each step (CLI and MCP share it)
   sched/         scheduled automatic updates: task, headless run, run log, toast
   history/       what WinForge installed, updated or rolled back, and the way back
   uninstall/     leftovers search and the matching rules that decide what is offered
@@ -82,6 +87,7 @@ internal/
   startup/       what starts with Windows, and switching it on and off without deleting it
   storage/       cleanup categories, old project folders, virtual disks, biggest files and folders, duplicates, Recycle Bin
 cmd/winforge-cli headless: scan | profiles | plan | apply | script | configure | export | check
+cmd/winforge-mcp    local MCP server for assistants
 cmd/winforge-verify  catalog verifier
 app.go, main.go, frontend/   Wails desktop app (Go + React/TypeScript)
 ```

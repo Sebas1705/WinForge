@@ -91,6 +91,8 @@ type App struct {
 	sched schedSession
 	// The Settings page's diagnostic report (diagbind.go).
 	diag diagSession
+	// Where the Settings page finds winforge-mcp.exe (assistantbind.go); nil means beside this exe.
+	assistantExe func() (string, error)
 	// The offline kit: the kit last opened and the task that is running (offlinekitbind.go).
 	kit kitState
 }

@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState, type ReactNode} from "react";
 import {AppIcon} from "./AppIcon";
+import {AssistantDialog} from "./AssistantDialog";
 import {DiagDialog} from "./DiagDialog";
 import {Icon} from "./Icon";
 import {Strip} from "./Strip";
@@ -261,6 +262,7 @@ export function SettingsDialog(p: {
     const set = (patch: Partial<prefs.Settings>) => p.onChange({...p.value, ...patch});
     const dialog = useRef<HTMLDivElement>(null);
     const [diag, setDiag] = useState(false);
+    const [assistant, setAssistant] = useState(false);
     useModal(dialog, p.onClose);
     return (
         <>
@@ -330,10 +332,15 @@ export function SettingsDialog(p: {
                     <span className="muted small">{t("diag.sectionHint")}</span>
                     <div className="actions tight"><button onClick={() => setDiag(true)}>{t("diag.open")}</button></div>
                 </div>
+                <div className="field stacked assistfield"><span>{t("assistant.section")}</span>
+                    <span className="muted small">{t("assistant.sectionHint")}</span>
+                    <div className="actions tight"><button onClick={() => setAssistant(true)}>{t("assistant.open")}</button></div>
+                </div>
                 <div className="actions end"><button className="primary" onClick={p.onClose}>{t("common.done")}</button></div>
             </div>
         </div>
         {diag && <DiagDialog onClose={() => setDiag(false)}/>}
+        {assistant && <AssistantDialog onClose={() => setAssistant(false)}/>}
         </>
     );
 }
