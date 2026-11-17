@@ -28,8 +28,8 @@ Not present: anything that runs on a schedule, a startup manager, cleanup of dev
 | 3 | Developer cache cleanup (done) | Where developers lose tens of GB; fits the Storage tab. Regenerable, but slow to download again. | Medium | Medium |
 | 4 | Export a profile as a `winget configure` file (done) | Replays a setup on a PC without WinForge and fits in a repository. Script and `winget import` export already exist. | Low to medium | Low |
 | 5 | Startup manager (done for Run keys and Startup folders; tasks and services are not listed; disable, never delete) | Boot time review; nothing covers it today. | Medium | Low (reversible) |
-| 6 | Privacy and Windows cleanup as reversible recipes | Most asked-for in WinUtil and O&O. Each tweak needs a preview, an undo and a restore point. | Medium to high | High unless each one is reviewed |
-| 7 | End-of-life and known-vulnerability report for installed software | Read-only, built on the catalog's verified publishers. | Medium | Low |
+| 6 | (done: privacy settings only) Privacy and Windows cleanup as reversible recipes | Most asked-for in WinUtil and O&O. Each tweak needs a preview, an undo and a restore point. | Medium to high | High unless each one is reviewed |
+| 7 | (done: end of support only) End-of-life and known-vulnerability report for installed software | Read-only, built on the catalog's verified publishers. | Medium | Low |
 | 8 | Profile drift ("what changed on this PC since you applied it") (done) | Turns profiles into something maintained, not installed once. | Medium | Low |
 | 9 | Profiles folder that can live in OneDrive or Dropbox (done) | Sync between PCs with no server and almost no code. | Low | Low |
 | 10 | Action palette (done: Ctrl+K opens it) | Daily use by keyboard. | Low | Low |
@@ -50,12 +50,12 @@ is measured demand: check the other tool's own repository before copying a behav
 | 14 | (done) Windows features and WSL setup as recipes (WSL, Virtual Machine Platform, Hyper-V, Sandbox, .NET 3.5), with the restart handled | The first thing a new developer PC needs. A recipe fits the existing runner, restore point and retry. | Medium | Medium: needs administrator rights and a restart |
 | 15 | (done) Health history: keep each scan's score and show the trend, plus a laptop battery report (`powercfg /batteryreport`) | Today a scan is a snapshot. A falling SSD or battery figure is only visible over time. | Low to medium | Low |
 | 16 | (done) Services and scheduled tasks viewer, third-party only, with a reversible switch (completes #5) | The half of "what runs at boot" that the startup page leaves out. | Medium | Medium: only items not from Microsoft, startup type only, never delete |
-| 17 | Offline kit: download the installers of a profile with their hashes to a folder or USB, and install from it | For a PC with no network or a slow one. Hashes already come from winget manifests. | Medium | Low |
-| 18 | Compare this PC with a profile file or an exported setup from another PC | Drift (#8) compares with the past; this compares two machines. | Low to medium | Low |
+| 17 | (done) Offline kit: download the installers of a profile with their hashes to a folder or USB, and install from it | For a PC with no network or a slow one. Hashes already come from winget manifests. | Medium | Low |
+| 18 | (done) Compare this PC with a profile file or an exported setup from another PC | Drift (#8) compares with the past; this compares two machines. | Low to medium | Low |
 | 19 | (done as a toast notification; Wails v2 has no tray support, so there is no tray icon) Update count and a notification (needs #2) | The visible side of scheduled updates. Without it, scheduling surprises people. | Medium | Low |
-| 20 | Space map (treemap) in Biggest things | The same data as today, easier to read. Pure interface work. | Medium | Low |
-| 21 | Diagnostic bundle (versions, scan results, log; no file names outside WinForge's own) and a "suggest this app" link that opens a pre-filled GitHub issue | Makes bug reports and catalog growth cheap. Nothing is sent by WinForge itself. | Low | Low |
-| 22 | Unattended mode for `winforge-cli`: machine-readable report and stable exit codes | For provisioning scripts and Intune-style use. Mostly formatting what exists. | Low | Low |
+| 20 | (done) Space map (treemap) in Biggest things | The same data as today, easier to read. Pure interface work. | Medium | Low |
+| 21 | (done) Diagnostic bundle (versions, scan results, log; no file names outside WinForge's own) and a "suggest this app" link that opens a pre-filled GitHub issue | Makes bug reports and catalog growth cheap. Nothing is sent by WinForge itself. | Low | Low |
+| 22 | (done) Unattended mode for `winforge-cli`: machine-readable report and stable exit codes | For provisioning scripts and Intune-style use. Mostly formatting what exists. | Low | Low |
 
 ## Not worth doing
 
@@ -74,7 +74,13 @@ is measured demand: check the other tool's own repository before copying a behav
 5. **E (done):** 11, 12. Managing what is installed: go back a version, and remove an app with its leftovers.
 6. **F (done):** 13, 14. The developer PC: an environment doctor, and WSL and Windows features as recipes.
 7. **G (done):** 15, 16. What the PC does over time and at boot: health history, services and tasks.
-8. **Later:** 6, 7 (each reviewed one recipe at a time), then 17, 18, 20, 21, 22.
+8. **H (done):** 6, 7, 17, 18, 20, 21, 22. Privacy settings, end of support, offline kits, comparing setups, the space map, the diagnostic report and an unattended CLI.
+
+What was left out on purpose:
+- **Vulnerabilities (#7).** Only end of support was built. An honest vulnerability check needs a database of affected version ranges that is too large and too fast-moving to bundle, and querying one online means sending the installed software and its versions to a third party, which breaks the trust model. A stale offline copy would also give false reassurance. End-of-support dates are small, change slowly and are public, so they ship inside the app and can be reviewed in a diff.
+- **Windows cleanup (#6).** Removing built-in apps, disabling Defender, UAC or Windows Update, the telemetry level and machine-wide policies are not offered: they cannot be undone exactly.
+- **Versions in comparisons (#18).** Profiles saved from a PC do not pin versions, so "versions differ" only fills for files that do. A "pin versions" choice when saving would make it useful.
+- **Offline kits (#17).** msix, portable and zip packages, Store apps and installers without a known silent switch are not installed offline; `kit.json` is not signed; free space is an estimate.
 
 ## Constraints every idea has to respect
 
@@ -82,5 +88,5 @@ is measured demand: check the other tool's own repository before copying a behav
 - Profiles are data. Scripts exist only as reviewed recipes.
 - Anything destructive asks first, says what it will do, and prefers the Recycle Bin or a reversible
   switch over deleting.
-- Anything that changes Windows settings creates a restore point first and can be undone.
+- Anything that changes Windows settings creates a restore point first and can be undone, or, for per-user registry values, saves an exact per-value backup first and restores it exactly.
 - Every screen works in Spanish and English, with the keyboard and with a screen reader.
