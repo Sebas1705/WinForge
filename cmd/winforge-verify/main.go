@@ -20,6 +20,7 @@ import (
 
 	"github.com/Sebas1705/WinForge/catalogdata"
 	"github.com/Sebas1705/WinForge/internal/catalog"
+	"github.com/Sebas1705/WinForge/internal/eol"
 	"github.com/Sebas1705/WinForge/internal/wingetpkgs"
 )
 
@@ -126,6 +127,24 @@ func summary(line string) {
 	fmt.Fprintln(f, line)
 }
 
+// checkEOL validates catalogdata/eol.yml: it parses, its dates are real, no cycle repeats and every
+// app it names is in the catalog. It needs no network.
+func checkEOL(cat *catalog.Catalog) error {
+	d, err := eol.Load(catalogdata.FS)
+	if err != nil {
+		return err
+	}
+	errs := d.Validate(func(id string) bool { return cat.Apps[id] != nil })
+	if len(errs) == 0 {
+		return nil
+	}
+	msgs := make([]string, len(errs))
+	for i, e := range errs {
+		msgs[i] = e.Error()
+	}
+	return fmt.Errorf("eol.yml invalid:\n  %s", strings.Join(msgs, "\n  "))
+}
+
 func main() { os.Exit(run()) }
 
 func run() int {
@@ -140,6 +159,11 @@ func run() int {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return 2
+	}
+	// The end-of-support table names catalog apps; check it offline, before the slow lookups.
+	if err := checkEOL(cat); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return 1
 	}
 	ids := make([]string, 0, len(cat.Apps))
 	for id := range cat.Apps {
