@@ -878,7 +878,7 @@
   homepage: https://www.openscad.org/
   license: "GNU GPLv2"
   winget: OpenSCAD.OpenSCAD
-  publisher: "OpenSCAD"
+  publisher: "The OpenSCAD Developers"
 
 - id: librecad
   name: "LibreCAD"

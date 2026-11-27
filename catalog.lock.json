@@ -5862,7 +5862,7 @@
   },
   "openscad": {
     "version": "2021.01",
-    "publisher": "OpenSCAD",
+    "publisher": "The OpenSCAD Developers",
     "installerHosts": [
       "files.openscad.org"
     ],
